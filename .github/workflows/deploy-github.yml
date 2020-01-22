@@ -12,7 +12,9 @@ jobs:
     # Steps to deploy
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false
 
     - name: Build
       # Run a multi-line script|
@@ -20,6 +22,11 @@ jobs:
         npm install
         npm run-script build
 
+    - name: Unit Test
+      run: |
+        npm install
+        npm run test:unit
+           
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
