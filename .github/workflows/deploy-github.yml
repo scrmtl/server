@@ -20,7 +20,7 @@ jobs:
       # Run a multi-line script|
       run: |
         npm install --progress=false
-        npm run-script build
+        npm run build
 
     - name: Unit Test
       run: |
@@ -33,4 +33,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
         # for vue.js is dist
-        FOLDER: .
+        FOLDER: dist
