@@ -33,4 +33,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
         # for vue.js is dist
-        FOLDER: dist
+        FOLDER: .
