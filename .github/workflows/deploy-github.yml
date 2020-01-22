@@ -19,12 +19,12 @@ jobs:
     - name: Build
       # Run a multi-line script|
       run: |
-        npm install
+        npm install --progress=false
         npm run-script build
 
     - name: Unit Test
       run: |
-        npm install
+        npm install --progress=false
         npm run test:unit
            
     - name: Deploy
