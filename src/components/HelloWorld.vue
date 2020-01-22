@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Hello World this is the scrmtl',
   props: {
     msg: String
   }
