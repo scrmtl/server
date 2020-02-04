@@ -9,6 +9,7 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+# Build scrmtl server vue.js app and api
 steps:
 - task: NodeTool@0
   inputs:
@@ -19,3 +20,16 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
+
+
+
+
+# Unit test
+
+# Build scrmtl server container
+
+# push to azure container Registry
+
+# deploy and orchestration containers 
+## mongo DB container
+## scrmtl server container
