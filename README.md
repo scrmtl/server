@@ -8,4 +8,4 @@ This is the main server applicationen based on Node.js
 
 ## Test it out
 
-Our [Live App](https://huskyre.github.io/scrmtl)
+Our [Live App](https://huskyre.github.io/scrmtl) *Under construction*
