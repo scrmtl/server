@@ -36,19 +36,19 @@ jobs:
       #login to azure container registry
     - uses: azure/docker-login@v1
       with:
-        login-server: contoso.azurecr.io
+        login-server: scrumtoolacr.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
       # build container and push to azure container registry
     - run: |
-        docker build ./docker -t contoso.azurecr.io/scrmtl:${{ github.sha }}
-        docker push contoso.azurecr.io/scrmtl:${{ github.sha }}
+        docker build ./docker -t scrumtoolacr.azurecr.io/server:${{ github.sha }}
+        docker push scrumtoolacr.azurecr.io/server:${{ github.sha }}
 
     - uses: azure/webapps-container-deploy@v1
       with:
         app-name: 'scrmtl-server'
-        images: 'contoso.azurecr.io/scrmtl:${{ github.sha }}'
+        images: 'scrumtoolacr.azurecr.io/server:${{ github.sha }}'
 
     - name: Azure logout
       run: |
