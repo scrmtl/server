@@ -32,12 +32,14 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       #login to azure container registry
     - uses: azure/docker-login@v1
       with:
         login-server: contoso.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
+
       # build container and push to azure container registry
     - run: |
         docker build ./docker -t contoso.azurecr.io/scrmtl:${{ github.sha }}
