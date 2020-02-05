@@ -41,8 +41,9 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
       # build container and push to azure container registry
+      # mit . wird in root geschaut
     - run: |
-        docker build ./docker -t scrumtoolacr.azurecr.io/server:${{ github.sha }}
+        docker build . -t scrumtoolacr.azurecr.io/server:${{ github.sha }}
         docker push scrumtoolacr.azurecr.io/server:${{ github.sha }}
 
     - uses: azure/webapps-container-deploy@v1
