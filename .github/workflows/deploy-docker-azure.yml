@@ -1,0 +1,59 @@
+name: Deploy to azure container registry
+
+on:
+  push:
+    branches:
+      - master
+
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    # Steps to deploy
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+
+    - name: Build
+      # Run a multi-line script|
+      run: |
+        npm install --progress=false
+        npm run build
+
+    - name: 'Unit Test'
+      run: |
+        npm install --progress=false
+        npm run test:unit
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # checkout the repo
+    - name: 'Checkout Github Action'
+      uses: actions/checkout@v2
+      # login to azure
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      #login to azure container registry
+    - uses: azure/docker-login@v1
+      with:
+        login-server: contoso.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+      # build container and push to azure container registry
+    - run: |
+        docker build ./docker -t contoso.azurecr.io/scrmtl:${{ github.sha }}
+        docker push contoso.azurecr.io/scrmtl:${{ github.sha }}
+
+    - uses: azure/webapps-container-deploy@v1
+      with:
+        app-name: 'scrmtl-server'
+        images: 'contoso.azurecr.io/scrmtl:${{ github.sha }}'
+
+    - name: Azure logout
+      run: |
+        az logout
