@@ -1,4 +1,4 @@
-name: Deploy to azure container registry
+name: Unit-Test and Trigger CD in Azure
 on:
   push:
     branches:
