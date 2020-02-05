@@ -7,7 +7,7 @@ on:
 
 
 jobs:
-  build-and-test:
+  build-test-deploy:
     runs-on: ubuntu-latest
     # Steps to deploy
     steps:
@@ -27,12 +27,6 @@ jobs:
         npm install --progress=false
         npm run test:unit
 
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      # checkout the repo
-    - name: 'Checkout Github Action'
-      uses: actions/checkout@v2
       # login to azure
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
