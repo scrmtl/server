@@ -8,4 +8,4 @@ This is the main server applicationen based on Node.js, express.js
 
 ## Test it out
 
-Our [Live App](https://huskyre.github.io/scrmtl) *Under construction*
+Our [Live App](http://scrumtool.azurewebsites.net/) on Azure
