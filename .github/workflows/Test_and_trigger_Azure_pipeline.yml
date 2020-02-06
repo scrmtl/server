@@ -21,7 +21,8 @@ jobs:
       run: |
         npm install --progress=false
         npm run test:unit
-    - uses: Azure/pipelines@v1
+    - name: Azure Pipelines Action
+      uses: Azure/pipelines@v1
       with:
         azure-devops-project-url: 'https://dev.azure.com/ScrumToolDevs/scrmtl'
         azure-pipeline-name: 'ScrumTool - CI' # name of the Azure pipeline to be triggered
