@@ -1,0 +1,16 @@
+{% extends 'scrumtool/base.html' %}
+{% block content %}
+<p class="lead">
+Hier können Sie Ihren Product Backlog sehen:
+</p>
+<hr>
+{% if backlog %}
+  <ul>
+    {%for item in backlog %}
+    <li>{{ item.name }} ({{ item.description }})</li>
+    {% endfor %}
+  </ul>
+<hr>
+
+{% endif %}
+{% endblock %}
