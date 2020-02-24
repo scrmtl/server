@@ -4,15 +4,47 @@
 Hier können Sie Ihren Product Backlog sehen:
 </p>
 <hr>
-<button type="button" name="button">abc</button>
 <h1>TestRepoGithub</h1>
-{% if backlog %}
-  <ul>
-    {%for item in backlog %}
-    <li>{{ item.name }} ({{ item.description }})</li>
-    {% endfor %}
-  </ul>
+<button type="button" name="button" >abc</button>
 <hr>
 
+{% if backlog %}
+<div class="list-group">
+  {%for item in backlog %}
+  <a href="#" class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{ item.name }}</h5>
+    </div>
+    <p class="mb-1">{{ item.description }}</p>
+    {% endfor %}
+  </a>
+  <hr>
 {% endif %}
+
+{% if sb %}
+<div class="list-group">
+  {%for item in sb %}
+  <a href="#" class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{ item.name }}</h5>
+    </div>
+    <p class="mb-1">{{ item.description }}</p>
+    {% endfor %}
+  </a>
+  <hr>
+  {% endif %}
+
+{% if tasks %}
+<div class="list-group">
+  {%for item in tasks %}
+  <a href=" " class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{ item.name }}</h5>
+    </div>
+    <p class="mb-1">{{ item.description }}</p>
+    {% endfor %}
+  </a>
+  <hr>
+  {% endif %}
+
 {% endblock %}
