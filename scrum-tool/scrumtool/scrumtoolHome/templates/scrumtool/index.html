@@ -1,10 +1,10 @@
 {% extends 'scrumtool/base.html' %}
 {% block content %}
 <p class="lead">
-Hier können Sie Ihren Product Backlog sehen:
+Product Backlug
 </p>
 <hr>
-<h1>TestRepoGithub</h1>
+<h1>Willkommen</h1>
 <button type="button" name="button" >abc</button>
 <hr>
 
@@ -36,6 +36,39 @@ Hier können Sie Ihren Product Backlog sehen:
   </a>
   <hr>
   {% endif %}
+
+  {% if sb %}
+    <ul id="sortable">
+    {%for item in sb %}
+    <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+      <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{ item.name }}</h5>
+      <span class="badge badge-primary badge-pill label">{{ item.productBacklog.name }}</span>
+      <span class="badge badge-primary badge-pill label">{{ item.id }}</span>
+      </div>
+    <p class="mb-1">{{ item.description }}</p>
+    </li>
+    {% endfor %}
+      </a>
+  <hr>
+  {% endif %}
+
+  {% if sb %}
+    <ul id="sortable">
+    {%for item in sb %}
+    <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+      <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{ item.name }}</h5>
+      <span class="badge badge-primary badge-pill label">{{ item.productBacklog.name }}</span>
+      <span class="badge badge-primary badge-pill label">{{ item.id }}</span>
+      </div>
+    <p class="mb-1">{{ item.description }}</p>
+    </li>
+    {% endfor %}
+      </a>
+  <hr>
+  {% endif %}
+
 
 {% if tasks %}
 <div class="list-group">
