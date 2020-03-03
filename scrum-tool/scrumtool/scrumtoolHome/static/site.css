@@ -1,4 +1,86 @@
-.message {
-    font-weight: 600;
-    color: blue;
+#sortable {
+    list-style-type: none; 
+    margin: 0; 
+    padding: 0; 
+    width: 100%; 
+}
+#sortable li { 
+    margin: 0 3px 3px 3px; 
+    padding: 0.4em; 
+    padding-left: 1.5em; 
+    font-size: 1.4em; 
+    height: auto; 
+}
+
+.zoom {
+  transition: transform .2s; /* Animation */
+}
+
+.zoom:hover {
+  transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+.label{
+    float: right;
+  }
+.float_left{
+    float: left;
+  }
+.navbar {
+    background-color: #FF3D00;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: white;
+    padding: 16px 0px 16px 0px;
+    
+}
+.navbar-item-list {
+  font-variant: small-caps;
+  margin-left: 2em;
+}
+.navbar-item-user {
+  font-variant: small-caps;
+  margin-right: 2em;
+}
+
+.body-content {
+  padding: 5px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.login-content {
+  box-shadow: 15px 15px 25px silver;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10em;
+  left: 50%;
+  top: 50%;
+  width: 300px;
+  height: 400px;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border-color: #00BFA5;
+  border-width: 2px;
+  border-style: solid;
+  border-width: 2.5px;
+  border-radius: 10px;
+
+}
+.login-header{
+  background-color: #00BFA5;
+  color: white;
+  width: 100%;
+  text-align: center;
+  font-size: 32;
+  height: 64px;
+  padding-top: 16px;
+
+}
+.login-forms{
+  padding-left: 3em;
+  padding-right: 3em;
+  padding-top: 3em;
+}
+.login-button{
+  margin-top: 2em;
+  margin-left: 4.5em;
+
 }

@@ -1,45 +1,35 @@
-<!DOCTYPE html>
-<html lang="de">
-  <head>
-    <title>Scrum-Tool</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <style type="text/css">
-      div.weiterrunter{
-        margin-top: 20px;
-      }
+{% extends 'scrumtool/base.html' %}
+{% block content %}
+
+<div class="login-content">
+    <div class="login-header">
+      <h3>Login</h3>
+    </div>
+    <div class="login-forms">    
+    {% if user.is_authenticated %}
       
-    </style>
-  </head>
-  <body>
-  <div class="text-center">
-  
-  <img src="../static/snail.png" alt="Ladefehler">
+      <form action="home" method="post">
+      {% csrf_token %}
+        <label for="team_name">Enter name: </label>
+        <br>
+        <input id="team_name" type="text" name="name_field" value="username">
+        <br>
+        <hr>
+        <label for="team_password">Enter password: </label>
+        <br>
+        <input id="team_password" type="password" name="password_field" value="password">
+        <br>
+        <div class="login-button">
+        <input type="submit" value="Login">
+        </div>
+      </form>
+    </div>
+</div>
 
-
-  <p>    
-  {% if user.is_authenticated %}
-    
-    <form action="home" method="post">
-     {% csrf_token %}
-      <label for="team_name">Enter name: </label>
-      <input id="team_name" type="text" name="name_field" value="username">
-      <label for="team_password">Enter password: </label>
-      <input id="team_password" type="text" name="password_field" value="password">
-      <input type="submit" value="Login">
-    </form>
-  </p>
-  </div>  
-
-  {% else %}
+{% else %}
 
 foisch
 
 {% endif %}
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-  </body>
-</html>
+{% endblock %}
