@@ -14,6 +14,22 @@ def index(request):
 
 
 def login(request):
-    
+
     return render(request=request, template_name='scrumtool/login.html')
 
+
+def pb(request):
+    context = {'backlog': ProductBacklog.objects.all(),
+                }
+
+    return render(request=request, template_name='scrumtool/pb.html',
+                    context=context)
+
+def sb(request):
+    context = {'backlog': ProductBacklog.objects.all(),
+                'sb': SprintBacklog.objects.all(),
+                'tasks': TaskCard.objects.all(),
+                }
+
+    return render(request=request, template_name='scrumtool/sb.html',
+                    context=context)

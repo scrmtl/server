@@ -1,23 +1,50 @@
-#sortable {
-    list-style-type: none; 
-    margin: 0; 
-    padding: 0; 
-    width: 100%; 
+.sortable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
 }
-#sortable li { 
-    margin: 0 3px 3px 3px; 
-    padding: 0.4em; 
-    padding-left: 1.5em; 
-    font-size: 1.4em; 
-    height: auto; 
+.sortable li {
+    box-shadow: 5px 5px 5px silver;
+    border-color: lightgray;
+    border-width: 2px;
+    border-style: solid;
+    border-width: 2.5px;
+    border-radius: 5px;
+    margin: 0 3px 3px 3px;
+    padding: 0;
+    padding-left: 0;
+    font-size: 0.8em;
+    height: auto;
+    background-color: white;
 }
+#dashboard{
+    font-size: 24px;
+    font-weight: lighter;
+    padding: 0;
+    margin-top: 15px;
+}
+
+
+
+a:link {
+  color: white;
+  text-decoration: none;
+}
+a:visited {
+  color: white;
+}
+a:active {
+  text-decoration: underline;
+}
+
+
 
 .zoom {
   transition: transform .2s; /* Animation */
 }
-
 .zoom:hover {
-  transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+  transform: scale(1.1); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
 }
 .label{
     float: right;
@@ -29,8 +56,7 @@
     background-color: #FF3D00;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: white;
-    padding: 16px 0px 16px 0px;
-    
+    padding: 0px 0px 0px 0px;
 }
 .navbar-item-list {
   font-variant: small-caps;
@@ -41,8 +67,36 @@
   margin-right: 2em;
 }
 
+
+
+.navbar-index {
+    background-color: #00BFA5;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: white;
+    height: 54px;
+    padding-top: 19px;
+}
+.navbar-index-item {
+    float: left;
+    margin-left: 32px;
+    font-size: 16px;
+    font-weight: lighter;
+}
+.navbar-item-help {
+  float: right;
+  margin-right: 2em;
+  margin-top: -5px;
+}
+.navbar-item-gear {
+  float: right;
+  margin-right: 2em;
+  margin-top: -5px;
+}
+
+
+
 .body-content {
-  padding: 5px;
+  padding: 0px;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 .login-content {
@@ -62,7 +116,6 @@
   border-style: solid;
   border-width: 2.5px;
   border-radius: 10px;
-
 }
 .login-header{
   background-color: #00BFA5;
@@ -72,7 +125,6 @@
   font-size: 32;
   height: 64px;
   padding-top: 16px;
-
 }
 .login-forms{
   padding-left: 3em;
@@ -82,5 +134,185 @@
 .login-button{
   margin-top: 2em;
   margin-left: 4.5em;
+}
 
+
+
+.list-element{
+  float: left;
+  box-shadow: 15px 15px 25px silver;
+  margin: 2em;
+  width: 320px;
+  height: auto;
+  border-color: #00BFA5;
+  border-width: 2px;
+  border-style: solid;
+  border-width: 2.5px;
+  border-radius: 10px;
+}
+.list-element-header {
+  background-color: #00BFA5;
+  color: white;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  padding-top: 16px;
+  height: 64px;
+  border-width: 2.5px;
+}
+.list-element-header-icon{
+  float: right;
+  margin-top: -40px;
+  margin-right: 15px;
+}
+.list-element-header-text{
+
+}
+.list-element-content {
+  padding: 2em;
+  text-align: center;
+  color: darkgray;
+}
+
+
+
+.labels{
+  margin: 0.4px;
+  padding-left: 14px;
+  padding-right: 20px;
+  padding-top: 4px;
+  width: auto;
+}
+.label_other{
+  background-color: green;
+  color: white;
+  border-radius: 4px;
+}
+.label_backend{
+  background-color: red;
+  color: white;
+  border-radius: 4px;
+}
+.label_frontend{
+  background-color: blue;
+  color: white;
+  border-radius: 4px;
+}
+.storypoints{
+  background-color: orange;
+  margin-bottom: 2px;
+  margin-right: 2px;
+  border-radius: 4px;
+  width: auto;
+}
+.checklist {
+  background-color: lightgray;
+  border-radius: 4px;
+  margin-left: 4px;
+  margin-bottom: 2px;
+  width: auto;
+  padding: 2px;
+}
+.comment {
+  background-color: lightgray;
+  border-radius: 4px;
+  margin-left: 4px;
+  margin-bottom: 2px;
+  width: auto;
+  padding: 2px;
+}
+.attach {
+  background-color: lightgray;
+  border-radius: 4px;
+  margin-left: 4px;
+  margin-bottom: 2px;
+  width: auto;
+  padding: 2px;
+}
+
+
+
+.greeting{
+  box-shadow: 15px 15px 25px silver;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5em;
+  margin-bottom: 5em;
+  width: 640px;
+  height: 320px;
+  border-color: #00BFA5;
+  border-width: 2px;
+  border-style: solid;
+  border-width: 2.5px;
+  border-radius: 10px;
+}
+.greeting-header {
+  background-color: #00BFA5;
+  color: white;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  padding-top: 16px;
+  height: 64px;
+  border-width: 2.5px;
+}
+.greeting-content {
+  text-align: center;
+  color: darkgray;
+}
+.snail{
+  float: right;
+  margin-right: 1em;
+  margin-top: 8em;
+}
+.snail-comment{
+  float: right;
+  margin-right: 1em;
+  margin-top: 8em;
+}
+
+
+
+.popup {
+ position: relative;
+ display: inline-block;
+ cursor: pointer;
+}
+.popup .popuptext {
+ visibility: hidden;
+ width: auto;
+ background-color: #555;
+ color: #fff;
+ text-align: center;
+ border-radius: 6px;
+ padding: 8px 0;
+ position: absolute;
+ z-index: 1;
+ bottom: 125%;
+ left: -50%;
+ margin-left: 40%;
+}
+.popup .popuptext::after {
+ content: "";
+ position: absolute;
+ top: 100%;
+ left: 50%;
+ margin-left: -5px;
+ border-width: 5px;
+ border-style: solid;
+ border-color: #555 transparent transparent transparent;
+}
+.popup .show {
+ visibility: visible;
+ -webkit-animation: fadeIn 1s;
+ animation: fadeIn 1s
+}
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+ from {opacity: 1;}
+ to {opacity: 1;}
+}
+@keyframes fadeIn {
+ from {opacity: 1;}
+ to {opacity:1 ;}
 }

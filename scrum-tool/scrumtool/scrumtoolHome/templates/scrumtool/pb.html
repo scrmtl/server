@@ -1,0 +1,30 @@
+{% extends 'scrumtool/base.html' %}
+{% block content %}
+
+<div class="navbar-index">
+    <div class="navbar-index-item zoom">
+      <a href="home"><img src="../static/return.png" alt="Error">  Back</a>
+    </div>
+    <div class="navbar-item-help zoom">
+       <a href="https://help.com"><img src="../static/question.png" alt="Error"></a>
+    </div>
+    <div class="navbar-item-gear zoom">
+       <a href="https://gear.com"><img src="../static/gear.png" alt="Error"></a>
+    </div>
+</div>
+
+{% if backlog %}
+  {%for item in backlog %}
+  <div class="list-element">
+  <div class="list-element-header">
+      <p>{{ item.name }}</p>
+  </div>
+  <div class="list-element-content">
+      <p>{{ item.description }}</p>
+  </div>
+</div>
+  {% endfor %}
+{% endif %}
+
+
+{% endblock %}

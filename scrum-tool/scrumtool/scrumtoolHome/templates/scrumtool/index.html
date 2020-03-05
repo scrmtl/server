@@ -1,12 +1,43 @@
 {% extends 'scrumtool/base.html' %}
 {% block content %}
-<p class="lead">
-Product Backlug
-</p>
-<hr>
-<h1>Willkommen</h1>
-<button type="button" name="button" >abc</button>
-<hr>
+
+<div class="navbar-index">
+  <div>
+     <div class="navbar-index-item zoom">
+       <a href="pb">Product Backlog</a>
+     </div>
+     <div class="navbar-index-item zoom">
+       <a href="sb">Sprint Backlog</a>
+     </div>
+     <div class="navbar-index-item zoom">
+       <a href="#">Statistic</a>
+     </div>
+   </div>
+     <div class="navbar-item-help zoom">
+       <a href="https://help.com"><img src="../static/question.png" alt="Error"></a>
+     </div>
+     <div class="navbar-item-gear zoom">
+       <a href="https://gear.com"><img src="../static/gear.png" alt="Error"></a>
+  </div>
+</div>
+
+
+<div class="greeting">
+  <div class="greeting-header">
+      <p>Welcome to your Scrum-Tool</p>
+  </div>
+  <div class="greeting-content">
+      <p>some informations</p>
+      <div class="snail">
+        <img src="../static/snail.png" alt="Error">
+      </div>
+      <div class="snail-comment">
+        <p>I will help you soon</p>
+      </div>
+  </div>
+</div>
+
+<!--
 
 {% if backlog %}
 <div class="list-group">
@@ -84,5 +115,7 @@ Product Backlug
   </a>
   <hr>
   {% endif %}
+
+-->
 
 {% endblock %}
