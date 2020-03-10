@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, login, pb, sb
+from .views import index, login, pb, sb, checklist, addChecklistItem, completeChecklistItem, deleteChecklistItem
 
 
 urlpatterns = [
@@ -8,5 +8,8 @@ urlpatterns = [
     path('home', index, name='index.html'),
     path('pb', pb, name='pb.html'),
     path('sb', sb, name='sb.html'),
-    path('checklist', checklist, name="checklist.html")
+    path('checklist', checklist, name='checklist.html'),
+    path('addChecklistItem', addChecklistItem, name='addChecklistItem'),
+    path('completeChecklistItem/<itemId>', completeChecklistItem, name='completeChecklistItem'),
+    path('deleteChecklistItem/<itemId>', deleteChecklistItem, name='deleteChecklistItem')
 ]

@@ -50,4 +50,4 @@ class ChecklistItem (models.Model):
     checked = models.BooleanField()
 
     def __str__(self):
-        return "{0}: {1} ".format(self.name, self.checked)
+        return "{0}({1}): {2} ".format(self.name, self.checklist, self.checked)
