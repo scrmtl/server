@@ -1,3 +1,7 @@
+""" admin definitions for the app -
+such definitions are needed to access model class instances
+from the Django admin site.
+"""
 from django.contrib import admin
 from .models import ProductBacklog, SprintBacklog, TaskCard, Checklist, ChecklistItem
 

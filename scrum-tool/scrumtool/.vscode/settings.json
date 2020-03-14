@@ -1,4 +1,5 @@
 {
+    /*
     "python.pythonPath": "/home/hermi/.virtualenvs/djangoVenv/bin/python",
     "editor.formatOnSave": true,
     "python.linting.pycodestyleEnabled": false,
@@ -10,4 +11,5 @@
     ],
     "python.linting.pylintEnabled": false,
     "python.linting.enabled": false,
+    */
 }

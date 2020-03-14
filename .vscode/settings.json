@@ -1,3 +1,7 @@
 {
-    "python.pythonPath": "/home/hermi/.virtualenvs/djangoVenv/bin/python"
+    "cSpell.words": [
+        "Scrmtl",
+        "describedby"
+    ]
+    //"python.pythonPath": "/home/hermi/.virtualenvs/djangoVenv/bin/python"
 }
