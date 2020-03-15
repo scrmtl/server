@@ -1,0 +1,53 @@
+{% extends 'scrumtool/base.html' %}
+{% block content %}
+<div class="container-fluid" id="wrapper">
+
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-4" id="content">
+            <h2>Test Liste</h2>
+
+            <form action="{% url 'addChecklistItem' %}" method="POST" role="form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="input-group">
+                        {{checklistForm.text}}
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default" id="add-btn">ADD</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+            <ul class="list-group t20">
+                {% for item in checklistItems %}
+                {% if item.checked %}
+                <li class="list-group-item todo-completed" id="{{item.id}}">
+                    <a href="{% url 'completeChecklistItem' item.id %}">
+                        <span>{{item.name}}</span>
+                    </a>
+                    <a href="{% url 'deleteChecklistItem' item.id %}"><span class="close">×</span></a>
+                </li>
+                {% else %}
+                <li class="list-group-item" id="{{item.id}}">
+                    <a href="{% url 'completeChecklistItem' item.id %}">
+                        {{item.name}}
+                    </a>
+                    <a href="{% url 'deleteChecklistItem' item.id %}"><span class="close">×</span></a>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    // Add a "checked" symbol when clicking on a list item
+    var list = document.querySelector('ul');
+    list.addEventListener('click', function (ev) {
+        if (ev.target.tagName === 'LI') {
+            ev.target.classList.toggle('checked');
+        }
+    }, false);
+
+</script>
+
+{% endblock %}
