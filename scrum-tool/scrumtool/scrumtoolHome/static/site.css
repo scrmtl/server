@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     width: 100%;
+    min-height: 100px;
 }
 .sortable li {
     box-shadow: 5px 5px 5px silver;
@@ -141,7 +142,9 @@ a:active {
 .list-element{
   float: left;
   box-shadow: 15px 15px 25px silver;
-  margin: 2em;
+  margin-top: 1em;
+  margin-right: 0.5em;
+  margin-left: 0.5em;
   width: 320px;
   height: auto;
   border-color: #00BFA5;
@@ -169,7 +172,7 @@ a:active {
 
 }
 .list-element-content {
-  padding: 2em;
+  padding: 0.5em;
   text-align: center;
   color: darkgray;
 }
