@@ -1,11 +1,19 @@
+"""Entry point for Django urls is the scrumtoolHome app
+"""
 from django.urls import path
-from .views import index, login, pb, sb
+from . import views
 
 
 urlpatterns = [
-        #wenn Anfrage reinkommt, dann übergebe das der Funktion index aus der views.py
-        path ('', login, name='login.html'),
-        path ('home', index, name='index.html'),
-        path ('pb', pb, name='pb.html'),
-        path ('sb', sb, name='sb.html'),
+    # When a request comes in, then pass it to the index function from views.py
+    path('', views.login, name='login.html'),
+    path('home', views.index, name='index.html'),
+    path('pb', views.pb, name='pb.html'),
+    path('sb', views.sb, name='sb.html'),
+    path('checklist', views.checklist, name='checklist.html'),
+    path('addChecklistItem', views.addChecklistItem, name='addChecklistItem'),
+    path('completeChecklistItem/<itemId>',
+         views.completeChecklistItem, name='completeChecklistItem'),
+    path('deleteChecklistItem/<itemId>',
+         views.deleteChecklistItem, name='deleteChecklistItem')
 ]

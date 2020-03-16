@@ -319,3 +319,31 @@ a:active {
  from {opacity: 1;}
  to {opacity:1 ;}
 }
+/* Checklist style */
+#wrapper {
+	margin-top: 10% !important;
+}
+#content {
+	background: lightgray;
+	padding: 25px;
+}
+#content > h2 {
+	font-size: 18px;
+	text-align: center;
+	padding-top: 0;
+}
+.t10 {
+	margin-top: 10px;
+}
+.t20 {
+	margin-top: 20px;
+}
+.todo-completed {
+	text-decoration: line-through;
+	background: rgba(149, 165, 166, .3);
+}
+.close .list-group-item {
+  color: black;
+}
+
+/* Checklist style ende */
