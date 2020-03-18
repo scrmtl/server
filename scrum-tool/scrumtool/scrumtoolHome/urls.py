@@ -12,8 +12,14 @@ urlpatterns = [
     path('sb', views.sb, name='sb.html'),
     path('checklist', views.checklist, name='checklist.html'),
     path('addChecklistItem', views.addChecklistItem, name='addChecklistItem'),
-    path('completeChecklistItem/<itemId>',
-         views.completeChecklistItem, name='completeChecklistItem'),
     path('deleteChecklistItem/<itemId>',
-         views.deleteChecklistItem, name='deleteChecklistItem')
+         views.deleteChecklistItem, name='deleteChecklistItem'),
+    path('delete_checklist_item', views.delete_checklist_item,
+         name='delete_checklist_item'),
+    path('add_checklist_item', views.add_checklist_item,
+         name='add_checklist_item'),
+    path('complete_checklist_item', views.complete_checklist_item,
+         name='complete_checklist_item'),
+    path('change_checklist_item', views.change_checklist_item,
+         name='change_checklist_item')
 ]

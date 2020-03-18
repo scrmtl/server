@@ -5,8 +5,24 @@
     <div class="row">
         <div class="col-lg-4 col-lg-offset-4" id="content">
             <h2>Test Liste</h2>
-
-            <form action="{% url 'addChecklistItem' %}" method="POST" role="form">
+            <ul id="checklist" class="list-group t20">
+                {% for item in checklistItems %}
+                {% if item.checked %}
+                <li class="list-group-item todo-completed" id="{{item.id}}">
+                    <input type="checkbox" class="form-check-input active" checked="checked">
+                    <input type="text" value="{{item.name}}">
+                    <span class="close">×</span>
+                </li>
+                {% else %}
+                <li class="list-group-item" id="{{item.id}}">
+                    <input type="checkbox" class="form-check-input">
+                    <input type="text" value="{{item.name}}">
+                    <span class="close">×</span>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            <form method="POST" id="checklistItemForm" action="{% url 'add_checklist_item' %}">
                 {% csrf_token %}
                 <div class="form-group">
                     <div class="input-group">
@@ -17,37 +33,109 @@
                     </div>
                 </div>
             </form>
-            <ul class="list-group t20">
-                {% for item in checklistItems %}
-                {% if item.checked %}
-                <li class="list-group-item todo-completed" id="{{item.id}}">
-                    <a href="{% url 'completeChecklistItem' item.id %}">
-                        <span>{{item.name}}</span>
-                    </a>
-                    <a href="{% url 'deleteChecklistItem' item.id %}"><span class="close">×</span></a>
-                </li>
-                {% else %}
-                <li class="list-group-item" id="{{item.id}}">
-                    <a href="{% url 'completeChecklistItem' item.id %}">
-                        {{item.name}}
-                    </a>
-                    <a href="{% url 'deleteChecklistItem' item.id %}"><span class="close">×</span></a>
-                </li>
-                {% endif %}
-                {% endfor %}
-            </ul>
         </div>
     </div>
 </div>
 <script>
-    // Add a "checked" symbol when clicking on a list item
-    var list = document.querySelector('ul');
-    list.addEventListener('click', function (ev) {
-        if (ev.target.tagName === 'LI') {
-            ev.target.classList.toggle('checked');
+    function getCookie(c_name) {
+        if (document.cookie.length > 0) {
+            c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1) {
+                c_start = c_start + c_name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) c_end = document.cookie.length;
+                return unescape(document.cookie.substring(c_start, c_end));
+            }
         }
-    }, false);
+        return "";
+    }
 
+    $(document).ready(function () {
+        $("#checklistItemForm").submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                data: $(this).serialize(),
+                type: $(this).attr('method'),
+                url: $(this).attr('action'),
+                success: function (response) {
+                    console.log(response);
+                    var jsonResponse = jQuery.parseJSON(response.content)
+                    var checkedClass = ""
+                    if (jsonResponse.checked) {
+                        var checkedClass = "todo-completed"
+                    }
+                    $("#checklist").append('<li class="list-group-item ' +
+                        checkedClass +
+                        '" id="' +
+                        jsonResponse["id"] +
+                        '"><a href="' +
+                        "/completeChecklistItem/" + jsonResponse['id'] +
+                        '"><span>' +
+                        jsonResponse['name'] +
+                        '</span></a><a href="' +
+                        "/deleteChecklistItem/" + jsonResponse['id'] +
+                        '"><span class="close">×</span></a></li>')
+                },
+                error: function (request, status, error) {
+                    console.log(request.responseText);
+                }
+            });
+        });
+        $(function () {
+            $.ajaxSetup({
+                headers: { "X-CSRFToken": getCookie("csrftoken") }
+            });
+        });
+        $("#checklist").click(function (event) {
+            var target = $(event.target);
+            var checklistData = new Object();
+            if (target.is(":checkbox")) {
+                checklistData.itemId = target.parent().attr("id");
+                var checklistDataStr = JSON.stringify(checklistData);
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'complete_checklist_item' %}",
+                    data: checklistData,
+                    success: function (response) {
+                        target.parent().toggleClass("todo-completed");
+                    },
+                });
+            } else if (target.hasClass("close")) {
+                checklistData.itemId = target.parent().attr("id");
+                var checklistDataStr = JSON.stringify(checklistData);
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'delete_checklist_item' %}",
+                    data: checklistData,
+                    success: function (response) {
+                        var jsonResponse = jQuery.parseJSON(response.content);
+                        $("#" + jsonResponse['id']).remove();
+                    },
+                });
+            }
+        });
+        //Bind keypress event to textbox
+        $("#checklist").children("li").children("input").keypress(function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                var target = $(event.target);
+                var checklistData = new Object();
+                checklistData.itemId = target.parent().attr("id")
+                checklistData.name = target.prop("value")
+                $.post("{% url 'change_checklist_item' %}",  // url
+                    checklistData, // data to be submit
+                    function (response) {   // success callback function
+
+                    }); // response data format
+            }
+            //Stop the event from propagation to other handlers
+            //If this line will be removed, then keypress event handler attached 
+            //at document level will also be triggered
+            event.stopPropagation();
+        });
+
+
+    })
 </script>
 
 {% endblock %}
