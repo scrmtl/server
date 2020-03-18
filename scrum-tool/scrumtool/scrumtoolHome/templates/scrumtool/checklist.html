@@ -5,8 +5,24 @@
     <div class="row">
         <div class="col-lg-4 col-lg-offset-4" id="content">
             <h2>Test Liste</h2>
-
-            <form action="{% url 'addChecklistItem' %}" method="POST" role="form">
+            <ul id="checklist" class="list-group t20 sortable">
+                {% for item in checklistItems %}
+                {% if item.checked %}
+                <li class="list-group-item todo-completed" id="{{item.id}}">
+                    <input type="checkbox" class="form-check-input active" checked="checked">
+                    <input type="text" value="{{item.text}}">
+                    <span class="close">×</span>
+                </li>
+                {% else %}
+                <li class="list-group-item" id="{{item.id}}">
+                    <input type="checkbox" class="form-check-input">
+                    <input type="text" value="{{item.text}}">
+                    <span class="close">×</span>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            <form method="POST" id="checklistItemForm" action="{% url 'add_checklist_item' %}">
                 {% csrf_token %}
                 <div class="form-group">
                     <div class="input-group">
@@ -17,37 +33,158 @@
                     </div>
                 </div>
             </form>
-            <ul class="list-group t20">
-                {% for item in checklistItems %}
-                {% if item.checked %}
-                <li class="list-group-item todo-completed" id="{{item.id}}">
-                    <a href="{% url 'completeChecklistItem' item.id %}">
-                        <span>{{item.name}}</span>
-                    </a>
-                    <a href="{% url 'deleteChecklistItem' item.id %}"><span class="close">×</span></a>
-                </li>
-                {% else %}
-                <li class="list-group-item" id="{{item.id}}">
-                    <a href="{% url 'completeChecklistItem' item.id %}">
-                        {{item.name}}
-                    </a>
-                    <a href="{% url 'deleteChecklistItem' item.id %}"><span class="close">×</span></a>
-                </li>
-                {% endif %}
-                {% endfor %}
-            </ul>
         </div>
     </div>
 </div>
 <script>
-    // Add a "checked" symbol when clicking on a list item
-    var list = document.querySelector('ul');
-    list.addEventListener('click', function (ev) {
-        if (ev.target.tagName === 'LI') {
-            ev.target.classList.toggle('checked');
+    //This function gets the required cookies for the csrf middleware
+    //more information --> see next function 
+    function getCookie(c_name) {
+        if (document.cookie.length > 0) {
+            c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1) {
+                c_start = c_start + c_name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) c_end = document.cookie.length;
+                return unescape(document.cookie.substring(c_start, c_end));
+            }
         }
-    }, false);
+        return "";
+    }
+    //This function will add a header, that is needed to pass the csrf Middleware:
+    //This is described here: 
+    //https://stackoverflow.com/questions/5100539/django-csrf-check-failing-with-an-ajax-post-request
+    $(function () {
+        $.ajaxSetup({
+            headers: { "X-CSRFToken": getCookie("csrftoken") }
+        });
+    });
+    function addDeleteCheckedEvents() {
+        //This function deletes and checks elements
+        $("#checklist").click(function (event) {
+            var target = $(event.target);
+            var checklistData = new Object();
+            if (target.is(":checkbox")) {
+                checklistData.itemId = target.parent().prop("id");
+                var checklistDataStr = JSON.stringify(checklistData);
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'complete_checklist_item' %}",
+                    data: checklistData,
+                    success: function (response) {
+                        target.parent().toggleClass("todo-completed");
+                    },
+                });
+            } else if (target.hasClass("close")) {
+                checklistData.itemId = target.parent().prop("id");
+                var checklistDataStr = JSON.stringify(checklistData);
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'delete_checklist_item' %}",
+                    data: checklistData,
+                    success: function (response) {
+                        var jsonResponse = jQuery.parseJSON(response.content);
+                        $("#" + jsonResponse['id']).remove();
+                    },
+                });
+            }
+        });
+    }
+    //This function changes the value of a task
+    //Edit: I testes the $.post function. It is way more convenient than $.ajax
+    //Also the prop() function should be used instead of the deprecated attr()
+    function addChangedTextEvent() {
+        $("#checklist").children("li").children("input").keypress(function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                var target = $(event.target);
+                var checklistData = new Object();
+                checklistData.itemId = target.parent().prop("id")
+                checklistData.text = target.prop("value")
+                $.post("{% url 'change_checklist_item' %}",  // url
+                    checklistData, // data to be submit
+                    function (response) {   // success callback function
 
+                    }); // response data format
+            }
+            //Stop the event from propagation to other handlers
+            //If this line will be removed, then keypress event handler attached 
+            //at document level will also be triggered
+            event.stopPropagation();
+        });
+    }
+    $(document).ready(function () {
+        addChangedTextEvent();
+        addDeleteCheckedEvents();
+        $("#checklistItemForm").submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                data: $(this).serialize(), //directly serialize form - CSRF will handle this
+                type: $(this).prop('method'),
+                url: $(this).prop('action'),
+                success: function (response) {
+                    console.log(response);
+                    //Get the response and create new list elements with it
+                    var jsonResponse = jQuery.parseJSON(response.content)
+                    var checkedClass = "";
+                    var checkedCheckbox = "";
+                    if (jsonResponse.checked) {
+                        checkedClass = "todo-completed"
+                        checkedCheckbox = "checked=\"checked\""
+                    }
+                    //HTML code for list element
+                    $("#checklist").append(
+                        '<li class="list-group-item ' +
+                        checkedClass +
+                        '" id="' +
+                        jsonResponse["id"] +
+                        '"><input type="checkbox" class="form-check-input active"' +
+                        checkedCheckbox +
+                        '><input type="text" value="' +
+                        jsonResponse['text'] +
+                        '"><span class="close">×</span></li>'
+                    );
+                    addChangedTextEvent();
+                    addDeleteCheckedEvents();
+                },
+                error: function (request, status, error) {
+                    console.log(request.responseText);
+                }
+            });
+        });
+    });
+    $(function () {
+        $('#checklist').sortable({
+            start: function (event, ui) {
+                var start_pos = ui.item.index();
+                ui.item.data('start_pos', start_pos);
+            },
+            change: function (event, ui) {
+                var start_pos = ui.item.data('start_pos');
+                var index = ui.placeholder.index();
+                if (start_pos < index) {
+                    $('#sortable li:nth-child(' + index + ')').addClass('highlights');
+                } else {
+                    $('#sortable li:eq(' + (index + 1) + ')').addClass('highlights');
+                }
+            },
+            update: function (event, ui) {
+                $('#sortable li').removeClass('highlights');
+            },
+            beforeStop: function (event, ui) {
+                var target = $(event.target);
+                var checklistData = new Object();
+                checklistData.itemId = ui.item.prop("id")
+                checklistData.text = ui.item.children(":text").prop("value")
+                var index = ui.placeholder.index();
+                checklistData.numbering = index;
+                $.post("{% url 'change_checklist_item' %}",  // url
+                    checklistData, // data to be submit
+                    function (response) {   // success callback function
+                    }); // response data format
+            }
+        });
+    });
 </script>
 
 {% endblock %}

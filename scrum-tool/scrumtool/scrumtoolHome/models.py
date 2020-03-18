@@ -22,7 +22,7 @@ class SprintBacklog(models.Model):
         to='ProductBacklog', on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
     description = models.TextField(null=True, blank=True)
-    #slug = models.SlugField(unique=True)
+    # slug = models.SlugField(unique=True)
 
     def __str__(self):
         return "{0} ({1})".format(self.name, self.description)
@@ -65,8 +65,11 @@ class ChecklistItem(models.Model):
     """ A ChecklistItem describes a Task that has to be done
     """
     checklist = models.ForeignKey(to='Checklist', on_delete=models.CASCADE)
-    name = models.CharField(max_length=256)
+    text = models.CharField(max_length=256)
     checked = models.BooleanField()
+    numbering = models.IntegerField(default=0, unique=False)
 
     def __str__(self):
-        return "{0}({1}): {2} ".format(self.name, self.checklist, self.checked)
+        return "{4}{0}({1}): {2} ".format(self.text, self.checklist,
+                                          self.checked,
+                                          self.numbering)
