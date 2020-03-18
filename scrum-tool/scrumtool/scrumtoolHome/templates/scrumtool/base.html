@@ -1,5 +1,14 @@
 <!DOCTYPE html>
 <html lang="de">
+  <head>
+    <title>Scrum-Tool</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="../static/site.css">
+    <link rel="stylesheet" href="../static/w3.css">
+    <link rel="shortcut icon" type="image/png" href="../static/snail.ico"/>
 
 <head>
   <title>Scrum-Tool</title>
@@ -47,22 +56,26 @@
 
   <script>
     $(".sortable").sortable({
-      connectWith: 'div'
-    });
-    //  $( function(id) {
-    //$( "#sortable" + id).sortable({
-    //  connectWith: ".connectedSortable"
-    //}).disableSelection();
-    //} );
-    $(function () {
-      $("#sortable").sortable();
-      $("#sortable").disableSelection();
-    });
+        connectWith: 'div'
+      });
+      $( function() {
+    $( ".sortable").sortable({
+      connectWith: ".connectedSortable"
+    }).disableSelection();
+    } );
+      $( function() {
+      $( "#sortable").sortable();
+      $( "#sortable").disableSelection();
+   } );
     function myFunction(id) {
       var popup = document.getElementById("myPopup" + id);
       popup.classList.toggle("show");
     }
-  </script>
-</body>
+    $( ".selector" ).sortable({
+      update: function( event, ui ) {}
+      });
+      $( ".selector" ).on( "sortupdate", function( event, ui ) {} );
+    </script>
+  </body>
 
 </html>

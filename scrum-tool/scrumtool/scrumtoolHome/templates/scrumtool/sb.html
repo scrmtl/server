@@ -25,8 +25,8 @@
           <span class="popuptext" id="myPopup{{item.name}}">{{ item.description }}</span>
       </div>
   </div>
-  <div class="list-element-content">
-    <ul class="sortable">
+  <div class="list-element-content selector">
+    <ul class="sortable connectedSortable ">
         {% if tasks %}
           {%for taskItem in tasks %}
             {% if taskItem.sprintBacklog.name == item.name %}
