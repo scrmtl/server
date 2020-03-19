@@ -25,6 +25,7 @@ jobs:
     - name: Azure Pipelines Action
       uses: Azure/pipelines@v1
       with:
+        #TODO create also new pipe on Azure
         azure-devops-project-url: 'https://dev.azure.com/ScrumToolDevs/scrmtl'
         azure-pipeline-name: 'ScrumTool - CI' # name of the Azure pipeline to be triggered
         azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
