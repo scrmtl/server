@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    # TODO set volume for retentive
+ data
+  web:
+    build: .
+
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
