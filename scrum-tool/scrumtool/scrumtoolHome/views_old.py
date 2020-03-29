@@ -6,7 +6,8 @@ from django_ajax.decorators import ajax
 
 from . import models
 from .forms import ChecklistForm
-
+from .serializers import step_serializer, steplist_serializer
+from rest_framework.renderers import JSONRenderer
 import json
 
 
@@ -231,6 +232,18 @@ def change_checklist_item(request):
     item_text = request.POST.get('text')
     item_numbering = request.POST.get('numbering')
     checklist_item = models.ChecklistItem.objects.get(pk=item_id)
+    checklist_list = models.Checklist.objects.get(
+        checklistitem=checklist_item)
+
+    _step_serializer = step_serializer.StepSerializer(
+        checklist_item)
+    json_dat = JSONRenderer().render(_step_serializer.data)
+    print(json_dat)
+    _list_serializer = steplist_serializer.StepListSerializer(
+        checklist_list)
+    json_dat = JSONRenderer().render(_list_serializer.data)
+    print(json_dat)
+
     if not (item_numbering is None):
         new_item_number = int(item_numbering) - 1
         selected_checklist = checklist_item.checklist
