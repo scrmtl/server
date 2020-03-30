@@ -6,7 +6,7 @@ from django_ajax.decorators import ajax
 
 from . import models
 from .forms import ChecklistForm
-from .serializers import step_serializer, steplist_serializer
+from api.serializers import step_serializer, steplist_serializer
 from rest_framework.renderers import JSONRenderer
 import json
 
@@ -91,8 +91,8 @@ def sb(request):
                   context=context)
 
 
-def checklist(request):
-    """Shows a checklist with items
+def Steplist(request):
+    """Shows a Steplist with items
 
     Parameters
     ----------
@@ -106,13 +106,13 @@ def checklist(request):
     """
     checklist_form = ChecklistForm()
     # TODO:
-    selected_checklist = models.Checklist.objects.get(name='Checklist 1')
-    selected_checklist_items = models.ChecklistItem.objects.filter(
-        checklist=selected_checklist).order_by('numbering')
+    selected_checklist = models.Steplist.objects.get(name='Checklist 1')
+    selected_checklist_items = models.SteplistItem.objects.filter(
+        Steplist=selected_checklist).order_by('numbering')
     context = {'checklistItems': selected_checklist_items,
                'checklistForm': checklist_form
                }
-    return render(request=request, template_name='scrumtool/checklist.html',
+    return render(request=request, template_name='scrumtool/Steplist.html',
                   context=context)
 
 
@@ -126,7 +126,7 @@ The content is specified separately for each function.
 """
 @ajax
 def delete_checklist_item(request):
-    """delete a checklist item
+    """delete a Steplist item
 
     Parameters
     ----------
@@ -140,7 +140,7 @@ def delete_checklist_item(request):
         {"id": integer}
     """
     item_id = request.POST.get('itemId')
-    checklist_item = models.ChecklistItem.objects.get(pk=item_id)
+    checklist_item = models.SteplistItem.objects.get(pk=item_id)
     checklist_item_json = json.dumps({"id": checklist_item.id})
     checklist_item.delete()
     print(checklist_item_json)
@@ -163,7 +163,7 @@ def complete_checklist_item(request):
         {"id": integer, "checked": boolean}
     """
     item_id = request.POST.get('itemId')
-    checklist_item = models.ChecklistItem.objects.get(pk=item_id)
+    checklist_item = models.SteplistItem.objects.get(pk=item_id)
     checklist_item.checked = not checklist_item.checked
     checklist_item.save()
     checklist_item_json = json.dumps({"id": checklist_item.id,
@@ -193,16 +193,16 @@ def add_checklist_item(request):
     checklist_form = ChecklistForm(request.POST)
     selected_checklist = ""
     if (request.POST.get('checklistName') is None):
-        selected_checklist = models.Checklist.objects.get(name='Checklist 1')
+        selected_checklist = models.Steplist.objects.get(name='Steplist 1')
     # get the highest value in numbering
-    selected_checklist_items = models.ChecklistItem.objects.filter(
-        checklist=selected_checklist).order_by('-numbering'
-                                               )[:1]
+    selected_checklist_items = models.SteplistItem.objects.filter(
+        Steplist=selected_checklist).order_by('-numbering'
+                                              )[:1]
     highest_number = selected_checklist_items[0].numbering
 
     if checklist_form.is_valid():
-        checklist_item = models.ChecklistItem(text=request.POST['text'])
-        checklist_item.checklist = selected_checklist
+        checklist_item = models.SteplistItem(text=request.POST['text'])
+        checklist_item.Steplist = selected_checklist
         checklist_item.checked = False
         checklist_item.numbering = highest_number + 1
         checklist_item.save()
@@ -231,9 +231,9 @@ def change_checklist_item(request):
     item_id = request.POST.get('itemId')
     item_text = request.POST.get('text')
     item_numbering = request.POST.get('numbering')
-    checklist_item = models.ChecklistItem.objects.get(pk=item_id)
-    checklist_list = models.Checklist.objects.get(
-        checklistitem=checklist_item)
+    checklist_item = models.SteplistItem.objects.get(pk=item_id)
+    checklist_list = models.Steplist.objects.get(
+        SteplistItem=checklist_item)
 
     _step_serializer = step_serializer.StepSerializer(
         checklist_item)
@@ -246,12 +246,12 @@ def change_checklist_item(request):
 
     if not (item_numbering is None):
         new_item_number = int(item_numbering) - 1
-        selected_checklist = checklist_item.checklist
+        selected_checklist = checklist_item.Steplist
         print(selected_checklist.name)
-        print(checklist_item.checklist.name)
-        selected_checklist_items = models.ChecklistItem.objects.filter(
-            checklist=selected_checklist).order_by('numbering'
-                                                   ).exclude(pk=item_id)
+        print(checklist_item.Steplist.name)
+        selected_checklist_items = models.SteplistItem.objects.filter(
+            Steplist=selected_checklist).order_by('numbering'
+                                                  ).exclude(pk=item_id)
         for i, item in enumerate(selected_checklist_items):
             if ((item.numbering >= checklist_item.numbering) and
                     (item.numbering <= new_item_number)):

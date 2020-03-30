@@ -10,7 +10,7 @@ urlpatterns = [
     path('home', views_old.index, name='index.html'),
     path('pb', views_old.pb, name='pb.html'),
     path('sb', views_old.sb, name='sb.html'),
-    path('checklist', views_old.checklist, name='checklist.html'),
+    path('Steplist', views_old.Steplist, name='Steplist.html'),
     path('delete_checklist_item', views_old.delete_checklist_item,
          name='delete_checklist_item'),
     path('add_checklist_item', views_old.add_checklist_item,

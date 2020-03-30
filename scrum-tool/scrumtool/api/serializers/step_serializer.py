@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from scrumtoolHome.models import ChecklistItem
+from scrumtoolHome.models import SteplistItem
 
 
 class StepSerializer(serializers.ModelSerializer):
@@ -7,5 +7,5 @@ class StepSerializer(serializers.ModelSerializer):
 
     """
     class Meta:
-        model = ChecklistItem
+        model = SteplistItem
         fields = ('id', 'text', 'checked', 'numbering')

@@ -2,79 +2,79 @@
 {% block content %}
 
 <div class="navbar-index">
-    <div class="navbar-index-item zoom">
-      <a href="home"><img src="../static/return.png" alt="Error">  Back</a>
-    </div>
-    <div class="navbar-item-help zoom">
-       <a href="https://help.com"><img src="../static/question.png" alt="Error"></a>
-    </div>
-    <div class="navbar-item-gear zoom">
-       <a href="https://gear.com"><img src="../static/gear.png" alt="Error"></a>
-    </div>
+  <div class="navbar-index-item zoom">
+    <a href="home"><img src="../static/return.png" alt="Error"> Back</a>
+  </div>
+  <div class="navbar-item-help zoom">
+    <a href="https://help.com"><img src="../static/question.png" alt="Error"></a>
+  </div>
+  <div class="navbar-item-gear zoom">
+    <a href="https://gear.com"><img src="../static/gear.png" alt="Error"></a>
+  </div>
 </div>
 
 {% if sb %}
-  {%for item in sb %}
-  <div class="list-element">
+{%for item in sb %}
+<div class="list-element">
   <div class="list-element-header">
-      <div class="list-element-header-text">
-        <p>{{ item.name }}</p>
-      </div>
-      <div class="list-element-header-icon popup" onclick="myFunction('{{item.name}}')">
-          <img src="../static/info.png" alt="Error">
-          <span class="popuptext" id="myPopup{{item.name}}">{{ item.description }}</span>
-      </div>
+    <div class="list-element-header-text">
+      <p>{{ item.name }}</p>
+    </div>
+    <div class="list-element-header-icon popup" onclick="myFunction('{{item.name}}')">
+      <img src="../static/info.png" alt="Error">
+      <span class="popuptext" id="myPopup{{item.name}}">{{ item.description }}</span>
+    </div>
   </div>
   <div class="list-element-content selector">
     <ul class="sortable connectedSortable ">
-        {% if tasks %}
-          {%for taskItem in tasks %}
-            {% if taskItem.sprintBacklog.name == item.name %}
-    <li class="ui-state-default">
-      <div class="w-100 justify-content-between">
-        <div class="labels w-100 d-flex justify-content-between">
-          {% if taskItem.label_frontend == True %}
-              <div class="label_frontend">
-                frontend
-              </div>
-          {% endif %}
-          {% if taskItem.label_backend == True %}
-              <div class="label_backend">
-                backend
-              </div>
-          {% endif %}
-          {% if taskItem.label_other == True %}
+      {% if tasks %}
+      {%for taskItem in tasks %}
+      {% if taskItem.sprintBacklog.name == item.name %}
+      <li class="ui-state-default">
+        <div class="w-100 justify-content-between">
+          <div class="labels w-100 d-flex justify-content-between">
+            {% if taskItem.label_frontend == True %}
+            <div class="label_frontend">
+              frontend
+            </div>
+            {% endif %}
+            {% if taskItem.label_backend == True %}
+            <div class="label_backend">
+              backend
+            </div>
+            {% endif %}
+            {% if taskItem.label_other == True %}
             <div class="label_other">
               other
             </div>
-          {% endif %}
-        <div class="id">
-          <span>ID:{{ taskItem.id }}</span>
+            {% endif %}
+            <div class="id">
+              <span>ID:{{ taskItem.id }}</span>
+            </div>
+          </div>
+          <p class="mb-1">{{ taskItem.description }}</p>
+          <div class="d-flex justify-content-between">
+            <div class="Steplist">
+              <span><img src="../static/checklist_white.png" alt="Error"></span>
+            </div>
+            <div class="comment">
+              <span><img src="../static/comment_white.png" alt="Error"></span>
+            </div>
+            <div class="attach">
+              <span><img src="../static/attach_white.png" alt="Error"></span>
+            </div>
+            <div class="storypoints">
+              <span><img src="../static/points_white.png" alt="Error"> {{ taskItem.storypoints }} </span>
+            </div>
+          </div>
         </div>
-        </div>
-        <p class="mb-1">{{ taskItem.description }}</p>
-        <div class="d-flex justify-content-between">
-          <div class="checklist">
-            <span><img src="../static/checklist_white.png" alt="Error"></span>
-          </div>
-          <div class="comment">
-            <span><img src="../static/comment_white.png" alt="Error"></span>
-          </div>
-          <div class="attach">
-            <span><img src="../static/attach_white.png" alt="Error"></span>
-          </div>
-          <div class="storypoints">
-            <span><img src="../static/points_white.png" alt="Error"> {{ taskItem.storypoints }} </span>
-          </div>
-        </div>
-      </div>
-    </li>
-          {% endif %}
-        {% endfor %}
+      </li>
+      {% endif %}
+      {% endfor %}
       {% endif %}
   </div>
 </div>
-  {% endfor %}
+{% endfor %}
 {% endif %}
 
 

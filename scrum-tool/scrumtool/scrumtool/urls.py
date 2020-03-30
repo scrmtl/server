@@ -22,6 +22,7 @@ from rest_framework.documentation import include_docs_urls
 from api import views
 
 router = DefaultRouter()
+
 router.register(r'steplist', views.SteplistViewSet)
 
 schema_view = get_schema_view(
@@ -34,6 +35,4 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('schema/', schema_view),
     path('docs/', include_docs_urls(title='Bookings API')),
-    path(r'^api-auth/', include('rest_framework.urls',
-                                namespace='rest_framework'))
 ]

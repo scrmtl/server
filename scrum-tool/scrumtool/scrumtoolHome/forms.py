@@ -5,7 +5,7 @@ from crispy_forms.utils import render_crispy_form
 
 
 class ChecklistForm(forms.Form):
-    """A HTML form for user input of checklist elements
+    """A HTML form for user input of Steplist elements
     """
     text = forms.CharField(
         max_length=256,
