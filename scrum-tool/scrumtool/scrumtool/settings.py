@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': 'scrumtooldb',
         'USER': 'scrmtladmin',
         'PASSWORD': 'test',
-        'HOST': 'localhost',
+        'HOST': 'scrmtl.ddns.net',
         'PORT': '14443',
     }
 }
