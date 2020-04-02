@@ -8,7 +8,7 @@
             "name": "Python: MasterProjDjango",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/scrum-tool/scrumtool/manage.py",
+            "program": "${workspaceFolder}/backend/scrumtool/manage.py",
             "console": "integratedTerminal",
             "args": [
                 "runserver",
