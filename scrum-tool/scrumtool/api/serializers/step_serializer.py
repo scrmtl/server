@@ -1,3 +1,5 @@
+"""Serializers for steps
+"""
 from rest_framework import serializers
 from scrumtoolHome.models import SteplistItem
 

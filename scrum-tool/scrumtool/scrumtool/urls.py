@@ -24,9 +24,12 @@ from api import views
 router = DefaultRouter()
 
 router.register(r'steplist', views.SteplistViewSet)
+router.register(
+    r'steplist/(?P<steplist_pk>[^/.]+)/step',
+    views.StepViewSet)
 
 schema_view = get_schema_view(
-    title='Bookings API',
+    title='Scrumtool API',
     description='An API to book matches or update odds.')
 
 urlpatterns = [
@@ -34,5 +37,5 @@ urlpatterns = [
     path('', include('scrumtoolHome.urls')),
     path('api/', include(router.urls)),
     path('schema/', schema_view),
-    path('docs/', include_docs_urls(title='Bookings API')),
+    path('docs/', include_docs_urls(title='Scrumtool API')),
 ]

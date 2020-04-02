@@ -26,7 +26,7 @@ SECRET_KEY = '725#n#v8bw-nw8_pd3zcos)l-o13)ua4uju(64pbj5z*8ryr(x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['elherminius.ddns.net', 'localhost']
+ALLOWED_HOSTS = ['elherminius.ddns.net', 'localhost', 'scrmtl.ddns.net']
 
 
 # Application definition
@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': 'scrumtooldb',
         'USER': 'scrmtladmin',
         'PASSWORD': 'test',
-        'HOST': 'scrmtl.ddns.net',
+        'HOST': 'localhost',
         'PORT': '14443',
     }
 }

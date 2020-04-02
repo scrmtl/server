@@ -71,6 +71,6 @@ class SteplistItem(models.Model):
 
     def __str__(self):
         return "{0}: {1}({2}): {3} ".format(self.numbering, self.text,
-                                            self.Steplist,
+                                            self.steplist,
                                             self.checked,
                                             )
