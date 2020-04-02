@@ -9,5 +9,5 @@ from . import models
 admin.site.register(models.ProductBacklog)
 admin.site.register(models.SprintBacklog)
 admin.site.register(models.TaskCard)
-admin.site.register(models.Checklist)
-admin.site.register(models.ChecklistItem)
+admin.site.register(models.Steplist)
+admin.site.register(models.SteplistItem)

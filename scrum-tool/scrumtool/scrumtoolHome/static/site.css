@@ -208,7 +208,7 @@ a:active {
   border-radius: 4px;
   width: auto;
 }
-.checklist {
+.Steplist {
   background-color: lightgray;
   border-radius: 4px;
   margin-left: 4px;
@@ -319,7 +319,7 @@ a:active {
  from {opacity: 1;}
  to {opacity:1 ;}
 }
-/* Checklist style */
+/* Steplist style */
 #wrapper {
 	margin-top: 10% !important;
 }
@@ -346,4 +346,4 @@ a:active {
   color: black;
 }
 
-/* Checklist style ende */
+/* Steplist style ende */

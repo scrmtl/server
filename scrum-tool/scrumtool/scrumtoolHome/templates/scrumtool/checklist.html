@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-lg-4 col-lg-offset-4" id="content">
             <h2>Test Liste</h2>
-            <ul id="checklist" class="list-group t20 sortable">
+            <ul id="Steplist" class="list-group t20 sortable">
                 {% for item in checklistItems %}
                 {% if item.checked %}
                 <li class="list-group-item todo-completed" id="{{item.id}}">
@@ -61,7 +61,7 @@
     });
     function addDeleteCheckedEvents() {
         //This function deletes and checks elements
-        $("#checklist").click(function (event) {
+        $("#Steplist").click(function (event) {
             var target = $(event.target);
             var checklistData = new Object();
             if (target.is(":checkbox")) {
@@ -94,7 +94,7 @@
     //Edit: I testes the $.post function. It is way more convenient than $.ajax
     //Also the prop() function should be used instead of the deprecated attr()
     function addChangedTextEvent() {
-        $("#checklist").children("li").children("input").keypress(function (event) {
+        $("#Steplist").children("li").children("input").keypress(function (event) {
             var keycode = (event.keyCode ? event.keyCode : event.which);
             if (keycode == '13') {
                 var target = $(event.target);
@@ -133,7 +133,7 @@
                         checkedCheckbox = "checked=\"checked\""
                     }
                     //HTML code for list element
-                    $("#checklist").append(
+                    $("#Steplist").append(
                         '<li class="list-group-item ' +
                         checkedClass +
                         '" id="' +
@@ -154,7 +154,7 @@
         });
     });
     $(function () {
-        $('#checklist').sortable({
+        $('#Steplist').sortable({
             start: function (event, ui) {
                 var start_pos = ui.item.index();
                 ui.item.data('start_pos', start_pos);

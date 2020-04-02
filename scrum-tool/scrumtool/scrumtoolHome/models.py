@@ -30,7 +30,7 @@ class SprintBacklog(models.Model):
 
 class TaskCard(models.Model):
     """A TaskCard contains all information concerning a task.
-    Including the Checklist
+    Including the Steplist
     """
     sprintBacklog = models.ForeignKey(
         to='SprintBacklog', on_delete=models.CASCADE)
@@ -51,8 +51,8 @@ class TaskCard(models.Model):
             self.label_other)
 
 
-class Checklist(models.Model):
-    """ A Checklist contains all elements of a checklist
+class Steplist(models.Model):
+    """ A Steplist contains all elements of a Steplist
     """
     taskCard = models.ForeignKey(to='TaskCard', on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
@@ -61,15 +61,16 @@ class Checklist(models.Model):
         return "{0} ".format(self.name)
 
 
-class ChecklistItem(models.Model):
-    """ A ChecklistItem describes a Task that has to be done
+class SteplistItem(models.Model):
+    """ A SteplistItem describes a Task that has to be done
     """
-    checklist = models.ForeignKey(to='Checklist', on_delete=models.CASCADE)
+    steplist = models.ForeignKey(to='Steplist', on_delete=models.CASCADE)
     text = models.CharField(max_length=256)
-    checked = models.BooleanField()
+    checked = models.BooleanField(default=False)
     numbering = models.IntegerField(default=0, unique=False)
 
     def __str__(self):
-        return "{4}{0}({1}): {2} ".format(self.text, self.checklist,
-                                          self.checked,
-                                          self.numbering)
+        return "{0}: {1}({2}): {3} ".format(self.numbering, self.text,
+                                            self.steplist,
+                                            self.checked,
+                                            )
