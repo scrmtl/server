@@ -41,7 +41,7 @@ class StepViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.StepSerializer
 
     def update(self, request, steplist_pk=None, pk=None):
-        """Update a step - automatically numbering will be changed 
+        """Update a step - automatically numbering will be changed
         for all elements in the list
 
         """
