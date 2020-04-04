@@ -1,6 +1,7 @@
 """ This file contains database definitions
 """
 from django.db import models
+from polymorphic.models import PolymorphicModel
 
 
 class Project(models.Model):
@@ -19,6 +20,13 @@ class Project(models.Model):
         pass
 
 
+BOARD_TYPE = (
+    ('PB', 'Product Backlog Board'),
+    ('SP', 'Sprint Backlog Board '),
+    ('AB', 'Archiv Board'),
+)
+
+
 class Board(models.Model):
     """Model definition for Board."""
 
@@ -28,7 +36,7 @@ class Board(models.Model):
         related_name='boards')
     name = models.CharField(max_length=256)
     description = models.TextField(null=True, blank=True)
-    status = models.CharField(choices=STATUS, max_length=2)
+    board_type = models.CharField(choices=BOARD_TYPE, max_length=2)
     display_lane_horizontal = models.BooleanField(default=False)
 
     class Meta:
@@ -40,13 +48,6 @@ class Board(models.Model):
     def __str__(self):
         """Unicode representation of Board."""
         pass
-
-
-BOARD_TYPE = (
-    ('PB', 'Product Backlog Board'),
-    ('SP', 'Sprint Backlog Board '),
-    ('AB', 'Archiv Board'),
-)
 
 
 class Lane(models.Model):
@@ -70,14 +71,28 @@ class Lane(models.Model):
         pass
 
 
-class Card(models.Model):
+STATUS = (
+    ('ns', 'not started'),
+    ('do', 'done'),
+    ('ip', 'in progress'),
+)
+
+
+class Card(PolymorphicModel):
     """A Card contains all information concerning a task.
     Including the Steplist
     """
+    # ForeignKey in abstract classes:
+    # https://docs.djangoproject.com/en/dev/topics/db/models/#be-careful-with-related-name-and-related-query-name
     lane = models.ForeignKey(
         to='Lane',
         on_delete=models.CASCADE,
-        related_name='cards')
+        related_name='%(class)s_cards')
+    label = models.ForeignKey(
+        to='Label',
+        on_delete=models.CASCADE,
+        related_name='%(class)s_cards'
+    )
     name = models.CharField(max_length=256)
     description = models.TextField(null=True, blank=True)
     numbering = models.IntegerField(default=0)
@@ -98,21 +113,10 @@ class Card(models.Model):
             self.storypoints)
 
 
-STATUS = (
-    ('ns', 'not started'),
-    ('do', 'done'),
-    ('ip', 'in progress'),
-)
-
-
 class Label(models.Model):
     """Model definition for Label."""
-    card = models.ForeignKey(
-        to='Card',
-        on_delete=models.CASCADE,
-        related_name='labels'
-    )
     title = models.CharField(max_length=256)
+    color = models.SlugField(max_length=6)
 
     class Meta:
         """Meta definition for Label."""
