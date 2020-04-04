@@ -152,8 +152,8 @@ class Feature(Card):
 
     class Meta:
         """Meta definition for Feature."""
-        verbose_name = 'Feature'
-        verbose_name_plural = 'Features'
+        verbose_name = 'Feature(Card)'
+        verbose_name_plural = 'Features(Card)'
 
     def __str__(self):
         """Unicode representation of Feature."""
@@ -170,8 +170,8 @@ class Task(Card):
     class Meta:
         """Meta definition for Task."""
 
-        verbose_name = 'Task'
-        verbose_name_plural = 'Tasks'
+        verbose_name = 'Task(Card)'
+        verbose_name_plural = 'Tasks(Card)'
 
     def __str__(self):
         """Unicode representation of Task."""
