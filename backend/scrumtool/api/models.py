@@ -1,10 +1,11 @@
 """ This file contains database definitions
 """
 from django.db import models
-from polymorphic.models import PolymorphicModel
 # Needed for TextChoices
 # https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 from django.utils.translation import gettext_lazy as _
+# https://django-polymorphic.readthedocs.io/en/latest/
+from polymorphic.models import PolymorphicModel
 
 
 class Project(models.Model):
@@ -28,13 +29,6 @@ class Project(models.Model):
         return "{0}: {1} ".format(self.name,
                                   self.description
                                   )
-
-
-BOARD_TYPE = (
-    ('PB', 'Product Backlog Board'),
-    ('SP', 'Sprint Backlog Board '),
-    ('AB', 'Archiv Board'),
-)
 
 
 class Board(models.Model):
