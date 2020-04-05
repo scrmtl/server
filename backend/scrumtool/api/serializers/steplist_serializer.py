@@ -1,7 +1,7 @@
 """Serializers for Steplists
 """
 from rest_framework import serializers
-from scrumtoolHome.models import Steplist
+from ..models import Steplist
 from . import step_serializer
 
 

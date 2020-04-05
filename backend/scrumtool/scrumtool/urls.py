@@ -27,6 +27,12 @@ router.register(r'steplist', views.SteplistViewSet)
 router.register(
     r'steplist/(?P<steplist_pk>[^/.]+)/step',
     views.StepViewSet)
+router.register(r'epic', views.EpicViewSet)
+router.register(r'feature', views.FeatureViewSet)
+router.register(r'task', views.TaskViewSet)
+router.register(r'board', views.BoardViewSet)
+router.register(r'lane', views.LaneViewSet)
+router.register(r'project', views.ProjectViewSet)
 
 schema_view = get_schema_view(
     title='Scrumtool API',
@@ -34,7 +40,6 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('scrumtoolHome.urls')),
     path('api/', include(router.urls)),
     path('schema/', schema_view),
     path('docs/', include_docs_urls(title='Scrumtool API')),
