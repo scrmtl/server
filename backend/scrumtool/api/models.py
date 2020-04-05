@@ -2,12 +2,20 @@
 """
 from django.db import models
 from polymorphic.models import PolymorphicModel
+# Needed for TextChoices
+# https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
+from django.utils.translation import gettext_lazy as _
 
 
 class Project(models.Model):
     """Model definition for Project."""
-    name = models.CharField(max_length=256)
-    description = models.TextField(null=True, blank=True)
+    name = models.CharField(
+        max_length=256,
+        help_text='This represents the name of the lane')
+    description = models.TextField(
+        null=True,
+        blank=True,
+        help_text='User description of the card')
 
     class Meta:
         """Meta definition for Project."""
@@ -31,14 +39,26 @@ BOARD_TYPE = (
 
 class Board(models.Model):
     """Model definition for Board."""
+    class BoardType(models.TextChoices):
+        PB = 'PB', _('Product Backlog Board')
+        SP = 'SP', _('Sprint Backlog Board ')
+        AB = 'AB', _('Archiv Board')
 
     board = models.ForeignKey(
         to='Project',
         on_delete=models.CASCADE,
         related_name='boards')
-    name = models.CharField(max_length=256)
-    description = models.TextField(null=True, blank=True)
-    board_type = models.CharField(choices=BOARD_TYPE, max_length=2)
+    name = models.CharField(
+        max_length=256,
+        help_text='This represents the name of the lane')
+    description = models.TextField(
+        null=True,
+        blank=True,
+        help_text='User description of the card')
+    board_type = models.CharField(
+        choices=BoardType.choices,
+        max_length=2,
+        help_text='This represents the type of board')
     display_lane_horizontal = models.BooleanField(default=False)
 
     class Meta:
@@ -61,8 +81,12 @@ class Lane(models.Model):
         to='Board',
         on_delete=models.CASCADE,
         related_name='lanes')
-    name = models.CharField(max_length=256)
-    numbering = models.IntegerField(default=0)
+    name = models.CharField(
+        max_length=256,
+        help_text='This represents the name of the lane')
+    numbering = models.IntegerField(
+        default=0,
+        help_text='Describes the order of the lanes')
 
     class Meta:
         """Meta definition for Lane."""
@@ -77,26 +101,24 @@ class Lane(models.Model):
                                                )
 
 
-STATUS = (
-    ('ns', 'not started'),
-    ('do', 'done'),
-    ('ip', 'in progress'),
-)
-
-
 class Card(PolymorphicModel):
     """A Card contains all information concerning a task.
     Including the Steplist
     """
     # ForeignKey in abstract classes:
     # https://docs.djangoproject.com/en/dev/topics/db/models/#be-careful-with-related-name-and-related-query-name
+    class Status(models.TextChoices):
+        NOT_STARTED = 'ns', _('not started')
+        DONE = 'do', _('done')
+        IN_PROGRESS = 'ip', _('in progress')
+
     lane = models.ForeignKey(
         to='Lane',
         on_delete=models.CASCADE,
         related_name='%(class)s_cards')
-    label = models.ManyToManyField(
+    labels = models.ManyToManyField(
         to='api.Label',
-        related_name='%(class)s_cards'
+        related_name='%(class)s_cards',
     )
     name = models.CharField(
         max_length=256,
@@ -111,7 +133,9 @@ class Card(PolymorphicModel):
         default=0,
         help_text='This is the name of the list itself')
     status = models.CharField(
-        choices=STATUS, max_length=2,
+        choices=Status.choices,
+        max_length=2,
+        default=Status.NOT_STARTED,
         help_text='This is the name of the list itself')
 
     class Meta:

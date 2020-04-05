@@ -10,14 +10,13 @@ class LabelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Label
-        fields = '__all__'
+        fields = ('title', 'color', 'id')
 
 
 class CardSerializer(serializers.ModelSerializer):
     """Base-class serializer for cards.
     Other cards will inherits from this class
     """
-    label = LabelSerializer(many=True)
 
     class Meta:
         model = Card
@@ -25,31 +24,34 @@ class CardSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',
                   'description', 'numbering',
                   'storypoints', 'status',
-                  'label')
+                  )
 
 
 class EpicSerializer(serializers.ModelSerializer):
     """Serializer for Epic-Cards
     """
+    labels = LabelSerializer(many=True)
 
     class Meta:
         model = Epic
-        fields = CardSerializer.Meta.fields
+        fields = CardSerializer.Meta.fields + ('labels',)
 
 
 class FeatureSerializer(serializers.ModelSerializer):
     """Serializer for Feature-Cards
     """
+    labels = LabelSerializer(many=True)
 
     class Meta:
         model = Feature
-        fields = CardSerializer.Meta.fields
+        fields = CardSerializer.Meta.fields + ('labels',)
 
 
 class TaskSerializer(serializers.ModelSerializer):
     """Serializer for Task-Cards
     """
+    labels = LabelSerializer(many=True)
 
     class Meta:
         model = Task
-        fields = CardSerializer.Meta.fields
+        fields = CardSerializer.Meta.fields + ('labels',)
