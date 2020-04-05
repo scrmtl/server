@@ -17,7 +17,9 @@ class Project(models.Model):
 
     def __str__(self):
         """Unicode representation of Project."""
-        pass
+        return "{0}: {1} ".format(self.name,
+                                  self.description
+                                  )
 
 
 BOARD_TYPE = (
@@ -47,7 +49,9 @@ class Board(models.Model):
 
     def __str__(self):
         """Unicode representation of Board."""
-        pass
+        return "{0}: {1}".format(self.name,
+                                 self.description,
+                                 )
 
 
 class Lane(models.Model):
@@ -68,7 +72,9 @@ class Lane(models.Model):
 
     def __str__(self):
         """Unicode representation of Lane."""
-        pass
+        return "{0} with numbering {1}".format(self.name,
+                                               self.numbering,
+                                               )
 
 
 STATUS = (
@@ -139,7 +145,10 @@ class Label(models.Model):
 
     def __str__(self):
         """Unicode representation of Label."""
-        pass
+        return "{0} with color {1}".format(self.title,
+                                           self.color,
+
+                                           )
 
 
 class Epic(Card):
@@ -150,10 +159,6 @@ class Epic(Card):
 
         verbose_name = 'Epic(Card)'
         verbose_name_plural = 'Epics(Card)'
-
-    def __str__(self):
-        """Unicode representation of Epic."""
-        pass
 
 
 class Feature(Card):
@@ -168,10 +173,6 @@ class Feature(Card):
         verbose_name = 'Feature(Card)'
         verbose_name_plural = 'Features(Card)'
 
-    def __str__(self):
-        """Unicode representation of Feature."""
-        pass
-
 
 class Task(Card):
     """Model definition for Task."""
@@ -185,10 +186,6 @@ class Task(Card):
 
         verbose_name = 'Task(Card)'
         verbose_name_plural = 'Tasks(Card)'
-
-    def __str__(self):
-        """Unicode representation of Task."""
-        pass
 
 
 class Steplist(models.Model):

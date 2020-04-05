@@ -27,6 +27,9 @@ router.register(r'steplist', views.SteplistViewSet)
 router.register(
     r'steplist/(?P<steplist_pk>[^/.]+)/step',
     views.StepViewSet)
+router.register(r'epic', views.EpicViewSet)
+router.register(r'feature', views.FeatureViewSet)
+router.register(r'task', views.TaskViewSet)
 
 schema_view = get_schema_view(
     title='Scrumtool API',
