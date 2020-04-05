@@ -41,6 +41,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls')),
     path('schema/', schema_view),
     path('docs/', include_docs_urls(title='Scrumtool API')),
 ]
