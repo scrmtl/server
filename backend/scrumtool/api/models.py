@@ -88,9 +88,8 @@ class Card(PolymorphicModel):
         to='Lane',
         on_delete=models.CASCADE,
         related_name='%(class)s_cards')
-    label = models.ForeignKey(
-        to='Label',
-        on_delete=models.CASCADE,
+    label = models.ManyToManyField(
+        to='api.Label',
         related_name='%(class)s_cards'
     )
     name = models.CharField(max_length=256)
