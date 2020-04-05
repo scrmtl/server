@@ -92,11 +92,21 @@ class Card(PolymorphicModel):
         to='api.Label',
         related_name='%(class)s_cards'
     )
-    name = models.CharField(max_length=256)
-    description = models.TextField(null=True, blank=True)
-    numbering = models.IntegerField(default=0)
-    storypoints = models.IntegerField(default=0)
-    status = models.CharField(choices=STATUS, max_length=2)
+    name = models.CharField(
+        max_length=256,
+        help_text='User given name of the card')
+    description = models.TextField(
+        null=True, blank=True,
+        help_text='User description of the card')
+    numbering = models.IntegerField(
+        default=0,
+        help_text='Describes the order of the steps')
+    storypoints = models.IntegerField(
+        default=0,
+        help_text='This is the name of the list itself')
+    status = models.CharField(
+        choices=STATUS, max_length=2,
+        help_text='This is the name of the list itself')
 
     class Meta:
         """Meta definition for Card."""
@@ -114,8 +124,12 @@ class Card(PolymorphicModel):
 
 class Label(models.Model):
     """Model definition for Label."""
-    title = models.CharField(max_length=256)
-    color = models.SlugField(max_length=6)
+    title = models.CharField(
+        max_length=256,
+        help_text='This is the text the Label represents')
+    color = models.SlugField(
+        max_length=6,
+        help_text='The color of the label in hex (ffffff)')
 
     class Meta:
         """Meta definition for Label."""
@@ -180,8 +194,14 @@ class Task(Card):
 class Steplist(models.Model):
     """ A Steplist contains all elements of a Steplist
     """
-    task = models.ForeignKey(to='Task', on_delete=models.CASCADE)
-    name = models.CharField(max_length=256)
+    task = models.ForeignKey(
+        to='Task',
+        on_delete=models.CASCADE,
+        related_name='steplists')
+    name = models.CharField(
+        max_length=256,
+        default='defaultSteplist',
+        help_text='This is the name of the list itself')
 
     class Meta:
         """Meta definition for Steplist."""
@@ -199,9 +219,16 @@ class SteplistItem(models.Model):
     steplist = models.ForeignKey(
         to='Steplist',
         on_delete=models.CASCADE)
-    text = models.CharField(max_length=256)
-    checked = models.BooleanField(default=False)
-    numbering = models.IntegerField(default=0, unique=False)
+    text = models.CharField(
+        max_length=256,
+        help_text='This is the text the user enters')
+    checked = models.BooleanField(
+        default=False,
+        help_text='Indicates that the step is finished')
+    numbering = models.IntegerField(
+        default=0,
+        unique=False,
+        help_text='Describes the order of the steps')
 
     class Meta:
         """Meta definition for Step."""
