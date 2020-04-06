@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'polymorphic',
+    'rest_auth',
     'api'
 ]
 
@@ -94,16 +96,20 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.MinimumLengthValidator'),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.CommonPasswordValidator'),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.NumericPasswordValidator'),
     },
 ]
 
@@ -131,4 +137,15 @@ STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'}
+    'DEFAULT_SCHEMA_CLASS': (
+        'rest_framework.schemas.coreapi.AutoSchema'),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',),
+    # Sessions is used by django REST api docs and browsable api
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',),
+    # With this the api is browsable without explicit permission granted per
+    # viewModel. Will be deprecated with user management
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated', )
+}
