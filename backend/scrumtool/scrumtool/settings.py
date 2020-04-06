@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'polymorphic',
+    'rest_auth',
     'api'
 ]
 
@@ -140,6 +141,11 @@ REST_FRAMEWORK = {
         'rest_framework.schemas.coreapi.AutoSchema'),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',),
+    # Sessions is used by django REST api docs and browsable api
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',),
+    # With this the api is browsable without explicit permission granted per
+    # viewModel. Will be deprecated with user management
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated', )
 }
