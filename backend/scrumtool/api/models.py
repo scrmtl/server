@@ -114,6 +114,10 @@ class Card(PolymorphicModel):
         to='api.Label',
         related_name='%(class)s_cards',
     )
+    files = models.ManyToManyField(
+        to='api.File',
+        related_name='%(class)s_files',
+    )
     name = models.CharField(
         max_length=256,
         help_text='User given name of the card')
@@ -144,6 +148,23 @@ class Card(PolymorphicModel):
             self.name,
             self.description,
             self.storypoints)
+
+
+class File(models.Model):
+    """Model definition for File."""
+    photo = models.ImageField(
+        upload_to='card_attachement')
+
+    class Meta:
+        """Meta definition for File."""
+
+        verbose_name = 'File'
+        verbose_name_plural = 'Files'
+
+    def __str__(self):
+        """Unicode representation of File."""
+        return "{0}".format(
+            self.photo.name)
 
 
 class Label(models.Model):

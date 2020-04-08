@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from rest_framework.schemas import get_schema_view
 from rest_framework.documentation import include_docs_urls
@@ -33,6 +35,8 @@ router.register(r'task', views.TaskViewSet)
 router.register(r'board', views.BoardViewSet)
 router.register(r'lane', views.LaneViewSet)
 router.register(r'project', views.ProjectViewSet)
+router.register(r'file', views.FileViewSet)
+
 
 schema_view = get_schema_view(
     title='Scrumtool API',
@@ -45,4 +49,4 @@ urlpatterns = [
     path('schema/', schema_view),
     path('docs/', include_docs_urls(title='Scrumtool API')),
     path('rest-auth/', include('rest_auth.urls'))
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
