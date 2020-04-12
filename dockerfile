@@ -1,16 +1,20 @@
-FROM python:3.9
-# for django that use postgresSql
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+FROM python:3.9-rc-alpine3.10
 
-WORKDIR /usr/src/app
-# TODO path to requirements.txt
-COPY requirements.txt ./
+# The enviroment variable ensures that the python output is set straight
+# to the terminal with out buffering it first
+ENV PYTHONUNBUFFERED 1
+
+# create root directory for our project in the container
+RUN mkdir /server
+
+# Set the working directory to /server
+WORKDIR /server
+
+# Copy the backend directory contents into the container at /server
+ADD backend/scrumtool /server/
+
+# Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
-# TODO first param, where is the python app
-COPY . .
 
 EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD [ "python", "./manage.py runserver 0.0.0.0:8000" ]

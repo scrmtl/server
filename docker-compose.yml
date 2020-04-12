@@ -4,10 +4,8 @@ services:
   db:
     image: postgres
     # TODO set volume for retentive
- data
-  web:
-    build: .
-
+  backend:
+    image: scrmtl
     ports:
       - "8000:8000"
     depends_on:
