@@ -61,7 +61,7 @@ jobs:
         USERNAME: ${{ github.actor }}
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         REGISTRY: "docker.pkg.github.com"
-        IMAGE_NAME: $IMAGE_NAME
+        IMAGE_NAME: scrmtl-server
         LATEST: "true"
 
       
