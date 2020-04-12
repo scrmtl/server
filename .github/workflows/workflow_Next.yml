@@ -1,4 +1,4 @@
-name: build and test frontend for NEXT
+name: build and test in NEXT branch
 on:
   push:
     branches:
