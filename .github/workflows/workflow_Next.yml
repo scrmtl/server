@@ -61,8 +61,7 @@ jobs:
         USERNAME: ${{ github.actor }}
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         REGISTRY: "docker.pkg.github.com"
-        DOCKERFILE: "Dockerfile"
-        IMAGE_NAME: "IMAGE_NAME"
+        IMAGE_NAME: $IMAGE_NAME
         LATEST: "true"
 
       
