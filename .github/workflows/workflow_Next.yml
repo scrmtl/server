@@ -54,15 +54,15 @@ jobs:
         persist-credentials: false
 
     - name: Docker Build & Push to GitHub Package
-        uses: opspresso/action-docker@master
-        with:
-          args: --docker
-        env:
-          USERNAME: ${{ github.actor }}
-          PASSWORD: ${{  secrets.GITHUB_TOKEN }}
-          REGISTRY: "docker.pkg.github.com"
-          DOCKERFILE: "Dockerfile"
-          IMAGE_NAME: "IMAGE_NAME"
-          LATEST: "true"
+      uses: opspresso/action-docker@master
+      with:
+        args: --docker
+      env:
+        USERNAME: ${{ github.actor }}
+        PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        REGISTRY: "docker.pkg.github.com"
+        DOCKERFILE: "Dockerfile"
+        IMAGE_NAME: "IMAGE_NAME"
+        LATEST: "true"
 
       
