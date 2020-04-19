@@ -1,4 +1,4 @@
-FROM python:3.9-rc-alpine3.10
+FROM python:3.8.2-alpine3.11
 
 # The enviroment variable ensures that the python output is set straight
 # to the terminal with out buffering it first
