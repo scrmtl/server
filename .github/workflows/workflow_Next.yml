@@ -80,7 +80,7 @@ jobs:
         USERNAME: ${{ github.actor }}
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         REGISTRY: "docker.pkg.github.com"
-        DOCKERFILE: "dockerfile"
+        DOCKERFILE: "Dockerfile"
         IMAGE_NAME: ${{env.IMAGE_NAME}}
         LATEST: "true"
 
