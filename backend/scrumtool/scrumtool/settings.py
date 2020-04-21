@@ -84,8 +84,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'scrumtooldb',
         'USER': 'scrmtladmin',
-        'PASSWORD': 'test',
-        'HOST': 'localhost',
+        'PASSWORD': 'postgresistdasbestedockerimage',
+        'HOST': 'postgres',
         'PORT': '14443',
     }
 }
