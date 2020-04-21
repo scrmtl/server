@@ -43,11 +43,6 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 paramiko==2.7.1
 passlib==1.7.1
-<<<<<<< HEAD
-=======
-pep8==1.7.1
-pgadmin4==4.20
->>>>>>> SummingStoryPoints
 Pillow==7.1.1
 psutil==5.5.1
 psycopg2-binary==2.8.4
