@@ -86,7 +86,7 @@ DATABASES = {
         'USER': 'scrmtladmin',
         'PASSWORD': 'postgresistdasbestedockerimage',
         'HOST': 'postgres',
-        'PORT': '14443',
+        'PORT': '5432',
     }
 }
 
