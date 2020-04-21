@@ -95,7 +95,7 @@ class Lane(models.Model):
                                                )
 
 
-class Card(PolymorphicModel):
+class Card(models.Model):
     """A Card contains all information concerning a task.
     Including the Steplist
     """
