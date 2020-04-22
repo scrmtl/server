@@ -3,4 +3,24 @@ import Vuetify from "vuetify/lib";
 
 Vue.use(Vuetify);
 
-export default new Vuetify({});
+const vuetify = new Vuetify({
+  theme: {
+    themes: {
+      light: {
+        primary: "#1976D2",
+        secondary: "#424242",
+        accent: "#82B1FF",
+        error: "#FF5252",
+        info: "#2196F3",
+        success: "#4CAF50",
+        warning: "#FFC107",
+        appbar: "#EF6C00",
+        navbar: "#00BFA5",
+        tabbody: "#757575",
+        border: "#00BFA5"
+      }
+    }
+  }
+});
+
+export default vuetify;
