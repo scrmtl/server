@@ -4,6 +4,7 @@
 .dockerignore
 .gitignore
 .github/*
+.vscode/*
 README.md
 Dockerfile
 

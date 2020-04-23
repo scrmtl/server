@@ -1,0 +1,133 @@
+[
+    {
+        "model": "api.project",
+        "pk": 3,
+        "fields": {
+            "name": "DefaultProject",
+            "description": ""
+        }
+    },
+    {
+        "model": "api.board",
+        "pk": 2,
+        "fields": {
+            "board": 3,
+            "name": "Product Backlog",
+            "description": "As described in the Scrum Guide, the Product Backlog is an ordered list of everything that is known to be needed in the product. It is the single source of requirements for any changes to be made to the product. The Product Owner is responsible for the Product Backlog, including its content, availability, and ordering.\r\n- https://www.scrum.org/resources/what-is-a-product-backlog",
+            "board_type": "PB",
+            "display_lane_horizontal": false
+        }
+    },
+    {
+        "model": "api.board",
+        "pk": 3,
+        "fields": {
+            "board": 3,
+            "name": "Sprint Backlog",
+            "description": "As described in the Scrum Guide, the Sprint Backlog is the set of Product Backlog items selected for the Sprint, plus a plan for delivering the product Increment and realizing the Sprint Goal. The Sprint Backlog is a forecast by the Development Team about what functionality will be in the next Increment and the work needed to deliver that functionality into a \u201cDone\u201d Increment.\r\n- https://www.scrum.org/resources/what-is-a-sprint-backlog",
+            "board_type": "SP",
+            "display_lane_horizontal": false
+        }
+    },
+    {
+        "model": "api.board",
+        "pk": 4,
+        "fields": {
+            "board": 3,
+            "name": "Archive Board",
+            "description": "",
+            "board_type": "AB",
+            "display_lane_horizontal": false
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 3,
+        "fields": {
+            "board": 3,
+            "name": "Next (Sprint Backlog)",
+            "numbering": 0
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 4,
+        "fields": {
+            "board": 3,
+            "name": "Doing",
+            "numbering": 1
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 5,
+        "fields": {
+            "board": 3,
+            "name": "On Hold/Blocked",
+            "numbering": 2
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 6,
+        "fields": {
+            "board": 3,
+            "name": "Ready (for Review)",
+            "numbering": 3
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 7,
+        "fields": {
+            "board": 3,
+            "name": "Done",
+            "numbering": 4
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 8,
+        "fields": {
+            "board": 2,
+            "name": "Bugs",
+            "numbering": 0
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 9,
+        "fields": {
+            "board": 2,
+            "name": "Ideas",
+            "numbering": 1
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 10,
+        "fields": {
+            "board": 2,
+            "name": "Produkt Backlog",
+            "numbering": 2
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 11,
+        "fields": {
+            "board": 2,
+            "name": "Growning (for Refinement)",
+            "numbering": 3
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 12,
+        "fields": {
+            "board": 2,
+            "name": "Ready (for next Sprints)",
+            "numbering": 4
+        }
+    }
+]
