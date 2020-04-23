@@ -7,7 +7,9 @@ DEBUG = False
 SECRET_KEY = '725#n#v8bw-nw8_pd3zcos)l-o13)ua4uju(64pbj5z*8ryr(x'
 
 # SECURITY WARNING: update this when you have the production host
-ALLOWED_HOSTS = ['scrmtl.ddns.net', 'localhost']
+ALLOWED_HOSTS = ['scrmtl.ddns.net',
+                 'elherminius.ddns.net',
+                 'localhost']
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
