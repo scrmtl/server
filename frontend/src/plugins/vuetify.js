@@ -17,7 +17,8 @@ const vuetify = new Vuetify({
         appbar: "#EF6C00",
         navbar: "#00BFA5",
         tabbody: "#757575",
-        border: "#00BFA5"
+        border: "#00BFA5",
+        lanbody: "#BDBDBD"
       }
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app color="orange darken-4">
+  <v-app-bar app color="#01579B">
     <v-app-bar-nav-icon></v-app-bar-nav-icon>
     <v-toolbar-title>Scrum-Tool</v-toolbar-title>
     <v-spacer></v-spacer>
@@ -75,6 +75,9 @@ export default {
     SprintBacklog,
     Statistic,
     HomeComponent
+  },
+  methods: {
+    
   }
 };
 </script>

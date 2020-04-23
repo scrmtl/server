@@ -33,6 +33,6 @@ export default {
 
 <style lang="css" scoped>
 .tab-content {
-  height: 1500px;
+  height: 1000px;
 }
 </style>
