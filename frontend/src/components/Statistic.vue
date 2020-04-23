@@ -1,31 +1,33 @@
 <template>
   <div class="tabbody tab-content">
-      Statistic Vue-Comp
+    Statistic Vue-Comp
   </div>
 </template>
 
 <script>
-
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-    created() {
-      axios
-      .get('http://scrmtl.ddns.net:14444/api/', {}, {
-        auth: {
-          username: "stephan",
-          password: "scrmtl14444"
+  created() {
+    axios
+      .get(
+        //"https://elherminius.ddns.net:14444/api/board",
+        "http://scrmtl.ddns.net:14444/api/board/",
+        //{},
+        {
+          auth: {
+            username: "stephan",
+            password: "scrmtl14444"
+          }
         }
-      })
-      .then (response=>{
-        console.log(response.data)
+      )
+      .then(response => {
+        console.log(response.data);
       })
       .catch(error => {
-        console.log('There was an error:' + error.response)
-      })
-    }
-
-
+        console.log("There was an error:" + error.response);
+      });
+  }
 };
 </script>
 

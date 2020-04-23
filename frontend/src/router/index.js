@@ -6,6 +6,7 @@ import ProductBacklog from "../components/ProductBacklog.vue";
 import SprintPlaning from "../components/SprintPlaning.vue";
 import SprintBacklog from "../components/SprintBacklog.vue";
 import Statistic from "../components/Statistic.vue";
+import HomeComponent from "../components/HomeComp.vue";
 
 Vue.use(VueRouter);
 
@@ -39,6 +40,11 @@ const routes = [
     path: "st",
     name: "st",
     component: Statistic
+  },
+  {
+    path: "homeComp",
+    name: "homeComp",
+    component: HomeComponent
   },
 
 ];
