@@ -11,6 +11,9 @@ ALLOWED_HOSTS = ['scrmtl.ddns.net',
                  'elherminius.ddns.net',
                  'localhost']
 
+# https://stackoverflow.com/questions/56916448/access-control-allow-origin-issue-in-vue-js-and-django
+CORS_ORIGIN_ALLOW_ALL = True
+
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
