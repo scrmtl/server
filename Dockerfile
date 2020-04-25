@@ -21,3 +21,7 @@ STOPSIGNAL SIGINT
 ENTRYPOINT ["python", "manage.py"]
 CMD ["runserver", "0.0.0.0:8000"]
 #CMD [ "python", "./manage.py runserver 0.0.0.0:8000" ]
+
+#Labels
+#Traefik
+LABEL traefik.http.routers.my-container.rule="Host(`scrmtl.ddns.net`) && Path(`/tool`)"
