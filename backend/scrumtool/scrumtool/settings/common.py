@@ -12,12 +12,18 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import posixpath
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+stdlogger = logging.getLogger(__name__)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(
     os.path.dirname(
         os.path.dirname(os.path.abspath(__file__))))
 
+stdlogger.info(
+    'Path for BASE_DIR is %s ', BASE_DIR)
 
 # Application definition
 
@@ -113,8 +119,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, "static"),
 # ]
+stdlogger.info(
+    'Path for static files is %s ', STATIC_ROOT)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+stdlogger.info(
+    'Path for media files is %s ', MEDIA_ROOT)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

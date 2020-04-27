@@ -1,7 +1,7 @@
 from scrumtool.settings.common import *
 
 
-DEBUG = False
+DEBUG = True
 
 # SECRET_KEY = os.environ['SECRET_KEY']
 SECRET_KEY = '725#n#v8bw-nw8_pd3zcos)l-o13)ua4uju(64pbj5z*8ryr(x'
