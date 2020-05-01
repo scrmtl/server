@@ -50,5 +50,3 @@ urlpatterns = [
     path('docs/', include_docs_urls(title='Scrumtool API')),
     path('rest-auth/', include('rest_auth.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-# Add 'prefix' to all urlpatterns
-urlpatterns = [path(f'{settings.URL_PREFIX}/', include(urlpatterns))]
