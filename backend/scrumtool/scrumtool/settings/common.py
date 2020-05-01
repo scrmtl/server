@@ -23,6 +23,9 @@ POSTGRES_DB = os.getenv('POSTGRES_DB',
                         'scrumtooldb')
 LOGLEVEL = os.getenv('LOGLEVEL', 'INFO').upper()
 
+URL_PREFIX = os.getenv('URL_PREFIX', 'tool')
+
+
 logging.basicConfig(level=LOGLEVEL)
 stdlogger = logging.getLogger(__name__)
 
