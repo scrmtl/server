@@ -2,7 +2,16 @@ import os
 from scrumtool.settings.common import *
 
 
-HOSTNAME_DATABASE = os.environ['POSTGRES_HOST', 'postgres']
+POSTGRES_HOST = os.getenv('POSTGRES_HOST',
+                          'postgres')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD',
+                              'postgresistdasbestedockerimage')
+POSTGRES_USER = os.getenv('POSTGRES_USER',
+                          'scrmtladmin')
+POSTGRES_DB = os.getenv('POSTGRES_DB',
+                        'scrumtooldb')
+POSTGRES_PORT = os.getenv('POSTGRES_PORT',
+                          '5432')
 
 DEBUG = True
 
@@ -23,11 +32,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'scrumtooldb',
-        'USER': 'scrmtladmin',
-        'PASSWORD': 'postgresistdasbestedockerimage',
-        'HOST': HOSTNAME_DATABASE,
-        'PORT': '5432',
+        'NAME': POSTGRES_DB,
+        'USER': POSTGRES_USER,
+        'PASSWORD': POSTGRES_PASSWORD,
+        'HOST': POSTGRES_HOST,
+        'PORT': POSTGRES_PORT,
     }
 }
 
