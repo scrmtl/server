@@ -11,5 +11,6 @@ export default {};
 <style lang="css" scoped>
 .tab-content {
   height: 1500px;
+  padding: 20px;
 }
 </style>

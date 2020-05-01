@@ -34,5 +34,6 @@ export default {
 <style lang="css" scoped>
 .tab-content {
   height: 1000px;
+  padding: 20px;
 }
 </style>

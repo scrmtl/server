@@ -14,11 +14,14 @@ const vuetify = new Vuetify({
         info: "#2196F3",
         success: "#4CAF50",
         warning: "#FFC107",
-        appbar: "#EF6C00",
-        navbar: "#00BFA5",
-        tabbody: "#757575",
+        appbar: "#2E4057",
+        navbar: "#31AA96",
+        tabbody: "#87A6B3",
         border: "#00BFA5",
-        lanbody: "#BDBDBD"
+        lanbody: "#FFFFfF",
+        card_head: "#6441A4",
+        highlight: "#C3F73A",
+        link: "#31AA96"
       }
     }
   }
