@@ -1,5 +1,8 @@
+import os
 from scrumtool.settings.common import *
 
+
+HOSTNAME_DATABASE = os.environ['POSTGRES_HOST', 'postgres']
 
 DEBUG = True
 
@@ -23,7 +26,7 @@ DATABASES = {
         'NAME': 'scrumtooldb',
         'USER': 'scrmtladmin',
         'PASSWORD': 'postgresistdasbestedockerimage',
-        'HOST': 'postgres',
+        'HOST': HOSTNAME_DATABASE,
         'PORT': '5432',
     }
 }
