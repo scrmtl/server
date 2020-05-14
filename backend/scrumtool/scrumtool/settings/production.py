@@ -1,7 +1,19 @@
+import os
 from scrumtool.settings.common import *
 
 
-DEBUG = False
+POSTGRES_HOST = os.getenv('POSTGRES_HOST',
+                          'postgres')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD',
+                              'postgresistdasbestedockerimage')
+POSTGRES_USER = os.getenv('POSTGRES_USER',
+                          'scrmtladmin')
+POSTGRES_DB = os.getenv('POSTGRES_DB',
+                        'scrumtooldb')
+POSTGRES_PORT = os.getenv('POSTGRES_PORT',
+                          '5432')
+
+DEBUG = True
 
 # SECRET_KEY = os.environ['SECRET_KEY']
 SECRET_KEY = '725#n#v8bw-nw8_pd3zcos)l-o13)ua4uju(64pbj5z*8ryr(x'
@@ -20,11 +32,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'scrumtooldb',
-        'USER': 'scrmtladmin',
-        'PASSWORD': 'postgresistdasbestedockerimage',
-        'HOST': 'postgres',
-        'PORT': '5432',
+        'NAME': POSTGRES_DB,
+        'USER': POSTGRES_USER,
+        'PASSWORD': POSTGRES_PASSWORD,
+        'HOST': POSTGRES_HOST,
+        'PORT': POSTGRES_PORT,
     }
 }
 
@@ -32,3 +44,6 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': (
         'rest_framework.schemas.coreapi.AutoSchema'),
 }
+
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
