@@ -8,6 +8,18 @@ from ..serializers import board_serializers
 class ProjectSerializer(serializers.ModelSerializer):
     """Serializer for Projects.
     """
+
+    class Meta:
+        model = Project
+        fields = ('id',
+                  'name',
+                  'description'
+                  )
+
+
+class ProjectSerializerFull(serializers.ModelSerializer):
+    """Serializer for Projects.
+    """
     boards = board_serializers.BoardSerializer(many=True)
 
     class Meta:

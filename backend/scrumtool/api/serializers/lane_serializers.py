@@ -8,6 +8,17 @@ from ..serializers import card_serializers
 class LaneSerializer(serializers.ModelSerializer):
     """Serializer for lanes.
     """
+    class Meta:
+        model = Lane
+        fields = ('id',
+                  'name',
+                  'numbering',
+                  )
+
+
+class LaneSerializerFull(serializers.ModelSerializer):
+    """Serializer for lanes.
+    """
     epic_cards = card_serializers.EpicSerializer(many=True)
     feature_cards = card_serializers.FeatureSerializer(many=True)
     task_cards = card_serializers.TaskSerializer(many=True)

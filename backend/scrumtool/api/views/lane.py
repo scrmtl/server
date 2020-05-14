@@ -15,3 +15,17 @@ class LaneViewSet(viewsets.ModelViewSet):
 
     queryset = models.Lane.objects.all()
     serializer_class = serializers.LaneSerializer
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        """retrive for full and partial retrieve
+            """
+        detaillevel = self.request.query_params.get('DetailLevel', None)
+        if detaillevel is not None:
+            if detaillevel == 'detail':
+                instance = self.get_object()
+                serializer = serializers.LaneSerializerFull(instance)
+                return Response(serializer.data)
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
