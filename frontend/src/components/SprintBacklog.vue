@@ -7,24 +7,33 @@
       >
       <div class="lane-header">
       <p dark>Next (Sprint Backlog)
-        <v-icon class="icon" dark>mdi-dots-vertical</v-icon></p> 
+        <v-menu>
+            <template v-slot:activator="{ on }">
+              <v-btn
+              dark
+              icon
+              v-on="on"
+              class="icon"
+              height="32"
+              >
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(item, i) in items"
+                :key="i"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu></p> 
       </div>
         <v-card-text class="lane-body">
 
         </v-card-text>
         <v-card-actions class="lane-extended">
-          <v-btn
-          text
-          color="link"
-          >
-          + new Feature
-          </v-btn>
-          <v-btn
-          text
-          color="link"
-          >
-          + new Task
-          </v-btn>
+
         </v-card-actions>
     </v-card>
     <v-card
@@ -34,24 +43,33 @@
       >
       <div class="lane-header">
       <p dark>Doing
-        <v-icon class="icon" dark>mdi-dots-vertical</v-icon></p> 
+        <v-menu>
+            <template v-slot:activator="{ on }">
+              <v-btn
+              dark
+              icon
+              v-on="on"
+              class="icon"
+              height="32"
+              >
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(item, i) in items"
+                :key="i"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu></p> 
       </div>
         <v-card-text class="lane-body">
           
         </v-card-text>
         <v-card-actions class="lane-extended">
-          <v-btn
-          text
-          color="link"
-          >
-          + new Feature
-          </v-btn>
-          <v-btn
-          text
-          color="link"
-          >
-          + new Task
-          </v-btn>
+
         </v-card-actions>
     </v-card>
     <v-card
@@ -61,24 +79,33 @@
       >
       <div class="lane-header">
       <p dark>On Hold/Blocked
-        <v-icon class="icon" dark>mdi-dots-vertical</v-icon></p> 
+        <v-menu>
+            <template v-slot:activator="{ on }">
+              <v-btn
+              dark
+              icon
+              v-on="on"
+              class="icon"
+              height="32"
+              >
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(item, i) in items"
+                :key="i"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu></p> 
       </div>
         <v-card-text class="lane-body">
           
         </v-card-text>
         <v-card-actions class="lane-extended">
-          <v-btn
-          text
-          color="link"
-          >
-          + new Feature
-          </v-btn>
-          <v-btn
-          text
-          color="link"
-          >
-          + new Task
-          </v-btn>
+
         </v-card-actions>
     </v-card>
     <v-card
@@ -88,24 +115,33 @@
       >
       <div class="lane-header">
       <p dark>Ready (for Review)
-        <v-icon class="icon" dark>mdi-dots-vertical</v-icon></p> 
+        <v-menu>
+            <template v-slot:activator="{ on }">
+              <v-btn
+              dark
+              icon
+              v-on="on"
+              class="icon"
+              height="32"
+              >
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(item, i) in items"
+                :key="i"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu></p> 
       </div>
         <v-card-text class="lane-body">
           
         </v-card-text>
         <v-card-actions class="lane-extended">
-          <v-btn
-          text
-          color="link"
-          >
-          + new Feature
-          </v-btn>
-          <v-btn
-          text
-          color="link"
-          >
-          + new Task
-          </v-btn>
+
         </v-card-actions>
     </v-card>
     <v-card
@@ -115,31 +151,50 @@
       >
       <div class="lane-header">
       <p dark>Done
-        <v-icon class="icon" dark>mdi-dots-vertical</v-icon></p> 
+        <v-menu>
+            <template v-slot:activator="{ on }">
+              <v-btn
+              dark
+              icon
+              v-on="on"
+              class="icon"
+              height="32"
+              >
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(item, i) in items"
+                :key="i"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu></p> 
       </div>
         <v-card-text class="lane-body">
           
         </v-card-text>
         <v-card-actions class="lane-extended">
-          <v-btn
-          text
-          color="link"
-          >
-          + new Feature
-          </v-btn>
-          <v-btn
-          text
-          color="link"
-          >
-          + new Task
-          </v-btn>
+
         </v-card-actions>
     </v-card>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data: () => ({
+    items: [
+      { title: "+ New Lane"},
+      { title: "+ New Epic"},
+      { title: "+ New Feature"},
+      { title: "+ New Task"},
+    ]
+  })
+
+};
 </script>
 
 <style lang="css" scoped>

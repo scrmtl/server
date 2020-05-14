@@ -25,7 +25,6 @@
     float: right;
     margin-right: 6px;
     margin-left: -24px;
-    padding-top: 4px;
   }
   .lane-body {
     background-color: white;
@@ -179,9 +178,6 @@
     width: 54px;
     background-color: #C3F73A;
   }
-  .task {
-
-  }
   .task-header {
     padding-top: 6px;
     height: 36px;
@@ -223,7 +219,36 @@
     padding-top: 6px;
     padding-left: 6px;
   }
-  .task-checklist-icon, .task-story-points{
+  .task-checklist-icon, .task-story-points, .task-story-points{
     margin-right: 6px;
     float: right;
+  }
+  .task-header2 {
+    padding-top: 6px;
+    height: 36px;
+    background-color: #3a3839;
+    border-style: solid;
+    border-bottom-color: white;
+    border-bottom-width: thin;
+    border-top-style: hidden;
+    border-left-style: hidden;
+    border-right-style: hidden;
+    color: white;
+  }
+  .task-body2 {
+    background-color: #3a3839;
+    color: white;
+  }
+  .task-labels2 {
+    padding-top: 6px;
+    padding-left: 6px;
+    height: 36px;
+    background-color: #3a3839;
+    color: white;
+    border-style: solid;
+    border-bottom-color: white;
+    border-bottom-width: thin;
+    border-top-style: hidden;
+    border-left-style: hidden;
+    border-right-style: hidden;
   }
