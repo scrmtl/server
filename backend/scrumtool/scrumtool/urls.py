@@ -36,6 +36,7 @@ router.register(r'board', views.BoardViewSet)
 router.register(r'lane', views.LaneViewSet)
 router.register(r'project', views.ProjectViewSet)
 router.register(r'file', views.FileViewSet)
+router.register(r'label', views.LabelViewSet)
 
 
 schema_view = get_schema_view(
