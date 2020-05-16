@@ -4,8 +4,8 @@ from django.db import models
 # Needed for TextChoices
 # https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 from django.utils.translation import gettext_lazy as _
-# https://django-polymorphic.readthedocs.io/en/latest/
-from polymorphic.models import PolymorphicModel
+
+from django.core.validators import RegexValidator
 
 
 class Project(models.Model):
@@ -182,9 +182,13 @@ class Label(models.Model):
     title = models.CharField(
         max_length=256,
         help_text='This is the text the Label represents')
-    color = models.SlugField(
+    color = models.TextField(
         max_length=7,
-        help_text='The color of the label in hex (#ffffff)')
+        help_text='The color of the label in hex (#ffffff)',
+        validators=[
+            RegexValidator('^#[A-Fa-f0-9]{6}$')
+        ]
+    )
 
     class Meta:
         """Meta definition for Label."""
