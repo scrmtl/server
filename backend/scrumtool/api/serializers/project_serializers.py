@@ -20,7 +20,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class ProjectSerializerFull(serializers.ModelSerializer):
     """Serializer for Projects.
     """
-    boards = board_serializers.BoardSerializer(many=True)
+    boards = board_serializers.BoardSerializerFull(many=True)
 
     class Meta:
         model = Project
