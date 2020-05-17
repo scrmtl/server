@@ -18,6 +18,7 @@ class LaneViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         """retrive for full and partial retrieve
+            Add ?DetailLevel=detail for full data
             """
         detaillevel = self.request.query_params.get('DetailLevel', None)
         if detaillevel is not None:

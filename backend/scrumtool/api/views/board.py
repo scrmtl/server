@@ -16,8 +16,9 @@ class BoardViewSet(viewsets.ModelViewSet):
     queryset = models.Board.objects.all()
     serializer_class = serializers.BoardSerializer
 
-    def retrieve(self, request, pk=None, *args, **kwargs):
+    def retrieve(self, request, *args, pk=None, **kwargs):
         """retrive for full and partial retrieve
+            Add ?DetailLevel=detail for full data
             """
         detaillevel = self.request.query_params.get('DetailLevel', None)
         if detaillevel is not None:

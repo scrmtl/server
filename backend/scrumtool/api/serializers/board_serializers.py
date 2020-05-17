@@ -21,7 +21,7 @@ class BoardSerializer(serializers.ModelSerializer):
 class BoardSerializerFull(serializers.ModelSerializer):
     """Serializer for boards.
     """
-    lanes = lane_serializers.LaneSerializer(many=True)
+    lanes = lane_serializers.LaneSerializerFull(many=True)
 
     class Meta:
         model = Board
