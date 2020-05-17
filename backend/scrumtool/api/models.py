@@ -4,8 +4,8 @@ from django.db import models
 # Needed for TextChoices
 # https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 from django.utils.translation import gettext_lazy as _
-# https://django-polymorphic.readthedocs.io/en/latest/
-from polymorphic.models import PolymorphicModel
+
+from django.core.validators import RegexValidator
 
 
 class Project(models.Model):
@@ -41,7 +41,9 @@ class Board(models.Model):
     board = models.ForeignKey(
         to='Project',
         on_delete=models.CASCADE,
-        related_name='boards')
+        related_name='boards',
+        help_text='The project this board belongs to',
+    )
     name = models.CharField(
         max_length=256,
         help_text='This represents the name of the lane')
@@ -74,7 +76,9 @@ class Lane(models.Model):
     board = models.ForeignKey(
         to='Board',
         on_delete=models.CASCADE,
-        related_name='lanes')
+        related_name='lanes',
+        help_text='The board this lane is associated with'
+    )
     name = models.CharField(
         max_length=256,
         help_text='This represents the name of the lane')
@@ -109,14 +113,20 @@ class Card(models.Model):
     lane = models.ForeignKey(
         to='Lane',
         on_delete=models.CASCADE,
-        related_name='%(class)s_cards')
+        related_name='%(class)s_cards',
+        help_text='Lane this card belongs to'
+    )
     labels = models.ManyToManyField(
         to='api.Label',
         related_name='%(class)s_cards',
+        blank=True,
+        help_text='User defined label for the card'
     )
     files = models.ManyToManyField(
         to='api.File',
         related_name='%(class)s_files',
+        blank=True,
+        help_text='Files a user wants to be connected with the card',
     )
     name = models.CharField(
         max_length=256,
@@ -172,9 +182,13 @@ class Label(models.Model):
     title = models.CharField(
         max_length=256,
         help_text='This is the text the Label represents')
-    color = models.SlugField(
-        max_length=6,
-        help_text='The color of the label in hex (ffffff)')
+    color = models.TextField(
+        max_length=7,
+        help_text='The color of the label in hex (#ffffff)',
+        validators=[
+            RegexValidator('^#[A-Fa-f0-9]{6}$')
+        ]
+    )
 
     class Meta:
         """Meta definition for Label."""
@@ -205,7 +219,8 @@ class Feature(Card):
     epic = models.ForeignKey(
         to='Epic',
         on_delete=models.CASCADE,
-        related_name='features')
+        related_name='features',
+        blank=True,)
 
     class Meta:
         """Meta definition for Feature."""
@@ -218,7 +233,8 @@ class Task(Card):
     feature = models.ForeignKey(
         to='Feature',
         on_delete=models.CASCADE,
-        related_name='tasks')
+        related_name='tasks',
+        blank=True,)
 
     class Meta:
         """Meta definition for Task."""

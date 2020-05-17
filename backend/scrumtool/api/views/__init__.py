@@ -8,3 +8,4 @@ from .board import *
 from .lane import *
 from .project import *
 from .authentication import *
+from .label import *
