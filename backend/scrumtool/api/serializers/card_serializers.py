@@ -2,6 +2,7 @@
 """
 from rest_framework import serializers
 from ..models import Card, Task, Feature, Epic, Label, File
+from .steplist_serializer import StepListSerializer
 
 
 class LabelSerializer(serializers.ModelSerializer):
@@ -51,7 +52,7 @@ class CardSerializer(serializers.ModelSerializer):
         abstract = True
         fields = ('id', 'name',
                   'description', 'numbering',
-                  'storypoints', 'status'
+                  'storypoints', 'status',
                   )
 
 
@@ -60,10 +61,11 @@ class EpicSerializer(serializers.ModelSerializer):
     """
     labels = LabelSerializer(many=True, required=False)
     files = FileSerializer(many=True, required=False)
+    steplists = StepListSerializer(many=True, required=False)
 
     class Meta:
         model = Epic
-        fields = CardSerializer.Meta.fields + ('labels', 'files')
+        fields = CardSerializer.Meta.fields + ('labels', 'files', 'steplists')
 
 
 class FeatureSerializer(serializers.ModelSerializer):
@@ -71,10 +73,11 @@ class FeatureSerializer(serializers.ModelSerializer):
     """
     labels = LabelSerializer(many=True, required=False)
     files = FileSerializer(many=True, required=False)
+    steplists = StepListSerializer(many=True, required=False)
 
     class Meta:
         model = Feature
-        fields = CardSerializer.Meta.fields + ('labels', 'files')
+        fields = CardSerializer.Meta.fields + ('labels', 'files', 'steplists')
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -82,7 +85,8 @@ class TaskSerializer(serializers.ModelSerializer):
     """
     labels = LabelSerializer(many=True, required=False)
     files = FileSerializer(many=True, required=False)
+    steplists = StepListSerializer(many=True, required=False)
 
     class Meta:
         model = Task
-        fields = CardSerializer.Meta.fields + ('labels', 'files')
+        fields = CardSerializer.Meta.fields + ('labels', 'files', 'steplists')
