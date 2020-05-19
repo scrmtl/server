@@ -65,7 +65,7 @@ class EpicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Epic
-        fields = CardSerializer.Meta.fields + ('labels', 'files', 'steplists')
+        fields = CardSerializer.Meta.fields + ('labels', 'steplists')
 
 
 class FeatureSerializer(serializers.ModelSerializer):
@@ -77,7 +77,7 @@ class FeatureSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Feature
-        fields = CardSerializer.Meta.fields + ('labels', 'files', 'steplists')
+        fields = CardSerializer.Meta.fields + ('labels', 'steplists')
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -89,4 +89,4 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = CardSerializer.Meta.fields + ('labels', 'files', 'steplists')
+        fields = CardSerializer.Meta.fields + ('labels', 'steplists')
