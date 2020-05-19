@@ -8,6 +8,9 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
 from django.core.exceptions import PermissionDenied
 
+from datetime import date
+import math
+
 
 class Project(models.Model):
     """Model definition for Project."""
@@ -35,13 +38,26 @@ class Project(models.Model):
     sprint_duration = models.PositiveIntegerField(
         blank=True,
         null=True,
-        help_text='Duration of a sprint'
+        help_text='Duration of a sprint in days'
     )
     status = models.CharField(
         choices=ProjectStatus.choices,
         max_length=2,
         default=ProjectStatus.AC,
         help_text='This represents the type of board')
+    dor = models.TextField(
+        null=True,
+        blank=True,
+        help_text='Definition of Ready ')
+    dod = models.TextField(
+        null=True,
+        blank=True,
+        help_text='Definition of Done ')
+    numOfSprints = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text='Number of Sprints possible '
+    )
 
     class Meta:
         """Meta definition for Project."""
@@ -65,6 +81,12 @@ class Project(models.Model):
             raise PermissionDenied(
                 'Can\'t modify because board has {0} status'.format(
                     self.status))
+        # calculate number of Sprints in this project
+        if (self.sprint_duration is not None and
+            self.start is not None and
+                self.end is not None):
+            delta = self.end - self.start
+            self.numOfSprints = math.floor((delta.days / self.sprint_duration))
         super(Project, self).save(*args, **kwargs)
 
 
