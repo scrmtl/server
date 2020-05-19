@@ -33,7 +33,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         """retrive for full and partial retrieve
-        Add ?Template=default for new project with default template
+        Add ?template=DefaultProject for new project with default template
         """
         template = self.request.query_params.get('Template', None)
         name = request.data.get('name')
@@ -43,16 +43,61 @@ class ProjectViewSet(viewsets.ModelViewSet):
             if template == 'DefaultProject':
                 default_project = models.Project.objects.get(
                     name='DefaultProject')
-                for board in default_project.boards.all():
-                    for lane in board.lanes.all():
-                        lane.pk = None
-                    board.pk = None
-                default_project.pk = None
                 default_project.name = name
                 default_project.description = description
-                default_project.save()
-                serializer = serializers.ProjectSerializerFull(
-                    data=default_project)
-                serializer.is_valid()
-                return Response(serializer.data)
+                model_pk = self.deep_copy_model(model=default_project)
+                # for board in default_project.boards.all():
+                #    for lane in board.lanes.all():
+                #        lane.pk = None
+                #    board.pk = None
+                # default_project.pk = None
+                # default_project.name = name
+                # default_project.description = description
+                # default_project.save()
+                # serializer = serializers.ProjectSerializerFull(
+                #    data = default_project)
+                # serializer.is_valid()
+                project = models.Project.objects.get(pk=model_pk)
+                test_serializer = serializers.ProjectSerializer(project)
+                return Response(test_serializer.data)
         super().create(request, *args, **kwargs)
+
+    def deep_copy_model(self, model, updated_fk=None, related_field=None):
+        child_model_relationships = []
+        # Take the passed in model and get the relationships of that model
+        relations = [
+            f for f in model._meta.get_fields()
+            if (f.one_to_many or f.one_to_one)
+            and f.auto_created and not f.concrete
+        ]
+        # Get the list of related models for those relationships
+        for relation in relations:
+            accessor_name = relation.get_accessor_name()
+            # Get the related field name for each relationship
+            fk_field = relation.field.get_attname()
+            # Build a list of child model list and related field name pairs
+            child_model_relationships.append(
+                (getattr(model, accessor_name).all(), fk_field))
+
+        # Make a copy of the model
+        model.pk = None
+
+        # If a parent model pk and related field are passed in, change that related field to the parent pk
+        # if updated_fk:
+        # This is what I am unable to fix.  Need to dynamically reference the models fk field to update with parent pk
+        # getattr(model, related_field) = updated_fk
+        # model.label_id = updated_fk
+        # getattr(model, related_field) = updated_fk
+        # getattr(model, related_field).SET(updated_fk)
+
+        model.save()
+
+        # Record the copied model's pk
+        new_pk = model.pk
+        # Loop through the listed pairs, deep copying each model and passing the pk and field name to update
+        for child_model_relationship in child_model_relationships:
+            for child_model in child_model_relationship[0]:
+                self.deep_copy_model(
+                    child_model, updated_fk=new_pk, related_field=child_model_relationship[1])
+
+        return model.pk

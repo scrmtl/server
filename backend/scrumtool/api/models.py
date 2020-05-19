@@ -6,10 +6,18 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from django.core.validators import RegexValidator
+from django.core.exceptions import PermissionDenied
+
+from datetime import date
+import math
 
 
 class Project(models.Model):
     """Model definition for Project."""
+    class ProjectStatus(models.TextChoices):
+        AR = 'AR', _('Archiv')
+        AC = 'AC', _('Active')
+
     name = models.CharField(
         max_length=256,
         help_text='This represents the name of the lane')
@@ -17,6 +25,39 @@ class Project(models.Model):
         null=True,
         blank=True,
         help_text='User description of the card')
+    start = models.DateField(
+        blank=True,
+        null=True,
+        help_text='Begin of the project'
+    )
+    end = models.DateField(
+        blank=True,
+        null=True,
+        help_text='End of the project'
+    )
+    sprint_duration = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        help_text='Duration of a sprint in days'
+    )
+    status = models.CharField(
+        choices=ProjectStatus.choices,
+        max_length=2,
+        default=ProjectStatus.AC,
+        help_text='This represents the type of board')
+    dor = models.TextField(
+        null=True,
+        blank=True,
+        help_text='Definition of Ready ')
+    dod = models.TextField(
+        null=True,
+        blank=True,
+        help_text='Definition of Done ')
+    numOfSprints = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text='Number of Sprints possible '
+    )
 
     class Meta:
         """Meta definition for Project."""
@@ -26,9 +67,27 @@ class Project(models.Model):
 
     def __str__(self):
         """Unicode representation of Project."""
-        return "{0}: {1} ".format(self.name,
-                                  self.description
-                                  )
+        return "{0}: {1} Description:{2}  ".format(self.name,
+                                                   self.pk,
+                                                   self.description,
+
+                                                   )
+
+    def save(self, *args, **kwargs):
+        if Project.objects.filter(pk=self.id).exists():
+            old_proj = Project.objects.get(pk=self.id)
+        if (self.status == self.ProjectStatus.AR and
+                old_proj.status == self.ProjectStatus.AR):
+            raise PermissionDenied(
+                'Can\'t modify because board has {0} status'.format(
+                    self.status))
+        # calculate number of Sprints in this project
+        if (self.sprint_duration is not None and
+            self.start is not None and
+                self.end is not None):
+            delta = self.end - self.start
+            self.numOfSprints = math.floor((delta.days / self.sprint_duration))
+        super(Project, self).save(*args, **kwargs)
 
 
 class Board(models.Model):
@@ -38,7 +97,7 @@ class Board(models.Model):
         SP = 'SP', _('Sprint Backlog Board ')
         AB = 'AB', _('Archiv Board')
 
-    board = models.ForeignKey(
+    project = models.ForeignKey(
         to='Project',
         on_delete=models.CASCADE,
         related_name='boards',
@@ -69,6 +128,15 @@ class Board(models.Model):
                                  self.description,
                                  )
 
+    def save(self, *args, **kwargs):
+        # if Project.objects.filter(pk=self.id).exists():
+        #    old_proj = Project.objects.get(pk=self.id)
+        if self.project.status == self.project.ProjectStatus.AR:
+            raise PermissionDenied(
+                'Can\'t modify because board has {0} status'.format(
+                    self.project.status))
+        super(Board, self).save(*args, **kwargs)
+
 
 class Lane(models.Model):
     """Model definition for Lane. """
@@ -97,6 +165,15 @@ class Lane(models.Model):
         return "{0} with numbering {1}".format(self.name,
                                                self.numbering,
                                                )
+
+    def save(self, *args, **kwargs):
+        # if Project.objects.filter(pk=self.id).exists():
+        #    old_proj = Project.objects.get(pk=self.id)
+        if self.board.project.status == self.board.project.ProjectStatus.AR:
+            raise PermissionDenied(
+                'Can\'t modify because board has {0} status'.format(
+                    self.board.project.status))
+        super(Lane, self).save(*args, **kwargs)
 
 
 class Card(models.Model):
@@ -158,6 +235,16 @@ class Card(models.Model):
             self.name,
             self.description,
             self.storypoints)
+
+    def save(self, *args, **kwargs):
+        # if Project.objects.filter(pk=self.id).exists():
+        #    old_proj = Project.objects.get(pk=self.id)
+        if (self.lane.board.project.status ==
+                self.lane.board.project.ProjectStatus.AR):
+            raise PermissionDenied(
+                'Can\'t modify because board has {0} status'.format(
+                    self.lane.board.project.status))
+        super(Card, self).save(*args, **kwargs)
 
 
 class File(models.Model):
@@ -264,6 +351,16 @@ class Steplist(models.Model):
     def __str__(self):
         return "{0} ".format(self.name)
 
+    def save(self, *args, **kwargs):
+        # if Project.objects.filter(pk=self.id).exists():
+        #    old_proj = Project.objects.get(pk=self.id)
+        if (self.task.lane.board.project.status ==
+                self.task.lane.board.project.ProjectStatus.AR):
+            raise PermissionDenied(
+                'Can\'t modify because board has {0} status'.format(
+                    self.task.lane.board.project.status))
+        super(Steplist, self).save(*args, **kwargs)
+
 
 class SteplistItem(models.Model):
     """ A SteplistItem describes a Task that has to be done
@@ -293,3 +390,13 @@ class SteplistItem(models.Model):
                                             self.steplist,
                                             self.checked,
                                             )
+
+    def save(self, *args, **kwargs):
+        # if Project.objects.filter(pk=self.id).exists():
+        #    old_proj = Project.objects.get(pk=self.id)
+        if (self.steplist.task.lane.board.project.status ==
+                self.steplist.task.lane.board.project.ProjectStatus.AR):
+            raise PermissionDenied(
+                'Can\'t modify because board has {0} status'.format(
+                    self.steplist.task.lane.board.project.status))
+        super(SteplistItem, self).save(*args, **kwargs)
