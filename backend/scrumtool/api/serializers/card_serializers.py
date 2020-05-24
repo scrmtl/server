@@ -60,7 +60,7 @@ class EpicSerializer(serializers.ModelSerializer):
     """Serializer for Epic-Cards
     """
     labels = LabelSerializer(many=True, required=False)
-    files = FileSerializer(many=True, required=False)
+    # files = FileSerializer(many=True, required=False)
     steplists = StepListSerializer(many=True, required=False)
 
     class Meta:
@@ -72,7 +72,7 @@ class FeatureSerializer(serializers.ModelSerializer):
     """Serializer for Feature-Cards
     """
     labels = LabelSerializer(many=True, required=False)
-    files = FileSerializer(many=True, required=False)
+    # files = FileSerializer(many=True, required=False)
     steplists = StepListSerializer(many=True, required=False)
 
     class Meta:
@@ -84,7 +84,7 @@ class TaskSerializer(serializers.ModelSerializer):
     """Serializer for Task-Cards
     """
     labels = LabelSerializer(many=True, required=False)
-    files = FileSerializer(many=True, required=False)
+    # files = FileSerializer(many=True, required=False)
     steplists = StepListSerializer(many=True, required=False)
 
     class Meta:
