@@ -8,6 +8,6 @@
     "cSpell.ignoreWords": [
         "posixpath"
     ],
-    "python.pythonPath": "C:\\Python38\\python.exe"
+    "python.pythonPath": "/home/hermi/.virtualenvs/djangoVenv/bin/python"
     //"python.pythonPath": "/home/hermi/.virtualenvs/djangoVenv/bin/python"
 }

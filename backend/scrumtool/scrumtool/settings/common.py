@@ -44,11 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
+    'oauth2_provider',
     'rest_framework',
-    'rest_framework.authtoken',
-    'polymorphic',
-    'rest_auth',
+    'corsheaders',
     'api'
 ]
 
@@ -57,8 +55,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
@@ -91,7 +89,8 @@ WSGI_APPLICATION = 'scrumtool.wsgi.application'
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': (
-            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'),
+            'django.contrib.auth.password_validation.'
+            'UserAttributeSimilarityValidator'),
     },
     {
         'NAME': (
@@ -103,7 +102,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': (
-            'django.contrib.auth.password_validation.NumericPasswordValidator'),
+            'django.contrib.auth.password_validation.'
+            'NumericPasswordValidator'),
     },
 ]
 

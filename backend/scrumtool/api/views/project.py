@@ -1,9 +1,12 @@
 """Controller methods in the app for cards
 """
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
+
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, \
+    TokenHasScope
 
 from .. import models
 from .. import serializers
@@ -15,6 +18,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     queryset = models.Project.objects.all()
     serializer_class = serializers.ProjectSerializer
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         """retrive for full and partial retrieve
@@ -82,9 +86,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
         # Make a copy of the model
         model.pk = None
 
-        # If a parent model pk and related field are passed in, change that related field to the parent pk
+        # If a parent model pk and related field are passed in, change that
+        # related field to the parent pk
         # if updated_fk:
-        # This is what I am unable to fix.  Need to dynamically reference the models fk field to update with parent pk
+        # This is what I am unable to fix.  Need to dynamically reference the
+        # models fk field to update with parent pk
         # getattr(model, related_field) = updated_fk
         # model.label_id = updated_fk
         # getattr(model, related_field) = updated_fk
@@ -94,10 +100,13 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         # Record the copied model's pk
         new_pk = model.pk
-        # Loop through the listed pairs, deep copying each model and passing the pk and field name to update
+        # Loop through the listed pairs, deep copying each model and passing
+        # the pk and field name to update
         for child_model_relationship in child_model_relationships:
             for child_model in child_model_relationship[0]:
                 self.deep_copy_model(
-                    child_model, updated_fk=new_pk, related_field=child_model_relationship[1])
+                    child_model,
+                    updated_fk=new_pk,
+                    related_field=child_model_relationship[1])
 
         return model.pk

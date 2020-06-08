@@ -5,6 +5,8 @@ from django.db import models
 # https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 from django.utils.translation import gettext_lazy as _
 
+from django.contrib.auth.models import AbstractUser
+
 from django.core.validators import RegexValidator
 from django.core.exceptions import PermissionDenied
 
@@ -400,3 +402,36 @@ class SteplistItem(models.Model):
                 'Can\'t modify because board has {0} status'.format(
                     self.steplist.task.lane.board.project.status))
         super(SteplistItem, self).save(*args, **kwargs)
+
+
+class Role(models.Model):
+    '''
+    The Role entries are managed by the system,
+    automatically created via a Django data migration.
+    '''
+    PO = 1
+    SM = 2
+    DEV = 3
+    ADMIN = 4
+    ROLE_CHOICES = (
+        (PO, 'product owner'),
+        (SM, 'scrum master'),
+        (DEV, 'developer'),
+        (ADMIN, 'admin'),
+    )
+    id = models.PositiveSmallIntegerField(
+        choices=ROLE_CHOICES, primary_key=True)
+
+    def __str__(self):
+        return self.get_id_display()
+
+
+class ScrumUser(AbstractUser):
+    '''
+
+    '''
+    name = models.CharField(blank=True, max_length=255)
+    roles = models.ManyToManyField(Role)
+
+    def __str__(self):
+        return self.email
