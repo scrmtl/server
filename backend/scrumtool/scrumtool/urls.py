@@ -79,10 +79,12 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
     path('schema/', schema_view),
     path('docs/', include_docs_urls(title='Scrumtool API')),
     path('rest-auth/', include('rest_auth.urls')),
-    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
