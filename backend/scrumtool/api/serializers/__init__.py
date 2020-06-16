@@ -7,3 +7,4 @@ from .card_serializers import *
 from .lane_serializers import *
 from .board_serializers import *
 from .project_serializers import *
+from .scrumuser_serializer import *

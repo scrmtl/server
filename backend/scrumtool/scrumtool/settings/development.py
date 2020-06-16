@@ -1,3 +1,5 @@
+''' settings for devolpment environment 
+'''
 from scrumtool.settings.common import *
 
 # Quick-start development settings - unsuitable for production
@@ -28,16 +30,23 @@ DATABASES = {
     }
 }
 
+
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope'}
+}
+
+AUTH_USER_MODEL = 'api.ScrumUser'
+
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': (
         'rest_framework.schemas.coreapi.AutoSchema'),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',),
-    # Sessions is used by django REST api docs and browsable api
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',),
-    # With this the api is browsable without explicit permission granted per
-    # viewModel. Will be deprecated with user management
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated', )
+        'rest_framework.permissions.IsAuthenticated',
+    )
+
 }

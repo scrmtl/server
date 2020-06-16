@@ -5,6 +5,8 @@ from django.db import models
 # https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 from django.utils.translation import gettext_lazy as _
 
+from django.contrib.auth.models import AbstractUser
+
 from django.core.validators import RegexValidator
 from django.core.exceptions import PermissionDenied
 
@@ -131,7 +133,8 @@ class Board(models.Model):
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
         #    old_proj = Project.objects.get(pk=self.id)
-        if self.project.status == self.project.ProjectStatus.AR:
+        if ((self.project_id is not None) and
+                (self.project.status == self.project.ProjectStatus.AR)):
             raise PermissionDenied(
                 'Can\'t modify because board has {0} status'.format(
                     self.project.status))
@@ -169,7 +172,8 @@ class Lane(models.Model):
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
         #    old_proj = Project.objects.get(pk=self.id)
-        if self.board.project.status == self.board.project.ProjectStatus.AR:
+        if ((self.board_id is not None) and
+                (self.board.project.status == self.board.project.ProjectStatus.AR)):
             raise PermissionDenied(
                 'Can\'t modify because board has {0} status'.format(
                     self.board.project.status))
@@ -239,8 +243,9 @@ class Card(models.Model):
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
         #    old_proj = Project.objects.get(pk=self.id)
-        if (self.lane.board.project.status ==
-                self.lane.board.project.ProjectStatus.AR):
+        if ((self.lane_id is not None) and
+            (self.lane.board.project.status ==
+                self.lane.board.project.ProjectStatus.AR)):
             raise PermissionDenied(
                 'Can\'t modify because board has {0} status'.format(
                     self.lane.board.project.status))
@@ -255,7 +260,23 @@ class File(models.Model):
     class Meta:
         """Meta definition for File."""
 
+        # def update(self, request, pk=None, **kwargs):
         verbose_name = 'File'
+    #     if pk is None:
+    #         return Response(status=status.HTTP_204_NO_CONTENT)
+    #     labels = request.data.get('labels')
+    #     if (labels is not None):
+    #         i = 0
+    #         for label in labels:
+    #             label_serializer = serializers.LabelSerializer(data=label)
+    #             if label_serializer.is_valid():
+    #                 logger.info('Save new label: %s' %
+    #                             label_serializer.validated_data)
+    #                 label_serializer.save()
+    #                 labels[i] = label_serializer.data
+    #                 i += 1
+    #     request.data['labels'] = labels
+    #     super().update(request)
         verbose_name_plural = 'Files'
 
     def __str__(self):
@@ -285,10 +306,10 @@ class Label(models.Model):
 
     def __str__(self):
         """Unicode representation of Label."""
-        return "{0} with color {1}".format(self.title,
-                                           self.color,
-
-                                           )
+        return "{0} with color {1} id: {2}".format(self.title,
+                                                   self.color,
+                                                   self.id,
+                                                   )
 
 
 class Epic(Card):
@@ -349,13 +370,16 @@ class Steplist(models.Model):
         verbose_name_plural = 'Steplist'
 
     def __str__(self):
-        return "{0} ".format(self.name)
+        return "{0} id:{1}".format(self.name, self.pk)
 
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
         #    old_proj = Project.objects.get(pk=self.id)
-        if (self.task.lane.board.project.status ==
-                self.task.lane.board.project.ProjectStatus.AR):
+
+        # Check if board is in Archive
+        if ((self.task_id is not None) and
+            (self.task.lane.board.project.status ==
+                self.task.lane.board.project.ProjectStatus.AR)):
             raise PermissionDenied(
                 'Can\'t modify because board has {0} status'.format(
                     self.task.lane.board.project.status))
@@ -386,17 +410,52 @@ class SteplistItem(models.Model):
         verbose_name_plural = 'Step'
 
     def __str__(self):
-        return "{0}: {1}({2}): {3} ".format(self.numbering, self.text,
-                                            self.steplist,
-                                            self.checked,
-                                            )
+        return "{0}: {1}(steplist:{2}) id:{3} ".format(self.numbering, self.text,
+                                                       self.steplist,
+                                                       self.id,
+                                                       )
 
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
         #    old_proj = Project.objects.get(pk=self.id)
-        if (self.steplist.task.lane.board.project.status ==
-                self.steplist.task.lane.board.project.ProjectStatus.AR):
+
+        if ((self.steplist_id is not None) and
+            (self.steplist.task.lane.board.project.status ==
+             self.steplist.task.lane.board.project.ProjectStatus.AR)):
             raise PermissionDenied(
                 'Can\'t modify because board has {0} status'.format(
                     self.steplist.task.lane.board.project.status))
         super(SteplistItem, self).save(*args, **kwargs)
+
+
+class Role(models.Model):
+    '''
+    The Role entries are managed by the system,
+    automatically created via a Django data migration.
+    '''
+    PO = 1
+    SM = 2
+    DEV = 3
+    ADMIN = 4
+    ROLE_CHOICES = (
+        (PO, 'product owner'),
+        (SM, 'scrum master'),
+        (DEV, 'developer'),
+        (ADMIN, 'admin'),
+    )
+    id = models.PositiveSmallIntegerField(
+        choices=ROLE_CHOICES, primary_key=True)
+
+    def __str__(self):
+        return self.get_id_display()
+
+
+class ScrumUser(AbstractUser):
+    '''
+
+    '''
+    name = models.CharField(blank=True, max_length=255)
+    roles = models.ManyToManyField(Role)
+
+    def __str__(self):
+        return self.email
