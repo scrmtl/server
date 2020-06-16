@@ -391,8 +391,7 @@ class SteplistItem(models.Model):
     """
     steplist = models.ForeignKey(
         to='Steplist',
-        on_delete=models.CASCADE,
-        blank=True,)
+        on_delete=models.CASCADE)
     text = models.CharField(
         max_length=256,
         help_text='This is the text the user enters')
@@ -411,10 +410,10 @@ class SteplistItem(models.Model):
         verbose_name_plural = 'Step'
 
     def __str__(self):
-        return "{0}: {1}({2}): {3} ".format(self.numbering, self.text,
-                                            self.steplist,
-                                            self.checked,
-                                            )
+        return "{0}: {1}(steplist:{2}) id:{3} ".format(self.numbering, self.text,
+                                                       self.steplist,
+                                                       self.id,
+                                                       )
 
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():

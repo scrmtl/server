@@ -113,7 +113,7 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = CardSerializer.Meta.fields + \
-            ('labels', 'steplists', 'feature')
+            ('feature', 'labels', 'steplists',)
 
     def update(self, instance, validated_data):
         labels_data = validated_data.pop('labels')
@@ -163,7 +163,7 @@ class TaskSerializer(serializers.ModelSerializer):
                 steplist_instance = Steplist.objects.get(
                     id=steplist['id'])
             steplist['task'] = instance.id
-            steplist_serializer = StepListSerializer(
+            steplist_serializer = StepListSerializerForCards(
                 data=steplist, instance=steplist_instance)
 
             if steplist_serializer.is_valid():
