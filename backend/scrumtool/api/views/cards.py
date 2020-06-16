@@ -1,16 +1,16 @@
 """Controller methods in the app for cards
 """
-from rest_framework import viewsets
-from rest_framework.response import Response
-
-from rest_framework import permissions, status
-from rest_framework.parsers import MultiPartParser, FormParser
-
-from django.shortcuts import get_object_or_404
-from django.http import Http404
-
-from .. import models
+# import the logging library
 from .. import serializers
+from .. import models
+from django.http import Http404
+from django.shortcuts import get_object_or_404
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import permissions, status
+from rest_framework.response import Response
+from rest_framework import viewsets
+import logging
+logger = logging.getLogger(__name__)
 
 
 class FileViewSet(viewsets.ModelViewSet):
