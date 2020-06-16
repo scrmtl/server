@@ -1,7 +1,6 @@
 """[summary]
 """
 
-from .task import *
 from .steplist import *
 from .cards import *
 from .board import *
