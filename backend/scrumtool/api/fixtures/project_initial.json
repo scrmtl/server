@@ -11,7 +11,7 @@
         "model": "api.board",
         "pk": 2,
         "fields": {
-            "board": 3,
+            "project": 3,
             "name": "Product Backlog",
             "description": "As described in the Scrum Guide, the Product Backlog is an ordered list of everything that is known to be needed in the product. It is the single source of requirements for any changes to be made to the product. The Product Owner is responsible for the Product Backlog, including its content, availability, and ordering.\r\n- https://www.scrum.org/resources/what-is-a-product-backlog",
             "board_type": "PB",
@@ -22,7 +22,7 @@
         "model": "api.board",
         "pk": 3,
         "fields": {
-            "board": 3,
+            "project": 3,
             "name": "Sprint Backlog",
             "description": "As described in the Scrum Guide, the Sprint Backlog is the set of Product Backlog items selected for the Sprint, plus a plan for delivering the product Increment and realizing the Sprint Goal. The Sprint Backlog is a forecast by the Development Team about what functionality will be in the next Increment and the work needed to deliver that functionality into a \u201cDone\u201d Increment.\r\n- https://www.scrum.org/resources/what-is-a-sprint-backlog",
             "board_type": "SP",
@@ -33,7 +33,7 @@
         "model": "api.board",
         "pk": 4,
         "fields": {
-            "board": 3,
+            "project": 3,
             "name": "Archive Board",
             "description": "",
             "board_type": "AB",
