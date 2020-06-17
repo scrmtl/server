@@ -235,10 +235,10 @@ class Card(models.Model):
         abstract = True
 
     def __str__(self):
-        return "{0} ({1}) {2}".format(
+        return "{0} ({1}) id:{2}".format(
             self.name,
             self.description,
-            self.storypoints)
+            self.id)
 
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
