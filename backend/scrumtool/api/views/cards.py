@@ -48,6 +48,26 @@ class EpicViewSet(viewsets.ModelViewSet):
     queryset = models.Epic.objects.all()
     serializer_class = serializers.EpicSerializer
 
+    @action(methods=['delete'], detail=True)
+    def remove_labels_from_task(self, request, pk=None):
+        labels_to_remove = request.data['labels']
+        for label in labels_to_remove:
+            self.remove_label(label)
+        return Response(self.serializer_class(self.get_object()).data, status=status.HTTP_200_OK)
+
+    @action(methods=['delete'], detail=True)
+    def remove_label_from_task(self, request, pk=None):
+        label_to_remove = request.data['label']
+        self.remove_label(label_to_remove)
+        return Response(self.serializer_class(self.get_object()).data, status=status.HTTP_200_OK)
+
+    def remove_label(self, label_data):
+        label = get_object_or_404(models.Label, pk=label_data['id'])
+        task = self.get_object()
+        task.labels.remove(label)
+        logger.info('Removed label: %s with from Epic: %s',
+                    label, task)
+
 
 class FeatureViewSet(viewsets.ModelViewSet):
     """CRUD for Features
@@ -55,6 +75,26 @@ class FeatureViewSet(viewsets.ModelViewSet):
 
     queryset = models.Feature.objects.all()
     serializer_class = serializers.FeatureSerializer
+
+    @action(methods=['delete'], detail=True)
+    def remove_labels_from_task(self, request, pk=None):
+        labels_to_remove = request.data['labels']
+        for label in labels_to_remove:
+            self.remove_label(label)
+        return Response(self.serializer_class(self.get_object()).data, status=status.HTTP_200_OK)
+
+    @action(methods=['delete'], detail=True)
+    def remove_label_from_task(self, request, pk=None):
+        label_to_remove = request.data['label']
+        self.remove_label(label_to_remove)
+        return Response(self.serializer_class(self.get_object()).data, status=status.HTTP_200_OK)
+
+    def remove_label(self, label_data):
+        label = get_object_or_404(models.Label, pk=label_data['id'])
+        task = self.get_object()
+        task.labels.remove(label)
+        logger.info('Removed label: %s with from feature: %s',
+                    label, task)
 
 
 class TaskViewSet(viewsets.ModelViewSet):
