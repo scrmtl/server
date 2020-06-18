@@ -53,13 +53,15 @@ class EpicViewSet(viewsets.ModelViewSet):
         labels_to_remove = request.data['labels']
         for label in labels_to_remove:
             self.remove_label(label)
-        return Response(self.serializer_class(self.get_object()).data, status=status.HTTP_200_OK)
+        return Response(self.serializer_class(self.get_object()).data,
+                        status=status.HTTP_200_OK)
 
     @action(methods=['delete'], detail=True)
     def remove_label_from_task(self, request, pk=None):
         label_to_remove = request.data['label']
         self.remove_label(label_to_remove)
-        return Response(self.serializer_class(self.get_object()).data, status=status.HTTP_200_OK)
+        return Response(self.serializer_class(self.get_object()).data,
+                        status=status.HTTP_200_OK)
 
     def remove_label(self, label_data):
         label = get_object_or_404(models.Label, pk=label_data['id'])
@@ -81,13 +83,15 @@ class FeatureViewSet(viewsets.ModelViewSet):
         labels_to_remove = request.data['labels']
         for label in labels_to_remove:
             self.remove_label(label)
-        return Response(self.serializer_class(self.get_object()).data, status=status.HTTP_200_OK)
+        return Response(self.serializer_class(self.get_object()).data,
+                        status=status.HTTP_200_OK)
 
     @action(methods=['delete'], detail=True)
     def remove_label_from_task(self, request, pk=None):
         label_to_remove = request.data['label']
         self.remove_label(label_to_remove)
-        return Response(self.serializer_class(self.get_object()).data, status=status.HTTP_200_OK)
+        return Response(self.serializer_class(self.get_object()).data,
+                        status=status.HTTP_200_OK)
 
     def remove_label(self, label_data):
         label = get_object_or_404(models.Label, pk=label_data['id'])
@@ -109,13 +113,15 @@ class TaskViewSet(viewsets.ModelViewSet):
         labels_to_remove = request.data['labels']
         for label in labels_to_remove:
             self.remove_label(label)
-        return Response(self.serializer_class(self.get_object()).data, status=status.HTTP_200_OK)
+        return Response(self.serializer_class(self.get_object()).data,
+                        status=status.HTTP_200_OK)
 
     @action(methods=['delete'], detail=True)
     def remove_label_from_task(self, request, pk=None):
         label_to_remove = request.data['label']
         self.remove_label(label_to_remove)
-        return Response(self.serializer_class(self.get_object()).data, status=status.HTTP_200_OK)
+        return Response(self.serializer_class(self.get_object()).data,
+                        status=status.HTTP_200_OK)
 
     def remove_label(self, label_data):
         label = get_object_or_404(models.Label, pk=label_data['id'])

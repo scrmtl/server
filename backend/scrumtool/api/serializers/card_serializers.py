@@ -115,6 +115,23 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = CardSerializer.Meta.fields + \
             ('feature', 'labels', 'steplists',)
 
+    def create(self, validated_data):
+        labels_data = validated_data.pop('labels')
+        steplists_data = validated_data.pop('steplists')
+
+        instance = super().create(validated_data)
+        instance.save()
+
+        instance = self.update_label(instance, labels_data)
+        instance.save()
+        instance = self.create_non_existing_label(instance, labels_data)
+        instance.save()
+
+        instance = self.update_steplist(instance, steplists_data)
+        instance.save()
+
+        return instance
+
     def update(self, instance, validated_data):
         labels_data = validated_data.pop('labels')
         steplists_data = validated_data.pop('steplists')
@@ -124,15 +141,22 @@ class TaskSerializer(serializers.ModelSerializer):
 
         instance = self.update_label(instance, labels_data)
         instance.save()
+        instance = self.create_non_existing_label(instance, labels_data)
+        instance.save()
+        instance = self.delete_not_send_labels(instance, labels_data)
+        instance.save()
 
         instance = self.update_steplist(instance, steplists_data)
         instance.save()
-
+        instance = self.delete_not_send_steplists(instance, steplists_data)
+        instance.save()
         return instance
 
     def update_label(self, instance, labels_data):
+        '''
+        Updates existing labels. Not existing labels are skipped.
+        '''
         label_instance = None
-
         for label in labels_data:
             if (('id' in label) and Label.objects.filter(
                     id=label['id']).exists()):
@@ -144,12 +168,14 @@ class TaskSerializer(serializers.ModelSerializer):
                     title=label['title']).exists()):
                 label_instance = Label.objects.get(
                     title=label['title'])
+            else:
+                continue
             # TODO Benutzer über fehlende Argumente informieren
             label_serializer = LabelSerializer(
                 data=label, instance=label_instance)
             if label_serializer.is_valid():
                 label_instance = label_serializer.save()
-                logger.info('Save new label: %s with id: %s',
+                logger.info('Update existing label: %s with id: %s',
                             label_serializer.validated_data, label_instance.id)
                 instance.labels.add(label_instance)
                 label_instance = None
@@ -163,9 +189,12 @@ class TaskSerializer(serializers.ModelSerializer):
                 steplist_instance = Steplist.objects.get(
                     id=steplist['id'])
             steplist['task'] = instance.id
+            for step in steplist['steplistitem_set']:
+                step['steplist'] = steplist['id']
             steplist_serializer = StepListSerializerForCards(
                 data=steplist, instance=steplist_instance)
-
+            steplist_serializer.is_valid()
+            logger.info(steplist_serializer.errors)
             if steplist_serializer.is_valid():
                 steplist_instance = steplist_serializer.save()
                 logger.info('Save new steplist: %s with id: %s',
@@ -174,4 +203,59 @@ class TaskSerializer(serializers.ModelSerializer):
                 steplist_instance.save()
                 steplist_instance = None
 
+        return instance
+
+    def delete_not_send_steplists(self, instance, steplists_data):
+        id_list = list()
+        for steplist in steplists_data:
+            if (('id' in steplist) and Steplist.objects.filter(
+                    id=steplist['id']).exists()):
+                id_list.append(steplist['id'])
+            else:
+                continue
+        for steplist in instance.steplists.all():
+            if steplist.id not in id_list:
+                steplist.delete()
+        return instance
+
+    def create_non_existing_label(self, instance, labels_data):
+        '''
+        Create new label if label does not exists 
+        '''
+        label_instance = None
+        for label in labels_data:
+            if ((
+                ('id' in label) and not
+                Label.objects.filter(
+                    id=label['id']).exists())
+                or
+                (('title' in label) and not
+                 Label.objects.filter(
+                    title=label['title']).exists())):
+                label_serializer = LabelSerializer(
+                    data=label)
+            else:
+                continue
+            if label_serializer.is_valid():
+                label_instance = label_serializer.save()
+                logger.info('Create new label: %s with id: %s',
+                            label_serializer.validated_data, label_instance.id)
+                instance.labels.add(label_instance)
+                label_instance = None
+        return instance
+
+    def delete_not_send_labels(self, instance, labels_data):
+        '''
+        delete existing label from task
+        '''
+        id_list = list()
+        for label in labels_data:
+            if (('id' in label) and Label.objects.filter(
+                    id=label['id']).exists()):
+                id_list.append(label['id'])
+            else:
+                continue
+        for label in instance.labels.all():
+            if label.id not in id_list:
+                instance.labels.remove(label)
         return instance
