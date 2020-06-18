@@ -133,23 +133,28 @@ class TaskSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        labels_data = validated_data.pop('labels')
-        steplists_data = validated_data.pop('steplists')
+        labels_data = None
+        steplists_data = None
+        if 'labels' in validated_data:
+            labels_data = validated_data.pop('labels')
+        if 'steplists' in validated_data:
+            steplists_data = validated_data.pop('steplists')
 
         instance = super().update(instance, validated_data)
         instance.save()
 
-        instance = self.update_label(instance, labels_data)
-        instance.save()
-        instance = self.create_non_existing_label(instance, labels_data)
-        instance.save()
-        instance = self.delete_not_send_labels(instance, labels_data)
-        instance.save()
-
-        instance = self.update_steplist(instance, steplists_data)
-        instance.save()
-        instance = self.delete_not_send_steplists(instance, steplists_data)
-        instance.save()
+        if labels_data is not None:
+            instance = self.update_label(instance, labels_data)
+            instance.save()
+            instance = self.create_non_existing_label(instance, labels_data)
+            instance.save()
+            instance = self.delete_not_send_labels(instance, labels_data)
+            instance.save()
+        if steplists_data is not None:
+            instance = self.update_steplist(instance, steplists_data)
+            instance.save()
+            instance = self.delete_not_send_steplists(instance, steplists_data)
+            instance.save()
         return instance
 
     def update_label(self, instance, labels_data):
