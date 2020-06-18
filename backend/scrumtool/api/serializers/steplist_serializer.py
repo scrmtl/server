@@ -66,7 +66,8 @@ class StepListSerializerForCards(serializers.ModelSerializer):
     """Serializer for a steplist
 
     """
-    steplistitem_set = step_serializer.StepSerializer(many=True)
+    steplistitem_set = step_serializer.StepSerializer(
+        many=True, required=False)
     task = serializers.PrimaryKeyRelatedField(
         queryset=Task.objects.all(), required=False)
 
@@ -79,9 +80,6 @@ class StepListSerializerForCards(serializers.ModelSerializer):
             'id': {
                 'read_only': False,
                 'required': False,
-            },
-            'task': {
-                'write_only': True,
             },
         }
 
@@ -104,6 +102,9 @@ class StepListSerializerForCards(serializers.ModelSerializer):
 
         instance = self.update_steplistitem(instance, steplistitem_set_data)
         instance.save()
+        instance = self.delete_not_send_steplistitem(
+            instance, steplistitem_set_data)
+        instance.save()
 
         return instance
 
@@ -124,6 +125,19 @@ class StepListSerializerForCards(serializers.ModelSerializer):
                             steplistitem_instance.id)
                 instance.steplistitem_set.add(steplistitem_instance)
                 steplistitem_instance = None
+        return instance
+
+    def delete_not_send_steplistitem(self, instance, steplistitem_set_data):
+        id_list = list()
+        for steplistitem in steplistitem_set_data:
+            if (('id' in steplistitem) and SteplistItem.objects.filter(
+                    id=steplistitem['id']).exists()):
+                id_list.append(steplistitem['id'])
+            else:
+                continue
+        for steplistitem in instance.steplistitem_set.all():
+            if steplistitem.id not in id_list:
+                steplistitem.delete()
         return instance
 
 

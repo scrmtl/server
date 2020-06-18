@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'corsheaders',
-
     'api'
 ]
 

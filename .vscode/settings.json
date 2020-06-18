@@ -7,7 +7,6 @@
     ],
     "cSpell.ignoreWords": [
         "posixpath"
-    ],
-    "python.pythonPath": "/home/hermi/.virtualenvs/djangoVenv/bin/python"
+    ]
     //"python.pythonPath": "/home/hermi/.virtualenvs/djangoVenv/bin/python"
 }
