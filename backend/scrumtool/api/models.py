@@ -187,9 +187,12 @@ class Card(models.Model):
     # ForeignKey in abstract classes:
     # https://docs.djangoproject.com/en/dev/topics/db/models/#be-careful-with-related-name-and-related-query-name
     class Status(models.TextChoices):
+        NEW = 'nw', _('new')
+        PLANNED = 'pd', _('planned')
         NOT_STARTED = 'ns', _('not started')
-        DONE = 'do', _('done')
         IN_PROGRESS = 'ip', _('in progress')
+        DONE = 'do', _('done')
+        ACCEPTED = 'ad', _('accepted')
 
     lane = models.ForeignKey(
         to='Lane',
@@ -224,8 +227,14 @@ class Card(models.Model):
     status = models.CharField(
         choices=Status.choices,
         max_length=2,
-        default=Status.NOT_STARTED,
-        help_text='This is the name of the list itself')
+        default=Status.NEW,
+        help_text='This is the name of the list itself:( \
+                    new = nw \
+                    pd = planned \
+                    ns = not started \
+                    ip = in progress \
+                    do = done \
+                    ad = accepted)')
 
     class Meta:
         """Meta definition for Card."""
@@ -410,7 +419,8 @@ class SteplistItem(models.Model):
         verbose_name_plural = 'Step'
 
     def __str__(self):
-        return "{0}: {1}(steplist:{2}) id:{3} ".format(self.numbering, self.text,
+        return "{0}: {1}(steplist:{2}) id:{3} ".format(self.numbering,
+                                                       self.text,
                                                        self.steplist,
                                                        self.id,
                                                        )
