@@ -145,10 +145,12 @@ class StepListSerializerCommon(serializers.ModelSerializer):
     """Serializer for a steplist
 
     """
+    task = serializers.PrimaryKeyRelatedField(
+        queryset=Task.objects.all(), required=False)
 
     class Meta:
         model = Steplist
-        fields = ('name', 'id')
+        fields = ('name', 'id', 'task')
         extra_kwargs = {
             "id": {
                 "read_only": False,

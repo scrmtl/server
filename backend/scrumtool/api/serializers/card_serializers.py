@@ -2,7 +2,7 @@
 """
 from rest_framework import serializers
 from ..models import Card, Task, Feature, Epic, Label, File, Steplist
-from .steplist_serializer import StepListSerializerForCards
+from .steplist_serializer import StepListSerializerForCards, StepListSerializerCommon
 import logging
 logger = logging.getLogger(__name__)
 
@@ -101,7 +101,7 @@ class FeatureSerializer(serializers.ModelSerializer):
         fields = CardSerializer.Meta.fields + ('labels', 'steplists')
 
 
-class TaskSerializer(serializers.ModelSerializer):
+class TaskSerializerFull(serializers.ModelSerializer):
     """Serializer for Task-Cards
     """
     labels = LabelSerializer(many=True, required=False)
@@ -225,7 +225,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def create_non_existing_label(self, instance, labels_data):
         '''
-        Create new label if label does not exists 
+        Create new label if label does not exists
         '''
         label_instance = None
         for label in labels_data:
@@ -264,3 +264,30 @@ class TaskSerializer(serializers.ModelSerializer):
             if label.id not in id_list:
                 instance.labels.remove(label)
         return instance
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    """Serializer for Task-Cards
+    """
+    labels = LabelSerializer(
+        many=True,
+        required=False,
+        read_only=False)
+    # serializers.PrimaryKeyRelatedField(
+    #    many=True,
+    #    required=False,
+    #    queryset=Label.objects.all())
+    # files = FileSerializer(many=True, required=False)
+    steplists = serializers.PrimaryKeyRelatedField(
+        many=True,
+        required=False,
+        read_only=False,
+        queryset=Steplist.objects.all())
+    feature = serializers.PrimaryKeyRelatedField(
+        queryset=Feature.objects.all(),
+        required=True)
+
+    class Meta:
+        model = Task
+        fields = CardSerializer.Meta.fields + \
+            ('feature', 'labels', 'steplists',)
