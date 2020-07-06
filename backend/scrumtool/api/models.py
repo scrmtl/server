@@ -6,6 +6,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import Group
 
 from django.core.validators import RegexValidator
 from django.core.exceptions import PermissionDenied
@@ -306,10 +307,11 @@ class Label(models.Model):
 
     def __str__(self):
         """Unicode representation of Label."""
-        return "{0} with color {1} id: {2}".format(self.title,
-                                                   self.color,
-                                                   self.id,
-                                                   )
+        return "{0} with color {1} id: {2}".format(
+            self.title,
+            self.color,
+            self.id,
+        )
 
 
 class Epic(Card):
@@ -410,10 +412,11 @@ class SteplistItem(models.Model):
         verbose_name_plural = 'Step'
 
     def __str__(self):
-        return "{0}: {1}(steplist:{2}) id:{3} ".format(self.numbering, self.text,
-                                                       self.steplist,
-                                                       self.id,
-                                                       )
+        return "{0}: {1}(steplist:{2}) id:{3} ".format(
+            self.numbering, self.text,
+            self.steplist,
+            self.id,
+        )
 
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
@@ -428,7 +431,7 @@ class SteplistItem(models.Model):
         super(SteplistItem, self).save(*args, **kwargs)
 
 
-class Role(models.Model):
+class ProjectRole(models.Model):
     '''
     The Role entries are managed by the system,
     automatically created via a Django data migration.
@@ -436,12 +439,10 @@ class Role(models.Model):
     PO = 1
     SM = 2
     DEV = 3
-    ADMIN = 4
     ROLE_CHOICES = (
         (PO, 'product owner'),
         (SM, 'scrum master'),
         (DEV, 'developer'),
-        (ADMIN, 'admin'),
     )
     id = models.PositiveSmallIntegerField(
         choices=ROLE_CHOICES, primary_key=True)
@@ -455,7 +456,10 @@ class ScrumUser(AbstractUser):
 
     '''
     name = models.CharField(blank=True, max_length=255)
-    roles = models.ManyToManyField(Role)
+    roles = models.ManyToManyField(ProjectRole)
 
     def __str__(self):
-        return self.email
+        return "username: {0} (id:{1}) ".format(
+            self.username,
+            self.id,
+        )

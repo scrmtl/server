@@ -1,0 +1,22 @@
+[
+{
+    "model": "api.role",
+    "pk": 1,
+    "fields": {}
+},
+{
+    "model": "api.role",
+    "pk": 2,
+    "fields": {}
+},
+{
+    "model": "api.role",
+    "pk": 3,
+    "fields": {}
+},
+{
+    "model": "api.role",
+    "pk": 4,
+    "fields": {}
+}
+]
