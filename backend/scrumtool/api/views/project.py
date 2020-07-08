@@ -50,17 +50,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 default_project.name = name
                 default_project.description = description
                 model_pk = self.deep_copy_model(model=default_project)
-                # for board in default_project.boards.all():
-                #    for lane in board.lanes.all():
-                #        lane.pk = None
-                #    board.pk = None
-                # default_project.pk = None
-                # default_project.name = name
-                # default_project.description = description
-                # default_project.save()
-                # serializer = serializers.ProjectSerializerFull(
-                #    data = default_project)
-                # serializer.is_valid()
                 project = models.Project.objects.get(pk=model_pk)
                 test_serializer = serializers.ProjectSerializer(project)
                 return Response(test_serializer.data)
@@ -85,16 +74,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         # Make a copy of the model
         model.pk = None
-
-        # If a parent model pk and related field are passed in, change that
-        # related field to the parent pk
-        # if updated_fk:
-        # This is what I am unable to fix.  Need to dynamically reference the
-        # models fk field to update with parent pk
-        # getattr(model, related_field) = updated_fk
-        # model.label_id = updated_fk
-        # getattr(model, related_field) = updated_fk
-        # getattr(model, related_field).SET(updated_fk)
 
         model.save()
 

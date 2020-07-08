@@ -1,7 +1,7 @@
 """Serializers for Cards
 """
 from rest_framework import serializers
-from ..models import Card, Task, Feature, Epic, Label, File, Steplist
+from ..models import Card, Task, Feature, Epic, Label, File, Steplist, Lane
 from .steplist_serializer import StepListSerializerForCards
 import logging
 logger = logging.getLogger(__name__)
@@ -55,6 +55,8 @@ class CardSerializer(serializers.ModelSerializer):
     """Base-class serializer for cards.
     Other cards will inherits from this class
     """
+    lane = serializers.PrimaryKeyRelatedField(
+        queryset=Lane.objects.all(), required=False)
 
     class Meta:
         model = Card
@@ -62,6 +64,7 @@ class CardSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',
                   'description', 'numbering',
                   'storypoints', 'status',
+                  'lane',
                   )
 
     def update(self, instance, validated_data):
@@ -73,6 +76,7 @@ class CardSerializer(serializers.ModelSerializer):
         instance.storypoints = validated_data.get(
             'storypoints', instance.storypoints)
         instance.status = validated_data.get('status', instance.status)
+        instance.lane = validated_data.get('lane', instance.lane)
         instance.save()
         return instance
 
@@ -108,7 +112,7 @@ class TaskSerializer(serializers.ModelSerializer):
     # files = FileSerializer(many=True, required=False)
     steplists = StepListSerializerForCards(many=True, required=False)
     feature = serializers.PrimaryKeyRelatedField(
-        queryset=Feature.objects.all(), required=True)
+        queryset=Feature.objects.all(), required=False)
 
     class Meta:
         model = Task
@@ -116,19 +120,24 @@ class TaskSerializer(serializers.ModelSerializer):
             ('feature', 'labels', 'steplists',)
 
     def create(self, validated_data):
-        labels_data = validated_data.pop('labels')
-        steplists_data = validated_data.pop('steplists')
+        labels_data = None
+        steplists_data = None
+        if 'labels' in validated_data:
+            labels_data = validated_data.pop('labels')
+        if 'steplists' in validated_data:
+            steplists_data = validated_data.pop('steplists')
 
         instance = super().create(validated_data)
         instance.save()
 
-        instance = self.update_label(instance, labels_data)
-        instance.save()
-        instance = self.create_non_existing_label(instance, labels_data)
-        instance.save()
-
-        instance = self.update_steplist(instance, steplists_data)
-        instance.save()
+        if labels_data is not None:
+            instance = self.update_label(instance, labels_data)
+            instance.save()
+            instance = self.create_non_existing_label(instance, labels_data)
+            instance.save()
+        if steplists_data is not None:
+            instance = self.update_steplist(instance, steplists_data)
+            instance.save()
 
         return instance
 
