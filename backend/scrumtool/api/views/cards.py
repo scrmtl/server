@@ -74,7 +74,6 @@ class EpicViewSet(viewsets.ModelViewSet):
 class FeatureViewSet(viewsets.ModelViewSet):
     """CRUD for Features
     """
-
     queryset = models.Feature.objects.all()
     serializer_class = serializers.FeatureSerializer
 

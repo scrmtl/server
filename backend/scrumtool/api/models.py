@@ -195,7 +195,8 @@ class Card(models.Model):
         to='Lane',
         on_delete=models.CASCADE,
         related_name='%(class)s_cards',
-        help_text='Lane this card belongs to'
+        help_text='Lane this card belongs to',
+        default=1
     )
     labels = models.ManyToManyField(
         to='api.Label',
@@ -342,7 +343,8 @@ class Task(Card):
         to='Feature',
         on_delete=models.CASCADE,
         related_name='tasks',
-        blank=True,)
+        blank=True,
+        default=1,)
 
     class Meta:
         """Meta definition for Task."""
