@@ -170,14 +170,25 @@ class Lane(models.Model):
                                                self.numbering,
                                                )
 
+    @property
+    def project(self):
+        """Getter for the parent project
+
+        Returns
+        -------
+        Project
+            The parent Project
+        """
+        return self.board.project
+
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
         #    old_proj = Project.objects.get(pk=self.id)
         if ((self.board_id is not None) and
-                (self.board.project.status == self.board.project.ProjectStatus.AR)):
+                (self.project.status == self.project.ProjectStatus.AR)):
             raise PermissionDenied(
                 'Can\'t modify because board has {0} status'.format(
-                    self.board.project.status))
+                    self.project.status))
         super(Lane, self).save(*args, **kwargs)
 
 
@@ -241,15 +252,26 @@ class Card(models.Model):
             self.description,
             self.storypoints)
 
+    @property
+    def project(self):
+        """Getter for the parent project
+
+        Returns
+        -------
+        Project
+            The parent Project
+        """
+        return self.lane.board.project
+
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
         #    old_proj = Project.objects.get(pk=self.id)
         if ((self.lane_id is not None) and
-            (self.lane.board.project.status ==
-                self.lane.board.project.ProjectStatus.AR)):
+            (self.project.status ==
+                self.project.ProjectStatus.AR)):
             raise PermissionDenied(
                 'Can\'t modify because board has {0} status'.format(
-                    self.lane.board.project.status))
+                    self.project.status))
         super(Card, self).save(*args, **kwargs)
 
 
@@ -374,14 +396,25 @@ class Steplist(models.Model):
     def __str__(self):
         return "{0} id:{1}".format(self.name, self.pk)
 
+    @property
+    def project(self):
+        """Getter for the parent project
+
+        Returns
+        -------
+        Project
+            The parent Project
+        """
+        return self.task.lane.board.project
+
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
         #    old_proj = Project.objects.get(pk=self.id)
 
         # Check if board is in Archive
         if ((self.task_id is not None) and
-            (self.task.lane.board.project.status ==
-                self.task.lane.board.project.ProjectStatus.AR)):
+            (self.project.status ==
+                self.project.ProjectStatus.AR)):
             raise PermissionDenied(
                 'Can\'t modify because board has {0} status'.format(
                     self.task.lane.board.project.status))
@@ -405,6 +438,17 @@ class SteplistItem(models.Model):
         unique=False,
         help_text='Describes the order of the steps')
 
+    @property
+    def project(self):
+        """Getter for the parent project
+
+        Returns
+        -------
+        Project
+            The parent Project
+        """
+        return self.steplist.task.lane.board.project
+
     class Meta:
         """Meta definition for Step."""
 
@@ -421,10 +465,9 @@ class SteplistItem(models.Model):
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
         #    old_proj = Project.objects.get(pk=self.id)
-
         if ((self.steplist_id is not None) and
-            (self.steplist.task.lane.board.project.status ==
-             self.steplist.task.lane.board.project.ProjectStatus.AR)):
+            (self.project.status ==
+             self.project.ProjectStatus.AR)):
             raise PermissionDenied(
                 'Can\'t modify because board has {0} status'.format(
                     self.steplist.task.lane.board.project.status))
@@ -447,6 +490,27 @@ class ProjectRole(models.Model):
     id = models.PositiveSmallIntegerField(
         choices=ROLE_CHOICES, primary_key=True)
 
+    @property
+    def is_po(self):
+        if self.id == 1:
+            return True
+        else:
+            return False
+
+    @property
+    def is_sm(self):
+        if self.id == 2:
+            return True
+        else:
+            return False
+
+    @property
+    def is_dev(self):
+        if self.id == 3:
+            return True
+        else:
+            return False
+
     def __str__(self):
         return self.get_id_display()
 
@@ -456,10 +520,42 @@ class ScrumUser(AbstractUser):
 
     '''
     name = models.CharField(blank=True, max_length=255)
-    roles = models.ManyToManyField(ProjectRole)
 
     def __str__(self):
         return "username: {0} (id:{1}) ".format(
             self.username,
             self.id,
+        )
+
+
+class ProjectUser(models.Model):
+    """Model definition for ProjectUser."""
+    scrum_user = models.ForeignKey(
+        to='ScrumUser',
+        on_delete=models.DO_NOTHING,
+        related_name='project_users'
+    )
+    role = models.ForeignKey(
+        to='ProjectRole',
+        on_delete=models.DO_NOTHING,
+        related_name='project_users'
+    )
+    project = models.ForeignKey(
+        to='Project',
+        on_delete=models.DO_NOTHING,
+        related_name='project_users'
+    )
+
+    class Meta:
+        """Meta definition for ProjectUser."""
+
+        verbose_name = 'ProjectUser'
+        verbose_name_plural = 'ProjectUsers'
+
+    def __str__(self):
+        """Unicode representation of ProjectUser."""
+        return "User:{0} with role ({1}) in project ({2}) ".format(
+            self.scrum_user,
+            self.role,
+            self.project
         )

@@ -18,7 +18,7 @@ class ScrumUserChangeForm(UserChangeForm):
 
     class Meta:
         model = ScrumUser
-        fields = UserChangeForm.Meta.fields + ('username', )
+        fields = UserChangeForm.Meta.fields
 
 
 User = get_user_model()

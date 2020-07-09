@@ -20,7 +20,8 @@ admin.site.register(models.Feature)
 admin.site.register(models.Epic)
 admin.site.register(models.Board)
 admin.site.register(models.File)
-admin.site.register(models.Role)
+admin.site.register(models.ProjectUser)
+admin.site.register(models.ProjectRole)
 
 
 class ScrumUserAdmin(UserAdmin):

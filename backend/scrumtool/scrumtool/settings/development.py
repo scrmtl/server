@@ -43,6 +43,7 @@ REST_FRAMEWORK = {
         'rest_framework.schemas.coreapi.AutoSchema'),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rules.permissions.ObjectPermissionBackend',
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
