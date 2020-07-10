@@ -11,11 +11,16 @@ from django.contrib.auth.models import Group
 from django.core.validators import RegexValidator
 from django.core.exceptions import PermissionDenied
 
+from .rules_predicates import is_po
+
+import rules
+from rules.contrib.models import RulesModel
+
 from datetime import date
 import math
 
 
-class Project(models.Model):
+class Project(RulesModel):
     """Model definition for Project."""
     class ProjectStatus(models.TextChoices):
         AR = 'AR', _('Archiv')
@@ -61,12 +66,29 @@ class Project(models.Model):
         blank=True,
         help_text='Number of Sprints possible '
     )
+    @property
+    def project(self):
+        """Getter for the parent project
+
+        Returns
+        -------
+        Project
+            The parent Project
+        """
+        return self
 
     class Meta:
         """Meta definition for Project."""
 
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'
+
+        rules_permissions = {
+            "view": rules.is_authenticated,
+            "add": rules.is_authenticated,
+            "change": is_po,
+            "delete": is_po,
+        }
 
     def __str__(self):
         """Unicode representation of Project."""

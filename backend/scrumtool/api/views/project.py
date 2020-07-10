@@ -5,25 +5,30 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
+from rules.contrib.rest_framework import AutoPermissionViewSetMixin
+
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, \
     TokenHasScope
+
 
 from .. import models
 from .. import serializers
 
 
-class ProjectViewSet(viewsets.ModelViewSet):
+class ProjectViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """CRUD for Projects
     """
 
     queryset = models.Project.objects.all()
     serializer_class = serializers.ProjectSerializer
-    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         """retrive for full and partial retrieve
         Add ?DetailLevel=detail for full data
         """
+        perm = models.Project.get_perm("tester")
+        if request.user.has_perm(models.Project.get_perm("tester")):
+            print("hello")
         detaillevel = self.request.query_params.get('DetailLevel', None)
         if detaillevel is not None:
             if detaillevel == 'detail':

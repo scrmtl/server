@@ -17,7 +17,9 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     project_users = project_user_serializer.ProjectUserSerializer(
         many=True,
-        required=True)
+        required=False,
+        read_only=True
+    )
 
     class Meta:
         model = Project
