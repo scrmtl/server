@@ -33,13 +33,13 @@ class ScrumUserAdmin(UserAdmin):
     list_filter = ('email', 'is_staff', 'is_active',
                    'is_superuser', 'username', 'name', )
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password', 'username', 'name',)}),
         ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2',
+            'fields': ('email', 'username', 'name', 'password1', 'password2',
                        'is_staff', 'is_superuser', 'is_active')}
          ),
     )
