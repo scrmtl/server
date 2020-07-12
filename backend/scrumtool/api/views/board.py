@@ -5,11 +5,13 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
+from rules.contrib.rest_framework import AutoPermissionViewSetMixin
+
 from .. import models
 from .. import serializers
 
 
-class BoardViewSet(viewsets.ModelViewSet):
+class BoardViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """CRUD for Boards
     """
 

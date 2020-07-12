@@ -4,13 +4,13 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
-
+from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
 from .. import models
 from .. import serializers
 
 
-class SteplistViewSet(viewsets.ModelViewSet):
+class SteplistViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """Handels events that influence the whole list
 
     Parameters

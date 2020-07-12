@@ -1,7 +1,7 @@
 """Serializers for Cards
 """
 from rest_framework import serializers
-from ..models import Card, Task, Feature, Epic, Label, File, Steplist
+from ..models import Card, Task, Feature, Epic, Label, File, Steplist, ScrumUser
 from .steplist_serializer import StepListSerializerForCards
 import logging
 logger = logging.getLogger(__name__)
@@ -109,6 +109,8 @@ class TaskSerializer(serializers.ModelSerializer):
     steplists = StepListSerializerForCards(many=True, required=False)
     feature = serializers.PrimaryKeyRelatedField(
         queryset=Feature.objects.all(), required=True)
+    assigned_users = serializers.PrimaryKeyRelatedField(
+        queryset=ScrumUser.objects.all(), required=False, many=True)
 
     class Meta:
         model = Task
