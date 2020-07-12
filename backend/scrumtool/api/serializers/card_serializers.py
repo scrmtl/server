@@ -1,9 +1,10 @@
 """Serializers for Cards
 """
-from rest_framework import serializers
-from ..models import Card, Task, Feature, Epic, Label, File, Steplist, ScrumUser
-from .steplist_serializer import StepListSerializerForCards
 import logging
+from .steplist_serializer import StepListSerializerForCards
+from rest_framework import serializers
+from ..models import Card, Task, Feature, Epic, Label, File, \
+    Steplist, ScrumUser, Lane
 logger = logging.getLogger(__name__)
 
 
