@@ -16,8 +16,8 @@ def getBoardType(user, board_object):
                 type {0}".format(
             type(board_object)))
 
-    stdlogger.info('Board type is %s ', board_object.board_type)
-    return board_object.board_type
+    stdlogger.info('Board type is %s ', board_object.board.board_type)
+    return board_object.board.board_type
 
 
 @rules.predicate

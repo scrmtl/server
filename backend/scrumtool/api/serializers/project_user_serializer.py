@@ -8,7 +8,9 @@ from ..serializers import scrumuser_serializer
 class ProjectUserSerializer(serializers.ModelSerializer):
     """Serializer for Projects.
     """
-    scrum_user = scrumuser_serializer.ScrumUserSerializer(required=False)
+    scrum_user = serializers.PrimaryKeyRelatedField(
+        queryset=ScrumUser.objects.all(),
+        required=True)
     role = serializers.PrimaryKeyRelatedField(
         queryset=ProjectRole.objects.all(),
         required=True)

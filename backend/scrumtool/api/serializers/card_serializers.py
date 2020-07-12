@@ -115,7 +115,7 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = CardSerializer.Meta.fields + \
-            ('feature', 'labels', 'steplists',)
+            ('feature', 'assigned_users', 'labels', 'steplists',)
 
     def update(self, instance, validated_data):
         labels_data = validated_data.pop('labels')

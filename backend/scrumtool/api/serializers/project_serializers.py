@@ -15,11 +15,10 @@ class ProjectSerializer(serializers.ModelSerializer):
     def validate_sprint_duration(self, value):
         return sprint_duration_validator(value)
 
-    project_users = project_user_serializer.ProjectUserSerializer(
-        many=True,
+    project_users = serializers.PrimaryKeyRelatedField(
+        queryset=ProjectUser.objects.all(),
         required=False,
-        read_only=True
-    )
+        many=True)
 
     class Meta:
         model = Project

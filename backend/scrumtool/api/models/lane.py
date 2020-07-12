@@ -59,17 +59,6 @@ class Lane(RulesModel, IGetProject, IGetBoard):
         """
         return self.board.project
 
-    @property
-    def board(self):
-        """Getter for the parent project
-
-        Returns
-        -------
-        Project
-            The parent Project
-        """
-        return self.board
-
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
         #    old_proj = Project.objects.get(pk=self.id)

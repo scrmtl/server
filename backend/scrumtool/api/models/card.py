@@ -80,12 +80,6 @@ class Card(RulesModel, IGetBoard, IGetProject):
         verbose_name = 'Card'
         verbose_name_plural = 'Card'
         abstract = True
-        rules_permissions = {
-            "view": is_project_team_member,
-            "add": is_po_in_project,
-            "change": can_change_board,
-            "delete": is_admin
-        }
 
     def __str__(self):
         return "{0} ({1}) {2}".format(
@@ -208,6 +202,12 @@ class Epic(Card):
 
         verbose_name = 'Epic(Card)'
         verbose_name_plural = 'Epics(Card)'
+        rules_permissions = {
+            "view": is_project_team_member,
+            "add": is_po_in_project,
+            "change": can_change_board,
+            "delete": is_admin
+        }
 
 
 class Feature(Card):
@@ -222,6 +222,12 @@ class Feature(Card):
         """Meta definition for Feature."""
         verbose_name = 'Feature(Card)'
         verbose_name_plural = 'Features(Card)'
+        rules_permissions = {
+            "view": is_project_team_member,
+            "add": is_po_in_project,
+            "change": can_change_board,
+            "delete": is_admin
+        }
 
 
 class Task(Card):
@@ -237,3 +243,9 @@ class Task(Card):
 
         verbose_name = 'Task(Card)'
         verbose_name_plural = 'Tasks(Card)'
+        rules_permissions = {
+            "view": is_project_team_member,
+            "add": is_po_in_project,
+            "change": can_change_board,
+            "delete": is_admin
+        }
