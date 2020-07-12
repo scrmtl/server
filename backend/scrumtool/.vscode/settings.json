@@ -12,4 +12,5 @@
     "python.linting.pylintEnabled": false,
     "python.linting.enabled": false,
     */
+    "python.dataScience.debugJustMyCode": false
 }

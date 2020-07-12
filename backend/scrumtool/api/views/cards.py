@@ -9,13 +9,13 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework import viewsets
+from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 from rest_framework.decorators import action
-
 import logging
 logger = logging.getLogger(__name__)
 
 
-class FileViewSet(viewsets.ModelViewSet):
+class FileViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """CRUD for Files
     """
     queryset = models.File.objects.all()
@@ -41,7 +41,7 @@ class FileViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class EpicViewSet(viewsets.ModelViewSet):
+class EpicViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """CRUD for Epics
     """
 
@@ -71,7 +71,7 @@ class EpicViewSet(viewsets.ModelViewSet):
                     label, task)
 
 
-class FeatureViewSet(viewsets.ModelViewSet):
+class FeatureViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """CRUD for Features
     """
     queryset = models.Feature.objects.all()
@@ -100,7 +100,7 @@ class FeatureViewSet(viewsets.ModelViewSet):
                     label, task)
 
 
-class TaskViewSet(viewsets.ModelViewSet):
+class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """CRUD for Tasks
     """
 

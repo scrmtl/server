@@ -8,3 +8,4 @@ from .lane import *
 from .project import *
 from .scrumuser import *
 from .label import *
+from .project_user import *
