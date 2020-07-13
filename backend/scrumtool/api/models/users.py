@@ -63,7 +63,7 @@ class ProjectRole(RulesModel):
 
 class ScrumUser(RulesModelMixin, AbstractUser, metaclass=RulesModelBase):
     '''
-
+    # TODO Rename ScrumUser to PlattformUser
     '''
     name = models.CharField(blank=True, max_length=255)
 
