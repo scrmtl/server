@@ -26,12 +26,12 @@ class ProjectViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         """retrive for full and partial retrieve
         Add ?DetailLevel=detail for full data
         """
-        perm = models.Project.get_perm("tester")
-        if request.user.has_perm(models.Project.get_perm("tester")):
-            print("hello")
+        # perm = models.Project.get_perm("tester")
+        # if request.user.has_perm(models.Project.get_perm("tester")):
+        #    print("hello")
         detaillevel = self.request.query_params.get('DetailLevel', None)
         if detaillevel is not None:
-            if detaillevel == 'detail':
+            if detaillevel == 'full':
                 instance = self.get_object()
                 serializer = serializers.ProjectSerializerFull(instance)
                 return Response(serializer.data)
