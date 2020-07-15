@@ -5,5 +5,5 @@ from . import serializers
 
 
 class ScrumUserViewSet(viewsets.ModelViewSet):
-    queryset = models.ScrumUser.objects.all()
+    queryset = models.PlatformUser.objects.all()
     serializer_class = serializers.ScrumUserSerializer

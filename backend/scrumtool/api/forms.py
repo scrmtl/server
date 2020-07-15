@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import ScrumUser
+from .models import PlatformUser
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.admin.widgets import FilteredSelectMultiple
@@ -10,14 +10,14 @@ from django.contrib.auth.models import Group
 class ScrumUserCreationForm(UserCreationForm):
 
     class Meta:
-        model = ScrumUser
+        model = PlatformUser
         fields = ('username', 'email')
 
 
 class ScrumUserChangeForm(UserChangeForm):
 
     class Meta:
-        model = ScrumUser
+        model = PlatformUser
         fields = UserChangeForm.Meta.fields
 
 

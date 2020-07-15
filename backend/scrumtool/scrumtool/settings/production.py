@@ -44,7 +44,7 @@ OAUTH2_PROVIDER = {
     'SCOPES': {'read': 'Read scope', 'write': 'Write scope'}
 }
 
-AUTH_USER_MODEL = 'api.ScrumUser'
+AUTH_USER_MODEL = 'api.PlatformUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': (

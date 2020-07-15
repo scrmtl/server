@@ -7,7 +7,7 @@ from . import models
 # Register your models here.
 
 from .forms import ScrumUserCreationForm, ScrumUserChangeForm, GroupAdminForm
-from .models import ScrumUser
+from .models import PlatformUser
 
 
 admin.site.register(models.Task)
@@ -27,7 +27,7 @@ admin.site.register(models.ProjectRole)
 class ScrumUserAdmin(UserAdmin):
     add_form = ScrumUserCreationForm
     form = ScrumUserChangeForm
-    model = ScrumUser
+    model = PlatformUser
     list_display = ('email', 'is_staff', 'is_active',
                     'is_superuser', 'username', 'name', )
     list_filter = ('email', 'is_staff', 'is_active',
@@ -47,7 +47,7 @@ class ScrumUserAdmin(UserAdmin):
     ordering = ('email',)
 
 
-admin.site.register(ScrumUser, ScrumUserAdmin)
+admin.site.register(PlatformUser, ScrumUserAdmin)
 
 # Unregister the original Group admin.
 admin.site.unregister(Group)

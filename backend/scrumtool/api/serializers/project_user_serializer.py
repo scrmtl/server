@@ -1,8 +1,8 @@
 """Serializers for ProjectUsers
 """
 from rest_framework import serializers
-from ..models import ScrumUser, ProjectRole, ProjectUser, Project
-from ..serializers import scrumuser_serializer
+from ..models import PlatformUser, ProjectRole, ProjectUser, Project
+from ..serializers import platformuser_serializer
 import logging
 
 stdlogger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class ProjectUserSerializer(serializers.ModelSerializer):
         return data
 
     scrum_user = serializers.PrimaryKeyRelatedField(
-        queryset=ScrumUser.objects.all(),
+        queryset=PlatformUser.objects.all(),
         required=True)
     role = serializers.PrimaryKeyRelatedField(
         queryset=ProjectRole.objects.all(),

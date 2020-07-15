@@ -8,7 +8,7 @@ from django.db import models
 # Needed for TextChoices
 # https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 from django.utils.translation import gettext_lazy as _
-
+from api.models.users import PlatformUser
 from django.core.validators import RegexValidator
 from django.core.exceptions import PermissionDenied
 
@@ -68,7 +68,7 @@ class Card(RulesModel, IGetBoard, IGetProject):
         default=Status.NOT_STARTED,
         help_text='This is the name of the list itself')
     assigned_users = models.ManyToManyField(
-        to='api.ScrumUser',
+        to='api.PlatformUser',
         related_name='%(class)s_cards',
         blank=True,
         help_text='User that are assigned to the card'
