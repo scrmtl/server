@@ -21,7 +21,7 @@ class LaneSerializerFull(serializers.ModelSerializer):
     """
     epic_cards = card_serializers.EpicSerializer(many=True)
     feature_cards = card_serializers.FeatureSerializer(many=True)
-    task_cards = card_serializers.TaskSerializer(many=True)
+    task_cards = card_serializers.TaskSerializerFull(many=True)
 
     class Meta:
         model = Lane

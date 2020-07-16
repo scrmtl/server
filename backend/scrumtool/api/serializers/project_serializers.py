@@ -1,8 +1,8 @@
 """Serializers for Projects
 """
 from rest_framework import serializers
-from ..models import Project
-from ..serializers import board_serializers
+from ..models import Project, ProjectUser
+from ..serializers import board_serializers, project_user_serializer
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -15,11 +15,17 @@ class ProjectSerializer(serializers.ModelSerializer):
     def validate_sprint_duration(self, value):
         return sprint_duration_validator(value)
 
+    project_users = serializers.PrimaryKeyRelatedField(
+        queryset=ProjectUser.objects.all(),
+        required=False,
+        many=True)
+
     class Meta:
         model = Project
         fields = ('id',
                   'name',
                   'description',
+                  'project_users',
                   'start',
                   'end',
                   'sprint_duration',
@@ -35,6 +41,9 @@ class ProjectSerializerFull(serializers.ModelSerializer):
     """Serializer for Projects.
     """
     boards = board_serializers.BoardSerializerFull(many=True)
+    project_users = project_user_serializer.ProjectUserSerializer(
+        many=True,
+        required=True)
 
     def validate(self, data):
         return date_validator(data)
@@ -47,6 +56,7 @@ class ProjectSerializerFull(serializers.ModelSerializer):
         fields = ('id',
                   'name',
                   'description',
+                  'project_users',
                   'start',
                   'end',
                   'sprint_duration',
@@ -57,43 +67,6 @@ class ProjectSerializerFull(serializers.ModelSerializer):
                   'boards'
                   )
         read_only_fields = ('numOfSprints',)
-
-
-"""Serializers for readonly
-"""
-
-
-class ProjectSerializerReadOnly(ProjectSerializer):
-    """Serializer for Projects.
-    """
-    class Meta:
-        read_only_fields = ('id',
-                            'name',
-                            'description',
-                            'start',
-                            'end',
-                            'sprint_duration',
-                            'status',
-                            'dor',
-                            'dod',
-                            'numOfSprints',)
-
-
-class ProjectSerializerFullReadOnly(ProjectSerializerFull):
-    """Serializer for Projects.
-    """
-    class Meta:
-        read_only_fields = ('id',
-                            'name',
-                            'description',
-                            'start',
-                            'end',
-                            'sprint_duration',
-                            'status',
-                            'dor',
-                            'dod',
-                            'numOfSprints',
-                            'boards')
 
 
 def date_validator(data):

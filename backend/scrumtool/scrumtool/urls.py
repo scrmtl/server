@@ -41,6 +41,7 @@ router.register(r'project', views.ProjectViewSet)
 router.register(r'file', views.FileViewSet)
 router.register(r'label', views.LabelViewSet)
 router.register(r'users', views.ScrumUserViewSet)
+router.register(r'project_users', views.ProjectUserViewSet)
 
 
 # OAuth2 provider endpoints

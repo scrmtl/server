@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'corsheaders',
+    'rules.apps.AutodiscoverRulesConfig',
     'api'
 ]
 

@@ -131,6 +131,21 @@
         }
     },
     {
+        "model": "api.projectrole",
+        "pk": 1,
+        "fields": {}
+    },
+    {
+        "model": "api.projectrole",
+        "pk": 2,
+        "fields": {}
+    },
+    {
+        "model": "api.projectrole",
+        "pk": 3,
+        "fields": {}
+    },
+    {
         "model": "api.epic",
         "pk": 1,
         "fields": {
