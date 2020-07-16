@@ -15,13 +15,18 @@ const vuetify = new Vuetify({
         success: "#4CAF50",
         warning: "#FFC107",
         appbar: "#2E4057",
-        navbar: "#31AA96",
-        tabbody: "#87A6B3",
+        navbar: "#6441A4",
+        tabbody: "#2E4057",
         border: "#00BFA5",
         lanbody: "#FFFFfF",
         card_head: "#6441A4",
         highlight: "#C3F73A",
-        link: "#31AA96"
+        link: "#31AA96",
+        task: "#999C96",
+        frontend: "#6441A4",
+        backend:"#2E4057",
+        ui_ux:"#31AA96",
+        bug:"#FF5252"
       }
     }
   }
