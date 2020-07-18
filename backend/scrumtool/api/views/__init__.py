@@ -9,3 +9,4 @@ from .project import *
 from .platformuser import *
 from .label import *
 from .project_user import *
+from .sprint import *

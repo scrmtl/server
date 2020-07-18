@@ -22,6 +22,7 @@ admin.site.register(models.Board)
 admin.site.register(models.File)
 admin.site.register(models.ProjectUser)
 admin.site.register(models.ProjectRole)
+admin.site.register(models.Sprint)
 
 
 class ScrumUserAdmin(UserAdmin):
