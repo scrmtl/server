@@ -6,9 +6,20 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    
+    detailViewVisable: false,
   },
   mutations: {
+    showDetailView(state){
+      state.detailViewVisable = true;
+    },
+
+    hideDetailView(state) {
+      state.detailViewVisable = false;
+    },
+
+    increment(state) {
+      state.count++;
+    }
     
   },
   actions: {
@@ -18,6 +29,7 @@ export default new Vuex.Store({
 
   },
   getters: {
+    getDetailStatus: state => state.detailViewVisable
 
   }
 });

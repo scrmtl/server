@@ -1,5 +1,5 @@
 <template>
-    <v-system-bar color="appbar" dark absolute="true" class="systemBar">
+    <v-system-bar color="appbar" dark absolute class="systemBar">
         <v-icon>mdi-filter-variant</v-icon>
         <span>ScrumTool</span>
         <v-spacer></v-spacer>

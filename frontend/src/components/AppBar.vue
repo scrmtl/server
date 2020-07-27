@@ -1,9 +1,9 @@
 <template>
-  <v-app-bar color="navbar" dark absolute="true" class="appBar">
+  <v-app-bar color="navbar" dark absolute class="appBar">
     <v-tabs
     background-color="transparent"
     dark
-    grow="true"
+    grow
     >
     <v-tab to="Home">
       Home

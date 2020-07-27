@@ -8,8 +8,8 @@
           persistent 
           max-width="400px" 
           content-class="createProjectDialog"
-          hide-overlay="true"
-          scrollable="true"
+          hide-overlay
+          scrollable
 
 
           >
@@ -106,7 +106,7 @@
           class="v-col"
         >
           <v-container fluid>
-            <v-layou>
+            <v-layout>
               <v-flex>
                 <ProjectCard/>
                 <ProjectCard/>
@@ -119,7 +119,7 @@
                                 <ProjectCard/>
                 <ProjectCard/>
               </v-flex>
-            </v-layou>
+            </v-layout>
           </v-container>
       </v-col>
         <v-col

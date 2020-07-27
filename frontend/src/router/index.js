@@ -14,6 +14,8 @@ import Epic from "../components/Epic.vue";
 import Feature from "../components/Feature.vue";
 import Task from "../components/Task.vue";
 
+import DetailView from '../components/DetailView.vue';
+
 
 
 Vue.use(VueRouter);
@@ -72,7 +74,13 @@ const routes = [
     path: "/Task",
     name: "Task",
     component: Task
+  },
+  {
+    path: "/Detail",
+    name: "Detail",
+    component: DetailView
   }
+
 
 ];
 
