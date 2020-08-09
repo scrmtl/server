@@ -1,4 +1,4 @@
-FROM python:3.8.2-buster
+FROM python:3.8.5-buster
 
 # The enviroment variable ensures that the python output is set straight
 # to the terminal with out buffering it first
