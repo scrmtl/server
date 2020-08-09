@@ -17,7 +17,7 @@ jobs:
     strategy:
       max-parallel: 2
       matrix:
-        python-version: [3.8.3]
+        python-version: [3.8.5]
     
     # Steps to deploy
     steps:
