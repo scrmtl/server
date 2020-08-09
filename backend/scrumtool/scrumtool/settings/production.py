@@ -9,7 +9,7 @@ SECRET_KEY = '725#n#v8bw-nw8_pd3zcos)l-o13)ua4uju(64pbj5z*8ryr(x'
 # SECURITY WARNING: update this when you have the production host
 # 'BACKEND_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'BACKEND_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
-ALLOWED_HOSTS = os.environ.get("BACKEND_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.getenv('BACKEND_ALLOWED_HOSTS', 'localhost').split(' ')
 
 # https://stackoverflow.com/questions/56916448/access-control-allow-origin-issue-in-vue-js-and-django
 CORS_ORIGIN_ALLOW_ALL = True
