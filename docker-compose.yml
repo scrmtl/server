@@ -13,8 +13,6 @@ services:
 
   scrmtlbackend:
     image: docker.pkg.github.com/scrmtl/server/scrmtl-server:latest
-    ports:
-      - 8000:8000
     depends_on:
       - scrmtldb
     environment:
@@ -24,10 +22,28 @@ services:
       POSTGRES_DB: bestDb
       # 'BACKEND_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
       BACKEND_ALLOWED_HOSTS: homeserver.local
+      OVERWRITEWEBROOT: /scrmtl/
+    labels:
+      # traefik routing aktiviert
+      - traefik.enable=true
+      # Netzwerkwahl
+      - traefik.docker.network=extern
+      - traefik.http.routers.scrmtlbackend.rule=Host(`homeserver.local`) && (PathPrefix(`/scrmtl/`) || Headers(`Referer`, `https://homeserver.local/scrmtl/`))
+      - traefik.http.routers.scrmtlbackend.entrypoints=web
+      - traefik.http.routers.scrmtlbackend.middlewares=ScrmtlbackendStripPrefix@file
+      - traefik.http.routers.scrmtlbackend.middlewares=HttpsRedirect@file
+      - traefik.http.routers.scrmtlbackend-secured.entrypoints=websecure
+      - traefik.http.routers.scrmtlbackend-secured.tls=true
+      - traefik.http.routers.scrmtlbackend-secured.rule=Host(`homeserver.local`) && (PathPrefix(`/scrmtl/`) || Headers(`Referer`, `http://homeserver.local/scrmtl/`))
+      - traefik.http.routers.scrmtlbackend-secured.middlewares=ScrmtlbackendStripPrefix@file
     networks:
       - appnetwork
+      - extern
 
 networks:
+  extern:
+    external: true
+    driver: bridge
   appnetwork:
     external: false
     driver: bridge
