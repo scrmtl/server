@@ -49,3 +49,6 @@ REST_FRAMEWORK = {
 # Needed for reverse proxy
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Support subdirectory setup behind proxy
+FORCE_SCRIPT_NAME = os.getenv('OVERWRITEWEBROOT')
