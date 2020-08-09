@@ -1,12 +1,33 @@
-version: '3'
+version: "3.7"
 
 services:
-  db:
+  scrmtldb:
     image: postgres
     # TODO set volume for retentive
-  backend:
-    image: scrmtl
+    environment:
+        POSTGRES_USER: meinUser
+        POSTGRES_PASSWORD: MeinNeuesPassword
+        POSTGRES_DB: bestDb
+    networks:
+      - appnetwork
+
+  scrmtlbackend:
+    image: docker.pkg.github.com/scrmtl/server/scrmtl-server:latest
     ports:
-      - "8000:8000"
+      - 8000:8000
     depends_on:
-      - db
+      - scrmtldb
+    environment:
+      POSTGRES_HOST: scrmtldb
+      POSTGRES_USER: meinUser
+      POSTGRES_PASSWORD: MeinNeuesPassword
+      POSTGRES_DB: bestDb
+      # 'BACKEND_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
+      BACKEND_ALLOWED_HOSTS: homeserver.local
+    networks:
+      - appnetwork
+
+networks:
+  appnetwork:
+    external: false
+    driver: bridge
