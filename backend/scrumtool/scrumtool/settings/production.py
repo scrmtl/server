@@ -56,5 +56,5 @@ FORCE_SCRIPT_NAME = webroot
 SESSION_COOKIE_PATH = webroot
 LOGIN_REDIRECT_URL= webroot
 LOGOUT_REDIRECT_URL= webroot
-STATIC_FILES_URL= webroot + 'static/'
-MEDIA_FILES_URL= webroot + 'media/'
+STATIC_FILES_URL= str(webroot) + str('static/')
+MEDIA_FILES_URL= str(webroot) + str('media/')
