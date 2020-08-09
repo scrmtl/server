@@ -51,10 +51,5 @@ USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Support subdirectory setup behind proxy
-webroot = os.getenv('OVERWRITEWEBROOT')
-FORCE_SCRIPT_NAME = webroot
-SESSION_COOKIE_PATH = webroot
-LOGIN_REDIRECT_URL= webroot
-LOGOUT_REDIRECT_URL= webroot
-STATIC_FILES_URL= str(webroot) + str('static/')
-MEDIA_FILES_URL= str(webroot) + str('media/')
+FORCE_SCRIPT_NAME = os.getenv('OVERWRITEWEBROOT')
+print(FORCE_SCRIPT_NAME)

@@ -22,20 +22,23 @@ services:
       POSTGRES_DB: bestDb
       # 'BACKEND_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
       BACKEND_ALLOWED_HOSTS: homeserver.local
+      # Trailing slash is necessary
       OVERWRITEWEBROOT: /scrmtl/
     labels:
-      # traefik routing aktiviert
+      # actived traefik routing
       - traefik.enable=true
-      # Netzwerkwahl
+      # Choose network
       - traefik.docker.network=extern
-      - traefik.http.routers.scrmtlbackend.rule=Host(`homeserver.local`) && (PathPrefix(`/scrmtl/`) || Headers(`Referer`, `https://homeserver.local/scrmtl/`))
+      # http config
+      - traefik.http.routers.scrmtlbackend.rule=Host(`homeserver.local`) && PathPrefix(`/scrmtl`)
       - traefik.http.routers.scrmtlbackend.entrypoints=web
       - traefik.http.routers.scrmtlbackend.middlewares=ScrmtlbackendStripPrefix@file
+      # https config
       - traefik.http.routers.scrmtlbackend.middlewares=HttpsRedirect@file
       - traefik.http.routers.scrmtlbackend-secured.entrypoints=websecure
       - traefik.http.routers.scrmtlbackend-secured.tls=true
-      - traefik.http.routers.scrmtlbackend-secured.rule=Host(`homeserver.local`) && (PathPrefix(`/scrmtl/`) || Headers(`Referer`, `http://homeserver.local/scrmtl/`))
-      - traefik.http.routers.scrmtlbackend-secured.middlewares=ScrmtlbackendStripPrefix@file
+      - traefik.http.routers.scrmtlbackend-secured.rule=Host(`homeserver.local`) && PathPrefix(`/scrmtl`)
+      - traefik.http.routers.scrmtlbackend-secured.middlewares=ScrmtlbackendMiddlewares@file
     networks:
       - appnetwork
       - extern
