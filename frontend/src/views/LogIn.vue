@@ -1,19 +1,35 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable */
 <template>
   <v-content class="tabbody tab-content">
-    <v-card width="400" class="mx-auto mt-10">
+    <v-card width="400" class="mx-auto mt-10" @submit.prevent="register">
       <v-card-title>
-        <h1 class="display-1">Login</h1>
+        <h1 class="display-1">Registrieren</h1>
       </v-card-title>
       <v-card-text>
         <v-form>
-          <v-text-field label="Username" prepend-icon="mdi-account-circle" />
+          <v-text-field 
+          label="Username" 
+          prepend-icon="mdi-account-circle" 
+          v-model="name" 
+          name="name" 
+          value 
+          type="text"/>
+          <v-text-field 
+          label="E-Mail" 
+          prepend-icon="mdi-mail" 
+          v-model="email" 
+          name="email" 
+          value 
+          type="email"/>
           <v-text-field
             label="Password"
             :type="showPassword ? 'text' : 'password'"
             prepend-icon="mdi-lock"
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="showPassword = !showPassword"
+            value
+            name="password"
+            v-model="passoword"
           />
         </v-form>
       </v-card-text>
@@ -31,9 +47,22 @@
 
 <script>
 export default {
-  data: () => ({
-    showPassword: false
-  })
+  data () {
+    return {
+      name: "",
+      email: "",
+      password: ""
+    }
+  },
+  methods: {
+    register () {
+      this.$store.dispatch('register', {
+        name: this.name,
+        email: this.email,
+        password: this.password,
+      })
+    }
+  }
 };
 </script>
 

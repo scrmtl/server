@@ -6,7 +6,7 @@
             class="navbar projectCard"
             max-width="344"
             dark
-            shaped="true"
+            shaped
             :elevation="hover ? 24 : 1"
         >
             <v-list-item three-line>
@@ -43,12 +43,11 @@
             <v-btn
             text
             class="status"
-            outlined="true"
+            outlined
             color="link"
             >Details</v-btn>
             <v-spacer></v-spacer>
             <v-switch
-              v-model="ex11"
               label=""
               color="link"
               value="select"
@@ -60,7 +59,7 @@
             text
             class=""
             color="error"
-            outlined="true"
+            outlined
             >...Status</v-btn>
             </v-card-actions>
         </v-card>
