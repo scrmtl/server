@@ -1,0 +1,111 @@
+version: "3.7"
+
+services:
+  reverseProxy:
+    image: traefik:v2.2
+    container_name: reverseProxy
+    restart: always
+    ports:
+    - 14080:80
+    - 14443:443
+    volumes:
+    # Um auf Docker socket zu lauschen
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    # Einheitliche Zeit vom System
+    - /etc/localtime:/etc/localtime:ro
+    # Konfig files von traefik
+    - /srv/traefik:/etc/traefik
+    labels:
+        # Dashboard
+        - traefik.enable=true
+        - traefik.http.routers.traefik.entrypoints=web
+        - traefik.http.routers.traefik.rule=HostRegexp(`{host:.+}`)            
+        # https
+        - traefik.http.routers.traefik.middlewares=HttpsRedirect@file
+        - traefik.http.routers.traefik-secured.entrypoints=websecure
+        - traefik.http.routers.traefik-secured.tls=true
+        - traefik.http.routers.traefik-secured.rule=Host(`scrmtl.ddns.net`) && (PathPrefix(`/traefik/`) || Headers(`Referer`, `https://scrmtl.ddns.net/traefik/dashboard/`))
+        - traefik.http.routers.traefik-secured.middlewares=TraefikMiddlewares@file
+        - traefik.http.routers.traefik-secured.service=api@internal
+        - traefik.http.services.traefik-secured.loadbalancer.server.port=8080
+    networks:
+    - extern
+  
+  scrmtldb:
+    image: postgres
+    # TODO set volume for retentive
+    environment:
+        POSTGRES_USER: meinUser
+        POSTGRES_PASSWORD: MeinNeuesPassword
+        POSTGRES_DB: bestDb
+    networks:
+      - appnetwork
+
+  scrmtlbackend:
+    image: docker.pkg.github.com/scrmtl/server/scrmtl-server:latest
+    depends_on:
+      - reverseProxy
+      - scrmtldb
+    environment:
+      POSTGRES_HOST: scrmtldb
+      POSTGRES_USER: meinUser
+      POSTGRES_PASSWORD: MeinNeuesPassword
+      POSTGRES_DB: bestDb
+      # 'BACKEND_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
+      BACKEND_ALLOWED_HOSTS: scrmtl.ddns.net
+      # maybe Trailing slash is necessary, if not run on root
+      # OVERWRITEWEBROOT: /scrmtl
+    labels:
+      # actived traefik routing
+      - traefik.enable=true
+      # Choose network
+      - traefik.docker.network=extern
+      # http config
+      - traefik.http.routers.scrmtlbackend.rule=Host(`scrmtl.ddns.net`)
+      - traefik.http.routers.scrmtlbackend.entrypoints=web
+      # https config
+      - traefik.http.routers.scrmtlbackend.middlewares=HttpsRedirect@file
+      - traefik.http.routers.scrmtlbackend-secured.entrypoints=websecure
+      - traefik.http.routers.scrmtlbackend-secured.tls=true
+      - traefik.http.routers.scrmtlbackend-secured.rule=Host(`scrmtl.ddns.net`)
+      - traefik.http.routers.scrmtlbackend-secured.middlewares=ScrmtlbackendMiddlewares@file
+    networks:
+      - appnetwork
+      - extern
+
+  portainer:
+    image: "portainer/portainer"
+    container_name: portainer
+    restart: always
+    depends_on:
+        - reverseProxy
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:rw
+        - /srv/portainer:/data
+        - /etc/localtime:/etc/localtime:ro
+    labels:
+        # traefik routing aktiviert
+        - traefik.enable=true
+        # Netzwerkwahl
+        - traefik.docker.network=extern
+        - traefik.http.routers.portainer.rule=Host(`scrmtl.ddns.net`) && PathPrefix(`/container`)
+        - traefik.http.routers.portainer.entrypoints=web
+        # https
+        - traefik.http.routers.portainer.middlewares=HttpsRedirect@file
+        - traefik.http.routers.portainer-secured.entrypoints=websecure
+        - traefik.http.routers.portainer-secured.tls=true
+        - traefik.http.routers.portainer-secured.rule=Host(`scrmtl.ddns.net`) && PathPrefix(`/container`)
+        - traefik.http.routers.portainer-secured.middlewares=PortainerMiddlewares@file
+        # Portainer Kommuniziert auf 2 ports 8000 und 9000 Hinter 9000 ist UI
+        - traefik.http.services.portainerServ.loadbalancer.server.port=9000
+        #traefik.http.routers.portainer-secure.service: portainerServ         
+    networks:
+        - extern
+
+networks:
+  extern:
+    external: true
+    driver: bridge
+  appnetwork:
+    external: false
+    driver: bridge

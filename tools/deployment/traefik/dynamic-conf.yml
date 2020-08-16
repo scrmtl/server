@@ -1,0 +1,74 @@
+http:
+    middlewares:
+      HttpsRedirect:
+        redirectScheme:
+          scheme: "https"
+          permanent: true
+
+      DefaultHeaders:
+        headers:
+          frameDeny: true
+          sslRedirect: true
+          browserXssFilter: true
+          contentTypeNosniff: true
+          forceSTSHeader: true
+          stsIncludeSubdomains: true
+          stsPreload: true
+          customFrameOptionsValue: SAMEORIGIN        
+      
+      DefaultWhitelist:
+        ipWhiteList:
+          sourceRange:
+          - "10.0.0.0/24"
+          - "192.168.0.0/16"
+          - "172.0.0.0/8"
+            
+      PortainerStripPrefix:
+        stripPrefix:
+          prefixes:
+          - /container
+          forceSlash: true
+      
+      TraefikStripPrefix:
+        stripPrefix:
+          prefixes:
+          - /traefik    
+      # BEGIN scrmtl app
+      ScrmtlbackendMiddlewares:
+        chain:
+          middlewares:
+            - ScrmtlbackendHeaders
+      
+      ScrmtlbackendHeaders:
+        headers:
+          # customRequestHeaders:
+          #   X-Script-Name: /scrmtl
+          stsPreload: true
+          stsIncludeSubdomains: true
+          contentTypeNosniff: true
+
+      # END scrmtl app
+
+      PortainerMiddlewares:
+        chain:
+          middlewares:
+          - PortainerStripPrefix
+          # - DefaultHeaders
+          # - DefaultWhitelist
+      
+      TraefikMiddlewares:
+        chain:
+          middlewares:
+          - TraefikStripPrefix
+
+          
+          
+tls:
+    stores:
+        default:
+            defaultCertificate:
+                certFile: /etc/traefik/ssl/certs/homeserver-selfsigned.crt
+                keyFile: /etc/traefik/ssl/private/homeserver-selfsigned.key
+
+
+    

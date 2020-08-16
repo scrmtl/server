@@ -1,0 +1,24 @@
+api:
+    dashboard: true
+    insecure: true
+
+log:
+    filePath: "/etc/traefik/loggingErrors.log"
+    format: "json"
+
+entryPoints:
+    web:
+        address: ":80"
+    websecure:
+        address: ":443"
+
+providers:
+    docker:
+        watch: true
+        exposedbydefault: false
+    file:
+        directory: "/etc/traefik/dynamic"
+        # autom. update
+        watch: true
+
+    
