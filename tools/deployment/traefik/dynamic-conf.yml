@@ -29,6 +29,10 @@ http:
           - /container
           forceSlash: true
       
+      TraefikAuth:
+        basicAuth:
+          usersFile: "/etc/traefik/users.txt"
+      
       TraefikStripPrefix:
         stripPrefix:
           prefixes:
@@ -41,8 +45,6 @@ http:
       
       ScrmtlbackendHeaders:
         headers:
-          # customRequestHeaders:
-          #   X-Script-Name: /scrmtl
           stsPreload: true
           stsIncludeSubdomains: true
           contentTypeNosniff: true
@@ -60,15 +62,8 @@ http:
         chain:
           middlewares:
           - TraefikStripPrefix
+          - TraefikAuth
 
-          
-          
-tls:
-    stores:
-        default:
-            defaultCertificate:
-                certFile: /etc/traefik/ssl/certs/homeserver-selfsigned.crt
-                keyFile: /etc/traefik/ssl/private/homeserver-selfsigned.key
 
 
     
