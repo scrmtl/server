@@ -66,6 +66,11 @@ http:
 
 
 tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/ssl/fallback.crt
+        keyFile: /etc/traefik/ssl/fallback.key
   options:
     default:
       minVersion: VersionTLS12
