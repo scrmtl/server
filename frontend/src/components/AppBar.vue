@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <v-app-bar color="navbar" dark absolute="true" class="appBar">
     <v-tabs

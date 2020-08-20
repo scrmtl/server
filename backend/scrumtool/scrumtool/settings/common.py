@@ -14,13 +14,17 @@ import os
 import posixpath
 import logging
 
-HOSTNAME_DATABASE = os.getenv('POSTGRES_HOST', 'postgres')
+POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'postgres')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD',
                               'postgresistdasbestedockerimage')
 POSTGRES_USER = os.getenv('POSTGRES_USER',
                           'scrmtladmin')
 POSTGRES_DB = os.getenv('POSTGRES_DB',
                         'scrumtooldb')
+
+POSTGRES_PORT = os.getenv('POSTGRES_PORT',
+                          '5432')
+
 LOGLEVEL = os.getenv('LOGLEVEL', 'INFO').upper()
 
 

@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <v-content class="tabbody tab-content">
     <v-row>
@@ -10,8 +11,6 @@
           content-class="createProjectDialog"
           hide-overlay="true"
           scrollable="true"
-
-
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn 
@@ -106,20 +105,20 @@
           class="v-col"
         >
           <v-container fluid>
-            <v-layou>
+            <v-layout>
               <v-flex>
                 <ProjectCard/>
                 <ProjectCard/>
-                                <ProjectCard/>
                 <ProjectCard/>
-                                <ProjectCard/>
                 <ProjectCard/>
-                                <ProjectCard/>
                 <ProjectCard/>
-                                <ProjectCard/>
+                <ProjectCard/>
+                <ProjectCard/>
+                <ProjectCard/>
+                <ProjectCard/>
                 <ProjectCard/>
               </v-flex>
-            </v-layou>
+            </v-layout>
           </v-container>
       </v-col>
         <v-col
@@ -142,6 +141,7 @@
 <script>
 import ProjectCard from "@/components/ProjectCard.vue"
 import MyTasksLane from "@/components/MyTasksLane.vue"
+//import scrmtlServices from '@/services/scrmtlServices.js'
 
 
 export default {
@@ -151,7 +151,12 @@ export default {
   components: {
     ProjectCard,
     MyTasksLane,
+  },
+  created () {
+
   }
+
+
 };
 </script>
 

@@ -1,0 +1,80 @@
+http:
+    middlewares:
+      HttpsRedirect:
+        redirectScheme:
+          scheme: "https"
+          permanent: true
+
+      DefaultHeaders:
+        headers:
+          frameDeny: true
+          sslRedirect: true
+          browserXssFilter: true
+          contentTypeNosniff: true
+          forceSTSHeader: true
+          stsIncludeSubdomains: true
+          stsPreload: true
+          customFrameOptionsValue: SAMEORIGIN        
+      
+      DefaultWhitelist:
+        ipWhiteList:
+          sourceRange:
+          - "10.0.0.0/24"
+          - "192.168.0.0/16"
+          - "172.0.0.0/8"
+            
+      PortainerStripPrefix:
+        stripPrefix:
+          prefixes:
+          - /container
+          forceSlash: true
+      
+      TraefikAuth:
+        basicAuth:
+          usersFile: "/etc/traefik/users.txt"
+      
+      TraefikStripPrefix:
+        stripPrefix:
+          prefixes:
+          - /traefik    
+      # BEGIN scrmtl app
+      ScrmtlbackendMiddlewares:
+        chain:
+          middlewares:
+            - ScrmtlbackendHeaders
+      
+      ScrmtlbackendHeaders:
+        headers:
+          stsPreload: true
+          stsIncludeSubdomains: true
+          contentTypeNosniff: true
+
+      # END scrmtl app
+
+      PortainerMiddlewares:
+        chain:
+          middlewares:
+          - PortainerStripPrefix
+          # - DefaultHeaders
+          # - DefaultWhitelist
+      
+      TraefikMiddlewares:
+        chain:
+          middlewares:
+          - TraefikStripPrefix
+          - TraefikAuth
+
+
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/ssl/fallback.crt
+        keyFile: /etc/traefik/ssl/fallback.key
+  options:
+    default:
+      minVersion: VersionTLS12
+
+    mintls13:
+      minVersion: VersionTLS13
+    

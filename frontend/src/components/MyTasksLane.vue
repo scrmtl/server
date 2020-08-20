@@ -13,6 +13,18 @@
             <Task/>
             <Task/>
             <Task/>
+                        <Task/>
+            <Task/>
+            <Task/>
+            <Task/>
+                        <Task/>
+            <Task/>
+            <Task/>
+            <Task/>
+                        <Task/>
+            <Task/>
+            <Task/>
+            <Task/>
         </v-card-text>
         <v-card-actions class="lane-extended">
 

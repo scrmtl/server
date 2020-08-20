@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template id="app">
   <v-app>
     <v-system-bar>

@@ -116,3 +116,6 @@ GitHub.sublime-settings
 .history
 .vscode/settings.json
 backend/scrumtool/.vscode/settings.json
+
+# Server Config # 
+tools/tools/deployment/Security
