@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'corsheaders',
     'rules.apps.AutodiscoverRulesConfig',
-    'huey.contrib.djhuey',
     'api',
 
 ]
