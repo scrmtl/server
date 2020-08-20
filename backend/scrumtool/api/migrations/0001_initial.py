@@ -362,8 +362,8 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(help_text='The project this board belongs to',
                                     on_delete=django.db.models.deletion.CASCADE, related_name='boards', to='api.Project'),
         ),
-        migrations.RunPython(
-            code=load_projects_from_fixture,
-            reverse_code=delete_projects,
-        ),
+        # migrations.RunPython(
+        #    code=load_projects_from_fixture,
+        #    reverse_code=delete_projects,
+        # ),
     ]
