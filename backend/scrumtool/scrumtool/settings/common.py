@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'corsheaders',
     'rules.apps.AutodiscoverRulesConfig',
-    'api'
+    'huey.contrib.djhuey',
+    'api',
+
 ]
 
 MIDDLEWARE = [

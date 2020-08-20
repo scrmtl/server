@@ -59,5 +59,5 @@ def is_project_team_member(user, project_object):
         return True
 
 
-is_admin = rules.is_group_member('Admin')
-is_default_user = rules.is_group_member('DefaultUsers')
+is_admin = rules.is_group_member('admin')
+is_default_user = rules.is_group_member('standard')

@@ -8,7 +8,7 @@ from django.db import models
 # Needed for TextChoices
 # https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 from django.utils.translation import gettext_lazy as _
-
+from api.models.users import PlatformUser
 from django.core.validators import RegexValidator
 from django.core.exceptions import PermissionDenied
 
@@ -28,9 +28,12 @@ class Card(RulesModel, IGetBoard, IGetProject):
     # ForeignKey in abstract classes:
     # https://docs.djangoproject.com/en/dev/topics/db/models/#be-careful-with-related-name-and-related-query-name
     class Status(models.TextChoices):
-        NOT_STARTED = 'ns', _('not started')
-        DONE = 'do', _('done')
-        IN_PROGRESS = 'ip', _('in progress')
+        NEW = 'NW', _('new')
+        PLANNED = 'PL', _('planned')
+        NOT_STARTED = 'NS', _('not started')
+        DONE = 'DO', _('done')
+        IN_PROGRESS = 'IP', _('in progress')
+        ACCEPTED = 'AC', _('accepted')
 
     lane = models.ForeignKey(
         to='Lane',
@@ -68,11 +71,17 @@ class Card(RulesModel, IGetBoard, IGetProject):
         default=Status.NOT_STARTED,
         help_text='This is the name of the list itself')
     assigned_users = models.ManyToManyField(
-        to='api.ScrumUser',
+        to='api.PlatformUser',
         related_name='%(class)s_cards',
         blank=True,
         help_text='User that are assigned to the card'
     )
+    sprint = models.ForeignKey(
+        to="api.Sprint",
+        related_name='%(class)s_cards',
+        on_delete=models.DO_NOTHING,
+        null=True, blank=True,
+        help_text='Sprint this card is part of.')
 
     class Meta:
         """Meta definition for Card."""

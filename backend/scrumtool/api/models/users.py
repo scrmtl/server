@@ -61,9 +61,8 @@ class ProjectRole(RulesModel):
         }
 
 
-class ScrumUser(RulesModelMixin, AbstractUser, metaclass=RulesModelBase):
+class PlatformUser(RulesModelMixin, AbstractUser, metaclass=RulesModelBase):
     '''
-    # TODO Rename ScrumUser to PlattformUser
     '''
     name = models.CharField(blank=True, max_length=255)
 
@@ -85,7 +84,7 @@ class ScrumUser(RulesModelMixin, AbstractUser, metaclass=RulesModelBase):
 class ProjectUser(RulesModel):
     """Model definition for ProjectUser."""
     scrum_user = models.ForeignKey(
-        to='ScrumUser',
+        to='PlatformUser',
         on_delete=models.DO_NOTHING,
         related_name='project_users'
     )

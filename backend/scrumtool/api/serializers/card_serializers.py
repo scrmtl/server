@@ -4,7 +4,7 @@ import logging
 from .steplist_serializer import StepListSerializerForCards
 from rest_framework import serializers
 from ..models import Card, Task, Feature, Epic, Label, File, \
-    Steplist, ScrumUser, Lane
+    Steplist, PlatformUser, Lane
 from .steplist_serializer import StepListSerializerForCards, StepListSerializerCommon
 logger = logging.getLogger(__name__)
 
@@ -66,7 +66,7 @@ class CardSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',
                   'description', 'numbering',
                   'storypoints', 'status',
-                  'lane',
+                  'lane', 'sprint',
                   )
 
     def update(self, instance, validated_data):
@@ -116,7 +116,7 @@ class TaskSerializerFull(serializers.ModelSerializer):
     feature = serializers.PrimaryKeyRelatedField(
         queryset=Feature.objects.all(), required=True)
     assigned_users = serializers.PrimaryKeyRelatedField(
-        queryset=ScrumUser.objects.all(), required=False, many=True)
+        queryset=PlatformUser.objects.all(), required=False, many=True)
     number_of_steps = serializers.SerializerMethodField()
     number_of_open_steps = serializers.SerializerMethodField()
 
