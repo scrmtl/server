@@ -156,7 +156,8 @@
             "storypoints": 0,
             "status": "ns",
             "labels": [],
-            "files": []
+            "files": [],
+            "sprint": null
         }
     },
     {
