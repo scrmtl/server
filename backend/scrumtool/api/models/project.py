@@ -7,13 +7,14 @@ from django.db import models
 # Needed for TextChoices
 # https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 from django.utils.translation import gettext_lazy as _
-
 from django.core.exceptions import PermissionDenied
 
 from api.rules_predicates import is_dev_in_project, \
     is_po_in_project, is_sm_in_project, is_project_team_member
 
 from api.models.model_interfaces import IGetProject
+
+import api.models.sprint as customModels
 
 
 class Project(RulesModel, IGetProject):
@@ -72,6 +73,24 @@ class Project(RulesModel, IGetProject):
             The parent Project
         """
         return self
+
+    @property
+    def latest_sprint(self) -> customModels.Sprint:
+        """Getter for the latest sprint of the project
+        Returns
+        -------
+        Sprint
+            A Sprint object
+
+        Raises
+        ------
+        PermissionDenied
+            No Permission to enter property
+        """
+        if not self.sprints.count():
+            return None
+        else:
+            return self.sprints.order_by('-start')[0]
 
     class Meta:
         """Meta definition for Project."""

@@ -36,20 +36,16 @@ class SprintSerializer(serializers.ModelSerializer):
                   'remaining_duration')
         read_only_fields = ('start', 'end', 'number')
 
-    def get_total_duration(self, obj):
-        total_duration = 0
-        if obj.start is None or obj.end is None:
+    def get_total_duration(self, obj: Sprint):
+        if obj.project is None:
             return 0
-        start = date(obj.start)
-        end = date(obj.end)
-        total_duration = end - start
-        return total_duration
+        return obj.project.sprint_duration
 
-    def get_remaining_duration(self, obj):
+    def get_remaining_duration(self, obj: Sprint):
         remaining_duration = 0
-        if obj.end is None:
-            return 0
         start = date.today()
-        end = date(obj.end)
+        end = obj.end
+        if (end is None) or (end < start):
+            return 0
         remaining_duration = end - start
-        return remaining_duration
+        return remaining_duration.days

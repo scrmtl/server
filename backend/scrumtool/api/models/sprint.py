@@ -2,7 +2,7 @@
 """
 from rules.contrib.models import RulesModel
 import rules
-from datetime import date
+from datetime import date, timedelta
 
 from django.core.exceptions import PermissionDenied
 from django.core.validators import RegexValidator
@@ -13,6 +13,9 @@ from api.rules_predicates import is_dev_in_project, \
     is_po_in_project, is_sm_in_project, is_project_team_member, is_admin
 
 from api.models.model_interfaces import IGetProject
+from api.querysets import SprintQuerySet
+
+import api.models as customModels
 
 
 class Sprint(RulesModel, IGetProject):
@@ -98,9 +101,21 @@ class Sprint(RulesModel, IGetProject):
         return "Sprint{0}: {1}  ".format(self.number,
                                          self.id,
                                          )
+    timed = SprintQuerySet.as_manager()
+    objects = models.Manager()
 
     def save(self, *args, **kwargs):
         if not Sprint.objects.filter(pk=self.id).exists():
-            # calculate new Sprint number
-            self.number = self.number_default()
+            # calculate new Sprint number and date
+            project: customModels.Project = self.project
+            latest_sprint: Sprint = self.project.latest_sprint
+            if not latest_sprint:
+                self.number = self.number_default()
+                self.start = project.start
+            else:
+                self.number = latest_sprint.number + 1
+                self.start = latest_sprint.end + timedelta(days=1)
+
+            self.end = self.start + timedelta(days=project.sprint_duration)
+
         super(Sprint, self).save(*args, **kwargs)

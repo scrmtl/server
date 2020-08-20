@@ -66,7 +66,7 @@ class CardSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',
                   'description', 'numbering',
                   'storypoints', 'status',
-                  'lane',
+                  'lane', 'sprint',
                   )
 
     def update(self, instance, validated_data):
