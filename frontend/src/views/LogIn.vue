@@ -45,9 +45,8 @@ export default {
     showPassword: false,
 
     Userinfo: {
-      username: "patrick",
-      password: "scrmtl1234",
-      token: "abc"
+      username: "",
+      password: "",
     },
 
     loginFalse: false,
