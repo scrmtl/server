@@ -39,7 +39,6 @@
 <script>
 import { mapState } from "vuex";
 import { mapMutations } from "vuex";
-//import getUserToken from "../components/PR"
 
 export default {
   data: () => ({
