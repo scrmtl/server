@@ -7,6 +7,10 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     detailViewVisable: false,
+
+    Userinfo: {
+      token: ""
+    },
   },
   mutations: {
     showDetailView(state){
@@ -19,7 +23,11 @@ export default new Vuex.Store({
 
     increment(state) {
       state.count++;
-    }
+    },
+
+    setToken(state, token){
+      state.Userinfo.token = token;
+    },
     
   },
   actions: {
@@ -29,7 +37,9 @@ export default new Vuex.Store({
 
   },
   getters: {
-    getDetailStatus: state => state.detailViewVisable
+    getDetailStatus: state => state.detailViewVisable, 
+
+    getToken: state => state.Userinfo.token
 
   }
 });
