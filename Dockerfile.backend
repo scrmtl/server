@@ -11,7 +11,7 @@ RUN mkdir /server
 WORKDIR /server
 
 # Copy the backend directory contents into the container at /server
-ADD scrumtool /server/
+ADD backend/scrumtool /server/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
