@@ -9,8 +9,8 @@ RUN mkdir /app
 # make the 'app' folder the current working directory
 WORKDIR /app
 
-# copy both 'package.json' and 'package-lock.json' (if available)
-COPY frontend/package*.json .
+# copy both 'package.json' and 'package-lock.json' (if available, slash necessary for more than one file)
+COPY frontend/package*.json ./
 
 # install project dependencies
 RUN npm install
