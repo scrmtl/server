@@ -7,28 +7,11 @@
       </v-card-title>
       <v-card-text>
         <v-form>
-<<<<<<< HEAD
-          <v-text-field 
-          label="Username" 
-          prepend-icon="mdi-account-circle" 
-          v-model="name" 
-          name="name" 
-          value 
-          type="text"/>
-          <v-text-field 
-          label="E-Mail" 
-          prepend-icon="mdi-mail" 
-          v-model="email" 
-          name="email" 
-          value 
-          type="email"/>
-=======
           <v-text-field
             label="Username"
             v-model="Userinfo.username"
             prepend-icon="mdi-account-circle"
           />
->>>>>>> Login
           <v-text-field
             label="Password"
             v-model="Userinfo.password"
@@ -61,22 +44,6 @@ import { mapState } from "vuex";
 import { mapMutations } from "vuex";
 
 export default {
-<<<<<<< HEAD
-  data () {
-    return {
-      name: "",
-      email: "",
-      password: ""
-    }
-  },
-  methods: {
-    register () {
-      this.$store.dispatch('register', {
-        name: this.name,
-        email: this.email,
-        password: this.password,
-      })
-=======
   data: () => ({
     showPassword: false,
 
@@ -132,7 +99,6 @@ export default {
             this.loginFalse = true;
           }
         });
->>>>>>> Login
     }
   }
 };
