@@ -59,7 +59,7 @@ jobs:
         USERNAME: ${{ github.actor }}
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         REGISTRY: "docker.pkg.github.com"
-        BUILD_PATH: "./backend/Dockerfile"
+        BUILD_PATH: "./backend"
         # DOCKERFILE: "Dockerfile"
         IMAGE_NAME: ${{env.IMAGE_BACKEND_NAME}}
         LATEST: "true"
@@ -81,7 +81,7 @@ jobs:
         USERNAME: ${{ github.actor }}
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         REGISTRY: "docker.pkg.github.com"
-        BUILD_PATH: "frontend/Dockerfile"
+        BUILD_PATH: "frontend"
         # DOCKERFILE: "Dockerfile"
         IMAGE_NAME: ${{env.IMAGE_FRONTEND_NAME}}
         LATEST: "true"
