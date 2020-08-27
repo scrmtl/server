@@ -1,3 +1,5 @@
+![build, test and deploy docker from NEXT branch](https://github.com/scrmtl/server/workflows/build,%20test%20and%20deploy%20from%20NEXT%20branch/badge.svg?branch=next)
+
 # Welcome to Scrmtl
 
 Innovative Scrum Management Tool
