@@ -67,7 +67,7 @@ services:
             - traefik.http.routers.scrmtlfrontend-secured.entrypoints=websecure
             - traefik.http.routers.scrmtlfrontend-secured.tls=true
             - traefik.http.routers.scrmtlfrontend-secured.tls.certresolver=myresolver
-            - traefik.http.routers.scrmtlfrontend-secured.rule="Host(`scrmtl.ddns.net`) && Path(`/app`)"
+            - traefik.http.routers.scrmtlfrontend-secured.rule="(Host(`scrmtl.ddns.net`) && Path(`/app`))"
             - traefik.http.routers.scrmtlfrontend-secured.middlewares=ScrmtlFrontendMiddlewares@file
             networks:
             - extern
