@@ -1,4 +1,4 @@
-name: build, test and deploy from NEXT branch
+name: build, test and deploy as docker containers from NEXT branch
 on:
   push:
     branches:
