@@ -63,8 +63,8 @@ jobs:
   
   # deploy to github docker registry
         
-  deploy:
-    name: 'build docker and deploy'
+  deployBackend:
+    name: 'Backend: Build docker and deploy'
     runs-on: ubuntu-latest
     # needs: [backendServer, frontendServer]
     steps:
@@ -86,17 +86,27 @@ jobs:
         IMAGE_NAME: ${{env.IMAGE_BACKEND_NAME}}
         LATEST: "true"
     
+  deployFrontend:
+    name: 'Frontend: build docker and deploy'
+    runs-on: ubuntu-latest
+    # needs: [backendServer, frontendServer]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+
     - name: 'Frontend: Docker Build & Push to GitHub Package'
-    uses: opspresso/action-docker@master
-    with:
-      args: --docker
-    env:
-      USERNAME: ${{ github.actor }}
-      PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      REGISTRY: "docker.pkg.github.com"
-      BUILD_PATH: "./frontend"
-      DOCKERFILE: "Dockerfile"
-      IMAGE_NAME: ${{env.IMAGE_FRONTEND_NAME}}
-      LATEST: "true
+      uses: opspresso/action-docker@master
+      with:
+        args: --docker
+      env:
+        USERNAME: ${{ github.actor }}
+        PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        REGISTRY: "docker.pkg.github.com"
+        BUILD_PATH: "./frontend"
+        DOCKERFILE: "Dockerfile"
+        IMAGE_NAME: ${{env.IMAGE_FRONTEND_NAME}}
+        LATEST: "true
 
       
