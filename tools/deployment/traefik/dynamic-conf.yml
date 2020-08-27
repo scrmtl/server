@@ -38,17 +38,27 @@ http:
           prefixes:
           - /traefik    
       # BEGIN scrmtl app
-      ScrmtlbackendMiddlewares:
+      ScrmtlBackendMiddlewares:
         chain:
           middlewares:
-            - ScrmtlbackendHeaders
+            - BackendHeaders
       
-      ScrmtlbackendHeaders:
+      BackendHeaders:
         headers:
           stsPreload: true
           stsIncludeSubdomains: true
           contentTypeNosniff: true
+      
+      ScrmtlFrontendMiddlewares:
+        chain:
+          middlewares:
+            - FrontendStripPrefix
 
+      FrontendStripPrefix:
+        stripPrefix:
+          prefixes:
+          - /app
+          forceSlash: true
       # END scrmtl app
 
       PortainerMiddlewares:

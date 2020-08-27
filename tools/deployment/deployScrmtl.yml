@@ -15,7 +15,7 @@ services:
         - appnetwork
 
     scrmtlbackend:
-        image: docker.pkg.github.com/scrmtl/server/scrmtl-server:latest
+        image: docker.pkg.github.com/scrmtl/server/scrmtl-backend:latest
         container_name: scrmtlbackend
         restart: always
         depends_on:
@@ -42,10 +42,36 @@ services:
         - traefik.http.routers.scrmtlbackend-secured.tls=true
         - traefik.http.routers.scrmtlbackend-secured.tls.certresolver=myresolver
         - traefik.http.routers.scrmtlbackend-secured.rule=Host(`scrmtl.ddns.net`)
-        - traefik.http.routers.scrmtlbackend-secured.middlewares=ScrmtlbackendMiddlewares@file
+        - traefik.http.routers.scrmtlbackend-secured.middlewares=ScrmtlBackendMiddlewares@file
         networks:
         - appnetwork
         - extern
+
+    scrmtlfrontend:
+        image: docker.pkg.github.com/scrmtl/server/scrmtl-frontend:latest
+        container_name: scrmtlfrontend
+        restart: always
+        depends_on:
+        - scrmtldb
+        - scrmtlbackend
+        labels:
+            # actived traefik routing
+            - traefik.enable=true
+            # Choose network
+            - traefik.docker.network=extern
+            # http config
+            - traefik.http.routers.scrmtlfrontend.rule=Host(`scrmtl.ddns.net`)
+            - traefik.http.routers.scrmtlfrontend.entrypoints=web
+            # https config
+            - traefik.http.routers.scrmtlfrontend.middlewares=HttpsRedirect@file
+            - traefik.http.routers.scrmtlfrontend-secured.entrypoints=websecure
+            - traefik.http.routers.scrmtlfrontend-secured.tls=true
+            - traefik.http.routers.scrmtlfrontend-secured.tls.certresolver=myresolver
+            - traefik.http.routers.scrmtlfrontend-secured.rule="Host(`scrmtl.ddns.net`) && Path(`/app`)"
+            - traefik.http.routers.scrmtlfrontend-secured.middlewares=ScrmtlFrontendMiddlewares@file
+            networks:
+            - extern
+
 
 networks:
     extern:

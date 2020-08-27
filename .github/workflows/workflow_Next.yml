@@ -6,7 +6,8 @@ on:
 
 env:
   # TODO: Change variable to your image's name.
-  IMAGE_NAME: scrmtl-server
+  IMAGE_BACKEND_NAME: scrmtl-backend
+  IMAGE_FRONTEND_NAME: scrmtl-frontend
   WORK_DIR_BACKEND: ./backend/scrumtool
 
 jobs:
@@ -72,7 +73,7 @@ jobs:
       with:
         persist-credentials: false
 
-    - name: Docker Build & Push to GitHub Package
+    - name: 'Backend: Docker Build & Push to GitHub Package'
       uses: opspresso/action-docker@master
       with:
         args: --docker
@@ -80,8 +81,22 @@ jobs:
         USERNAME: ${{ github.actor }}
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         REGISTRY: "docker.pkg.github.com"
+        BUILD_PATH: "./backend"
         DOCKERFILE: "Dockerfile"
-        IMAGE_NAME: ${{env.IMAGE_NAME}}
+        IMAGE_NAME: ${{env.IMAGE_BACKEND_NAME}}
         LATEST: "true"
+    
+    - name: 'Frontend: Docker Build & Push to GitHub Package'
+    uses: opspresso/action-docker@master
+    with:
+      args: --docker
+    env:
+      USERNAME: ${{ github.actor }}
+      PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+      REGISTRY: "docker.pkg.github.com"
+      BUILD_PATH: "./frontend"
+      DOCKERFILE: "Dockerfile"
+      IMAGE_NAME: ${{env.IMAGE_FRONTEND_NAME}}
+      LATEST: "true
 
       

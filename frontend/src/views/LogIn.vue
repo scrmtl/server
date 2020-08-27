@@ -21,7 +21,6 @@
             @click:append="showPassword = !showPassword"
             value
             name="password"
-            v-mo#del="passoword"
           />
         </v-form>
       </v-card-text>
