@@ -7,6 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+<<<<<<< HEAD
     Userinfo: {
       username: "stephan",
       password: "scrmtl14444",
@@ -14,8 +15,30 @@ export default new Vuex.Store({
     },
     responseData:[],
         
+=======
+    detailViewVisable: false,
+
+    Userinfo: {
+      token: ""
+    },
+>>>>>>> Login
   },
   mutations: {
+    showDetailView(state){
+      state.detailViewVisable = true;
+    },
+
+    hideDetailView(state) {
+      state.detailViewVisable = false;
+    },
+
+    increment(state) {
+      state.count++;
+    },
+
+    setToken(state, token){
+      state.Userinfo.token = token;
+    },
     
   },
   actions: {
@@ -25,6 +48,9 @@ export default new Vuex.Store({
 
   },
   getters: {
+    getDetailStatus: state => state.detailViewVisable, 
+
+    getToken: state => state.Userinfo.token
 
   }
 });

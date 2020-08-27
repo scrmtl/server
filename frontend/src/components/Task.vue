@@ -9,7 +9,7 @@
               :elevation="hover ? 14 : 5"
             >
               <div class="task-header2 task">
-                <span class="task-name">Task Name</span>
+                <span class="task-name" @click="showDialog">Task Name</span>
                 <v-spacer></v-spacer>
                 <span class="task-status">
                   <v-tooltip bottom>
@@ -149,15 +149,24 @@
           </v-card>
           </template>
         </v-hover>
+        <DetailView></DetailView>
     </div>
 </template>
 
 <script>
+import DetailView from "../components/DetailView";
     export default {
         data: () => ({
+
   }),
+  components: {
+    DetailView
+  },
+
   methods: {
-    
+      showDialog() {
+      this.$store.commit("showDetailView");
+    }
   }
     }
 </script>
