@@ -7,21 +7,15 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-<<<<<<< HEAD
-    Userinfo: {
-      username: "stephan",
-      password: "scrmtl14444",
-      token: ""
-    },
-    responseData:[],
-        
-=======
     detailViewVisable: false,
 
+    username: "",
+
+
     Userinfo: {
+      
       token: ""
     },
->>>>>>> Login
   },
   mutations: {
     showDetailView(state){
@@ -39,6 +33,9 @@ export default new Vuex.Store({
     setToken(state, token){
       state.Userinfo.token = token;
     },
+    setUsername(state, username){
+      state.username = username;
+    }
     
   },
   actions: {
@@ -50,7 +47,9 @@ export default new Vuex.Store({
   getters: {
     getDetailStatus: state => state.detailViewVisable, 
 
-    getToken: state => state.Userinfo.token
+    getToken: state => state.Userinfo.token,
+
+    getUsername: state => state.username
 
   }
 });

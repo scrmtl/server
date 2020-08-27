@@ -21,7 +21,7 @@
             @click:append="showPassword = !showPassword"
             value
             name="password"
-            v-model="passoword"
+            v-mo#del="passoword"
           />
         </v-form>
       </v-card-text>
@@ -61,7 +61,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["setToken"]),
+    ...mapMutations(["setToken", "setUsername"]),
 
     login() {
       var axios = require("axios");
@@ -86,6 +86,7 @@ export default {
           this.token = response.data.access_token;
           //console.log(this.token);
           this.setToken(this.token);
+          this.setUsername(this.Userinfo.username)
           console.log(this.$store.getters.getToken);
           if (response.status == 200) {
             this.$router.push("home");

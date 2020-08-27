@@ -9,15 +9,10 @@
           persistent 
           max-width="400px" 
           content-class="createProjectDialog"
-<<<<<<< HEAD
-          hide-overlay="true"
-          scrollable="true"
-=======
           hide-overlay
           scrollable
 
 
->>>>>>> Login
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn 
