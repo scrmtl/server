@@ -84,6 +84,6 @@ jobs:
         BUILD_PATH: "./frontend"
         DOCKERFILE: "Dockerfile"
         IMAGE_NAME: ${{env.IMAGE_FRONTEND_NAME}}
-        LATEST: "true
+        LATEST: "true"
 
       
