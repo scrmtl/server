@@ -59,13 +59,13 @@ jobs:
         USERNAME: ${{ github.actor }}
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         REGISTRY: "docker.pkg.github.com"
-        BUILD_PATH: "backend"
+        BUILD_PATH: "/github/workspace/backend"
         DOCKERFILE: "Dockerfile"
         IMAGE_NAME: ${{env.IMAGE_BACKEND_NAME}}
         LATEST: "true"
     
   deployFrontend:
-    name: Frontend - build docker and deploy
+    name: Frontend - Build docker and deploy
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -81,7 +81,7 @@ jobs:
         USERNAME: ${{ github.actor }}
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         REGISTRY: "docker.pkg.github.com"
-        BUILD_PATH: "./frontend"
+        BUILD_PATH: "/frontend"
         DOCKERFILE: "Dockerfile"
         IMAGE_NAME: ${{env.IMAGE_FRONTEND_NAME}}
         LATEST: "true"
