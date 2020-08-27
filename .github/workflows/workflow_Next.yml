@@ -59,7 +59,7 @@ jobs:
         USERNAME: ${{ github.actor }}
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         REGISTRY: "docker.pkg.github.com"
-        BUILD_PATH: "./backend"
+        BUILD_PATH: "backend"
         DOCKERFILE: "Dockerfile"
         IMAGE_NAME: ${{env.IMAGE_BACKEND_NAME}}
         LATEST: "true"
