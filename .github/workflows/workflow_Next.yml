@@ -1,4 +1,4 @@
-name: build and test in NEXT branch
+name: build, test and deploy from NEXT branch
 on:
   push:
     branches:
@@ -13,7 +13,7 @@ env:
 jobs:
   #backend job
   backendServer:
-    name: 'build and test backend'
+    name: build and test backend
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 2
@@ -43,7 +43,7 @@ jobs:
 # deploy to github docker registry
        
   deployBackend:
-    name: 'Backend: Build docker and deploy'
+    name: Backend - Build docker and deploy
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -51,7 +51,7 @@ jobs:
       with:
         persist-credentials: false
 
-    - name: 'Docker Build & Push to GitHub Package'
+    - name: Docker Build & Push to GitHub Package
       uses: opspresso/action-docker@master
       with:
         args: --docker
@@ -65,7 +65,7 @@ jobs:
         LATEST: "true"
     
   deployFrontend:
-    name: 'Frontend: build docker and deploy'
+    name: Frontend - build docker and deploy
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -73,7 +73,7 @@ jobs:
       with:
         persist-credentials: false
 
-    - name: 'Docker Build & Push to GitHub Package'
+    - name: Docker Build & Push to GitHub Package
       uses: opspresso/action-docker@master
       with:
         args: --docker
