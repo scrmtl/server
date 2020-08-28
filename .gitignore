@@ -24,6 +24,10 @@ media
 .idea/**/libraries 
 *.iws /out/ 
 
+# Webstorm Usage
+.idea/*
+
+
 # Python # 
 *.py[cod] 
 *$py.class 
@@ -118,16 +122,16 @@ GitHub.sublime-settings
 backend/scrumtool/.vscode/settings.json
 
 ## Deployment Server Config  
-tools/tools/deployment/Security
+tools/deployment/Security/*
 
 ## frontend
 # npm
 .DS_Store
-node_modules
-/dist
+frontend/node_modules
+frontend/dist
 
-/tests/e2e/videos/
-/tests/e2e/screenshots/
+frontend/tests/e2e/videos/
+frontend/tests/e2e/screenshots/
 
 # local env files
 .env.local
@@ -139,8 +143,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # Editor directories and files
-.idea
-.vscode
 *.suo
 *.ntvs*
 *.njsproj
