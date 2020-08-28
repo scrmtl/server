@@ -53,6 +53,11 @@ http:
         chain:
           middlewares:
             - FrontendStripPrefix
+            - FrontendHeaders
+
+      FrontendHeaders:
+        headers:
+          contentTypeNosniff: true
 
       FrontendStripPrefix:
         stripPrefix:

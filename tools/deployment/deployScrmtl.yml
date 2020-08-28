@@ -55,22 +55,22 @@ services:
         - scrmtldb
         - scrmtlbackend
         labels:
-            # actived traefik routing
-            - traefik.enable=true
-            # Choose network
-            - traefik.docker.network=extern
-            # http config
-            - traefik.http.routers.scrmtlfrontend.rule=Host(`scrmtl.ddns.net`)
-            - traefik.http.routers.scrmtlfrontend.entrypoints=web
-            # https config
-            - traefik.http.routers.scrmtlfrontend.middlewares=HttpsRedirect@file
-            - traefik.http.routers.scrmtlfrontend-secured.entrypoints=websecure
-            - traefik.http.routers.scrmtlfrontend-secured.tls=true
-            - traefik.http.routers.scrmtlfrontend-secured.tls.certresolver=myresolver
-            - traefik.http.routers.scrmtlfrontend-secured.rule="(Host(`scrmtl.ddns.net`) && Path(`/app`))"
-            - traefik.http.routers.scrmtlfrontend-secured.middlewares=ScrmtlFrontendMiddlewares@file
-            networks:
-            - extern
+        # actived traefik routing
+        - traefik.enable=true
+        # Choose network
+        - traefik.docker.network=extern
+        # http config
+        - traefik.http.routers.scrmtlfrontend.rule=Host(`scrmtl.ddns.net`) && PathPrefix(`/app`)
+        - traefik.http.routers.scrmtlfrontend.entrypoints=web
+        # https config
+        - traefik.http.routers.scrmtlfrontend.middlewares=HttpsRedirect@file
+        - traefik.http.routers.scrmtlfrontend-secured.entrypoints=websecure
+        - traefik.http.routers.scrmtlfrontend-secured.tls=true
+        - traefik.http.routers.scrmtlfrontend-secured.tls.certresolver=myresolver
+        - traefik.http.routers.scrmtlfrontend-secured.rule=Host(`scrmtl.ddns.net`) && PathPrefix(`/app`)
+        - traefik.http.routers.scrmtlfrontend-secured.middlewares=ScrmtlFrontendMiddlewares@file
+        networks:
+        - extern
 
 
 networks:
