@@ -159,7 +159,7 @@ export default {
       this.$router.push('/login');
     }
     // Load Projects
-
+    this.$store.dispatch("fetchProjects");
     //Load user's tasks
 
   }
