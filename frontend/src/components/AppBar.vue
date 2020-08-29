@@ -6,7 +6,7 @@
     dark
     grow
     >
-    <v-tab to="Home">
+    <v-tab to="/">
       Home
     </v-tab>
     <v-tab to="ProductBacklog">
