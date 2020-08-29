@@ -1,22 +1,46 @@
 import Vue from "vue";
 import Vuex from "vuex";
-//import axios from "axios";
+import Axios from "axios";
+import createPersistedState from "vuex-persistedstate";
 
-Vue.use(Vuex);
-
+Vue.use(Vuex, Axios);
 
 export default new Vuex.Store({
-  state: {
+  // for debugging 
+  // later something like this even better 
+  // strict: eprocess.env.NODE_ENV !== 'production'
+  strict: true,
+  plugins: [createPersistedState()],
+  // States
+  state: {   
     detailViewVisable: false,
 
-    username: "",
+    
+
+    
 
 
     Userinfo: {
-      
+      username: "",
       token: ""
     },
   },
+  // call REST API
+  // Use from the components
+  actions: {
+    login ({ commit }, { token, username }) {
+      commit('SET_TOKEN', token);
+      commit('SET_USERNAME', username);
+      // set auth header
+      Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    },
+
+    logout ({ commit }) {
+      commit('RESET', '');
+    }
+      
+  },
+  //Update States
   mutations: {
     showDetailView(state){
       state.detailViewVisable = true;
@@ -30,26 +54,33 @@ export default new Vuex.Store({
       state.count++;
     },
 
-    setToken(state, token){
+    SET_TOKEN(state, token){
       state.Userinfo.token = token;
     },
-    setUsername(state, username){
-      state.username = username;
+    SET_USERNAME(state, username){
+      state.Userinfousername = username;
+    },
+    RESET(state){
+      state.Userinfo.username = "";
+      state.Userinfo.token = "";
     }
+
     
   },
-  actions: {
+  getters: {
+    getDetailStatus: state => {
+      return state.detailViewVisable
+    }, 
 
+    getToken: state => {
+      return state.Userinfo.token
+    },
+
+    getUsername: state => {
+      return state.Userinfo.username
+    },
   },
   modules: {
-
-  },
-  getters: {
-    getDetailStatus: state => state.detailViewVisable, 
-
-    getToken: state => state.Userinfo.token,
-
-    getUsername: state => state.username
 
   }
 });

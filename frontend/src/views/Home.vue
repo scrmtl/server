@@ -154,7 +154,13 @@ export default {
     ProjectCard,
     MyTasksLane,
   },
-  created () {
+  async created () {
+    if (this.$store.getters.getToken != "") {
+      this.$router.push('/login');
+    }
+    // Load Projects
+
+    //Load user's tasks
 
   }
 

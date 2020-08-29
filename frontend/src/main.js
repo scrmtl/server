@@ -4,8 +4,12 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
+import Axios from "axios";
 
 Vue.config.productionTip = false;
+
+// set auth header
+Axios.defaults.headers.common['Authorization'] = `Bearer ${store.state.token}`;
 
 new Vue({
   router,

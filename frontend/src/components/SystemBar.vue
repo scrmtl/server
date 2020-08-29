@@ -3,19 +3,23 @@
         <v-icon>mdi-filter-variant</v-icon>
         <span>ScrumTool</span>
         <v-spacer></v-spacer>
-        <span class="systemBarUser">{{Username}}</span>
+        <span class="systemBarUser">{{username}}</span>
         <v-icon class="systemBarIcon">mdi-account</v-icon>   
     </v-system-bar>
 </template>
 
 <script>
-    import { mapState } from "vuex";
+import { mapState } from 'vuex';
+
     export default {
-        computed: {
-        ...mapState({
-            Username: "username"
+        data() {
+            return {
+                user: ''
+            };
+        },
+        computed: mapState({
+            username: state => state.Userinfo.username,
         })
-    },
     }
 </script>
 
