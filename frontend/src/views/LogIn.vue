@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
   <v-content class="tabbody tab-content">
     <v-card width="400" class="mx-auto mt-10" @submit.prevent="register">
@@ -39,13 +38,13 @@
 </template>
 
 <script>
-import AuthService from '@/services/AuthService.js';
+import AuthService from "@/services/AuthService.js";
 
-export default{
+export default {
   data() {
     return {
       showPassword: false,
-      loginFalse:false,
+      loginFalse: false,
       username: "",
       password: "",
       errorMessage: ""
@@ -59,16 +58,16 @@ export default{
           password: this.password
         };
         const response = await AuthService.login(credentials);
-        this.errorMessage = response.errorMessage;
+        this.errorMessage = response.errorMessage;        
         const token = response.access_token;
         const user = this.username;
-        this.$store.commit('login', { token, user });
-        this.$router.push('/');
-        // if (response.status == 200) {
-        //   this.$router.push('/');
-        // } else {
-        //   this.loginFalse = true;
-        // }
+        console.log(user);
+        this.$store.dispatch("login", { token, user });
+        if (token !== "") {
+          this.$router.push('/');
+        } else {
+          this.loginFalse = true;
+        }
       } catch (error) {
         this.errorMessage = error.response.data.msg;
       }

@@ -5,6 +5,9 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex, Axios);
 
+const baseUrl = "https://scrmtl.ddns.net/api";
+const projectPath = "/project/";
+
 export default new Vuex.Store({
   // for debugging 
   // later something like this even better 
@@ -14,29 +17,42 @@ export default new Vuex.Store({
   // States
   state: {   
     detailViewVisable: false,
-
-    
-
-    
-
-
     Userinfo: {
       username: "",
       token: ""
     },
+
+    projects: []
   },
   // call REST API
   // Use from the components
   actions: {
-    login ({ commit }, { token, username }) {
-      commit('SET_TOKEN', token);
-      commit('SET_USERNAME', username);
+    login ({ commit }, { token, user }) {
+      commit("SET_TOKEN", token);
+      commit("SET_USERNAME", user);
       // set auth header
-      Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     },
 
     logout ({ commit }) {
-      commit('RESET', '');
+      commit("RESET", '');
+    },
+
+    async fetchProjects ({commit}) {
+      const response = await Axios.get(`${baseUrl}${projectPath}`);
+      commit("SET_PROJECTS", response.data);    
+    },
+    async addProject ({commit}, project) {
+      const response = await Axios.post(`${baseUrl}${projectPath}`, project);
+      commit("NEW_PROJECT", response.data);    
+    },
+    async updateProject ({commit}, project) {
+      const response = await Axios.put(`${baseUrl}${projectPath}${project.id}`, project);
+      commit("UPDATE_PROJECT", response.data);    
+    },
+    async removeProject ({commit}, project) {
+      await Axios.delete(`${baseUrl}${projectPath}${project.id}`);
+      commit("DELETE_PROJECT", project);    
     }
       
   },
@@ -58,27 +74,41 @@ export default new Vuex.Store({
       state.Userinfo.token = token;
     },
     SET_USERNAME(state, username){
-      state.Userinfousername = username;
+      state.Userinfo.username = username;
     },
     RESET(state){
       state.Userinfo.username = "";
       state.Userinfo.token = "";
+    },
+    SET_PROJECTS(state, projects){
+      state.projects = projects;
+    },
+    NEW_PROJECT(state, project){
+      state.projects.unshift(project);
+    },
+    UPDATE_PROJECT(state, updatedProject){
+      const index = state.projects.findIndex(t => t.id === updatedProject.id);
+        if(index !== -1) {
+            state.tasks.splice(index, 1, updatedProject);
+        } 
+    },
+    DELETE_PROJECT(state, project){
+      state.projects = state.projects.filter(prj => project.id !== prj.id);
     }
-
     
   },
   getters: {
     getDetailStatus: state => {
-      return state.detailViewVisable
+      return state.detailViewVisable;
     }, 
 
     getToken: state => {
-      return state.Userinfo.token
+      return state.Userinfo.token;
     },
 
     getUsername: state => {
-      return state.Userinfo.username
-    },
+      return state.Userinfo.username;
+    }
   },
   modules: {
 

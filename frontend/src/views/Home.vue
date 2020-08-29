@@ -155,7 +155,7 @@ export default {
     MyTasksLane,
   },
   async created () {
-    if (this.$store.getters.getToken != "") {
+    if (!this.$store.getters.getToken) {
       this.$router.push('/login');
     }
     // Load Projects
