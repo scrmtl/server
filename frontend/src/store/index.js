@@ -15,7 +15,7 @@ export default new Vuex.Store({
   strict: true,
   plugins: [createPersistedState()],
   // States
-  state: {   
+  state: {
     detailViewVisable: false,
     Userinfo: {
       username: "",
@@ -27,38 +27,38 @@ export default new Vuex.Store({
   // call REST API
   // Use from the components
   actions: {
-    login ({ commit }, { token, user }) {
+    login({ commit }, { token, user }) {
       commit("SET_TOKEN", token);
       commit("SET_USERNAME", user);
       // set auth header
       Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     },
 
-    logout ({ commit }) {
+    logout({ commit }) {
       commit("RESET", '');
     },
 
-    async fetchProjects ({commit}) {
+    async fetchProjects({ commit }) {
       const response = await Axios.get(`${baseUrl}${projectPath}`);
-      commit("SET_PROJECTS", response.data);    
+      commit("SET_PROJECTS", response.data);
     },
-    async addProject ({commit}, project) {
+    async addProject({ commit }, project) {
       const response = await Axios.post(`${baseUrl}${projectPath}`, project);
-      commit("NEW_PROJECT", response.data);    
+      commit("NEW_PROJECT", response.data);
     },
-    async updateProject ({commit}, project) {
+    async updateProject({ commit }, project) {
       const response = await Axios.put(`${baseUrl}${projectPath}${project.id}`, project);
-      commit("UPDATE_PROJECT", response.data);    
+      commit("UPDATE_PROJECT", response.data);
     },
-    async removeProject ({commit}, project) {
+    async removeProject({ commit }, project) {
       await Axios.delete(`${baseUrl}${projectPath}${project.id}`);
-      commit("DELETE_PROJECT", project);    
+      commit("DELETE_PROJECT", project);
     }
-      
+
   },
   //Update States
   mutations: {
-    showDetailView(state){
+    showDetailView(state) {
       state.detailViewVisable = true;
     },
 
@@ -70,37 +70,37 @@ export default new Vuex.Store({
       state.count++;
     },
 
-    SET_TOKEN(state, token){
+    SET_TOKEN(state, token) {
       state.Userinfo.token = token;
     },
-    SET_USERNAME(state, username){
+    SET_USERNAME(state, username) {
       state.Userinfo.username = username;
     },
-    RESET(state){
+    RESET(state) {
       state.Userinfo.username = "";
       state.Userinfo.token = "";
     },
-    SET_PROJECTS(state, projects){
+    SET_PROJECTS(state, projects) {
       state.projects = projects;
     },
-    NEW_PROJECT(state, project){
+    NEW_PROJECT(state, project) {
       state.projects.unshift(project);
     },
-    UPDATE_PROJECT(state, updatedProject){
+    UPDATE_PROJECT(state, updatedProject) {
       const index = state.projects.findIndex(t => t.id === updatedProject.id);
-        if(index !== -1) {
-            state.tasks.splice(index, 1, updatedProject);
-        } 
+      if (index !== -1) {
+        state.tasks.splice(index, 1, updatedProject);
+      }
     },
-    DELETE_PROJECT(state, project){
+    DELETE_PROJECT(state, project) {
       state.projects = state.projects.filter(prj => project.id !== prj.id);
     }
-    
+
   },
   getters: {
     getDetailStatus: state => {
       return state.detailViewVisable;
-    }, 
+    },
 
     getToken: state => {
       return state.Userinfo.token;
@@ -108,6 +108,10 @@ export default new Vuex.Store({
 
     getUsername: state => {
       return state.Userinfo.username;
+    },
+
+    getProjects: state => {
+      return state.projects;
     }
   },
   modules: {
