@@ -3,15 +3,16 @@ import Vuex from "vuex";
 import Axios from "axios";
 import createPersistedState from "vuex-persistedstate";
 
-import board from '@/store/board';
-import epic from '@/store/epic';
-import feature from '@/store/feature';
-import label from '@/store/label';
-import lane from '@/store/lane';
-import projectUser from '@/store/projectUser';
-import sprint from '@/store/sprint';
-import steplist from '@/store/steplist';
-import task from '@/store/task';
+import board from '@/store/ressources/board';
+import epic from '@/store/ressources/epic';
+import feature from '@/store/ressources/feature';
+import label from '@/store/ressources/label';
+import lane from '@/store/ressources/lane';
+import projectUser from '@/store/ressources/projectUser';
+import sprint from '@/store/ressources/sprint';
+import steplist from '@/store/ressources/steplist';
+import task from '@/store/ressources/task';
+import user from '@/store/ressources/user';
 
 Vue.use(Vuex, Axios);
 
@@ -136,6 +137,7 @@ export default new Vuex.Store({
     projectUser,
     sprint,
     steplist,
+    user,
   }
 });
 
