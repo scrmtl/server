@@ -3,9 +3,20 @@ import Vuex from "vuex";
 import Axios from "axios";
 import createPersistedState from "vuex-persistedstate";
 
+import board from '@/store/board';
+import epic from '@/store/epic';
+import feature from '@/store/feature';
+import label from '@/store/label';
+import lane from '@/store/lane';
+import projectUser from '@/store/projectUser';
+import sprint from '@/store/sprint';
+import steplist from '@/store/steplist';
+import task from '@/store/task';
+
 Vue.use(Vuex, Axios);
 
 const baseUrl = "https://scrmtl.ddns.net/api";
+const baseUrlDefault = "https://scrmtl.ddns.net";
 const projectPath = "/project/";
 
 export default new Vuex.Store({
@@ -32,12 +43,14 @@ export default new Vuex.Store({
       commit("SET_USERNAME", user);
       // set auth header
       Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      Axios.defaults.baseURL = process.env.VUE_APP_BASE_URL || baseUrlDefault
     },
 
     logout({ commit }) {
       commit("RESET", '');
     },
 
+    //Project
     async fetchProjects({ commit }) {
       const response = await Axios.get(`${baseUrl}${projectPath}`);
       commit("SET_PROJECTS", response.data);
@@ -54,7 +67,6 @@ export default new Vuex.Store({
       await Axios.delete(`${baseUrl}${projectPath}${project.id}`);
       commit("DELETE_PROJECT", project);
     }
-
   },
   //Update States
   mutations: {
@@ -115,7 +127,15 @@ export default new Vuex.Store({
     }
   },
   modules: {
-
+    task,
+    board,
+    epic,
+    feature,
+    label,
+    lane,
+    projectUser,
+    sprint,
+    steplist,
   }
 });
 
