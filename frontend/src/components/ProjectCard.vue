@@ -5,14 +5,9 @@
         <v-card class="navbar projectCard" max-width="344" dark shaped :elevation="hover ? 24 : 1">
           <v-list-item three-line>
             <v-list-item-content>
-              <v-list-item-title class="headline mb-1">Projektname</v-list-item-title>
+              <v-list-item-title class="headline mb-1">{{project.name}}</v-list-item-title>
               <v-list-item-subtitle>
-                <span>
-                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                  sed diam nonumy eirmod tempor invidunt ut labore et dolore
-                  magna aliquyam erat, sed diam voluptua. At vero eos et
-                  accusam et
-                </span>
+                <span>{{project.description}}</span>
               </v-list-item-subtitle>
             </v-list-item-content>
 
@@ -49,12 +44,13 @@
 
 <script>
 export default {
+  props: ["project"],
   data() {
     return {
       value: "75/100",
       ex11: true
     };
-  },
+  }
 };
 </script>
 
