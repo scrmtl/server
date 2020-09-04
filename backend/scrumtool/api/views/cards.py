@@ -152,9 +152,59 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         if detaillevel is not None:
             if detaillevel == 'full':
                 instance = self.get_object()
-                serializer = serializers.TaskSerializerFull(instance)
+                serializer = serializers.TaskSerializerFull(data=request.data)
                 return Response(serializer.data)
 
         instance = self.get_object()
-        serializer = self.get_serializer(instance)
+        serializer = serializers.TaskSerializerFull(
+            data=request.data, instance=instance)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        return Response(serializer.data)
+
+    def partial_update(self, request, pk=None):
+        """update task
+            Add ?DetailLevel=full for full data
+            """
+        detaillevel = self.request.query_params.get('DetailLevel', None)
+        if detaillevel is not None:
+            if detaillevel == 'full':
+                instance = self.get_object()
+                serializer = serializers.TaskSerializerFull(data=request.data)
+                return Response(serializer.data)
+
+        instance = self.get_object()
+        serializer = serializers.TaskSerializerFull(
+            instance=instance, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        return Response(serializer.data)
+
+    def list(self, request):
+        """Gets the requested queryset for cards
+
+        Parameters
+        ----------
+        byUser : id of user
+
+        byProject : id of project
+
+        Returns
+        -------
+        Cards
+            list of cards
+        """
+        by_user = self.request.query_params.get('byUser', None)
+        by_lane = self.request.query_params.get('byLane', None)
+        _queryset = self.queryset
+        current_user: models.PlatformUser = self.request.user
+
+        if by_user is not None and int(by_user) == current_user.id:
+            _queryset = self.queryset.filter(
+                assigned_users__id=current_user.id)
+        elif by_lane is not None:
+            _queryset = self.queryset.filter(
+                lane__id=int(by_lane))
+
+        serializer = self.serializer_class(_queryset, many=True)
         return Response(serializer.data)
