@@ -4,7 +4,7 @@
       <template v-slot="{ hover }">
         <v-card class="task mt-4" min-width="300" height="160" :elevation="hover ? 14 : 5">
           <div class="task-header2 task">
-            <span class="task-name" @click="showDialog">{{task.name}}</span>
+            <span class="task-name" @click="showDialog()">{{task.name}}</span>
             <v-spacer></v-spacer>
             <span class="task-status">
               <!-- Card Status: New -->
@@ -167,6 +167,7 @@ export default {
   methods: {
     showDialog() {
       this.$store.commit("showDetailView");
+      this.$store.commit("setDetailTask", this.task);
     }
   }
 };

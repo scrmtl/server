@@ -83,7 +83,7 @@ class PlatformUser(RulesModelMixin, AbstractUser, metaclass=RulesModelBase):
 
 class ProjectUser(RulesModel):
     """Model definition for ProjectUser."""
-    scrum_user = models.ForeignKey(
+    plattform_user = models.ForeignKey(
         to='PlatformUser',
         on_delete=models.DO_NOTHING,
         related_name='project_users'
@@ -115,7 +115,7 @@ class ProjectUser(RulesModel):
     def __str__(self):
         """Unicode representation of ProjectUser."""
         return "User:{0} with role ({1}) in project ({2}) ".format(
-            self.scrum_user,
+            self.plattform_user,
             self.role,
             self.project
         )

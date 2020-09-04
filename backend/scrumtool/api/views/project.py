@@ -60,6 +60,29 @@ class ProjectViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
                 return Response(test_serializer.data)
         super().create(request, *args, **kwargs)
 
+    def list(self, request):
+        """Gets the requested queryset for projects
+
+        Parameters
+        ----------
+        byUser : id of user
+
+        Returns
+        -------
+        Projects
+            list of projects
+        """
+        by_user = self.request.query_params.get('byUser', None)
+        _queryset = self.queryset
+        current_user: models.PlatformUser = self.request.user
+
+        if by_user is not None and int(by_user) == current_user.id:
+            _queryset = self.queryset.filter(
+                project_users__plattform_user__id=current_user.id)
+
+        serializer = self.serializer_class(_queryset, many=True)
+        return Response(serializer.data)
+
     def deep_copy_model(self, model, updated_fk=None, related_field=None):
         child_model_relationships = []
         # Take the passed in model and get the relationships of that model

@@ -30,6 +30,7 @@ export default new Vuex.Store({
   // States
   state: {
     detailViewVisable: false,
+    detailTask: {},
     Userinfo: {
       username: "",
       token: ""
@@ -78,6 +79,10 @@ export default new Vuex.Store({
 
     hideDetailView(state) {
       state.detailViewVisable = false;
+    },
+
+    setDetailTask(state, Task){
+      state.detailTask = Task;
     },
 
     increment(state) {

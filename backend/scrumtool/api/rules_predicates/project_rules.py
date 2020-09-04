@@ -15,7 +15,7 @@ def getProjectUser(user, project_object):
                 type {0}".format(
             type(project_object)))
     for project_user in project_object.project.project_users.all():
-        if project_user.scrum_user.id == user.id:
+        if project_user.plattform_user.id == user.id:
             stdlogger.info(
                 'User is member of the project %s ',
                 project_object.project)

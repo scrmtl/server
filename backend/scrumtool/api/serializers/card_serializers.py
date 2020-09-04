@@ -316,8 +316,27 @@ class TaskSerializer(serializers.ModelSerializer):
     feature = serializers.PrimaryKeyRelatedField(
         queryset=Feature.objects.all(),
         required=True)
+    assigned_users = serializers.PrimaryKeyRelatedField(
+        queryset=PlatformUser.objects.all(), required=False, many=True)
+    number_of_steps = serializers.SerializerMethodField()
+    number_of_open_steps = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
         fields = CardSerializer.Meta.fields + \
-            ('feature', 'labels', 'steplists',)
+            ('feature', 'assigned_users', 'labels', 'steplists',
+             'number_of_steps', 'number_of_open_steps')
+
+    def get_number_of_steps(self, obj):
+        steps = 0
+        for steplist in obj.steplists.all():
+            steps += steplist.steplistitem_set.count()
+        return steps
+
+    def get_number_of_open_steps(self, obj):
+        open_steps = 0
+        for steplist in obj.steplists.all():
+            for step in steplist.steplistitem_set.all():
+                if not step.checked:
+                    open_steps += 1
+        return open_steps
