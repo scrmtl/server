@@ -3,14 +3,14 @@ import createCrudModule from 'vuex-crud';
 export default createCrudModule({
     resource: 'board', // The name of your CRUD resource (mandatory)
     // Follow actions are generated:
-    // FETCH_LIST
-    // FETCH_SINGLE
-    // CREATE
-    // UPDATE
-    // REPLACE
-    // DESTROY
+    // fetchList
+    // fetchSingle
+    // create
+    // update
+    // replace
+    // destroy
     
     // Follow getters are generated:
     // list 
-    // byid(id)
+    // byid(id))
 });

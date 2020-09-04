@@ -13,12 +13,13 @@ import sprint from '@/store/ressources/sprint';
 import steplist from '@/store/ressources/steplist';
 import task from '@/store/ressources/task';
 import user from '@/store/ressources/user';
+import project from '@/store/ressources/project';
 
 Vue.use(Vuex, Axios);
 
-const baseUrl = "https://scrmtl.ddns.net/api";
+// const baseUrl = "https://scrmtl.ddns.net/api";
 const baseUrlDefault = "https://scrmtl.ddns.net";
-const projectPath = "/project/";
+// const projectPath = "/project/";
 
 export default new Vuex.Store({
   // for debugging 
@@ -52,22 +53,22 @@ export default new Vuex.Store({
     },
 
     //Project
-    async fetchProjects({ commit }) {
-      const response = await Axios.get(`${baseUrl}${projectPath}`);
-      commit("SET_PROJECTS", response.data);
-    },
-    async addProject({ commit }, project) {
-      const response = await Axios.post(`${baseUrl}${projectPath}`, project);
-      commit("NEW_PROJECT", response.data);
-    },
-    async updateProject({ commit }, project) {
-      const response = await Axios.put(`${baseUrl}${projectPath}${project.id}`, project);
-      commit("UPDATE_PROJECT", response.data);
-    },
-    async removeProject({ commit }, project) {
-      await Axios.delete(`${baseUrl}${projectPath}${project.id}`);
-      commit("DELETE_PROJECT", project);
-    }
+    // async fetchProjects({ commit }) {
+    //   const response = await Axios.get(`${baseUrl}${projectPath}`);
+    //   commit("SET_PROJECTS", response.data);
+    // },
+    // async addProject({ commit }, project) {
+    //   const response = await Axios.post(`${baseUrl}${projectPath}`, project);
+    //   commit("NEW_PROJECT", response.data);
+    // },
+    // async updateProject({ commit }, project) {
+    //   const response = await Axios.put(`${baseUrl}${projectPath}${project.id}`, project);
+    //   commit("UPDATE_PROJECT", response.data);
+    // },
+    // async removeProject({ commit }, project) {
+    //   await Axios.delete(`${baseUrl}${projectPath}${project.id}`);
+    //   commit("DELETE_PROJECT", project);
+    // }
   },
   //Update States
   mutations: {
@@ -93,21 +94,21 @@ export default new Vuex.Store({
       state.Userinfo.username = "";
       state.Userinfo.token = "";
     },
-    SET_PROJECTS(state, projects) {
-      state.projects = projects;
-    },
-    NEW_PROJECT(state, project) {
-      state.projects.unshift(project);
-    },
-    UPDATE_PROJECT(state, updatedProject) {
-      const index = state.projects.findIndex(t => t.id === updatedProject.id);
-      if (index !== -1) {
-        state.tasks.splice(index, 1, updatedProject);
-      }
-    },
-    DELETE_PROJECT(state, project) {
-      state.projects = state.projects.filter(prj => project.id !== prj.id);
-    }
+    // SET_PROJECTS(state, projects) {
+    //   state.projects = projects;
+    // },
+    // NEW_PROJECT(state, project) {
+    //   state.projects.unshift(project);
+    // },
+    // UPDATE_PROJECT(state, updatedProject) {
+    //   const index = state.projects.findIndex(t => t.id === updatedProject.id);
+    //   if (index !== -1) {
+    //     state.tasks.splice(index, 1, updatedProject);
+    //   }
+    // },
+    // DELETE_PROJECT(state, project) {
+    //   state.projects = state.projects.filter(prj => project.id !== prj.id);
+    // }
 
   },
   getters: {
@@ -123,9 +124,9 @@ export default new Vuex.Store({
       return state.Userinfo.username;
     },
 
-    getProjects: state => {
-      return state.projects;
-    }
+    // getProjects: state => {
+    //   return state.projects;
+    // }
   },
   modules: {
     task,
@@ -138,6 +139,7 @@ export default new Vuex.Store({
     sprint,
     steplist,
     user,
+    project,
   }
 });
 

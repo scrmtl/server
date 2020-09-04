@@ -101,7 +101,7 @@
         <v-container fluid>
           <v-layout>
             <v-flex>
-              <div v-for="project in this.$store.getters.getProjects" :key="project.id">
+              <div v-for="project in listProjects" :key="project.id">
                 <ProjectCard v-bind:project="project" />
               </div>
             </v-flex>
@@ -120,6 +120,7 @@
 <script>
 import ProjectCard from "@/components/ProjectCard.vue";
 import MyTasksLane from "@/components/MyTasksLane.vue";
+import {mapGetters, mapActions} from "vuex";
 //import scrmtlServices from '@/services/scrmtlServices.js'
 
 export default {
@@ -135,15 +136,24 @@ export default {
       this.$router.push("/login");
     }
     // Load Projects
-    this.$store.dispatch("fetchProjects");
+    this.fetchProjects();
     //Load user's tasks
   },
   methods: {
+    ...mapActions("project", {
+      fetchProjects: "fetchList"
+    }),
     loadData: function() {
-      this.$store.dispatch("fetchProjects");
+      this.fetchProjects();
     }
   },
+  computed:{
+    ...mapGetters("project", 
+    {listProjects: "list"
+    })
+  },
   mounted: function() {
+    console.log(this.listProjects);
     this.loadData();
     setInterval(
       function() {
