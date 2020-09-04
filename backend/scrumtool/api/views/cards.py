@@ -158,7 +158,7 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = serializers.TaskSerializerFull(
             data=request.data, instance=instance)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response(serializer.data)
 
@@ -176,7 +176,7 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = serializers.TaskSerializerFull(
             instance=instance, data=request.data, partial=True)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response(serializer.data)
 
