@@ -97,6 +97,7 @@
                     <span>Story Points</span>
                   </v-tooltip>
                   <span>{{task.storypoints}}</span>
+                  <!-- Use Images -->
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
                       <v-icon
@@ -109,6 +110,7 @@
                     <span>Task: used images</span>
                   </v-tooltip>
                   <span>1</span>
+                  <!-- Steps -->
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
                       <v-icon
@@ -118,9 +120,9 @@
                         v-on="on"
                       >mdi-check-box-multiple-outline</v-icon>
                     </template>
-                    <span>Task: To-Do List</span>
+                    <span>open steps</span>
                   </v-tooltip>
-                  <span>5/8</span>
+                  <span>{{task.number_of_open_steps}} / {{task.number_of_steps}}</span>
                 </div>
               </div>
             </div>
@@ -132,21 +134,18 @@
                 <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
               </v-avatar>
             </div>
-
-            <div class="task-labels2 task">
-              <div class="label-backend backend">
-                <span>Backend</span>
-              </div>
-              <div class="label-frontend frontend">
-                <span>Frontend</span>
-              </div>
-              <div class="label-ux ui_ux">
-                <span>UX/UI</span>
-              </div>
-              <div class="label-bug bug">
-                <span>BUG</span>
-              </div>
+            <div>
+              <v-chip-group column class="ml-4">
+              <v-chip
+                v-for="(label, i) in task.labels"
+                :key="i"
+                :color="label.color"
+                v-text="label.title"
+                
+              ></v-chip>
+            </v-chip-group>
             </div>
+            
           </v-card-text>
         </v-card>
       </template>
