@@ -97,7 +97,7 @@
                           prepend-icon="mdi-account-multiple-plus"
                         ></v-select>
                         <v-btn color="link" text @click="drawer = false">Close</v-btn>
-                        <v-btn color="link" text @click="dialog = false">Save</v-btn>
+                        <v-btn color="link" text @click="drawer = false">Save</v-btn>
                       </v-card-text>
                     </v-card>
                   </v-tab-item>
@@ -112,6 +112,8 @@
                             required
                             prepend-icon="mdi-circle-edit-outline"
                           ></v-select>
+                          <v-btn color="link" text @click="drawer = false">Close</v-btn>
+                        <v-btn color="link" text @click="drawer = false">Save</v-btn>
                         </v-card-text>
                     </v-card>
                   </v-tab-item>
