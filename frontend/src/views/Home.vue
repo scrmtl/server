@@ -11,13 +11,14 @@
             content-class="createProjectDialog"
             hide-overlay
             scrollable
+            transition="slide-x-reverse-transition"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn text large color="link" v-bind="attrs" v-on="on">
                 <v-icon class="mr-1">mdi-folder-plus</v-icon>Projekt erstellen
               </v-btn>
             </template>
-            <v-card color="navbar" dark>
+            <v-card color="navbar" >
               <v-card-title>
                 <span class="headline ma-0 pa-1">Projekterstellung</span>
               </v-card-title>
@@ -79,7 +80,8 @@
                     required
                     prepend-icon="mdi-circle-edit-outline"
                   ></v-select>
-                  <small>*müssen ausgefüllt sein</small>
+                  <small
+                  class="white">*müssen ausgefüllt sein</small>
                 </v-container>
               </v-card-text>
               <v-card-actions>
@@ -89,9 +91,186 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+           <v-navigation-drawer
+              v-model="drawer"
+              absolute
+              temporary
+              right
+              width="800"
+              color="navbar"
+              dark
+            >
+              <v-container>
+              <v-card>
+                <v-tabs
+                  v-model="tab"
+                  dark
+                  background-color="navbar"
+                  slider-color="link"
+                  centered
+                  grow
+                >
+                  <v-tab
+                    :key="detail"
+                  >
+                    Details
+                  </v-tab>
+                  <v-tab
+                    :key="info"
+                  >
+                    Info
+                  </v-tab>
+                </v-tabs>
 
-          <v-btn text large color="link">
-            <v-icon class="mr-1">mdi-delete-forever</v-icon>Projekt(e) löschen
+                <v-tabs-items
+                v-model="tab" 
+                background-color="navbar"
+                color="navbar"
+                >
+                  <v-tab-item
+                    :key="detail"
+                  >
+                    <v-card flat dark color="navbar">
+                      <v-card-text>
+                          <v-text-field
+                          label="Projektname*"
+                          required
+                          prepend-icon="mdi-information-outline"
+                          class="ma-1"
+                        ></v-text-field>
+                        <v-text-field
+                          label="Projekt Start*"
+                          hint="DD/MM/JJJJ"
+                          required
+                          persistent-hint
+                          prepend-icon="mdi-calendar-range"
+                          class="ma-1"
+                        ></v-text-field>
+                        <v-text-field
+                          label="Projekt Ende*"
+                          hint="DD/MM/JJJJ"
+                          persistent-hint
+                          required
+                          prepend-icon="mdi-calendar-range"
+                          class="mb-6 mt-1 ml-1 mr-1"
+                        ></v-text-field>
+                        <v-textarea
+                          label="Projektbeschreibung"
+                          prepend-icon="mdi-information-outline"
+                          outlined
+                          height="70"
+                          class="ma-1"
+                        ></v-textarea>
+                        <v-textarea
+                          label="Definition of Ready"
+                          prepend-icon="mdi-information-outline"
+                          outlined
+                          height="70"
+                          class="ma-1"
+                        ></v-textarea>
+                        <v-textarea
+                          label="Definition of Done"
+                          prepend-icon="mdi-information-outline"
+                          outlined
+                          height="70"
+                          class="ma-0"
+                        ></v-textarea>
+                        <v-select
+                          :items="['User1', 'User2', 'User3', 'User4']"
+                          label="Projekt Mitglieder*"
+                          multiple
+                          required
+                          prepend-icon="mdi-account-multiple-plus"
+                        ></v-select>
+                      </v-card-text>
+                    </v-card>
+                  </v-tab-item>
+                  <v-tab-item
+                    :key="info"
+                  >
+                    <v-card flat dark color="navbar" title>
+                      <v-card-text>
+                          <v-select
+                            :items="['Nicht gestartet', 'Läuft', 'Überzogen', 'Beendet']"
+                            label="Status*"
+                            required
+                            prepend-icon="mdi-circle-edit-outline"
+                          ></v-select>
+                        </v-card-text>
+                    </v-card>
+                  </v-tab-item>
+                </v-tabs-items>
+              </v-card>
+                <!-- <v-text-field
+                  label="Projektname*"
+                  required
+                  prepend-icon="mdi-information-outline"
+                  class="ma-1"
+                ></v-text-field>
+                <v-text-field
+                  label="Projekt Start*"
+                  hint="DD/MM/JJJJ"
+                  required
+                  persistent-hint
+                  prepend-icon="mdi-calendar-range"
+                  class="ma-1"
+                ></v-text-field>
+                <v-text-field
+                  label="Projekt Ende*"
+                  hint="DD/MM/JJJJ"
+                  persistent-hint
+                  required
+                  prepend-icon="mdi-calendar-range"
+                  class="mb-6 mt-1 ml-1 mr-1"
+                ></v-text-field>
+                <v-textarea
+                  label="Projektbeschreibung"
+                  prepend-icon="mdi-information-outline"
+                  outlined
+                  height="70"
+                  class="ma-1"
+                ></v-textarea>
+                <v-textarea
+                  label="Definition of Ready"
+                  prepend-icon="mdi-information-outline"
+                  outlined
+                  height="70"
+                  class="ma-1"
+                ></v-textarea>
+                <v-textarea
+                  label="Definition of Done"
+                  prepend-icon="mdi-information-outline"
+                  outlined
+                  height="70"
+                  class="ma-0"
+                ></v-textarea>
+                <v-select
+                  :items="['User1', 'User2', 'User3', 'User4']"
+                  label="Projekt Mitglieder*"
+                  multiple
+                  required
+                  prepend-icon="mdi-account-multiple-plus"
+                ></v-select>
+                <v-select
+                  :items="['Nicht gestartet', 'Läuft', 'Überzogen', 'Beendet']"
+                  label="Status*"
+                  required
+                  prepend-icon="mdi-circle-edit-outline"
+                ></v-select>
+                <small>*müssen ausgefüllt sein</small>
+              </v-container>
+              <v-spacer></v-spacer>
+              <v-btn color="link" text @click="drawer = false">Close</v-btn>
+              <v-btn color="link" text @click="dialog = false">Save</v-btn> -->
+              </v-container>
+            </v-navigation-drawer>
+          <v-btn 
+          text 
+          large 
+          color="link"
+          @click.stop="drawer = !drawer">
+            <v-icon class="mr-1">mdi-delete-forever</v-icon>
+            Projekt(e) löschen
           </v-btn>
         </div>
       </div>
@@ -110,7 +289,7 @@
       </v-col>
       <v-col cols="2" md="2">
         <v-container>
-          <MyTasksLane />
+          <MyTasksLane/>
         </v-container>
       </v-col>
     </v-row>
@@ -124,7 +303,13 @@ import MyTasksLane from "@/components/MyTasksLane.vue";
 
 export default {
   data: () => ({
-    dialog: false
+    dialog: false,
+    drawer: null,
+    tab: null,
+    items: [
+      {tab: "Detail", content: "Detail Content"},
+      {tab: "Info", content: "Info Content"}
+    ]
   }),
   components: {
     ProjectCard,
