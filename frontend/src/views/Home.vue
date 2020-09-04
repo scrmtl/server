@@ -25,12 +25,10 @@
                   tile
                 >
                   <v-tab
-                    :key="detail"
                   >
                     Details
                   </v-tab>
                   <v-tab
-                    :key="info"
                   >
                     Info
                   </v-tab>
@@ -42,7 +40,6 @@
                 color="navbar"
                 >
                   <v-tab-item
-                    :key="detail"
                   >
                     <v-card flat dark color="navbar" tile>
                       <v-card-text>
@@ -102,7 +99,6 @@
                     </v-card>
                   </v-tab-item>
                   <v-tab-item
-                    :key="info"
                   >
                     <v-card flat dark color="navbar" tile>
                       <v-card-text>
@@ -175,7 +171,7 @@ export default {
   data: () => ({
     dialog: false,
     drawer: null,
-    tab: null
+    tab: null,
   }),
   components: {
     ProjectCard,
