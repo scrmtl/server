@@ -7,7 +7,8 @@
             <span class="task-name" @click="showDialog">{{task.name}}</span>
             <v-spacer></v-spacer>
             <span class="task-status">
-              <v-tooltip bottom>
+              <!-- Card Status: New -->
+              <v-tooltip bottom v-if="task.status = 'NW'">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     class="task-status-icons"
@@ -16,9 +17,10 @@
                     v-on="on"
                   >mdi-new-box</v-icon>
                 </template>
-                <span>TaskStatus: new</span>
+                <span>Status: new</span>
               </v-tooltip>
-              <v-tooltip bottom>
+              <!-- Card Status: Not Started -->
+              <v-tooltip bottom v-else-if="task.status = 'NS'">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     class="task-status-icons"
@@ -27,9 +29,10 @@
                     v-on="on"
                   >mdi-coffee</v-icon>
                 </template>
-                <span>TaskStatus: not started</span>
+                <span>Status: not started</span>
               </v-tooltip>
-              <v-tooltip bottom>
+              <!-- Card Status: In Pogress -->
+              <v-tooltip bottom v-else-if="task.status = 'IP'">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     class="task-status-icons"
@@ -38,9 +41,10 @@
                     v-on="on"
                   >mdi-circle-slice-4</v-icon>
                 </template>
-                <span>TaskStatus: in progress</span>
+                <span>Status: In Progress</span>
               </v-tooltip>
-              <v-tooltip bottom>
+              <!-- Card Status: Done -->
+              <v-tooltip bottom v-else-if="task.status = 'DO'">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     class="task-status-icons"
@@ -49,9 +53,10 @@
                     v-on="on"
                   >mdi-beaker-check</v-icon>
                 </template>
-                <span>TaskStatus: done</span>
+                <span>Status: Done</span>
               </v-tooltip>
-              <v-tooltip bottom>
+              <!-- Card Status: Accepted-->
+              <v-tooltip bottom v-else-if="task.status = 'AC'">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     class="task-status-icons"
@@ -60,7 +65,7 @@
                     v-on="on"
                   >mdi-bookmark-check</v-icon>
                 </template>
-                <span>TaskStatus: accepted</span>
+                <span>Status: Accepted</span>
               </v-tooltip>
             </span>
           </div>
