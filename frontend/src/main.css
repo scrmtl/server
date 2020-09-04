@@ -294,3 +294,9 @@
     margin-right: 9.5px;
     width: 64px;
   }
+
+  .TaskDialog {
+    position: absolute;
+    top: 10;
+    right: 0;
+  }
