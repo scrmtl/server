@@ -16,9 +16,9 @@ class ProjectUserSerializer(serializers.ModelSerializer):
         """Check Sprint duration
         """
         project = data['project']
-        scrum_user = data['scrum_user']
+        plattform_user = data['plattform_user']
         for project_user in project.project_users.all():
-            if project_user.scrum_user.id == scrum_user.id:
+            if project_user.plattform_user.id == plattform_user.id:
                 stdlogger.info(
                     'User is already member of the project %s ',
                     project)
@@ -27,7 +27,7 @@ class ProjectUserSerializer(serializers.ModelSerializer):
                         project))
         return data
 
-    scrum_user = serializers.PrimaryKeyRelatedField(
+    plattform_user = serializers.PrimaryKeyRelatedField(
         queryset=PlatformUser.objects.all(),
         required=True)
     role = serializers.PrimaryKeyRelatedField(
@@ -40,7 +40,7 @@ class ProjectUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectUser
         fields = ('id',
-                  'scrum_user',
+                  'plattform_user',
                   'role',
                   'project',
                   )
