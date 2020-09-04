@@ -65,14 +65,10 @@
             grow
             tile
           >
-            <v-tab
-              :key="detail"
-            >
+            <v-tab>
               Details
             </v-tab>
-            <v-tab
-              :key="info"
-            >
+            <v-tab>
               Info
             </v-tab>
           </v-tabs>
@@ -82,9 +78,7 @@
           background-color="navbar"
           color="navbar"
           >
-            <v-tab-item
-              :key="detail"
-            >
+            <v-tab-item>
               <v-card flat dark color="navbar" tile>
                 <v-card-text>
                     <v-text-field
@@ -142,9 +136,7 @@
                 </v-card-text>
               </v-card>
             </v-tab-item>
-            <v-tab-item
-              :key="info"
-            >
+            <v-tab-item>
               <v-card flat dark color="navbar" tile>
                 <v-card-text>
                   <v-select
