@@ -105,7 +105,7 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """
 
     queryset = models.Task.objects.all()
-    serializer_class = serializers.TaskSerializer
+    serializer_class = serializers.TaskSerializerFull
 
     @action(methods=['delete'], detail=True)
     def remove_labels_from_task(self, request, pk=None):
@@ -206,5 +206,5 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
             _queryset = self.queryset.filter(
                 lane__id=int(by_lane))
 
-        serializer = self.serializer_class(_queryset, many=True)
+        serializer = self.get_serializer(_queryset, many=True)
         return Response(serializer.data)
