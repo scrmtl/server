@@ -1,7 +1,7 @@
 import createCrudModule from 'vuex-crud';
 
 export default createCrudModule({
-    resource: 'label', // The name of your CRUD resource (mandatory)
+    resource: 'labels', // The name of your CRUD resource (mandatory)
     // Follow actions are generated:
     // fetchList
     // fetchSingle

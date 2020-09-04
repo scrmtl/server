@@ -1,7 +1,7 @@
 import createCrudModule from 'vuex-crud';
 
 export default createCrudModule({
-    resource: 'task', // The name of your CRUD resource (mandatory)
+    resource: 'tasks', // The name of your CRUD resource (mandatory)
     // Follow actions are generated:
     // fetchList
     // fetchSingle

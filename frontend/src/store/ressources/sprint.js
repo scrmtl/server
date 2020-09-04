@@ -1,7 +1,7 @@
 import createCrudModule from 'vuex-crud';
 
 export default createCrudModule({
-    resource: 'sprint', // The name of your CRUD resource (mandatory)
+    resource: 'sprints', // The name of your CRUD resource (mandatory)
     // Follow actions are generated:
     // fetchList
     // fetchSingle
