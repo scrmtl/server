@@ -19,8 +19,8 @@ def getProjectUser(PlatformUser):
 
 @rules.predicate
 def is_current_user(user, PlatformUser):
-    scrum_user = getProjectUser(PlatformUser)
-    if scrum_user == user:
+    plattform_user = getProjectUser(PlatformUser)
+    if plattform_user == user:
         return True
     else:
         return False
