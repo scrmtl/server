@@ -140,7 +140,10 @@
       </div>
     </v-row>
     <v-row>
-      <v-col cols="10" md="10" class="v-col">
+      <v-col
+      cols="12"
+      sm="6"
+      md="8">
         <v-container fluid>
           <v-layout>
             <v-flex>
@@ -151,7 +154,9 @@
           </v-layout>
         </v-container>
       </v-col>
-      <v-col cols="2" md="2">
+      <v-col
+      cols="6"
+      md="4">
         <v-container>
           <MyTasksLane/>
         </v-container>
