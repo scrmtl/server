@@ -81,7 +81,7 @@
                       v-on="on"
                     >mdi-calendar-range</v-icon>
                   </template>
-                  <span>Task: Endtime</span>
+                  <span>Endtime</span>
                 </v-tooltip>
                 <span>DD/MM/JJJJ</span>
                 <div class="task-icons2">
@@ -94,9 +94,9 @@
                         v-on="on"
                       >mdi-chart-bubble</v-icon>
                     </template>
-                    <span>Task: StoryPoints</span>
+                    <span>Story Points</span>
                   </v-tooltip>
-                  <span>SP13</span>
+                  <span>{{task.storypoints}}</span>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
                       <v-icon
