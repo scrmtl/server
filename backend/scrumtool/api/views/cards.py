@@ -152,11 +152,32 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         if detaillevel is not None:
             if detaillevel == 'full':
                 instance = self.get_object()
-                serializer = serializers.TaskSerializerFull(instance)
+                serializer = serializers.TaskSerializerFull(data=request.data)
                 return Response(serializer.data)
 
         instance = self.get_object()
-        serializer = self.get_serializer(instance)
+        serializer = serializers.TaskSerializerFull(
+            data=request.data, instance=instance)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
+
+    def partial_update(self, request, pk=None):
+        """update task
+            Add ?DetailLevel=full for full data
+            """
+        detaillevel = self.request.query_params.get('DetailLevel', None)
+        if detaillevel is not None:
+            if detaillevel == 'full':
+                instance = self.get_object()
+                serializer = serializers.TaskSerializerFull(data=request.data)
+                return Response(serializer.data)
+
+        instance = self.get_object()
+        serializer = serializers.TaskSerializerFull(
+            instance=instance, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
         return Response(serializer.data)
 
     def list(self, request):

@@ -32,17 +32,17 @@ router.register(r'steplist', views.SteplistViewSet)
 router.register(
     r'steplist/(?P<steplist_pk>[^/.]+)/step',
     views.StepViewSet)
-router.register(r'epic', views.EpicViewSet)
-router.register(r'feature', views.FeatureViewSet)
-router.register(r'task', views.TaskViewSet)
-router.register(r'board', views.BoardViewSet)
-router.register(r'lane', views.LaneViewSet)
-router.register(r'project', views.ProjectViewSet)
-router.register(r'file', views.FileViewSet)
-router.register(r'label', views.LabelViewSet)
+router.register(r'epics', views.EpicViewSet)
+router.register(r'features', views.FeatureViewSet)
+router.register(r'tasks', views.TaskViewSet)
+router.register(r'boards', views.BoardViewSet)
+router.register(r'lanes', views.LaneViewSet)
+router.register(r'projects', views.ProjectViewSet)
+router.register(r'files', views.FileViewSet)
+router.register(r'labels', views.LabelViewSet)
 router.register(r'users', views.ScrumUserViewSet)
 router.register(r'project_users', views.ProjectUserViewSet)
-router.register(r'sprint', views.SprintViewSet)
+router.register(r'sprints', views.SprintViewSet)
 
 
 # OAuth2 provider endpoints
