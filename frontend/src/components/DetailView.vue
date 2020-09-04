@@ -193,13 +193,12 @@ export default {
           name: this.TaskData.name,
           description: this.TaskData.description,
           storypoints: this.TaskData.storypoints,
-
           status: this.TaskData.status,
           lane: this.TaskData.lane,
           sprint: this.TaskData.sprint,
           feature: this.TaskData.feature,
           labels: this.TaskData.labels,
-          steplists: this.TaskData.steplists
+          //steplists: this.TaskData.steplists
         }
 
       });
