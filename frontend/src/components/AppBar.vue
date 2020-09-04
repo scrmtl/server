@@ -36,7 +36,11 @@ export default {
   components: {
 
   },
-  methods: {    
+  methods: {
+       
+  },
+  computed:{
+
   }
 };
 </script>

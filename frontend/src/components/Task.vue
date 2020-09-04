@@ -8,7 +8,7 @@
             <v-spacer></v-spacer>
             <span class="task-status">
               <!-- Card Status: New -->
-              <v-tooltip bottom v-if="task.status = 'NW'">
+              <v-tooltip bottom v-if="task.status === 'NW'">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     class="task-status-icons"
@@ -20,7 +20,7 @@
                 <span>Status: new</span>
               </v-tooltip>
               <!-- Card Status: Not Started -->
-              <v-tooltip bottom v-else-if="task.status = 'NS'">
+              <v-tooltip bottom v-else-if="task.status === 'NS'">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     class="task-status-icons"
@@ -31,8 +31,20 @@
                 </template>
                 <span>Status: not started</span>
               </v-tooltip>
+              <!-- Card Status: Planned -->
+              <v-tooltip bottom v-else-if="task.status === 'PL'">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    class="task-status-icons"
+                    color="tabbody"
+                    v-bind="attrs"
+                    v-on="on"
+                  >mdi-information-outline</v-icon>
+                </template>
+                <span>Status: not started</span>
+              </v-tooltip>
               <!-- Card Status: In Pogress -->
-              <v-tooltip bottom v-else-if="task.status = 'IP'">
+              <v-tooltip bottom v-else-if="task.status === 'IP'">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     class="task-status-icons"
@@ -44,7 +56,7 @@
                 <span>Status: In Progress</span>
               </v-tooltip>
               <!-- Card Status: Done -->
-              <v-tooltip bottom v-else-if="task.status = 'DO'">
+              <v-tooltip bottom v-else-if="task.status === 'DO'">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     class="task-status-icons"
@@ -56,7 +68,7 @@
                 <span>Status: Done</span>
               </v-tooltip>
               <!-- Card Status: Accepted-->
-              <v-tooltip bottom v-else-if="task.status = 'AC'">
+              <v-tooltip bottom v-else-if="task.status ==='AC'">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     class="task-status-icons"
