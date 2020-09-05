@@ -43,7 +43,6 @@
                           ref="menu"
                           v-model="calendar1menu"
                           :close-on-content-click="false"
-                          :return-value.sync="date"
                           transition="scale-transition"
                           offset-y
                           min-width="290px"
@@ -72,7 +71,6 @@
                           ref="menu"
                           v-model="calendar2menu"
                           :close-on-content-click="false"
-                          :return-value.sync="date"
                           transition="scale-transition"
                           offset-y
                           min-width="290px"
@@ -198,7 +196,8 @@ import { mapGetters, mapActions, mapState } from "vuex";
 export default {
   data: () => ({
     dialog: false,
-    calendarmenu: false,
+    calendar1menu: false,
+    calendar2menu: false,
     drawer: null,
     tab: null,
     localProject: {}
