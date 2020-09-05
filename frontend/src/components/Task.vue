@@ -39,7 +39,7 @@
                     color="tabbody"
                     v-bind="attrs"
                     v-on="on"
-                  >mdi-information-outline</v-icon>
+                  >mdi-notebook</v-icon>
                 </template>
                 <span>Status: not started</span>
               </v-tooltip>

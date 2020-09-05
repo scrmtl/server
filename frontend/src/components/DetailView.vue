@@ -8,6 +8,7 @@
       hide-overlay
       :retain-focus = Boolean(false)
       scrollable
+      :retain-focus="false"
     >
       <v-card class="task mt-4">
         <v-card-title>
@@ -120,16 +121,16 @@ export default {
     this.TaskData = this.task;
   },
 
-  mounted: function() {
-    this.TaskData = this.task;
-    this.fetchData();
-    setInterval(
-      function() {
-        this.fetchData();
-      }.bind(this),
-      10000
-    );
-  },
+  // mounted: function() {
+  //   this.TaskData = this.task;
+  //   this.fetchData();
+  //   setInterval(
+  //     function() {
+  //       this.fetchData();
+  //     }.bind(this),
+  //     10000
+  //   );
+  // },
 
   computed: {
     ...mapState({
@@ -194,12 +195,13 @@ export default {
           name: this.TaskData.name,
           description: this.TaskData.description,
           storypoints: this.TaskData.storypoints,
+
           status: this.TaskData.status,
           lane: this.TaskData.lane,
           sprint: this.TaskData.sprint,
           feature: this.TaskData.feature,
           labels: this.TaskData.labels,
-          //steplists: this.TaskData.steplists
+          // steplists: this.TaskData.steplists
         }
 
       });
