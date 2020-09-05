@@ -196,14 +196,14 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         """
         by_user = self.request.query_params.get('byUser', None)
         by_lane = self.request.query_params.get('byLane', None)
-        _queryset = self.queryset
+        _queryset = models.Task.objects.all()
         current_user: models.PlatformUser = self.request.user
 
         if by_user is not None and int(by_user) == current_user.id:
-            _queryset = self.queryset.filter(
+            _queryset = _queryset.filter(
                 assigned_users__id=current_user.id)
         elif by_lane is not None:
-            _queryset = self.queryset.filter(
+            _queryset = _queryset.filter(
                 lane__id=int(by_lane))
 
         serializer = self.get_serializer(_queryset, many=True)
