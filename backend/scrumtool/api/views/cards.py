@@ -194,17 +194,27 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         Cards
             list of cards
         """
-        by_user = self.request.query_params.get('byUser', None)
-        by_lane = self.request.query_params.get('byLane', None)
-        _queryset = models.Task.objects.all()
+        by_user: str = self.request.query_params.get('byUser', None)
+        by_lane: str = self.request.query_params.get('byLane', None)
+        _queryset = models.Task.objects.all().order_by('numbering')
+        logger.info("The following objects are the basic queryset")
+        for query in _queryset:
+            logger.info(query)
+
         current_user: models.PlatformUser = self.request.user
 
-        if by_user is not None and int(by_user) == current_user.id:
+        if (by_user is not None and
+            by_user.isdecimal() and
+                int(by_user) == current_user.id):
             _queryset = _queryset.filter(
                 assigned_users__id=current_user.id)
-        elif by_lane is not None:
+        elif (by_lane is not None and by_lane.isdecimal()):
             _queryset = _queryset.filter(
                 lane__id=int(by_lane))
 
-        serializer = self.get_serializer(_queryset, many=True)
+        logger.info("The following objects are requested")
+        for query in _queryset:
+            logger.info(query)
+
+        serializer = serializers.TaskSerializer(_queryset, many=True)
         return Response(serializer.data)

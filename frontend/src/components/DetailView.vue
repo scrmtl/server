@@ -33,6 +33,7 @@
             <v-select :items="Storypoints" label="Storypoints" v-model="TaskData.storypoints"></v-select>
             <v-select
               :items="['NW', 'PL', 'NS', 'DO', 'IP', 'AC']"
+              :item-text="title"
               label="Status*"
               required
               prepend-icon="mdi-circle-edit-outline"
