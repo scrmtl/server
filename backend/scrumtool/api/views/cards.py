@@ -216,13 +216,12 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         """
         by_user: str = self.request.query_params.get('byUser', None)
         by_lane: str = self.request.query_params.get('byLane', None)
-        _queryset = self.get_queryset().order_by('numbering')
-        logger.info("The following objects are the basic queryset")
-        for query in _queryset:
-            logger.info(query)
+        _queryset = self.get_queryset().order_by('numbering').all()
 
         current_user: models.PlatformUser = self.request.user
-
+        # needed to evaluate the lazy queryset
+        if not _queryset:
+            pass
         if (by_user is not None and
             by_user.isdecimal() and
                 int(by_user) == current_user.id):
@@ -231,10 +230,6 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         elif (by_lane is not None and by_lane.isdecimal()):
             _queryset = _queryset.filter(
                 lane__id=int(by_lane))
-
-        logger.info("The following objects are requested")
-        for query in _queryset:
-            logger.info(query)
 
         serializer = serializers.TaskSerializer(_queryset, many=True)
         return Response(serializer.data)
