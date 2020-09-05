@@ -1,14 +1,6 @@
 <template>
-    <div>
-        <v-navigation-drawer
-      v-model="detail"
-      absolute
-      temporary
-      right
-      width="800"
-      color="navbar"
-      dark
-    >
+  <div>
+    <v-navigation-drawer v-model="fisible" absolute right width="800" color="navbar" dark>
       <v-container>
         <v-card>
           <v-tabs
@@ -20,30 +12,20 @@
             grow
             tile
           >
-            <v-tab
-            >
-              Details
-            </v-tab>
-            <v-tab
-            >
-              Info
-            </v-tab>
+            <v-tab>Details</v-tab>
+            <v-tab>Info</v-tab>
           </v-tabs>
 
-          <v-tabs-items
-          v-model="tab" 
-          background-color="navbar"
-          color="navbar"
-          >
-            <v-tab-item
-            >
+          <v-tabs-items v-model="tab" background-color="navbar" color="navbar">
+            <v-tab-item>
               <v-card flat dark color="navbar" tile>
                 <v-card-text>
-                    <v-text-field
+                  <v-text-field
                     label="Projektname*"
                     required
                     prepend-icon="mdi-information-outline"
                     class="ma-1"
+                    v-model="localProject.name"
                   ></v-text-field>
                   <v-text-field
                     label="Projekt Start*"
@@ -52,6 +34,7 @@
                     persistent-hint
                     prepend-icon="mdi-calendar-range"
                     class="ma-1"
+                    v-model="localProject.start"
                   ></v-text-field>
                   <v-text-field
                     label="Projekt Ende*"
@@ -60,6 +43,7 @@
                     required
                     prepend-icon="mdi-calendar-range"
                     class="mb-6 mt-1 ml-1 mr-1"
+                    v-model="localProject.end"
                   ></v-text-field>
                   <v-textarea
                     label="Projektbeschreibung"
@@ -67,6 +51,7 @@
                     outlined
                     height="70"
                     class="ma-1"
+                    v-model="localProject.description"
                   ></v-textarea>
                   <v-textarea
                     label="Definition of Ready"
@@ -74,6 +59,7 @@
                     outlined
                     height="70"
                     class="ma-1"
+                    v-model="localProject.dor"
                   ></v-textarea>
                   <v-textarea
                     label="Definition of Done"
@@ -81,6 +67,7 @@
                     outlined
                     height="70"
                     class="ma-0"
+                    v-model="localProject.dod"
                   ></v-textarea>
                   <v-select
                     :items="['User1', 'User2', 'User3', 'User4']"
@@ -88,21 +75,22 @@
                     multiple
                     required
                     prepend-icon="mdi-account-multiple-plus"
+                    v-model="localProject.project_users"
                   ></v-select>
-                  <v-btn color="link" text @click="drawer = false">Close</v-btn>
-                  <v-btn color="link" text @click="drawer = false">Save</v-btn>
+                  <v-btn color="link" text @click="close()">Close</v-btn>
+                  <v-btn color="link" text @click="confirm()">Save</v-btn>
                 </v-card-text>
               </v-card>
             </v-tab-item>
-            <v-tab-item
-            >
+            <v-tab-item>
               <v-card flat dark color="navbar" tile>
                 <v-card-text>
                   <v-select
-                    :items="['Nicht gestartet', 'Läuft', 'Überzogen', 'Beendet']"
+                    :items="['NW', 'PL', 'NS', 'DO', 'IP', 'AC']"
                     label="Status*"
                     required
                     prepend-icon="mdi-circle-edit-outline"
+                    v-model="localProject.status"
                   ></v-select>
                   <span class="headline ma-4">Sprintinformationen</span>
                   <v-row>
@@ -123,8 +111,8 @@
                       <p>nächster Sprintstart: 14.07.20</p>
                     </div>
                   </v-row>
-                    <v-btn color="link" text @click="drawer = false">Close</v-btn>
-                    <v-btn color="link" text @click="drawer = false">Save</v-btn>
+                  <v-btn color="link" text @click="close()">Close</v-btn>
+                  <v-btn color="link" text @click="confirm()">Save</v-btn>
                 </v-card-text>
               </v-card>
             </v-tab-item>
@@ -132,31 +120,66 @@
         </v-card>
       </v-container>
     </v-navigation-drawer>
-
-    </div>
+  </div>
 </template>
 
 <script>
-import { mapState } from "vuex"
-    export default {
-        name:"DetailProject",
-        data() {
-            return {
-                detail: null,
-                tab: null,
-            }
-        },
-        computed: {
-          ...mapState({
-            visible: "detailProjectVisable",
-            task: "detailProject"
-          }),
+import { mapState, mapActions } from "vuex";
+export default {
+  name: "DetailProject",
+  data: () => ({
+    tab: null,
+    valueDetail: 50,
+    localProject: {}
+  }),
+  computed: {
+    ...mapState({
+      fisible: "detailProjectVisable",
+      project: "detailProject"
+    })
+  },
+
+  created: function() {
+    this.$store.commit("hideProjectDetail");
+    this.localProject = this.project;
+  },
+
+  updated: function() {
+    this.localProject = this.project;
+  },
+
+  methods: {
+    close() {
+      this.$store.commit("hideProjectDetail");
+    },
+
+    confirm() {
+      this.close();
+      this.saveProject();
+    },
+
+    ...mapActions("project", {
+      updateProject: "update"
+    }),
+
+    saveProject(){this.updateProject({
+        id: this.localProject.id + "/",
+        data: {
+          id: this.localProject.id,
+          name: this.localProject.name,
+          description: this.localProject.description,
+          status: this.localProject.status,
+          start: this.localProject.start,
+          end: this.localProject.end,
+          dor: this.localProject.dor,
+          dod: this.localProject.dod
         }
-        
+      });
     }
+  }
+};
 </script>
 
 <style lang="css" scoped>
 @import "../main.css";
-
 </style>

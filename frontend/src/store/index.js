@@ -78,12 +78,15 @@ export default new Vuex.Store({
     showDetailView(state) {
       state.detailViewVisable = true;
     },
-    showProjectDetail(state) {
-      state.detailProjectVisable = true;
-    },
+
     hideDetailView(state) {
       state.detailViewVisable = false;
     },
+
+    showProjectDetail(state) {
+      state.detailProjectVisable = true;
+    },
+    
     hideProjectDetail(state) {
       state.detailProjectVisable = false;
     },
