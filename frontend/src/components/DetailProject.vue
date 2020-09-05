@@ -115,8 +115,13 @@
                     prepend-icon="mdi-account-multiple-plus"
                     v-model="localProject.project_users"
                   ></v-select>
-                  <v-btn color="link" text @click="close()">Close</v-btn>
-                  <v-btn color="link" text @click="confirm()">Save</v-btn>
+                  <div>
+                    <v-btn color="link" text @click="close()">Close</v-btn>
+                    <v-btn color="link" text @click="confirm()">Save</v-btn>
+                    <v-btn color="error" absolute text right @click="deleteDialog = true">
+                      <v-icon left>mdi-bucket-outline</v-icon>Delete
+                    </v-btn>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-tab-item>
@@ -149,8 +154,13 @@
                       <p>nächster Sprintstart: 14.07.20</p>
                     </div>
                   </v-row>
-                  <v-btn color="link" text @click="close()">Close</v-btn>
-                  <v-btn color="link" text @click="confirm()">Save</v-btn>
+                  <div>
+                    <v-btn color="link" text @click="close()">Close</v-btn>
+                    <v-btn color="link" text @click="confirm()">Save</v-btn>
+                    <v-btn color="error" absolute text right @click="deleteDialog = true">
+                      <v-icon left>mdi-bucket-outline</v-icon>Delete
+                    </v-btn>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-tab-item>
@@ -158,6 +168,15 @@
         </v-card>
       </v-container>
     </v-navigation-drawer>
+    <v-dialog v-model="deleteDialog" persistent max-width="300px" dark>
+      <v-card>
+        <v-card-text>Möchten Sie das Projekt wirklich löschen?</v-card-text>
+        <v-card-actions>
+          <v-btn color="error" @click="deleteProject()">Ja</v-btn>
+          <v-btn color="link" @click="deleteDialog = false">Nein</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -169,6 +188,8 @@ export default {
     tab: null,
     calendar1menu: false,
     calendar2menu: false,
+
+    deleteDialog: false,
 
     valueDetail: 50,
     localProject: {}
@@ -210,6 +231,9 @@ export default {
     ...mapActions("project", {
       updateProject: "update"
     }),
+    ...mapActions("project", {
+      deletePro: "destroy"
+    }),
 
     saveProject() {
       this.updateProject({
@@ -225,6 +249,14 @@ export default {
           dod: this.localProject.dod
         }
       });
+    },
+
+    deleteProject() {
+      this.deleteDialog = false;
+      this.deletePro({
+        id: this.localProject.id + "/"
+      });
+      this.close();
     }
   }
 };

@@ -70,9 +70,6 @@ export default {
 
   methods: {
     showProjectDetail() {
-      
-      console.log("hallo?");
-      console.log(this.project);
       this.$store.commit("showProjectDetail");
       this.$store.commit("setProjectDetail", this.project);
       

@@ -152,9 +152,6 @@
           <v-btn text color="link" large @click.stop="drawer = !drawer">
             <v-icon class="mr-1">mdi-folder-plus</v-icon>Projekt erstellen
           </v-btn>
-          <v-btn text large color="link">
-            <v-icon class="mr-1">mdi-delete-forever</v-icon>Projekt(e) löschen
-          </v-btn>
         </div>
       </div>
     </v-row>
@@ -262,7 +259,6 @@ export default {
     })
   },
   mounted() {
-    console.log(this.listProjects);
     this.loadData();
     setInterval(
       function() {
