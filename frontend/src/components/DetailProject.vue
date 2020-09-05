@@ -129,7 +129,7 @@
               <v-card flat dark color="navbar" tile>
                 <v-card-text>
                   <v-select
-                    :items="['NW', 'PL', 'NS', 'DO', 'IP', 'AC']"
+                    :items="['AC', 'AR']"
                     label="Status*"
                     required
                     prepend-icon="mdi-circle-edit-outline"
