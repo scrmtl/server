@@ -15,6 +15,7 @@ import Lane from "@/components/Lane.vue";
 import { mapGetters, mapActions, mapState } from "vuex";
 export default {
   data: () => ({}),
+  props: ["SprintBacklogBoard"],
   components: {
     Lane
   },
@@ -34,7 +35,7 @@ export default {
     }),
 
     fetchData() {
-      return this.fetchLanes();
+      return this.fetchLanes({customUrlFnArgs: this.SprintBacklogBoard.id});
     }
   },
 
