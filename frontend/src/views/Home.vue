@@ -182,23 +182,27 @@ export default {
       this.$router.push("/login");
     }
     // Load Projects
-    this.fetchProjects();
+    this.ProjectsFetch();
     //Load user's tasks
   },
   methods: {
     ...mapActions("project", {
-      fetchProjects: "fetchList"
+      ProjectsFetch: "fetchList"
     }),
-    loadData: function() {
-      this.fetchProjects();
-    }
+    ...mapActions("user", {
+      UsersFetch: "fetchList"
+    }),
+    loadData() {
+      this.ProjectsFetch()
+      this.UsersFetch();
+    } 
   },
   computed:{
     ...mapGetters("project", 
     {listProjects: "list"
     })
   },
-  mounted: function() {
+  mounted() {
     console.log(this.listProjects);
     this.loadData();
     setInterval(
