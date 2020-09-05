@@ -71,8 +71,6 @@ export default new Vuex.Store({
     hideProjectDetail(state) {
       state.detailProjectVisable = false;
     },
-
-
     setDetailTask(state, Task){
       state.detailTask = Task;
     },
