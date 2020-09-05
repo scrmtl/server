@@ -5,7 +5,7 @@
         <v-card 
         class="task mt-4" 
         min-width="300" 
-        height="160" 
+        max-height="260" 
         :elevation="hover ? 14 : 5"
         @click="showDialog()"
         >
@@ -147,10 +147,11 @@
             <!-- assigned Users -->
             <v-row>
               <v-col>
-                <div v-for="user in task.assigned_users" :key="user" class="task-user task">
+                <div v-for="user in task.assigned_users" :key="user" 
+                class="task-user task">
                   <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-avatar color="red" size="36" v-bind="attrs" v-on="on">
+                  <v-avatar color="red" size="32" v-bind="attrs" v-on="on">
                     <span class="white--text headline">{{GetUserInitial(user)}}</span>
                   </v-avatar>
                   </template>
