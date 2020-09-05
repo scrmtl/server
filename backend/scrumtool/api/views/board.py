@@ -14,8 +14,13 @@ from .. import serializers
 class BoardViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """CRUD for Boards
     """
-
     queryset = models.Board.objects.all()
+
+    def get_queryset(self):
+        if 'project_pk' not in self.kwargs:
+            return self.queryset
+        else:
+            return models.Board.objects.filter(project=self.kwargs['project_pk'])
     serializer_class = serializers.BoardSerializer
 
     def retrieve(self, request, *args, pk=None, **kwargs):
