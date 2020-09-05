@@ -151,11 +151,16 @@
         </v-container>
       </v-col>
       <v-col
-      cols="6"
-      md="4">
+      cols="2"
+      md="4"
+      sm="2"
+      class="pr-2"
+      >
+      <v-flex>
         <v-container>
           <MyTasksLane/>
         </v-container>
+      </v-flex>
       </v-col>
     </v-row>
   </v-content>
