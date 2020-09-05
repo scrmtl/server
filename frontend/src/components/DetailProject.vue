@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-navigation-drawer
-      v-model="drawer"
+      v-model="detail"
       absolute
       temporary
       right
@@ -137,12 +137,21 @@
 </template>
 
 <script>
+import { mapState } from "vuex"
     export default {
+        name:"DetailProject",
         data() {
             return {
-                drawer: null,
+                detail: null,
+                tab: null,
             }
         },
+        computed: {
+          ...mapState({
+            visible: "detailProjectVisable",
+            task: "detailProject"
+          }),
+        }
         
     }
 </script>

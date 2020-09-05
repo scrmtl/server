@@ -2,7 +2,13 @@
   <div>
     <v-hover>
       <template v-slot="{ hover }">
-        <v-card class="navbar projectCard" max-width="344" dark shaped :elevation="hover ? 24 : 1">
+        <v-card
+         class="navbar projectCard"
+         max-width="344" 
+         dark 
+         shaped 
+         :elevation="hover ? 24 : 1"
+         >
           <v-list-item three-line>
             <v-list-item-content>
               <v-list-item-title class="headline mb-1">{{project.name}}</v-list-item-title>
@@ -24,8 +30,7 @@
 
           <v-card-actions>
             <v-btn 
-            text 
-            class="status" 
+            text
             outlined 
             color="link"
             @click="showProjectDetail()"
@@ -45,8 +50,9 @@
         </v-card>
       </template>
     </v-hover>
-    <DetailProject></DetailProject>
-    
+      <div>
+    <DetailProject/>
+  </div>
   </div>
 </template>
 
@@ -54,7 +60,7 @@
 import DetailProject from '@/components/DetailProject.vue';
 
 export default {
-  props: ["detailproject"],
+  props: ["project"],
   data() {
     return {
       valueCard: "50/100",

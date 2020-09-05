@@ -30,7 +30,9 @@ export default new Vuex.Store({
   // States
   state: {
     detailViewVisable: false,
+    detailProjectVisable: false,
     detailTask: {},
+    detailProject: {},
     Userinfo: {
       username: "",
       token: ""
@@ -82,13 +84,18 @@ export default new Vuex.Store({
     hideDetailView(state) {
       state.detailViewVisable = false;
     },
+    hideProjectDetail(state) {
+      state.detailProjectVisable = false;
+    },
+
 
     setDetailTask(state, Task){
       state.detailTask = Task;
     },
     setProjectDetail(state, ProjectDetail){
-      state.detailTask = ProjectDetail;
+      state.detailProject = ProjectDetail;
     },
+
     increment(state) {
       state.count++;
     },
@@ -123,6 +130,9 @@ export default new Vuex.Store({
   getters: {
     getDetailStatus: state => {
       return state.detailViewVisable;
+    },
+    getProjectDetailStatus: state => {
+      return state.detailProjectVisable;
     },
 
     getToken: state => {
