@@ -8,7 +8,6 @@
       hide-overlay
       :retain-focus = Boolean(false)
       scrollable
-      :retain-focus="false"
     >
       <v-card class="task mt-4">
         <v-card-title>
