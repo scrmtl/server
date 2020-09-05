@@ -3,7 +3,13 @@
     <v-hover>
       <template v-slot="{ hover }">
         <v-card class="navbar projectCard" max-width="344" dark shaped :elevation="hover ? 24 : 1">
-          <v-list-item three-line>
+          <router-link 
+          :to="{name: 'ProductBacklog'}"
+          style="text-decoration: none; color: inherit;"
+          >
+          <v-list-item 
+          three-line
+          >
             <v-list-item-content>
               <v-list-item-title class="headline mb-1">{{project.name}}</v-list-item-title>
               <v-list-item-subtitle>
@@ -21,7 +27,7 @@
               >{{ valueCard }}</v-progress-circular>
             </v-list-item-avatar>
           </v-list-item>
-
+          </router-link>
           <v-card-actions>
             <v-btn text outlined color="link" @click="showProjectDetail()">Details</v-btn>
             <v-spacer></v-spacer>

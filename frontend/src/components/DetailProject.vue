@@ -27,24 +27,62 @@
                     class="ma-1"
                     v-model="localProject.name"
                   ></v-text-field>
-                  <v-text-field
-                    label="Projekt Start*"
-                    hint="DD/MM/JJJJ"
-                    required
-                    persistent-hint
-                    prepend-icon="mdi-calendar-range"
-                    class="ma-1"
-                    v-model="localProject.start"
-                  ></v-text-field>
-                  <v-text-field
-                    label="Projekt Ende*"
-                    hint="DD/MM/JJJJ"
-                    persistent-hint
-                    required
-                    prepend-icon="mdi-calendar-range"
-                    class="mb-6 mt-1 ml-1 mr-1"
-                    v-model="localProject.end"
-                  ></v-text-field>
+                  <v-menu
+                    ref="menu"
+                    v-model="calendar1menu"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="290px"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="localProject.start"
+                        label="Projekt Start*"
+                        hint="YYYY-MM-DD"
+                        prepend-icon="mdi-calendar-range"
+                        required
+                        persistent-hint
+                        class="ma-1"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker v-model="localProject.start" no-title scrollable>
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="calendar1menu = false">Cancel</v-btn>
+                      <v-btn text color="primary" @click="calendar1menu = false">OK</v-btn>
+                    </v-date-picker>
+                  </v-menu>
+                  <v-menu
+                    ref="menu"
+                    v-model="calendar2menu"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="290px"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="localProject.end"
+                        label="Projekt Ende*"
+                        hint="YYYY-MM-DD"
+                        prepend-icon="mdi-calendar-range"
+                        required
+                        persistent-hint
+                        class="ma-1"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker v-model="localProject.end" no-title scrollable>
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="calendar2menu = false">Cancel</v-btn>
+                      <v-btn text color="primary" @click="calendar2menu = false">OK</v-btn>
+                    </v-date-picker>
+                  </v-menu>
                   <v-textarea
                     label="Projektbeschreibung"
                     prepend-icon="mdi-information-outline"
@@ -129,16 +167,15 @@ export default {
   name: "DetailProject",
   data: () => ({
     tab: null,
+    calendar1menu: false,
+    calendar2menu: false,
+
     valueDetail: 50,
-    localProject: {
-      name: "", 
-    }
+    localProject: {}
   }),
   computed: {
     ...mapState({
       project: "detailProject"
-
-      
     }),
 
     visible: {
@@ -148,7 +185,7 @@ export default {
       set: function(newValue) {
         this.$store.state.detailProjectVisable = newValue;
       }
-    },
+    }
   },
 
   created: function() {

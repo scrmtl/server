@@ -35,7 +35,7 @@
       </v-card-actions>
     </v-card>
 
-    <v-snackbar v-model="loginFalse">{{ errorMessage }}</v-snackbar>
+    <v-snackbar v-model="loginFalse">{{ bentuzerausgabe }}</v-snackbar>
   </v-content>
 </template>
 
@@ -49,7 +49,8 @@ export default {
       loginFalse: false,
       username: "",
       password: "",
-      errorMessage: ""
+      errorMessage: "", 
+      bentuzerausgabe: "Benutzername oder Passwort ist falsch...", 
     };
   },
   methods:{
@@ -65,13 +66,14 @@ export default {
         const user = this.username;
         console.log(user);
         this.$store.dispatch("login", { token, user });
-        if (token !== "") {
+        if (response.access_token !== "") {
           this.$router.push('/');
         } else {
           this.loginFalse = true;
         }
       } catch (error) {
         this.errorMessage = error.response.data.msg;
+        this.loginFalse = true;
       }
     }
   }

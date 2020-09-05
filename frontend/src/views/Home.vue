@@ -7,7 +7,6 @@
           <v-navigation-drawer
             v-model="drawer"
             absolute
-            temporary
             right
             width="800"
             color="navbar"
@@ -201,7 +200,7 @@ export default {
     dialog: false,
     calendar1menu: false,
     calendar2menu: false,
-    drawer: null,
+    drawer: false,
     tab: null,
     localProject: {}
   }),
