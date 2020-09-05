@@ -135,7 +135,7 @@
                     <v-card flat dark color="navbar" tile>
                       <v-card-text>
                         <v-select
-                          :items="['Nicht gestartet', 'Läuft', 'Überzogen', 'Beendet']"
+                          :items="['AC', 'AR']"
                           label="Status*"
                           required
                           prepend-icon="mdi-circle-edit-outline"
