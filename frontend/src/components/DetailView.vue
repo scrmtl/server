@@ -6,6 +6,7 @@
       max-width="400px"
       content-class="TaskDialog"
       hide-overlay
+      :retain-focus = Boolean(false)
       scrollable
     >
       <v-card class="task mt-4">
