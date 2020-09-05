@@ -6,6 +6,7 @@
       max-width="400px"
       content-class="TaskDialog"
       hide-overlay
+      :retain-focus = Boolean(false)
       scrollable
       :retain-focus="false"
     >

@@ -65,10 +65,12 @@
             grow
             tile
           >
-            <v-tab>
+            <v-tab
+            >
               Details
             </v-tab>
-            <v-tab>
+            <v-tab
+            >
               Info
             </v-tab>
           </v-tabs>
@@ -78,7 +80,8 @@
           background-color="navbar"
           color="navbar"
           >
-            <v-tab-item>
+            <v-tab-item
+            >
               <v-card flat dark color="navbar" tile>
                 <v-card-text>
                     <v-text-field
@@ -136,7 +139,8 @@
                 </v-card-text>
               </v-card>
             </v-tab-item>
-            <v-tab-item>
+            <v-tab-item
+            >
               <v-card flat dark color="navbar" tile>
                 <v-card-text>
                   <v-select
