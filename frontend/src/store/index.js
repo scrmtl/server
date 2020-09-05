@@ -76,7 +76,9 @@ export default new Vuex.Store({
     showDetailView(state) {
       state.detailViewVisable = true;
     },
-
+    showProjectDetail(state) {
+      state.detailProjectVisable = true;
+    },
     hideDetailView(state) {
       state.detailViewVisable = false;
     },
@@ -84,7 +86,9 @@ export default new Vuex.Store({
     setDetailTask(state, Task){
       state.detailTask = Task;
     },
-
+    setProjectDetail(state, ProjectDetail){
+      state.detailTask = ProjectDetail;
+    },
     increment(state) {
       state.count++;
     },
