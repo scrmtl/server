@@ -107,11 +107,10 @@ export default {
     Storypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
     TaskData: {},
 
-    selectedLabel: "", 
+    selectedLabel: "",
 
     //Dropdown der Step-Actions
-    step_actions: [{ title: "Edit" }, { title: "Delete" }],
-
+    step_actions: [{ title: "Edit" }, { title: "Delete" }]
   }),
 
   created: function() {
@@ -120,16 +119,16 @@ export default {
     this.TaskData = this.task;
   },
 
-  // mounted: function() {
-  //   this.TaskData = this.task;
-  //   this.fetchData();
-  //   setInterval(
-  //     function() {
-  //       this.fetchData();
-  //     }.bind(this),
-  //     10000
-  //   );
-  // },
+  updated: function() {
+    this.TaskData = this.task;
+    //   this.fetchData();
+    //   setInterval(
+    //     function() {
+    //       this.fetchData();
+    //     }.bind(this),
+    //     10000
+    //   );
+  },
 
   computed: {
     ...mapState({
@@ -186,7 +185,7 @@ export default {
       });
     },
 
-    saveTask(){
+    saveTask() {
       this.updateTask({
         id: this.TaskData.id + "/",
         data: {
@@ -199,10 +198,9 @@ export default {
           lane: this.TaskData.lane,
           sprint: this.TaskData.sprint,
           feature: this.TaskData.feature,
-          labels: this.TaskData.labels,
+          labels: this.TaskData.labels
           // steplists: this.TaskData.steplists
         }
-
       });
     }
   },
