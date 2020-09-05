@@ -1,8 +1,12 @@
 <template>
   <v-content class="tabbody tab-content">
-   <div v-for="lane in laneList" :key="lane.id">
-      <Lane v-bind:lane="lane"></Lane>
-    </div>
+    <v-container fluid class="pl-10">
+       <v-row>
+          <div v-for="lane in laneList" :key="lane.id">
+            <Lane v-bind:lane="lane"></Lane>
+          </div>
+      </v-row>
+    </v-container>
   </v-content>
 </template>
 
