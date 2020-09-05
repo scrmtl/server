@@ -19,6 +19,12 @@ class SteplistViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """
 
     queryset = models.Steplist.objects.all()
+
+    def get_queryset(self):
+        if 'task_pk' not in self.kwargs:
+            return self.queryset
+        else:
+            return self.queryset.filter(task=self.kwargs['task_pk'])
     serializer_class = serializers.StepListSerializerCommon
 
     def retrieve(self, request, pk=None):
@@ -28,7 +34,7 @@ class SteplistViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         -------
         json : Single steplist element with an array of steps
         """
-        _steplist = get_object_or_404(self.queryset, pk=pk)
+        _steplist = get_object_or_404(self.get_queryset(), pk=pk)
         _serializer_class = serializers.StepListSerializer(_steplist)
 
         return Response(_serializer_class.data)
@@ -38,6 +44,12 @@ class StepViewSet(viewsets.ModelViewSet):
     """API for getting, changing and creating steps
     """
     queryset = models.SteplistItem.objects.all()
+
+    def get_queryset(self):
+        if 'steplist_pk' not in self.kwargs:
+            return self.queryset
+        else:
+            return self.queryset.filter(steplist=self.kwargs['steplist_pk'])
     serializer_class = serializers.StepSerializer
 
     def update(self, request, steplist_pk=None, pk=None):
@@ -45,7 +57,7 @@ class StepViewSet(viewsets.ModelViewSet):
         for all elements in the list
 
         """
-        _steplist_item = get_object_or_404(self.queryset, pk=pk)
+        _steplist_item = get_object_or_404(self.get_queryset(), pk=pk)
         serializer = self.get_serializer(
             _steplist_item,
             data=request.data,

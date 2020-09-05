@@ -5,8 +5,14 @@ from . import serializers
 from rest_framework.response import Response
 
 
-class ScrumUserViewSet(viewsets.ModelViewSet):
+class PlatformUserViewSet(viewsets.ModelViewSet):
     queryset = models.PlatformUser.objects.all()
+
+    def get_queryset(self):
+        if 'task_pk' not in self.kwargs:
+            return self.queryset
+        else:
+            return self.queryset.filter(task_cards=self.kwargs['task_pk'])
     serializer_class = serializers.ScrumUserSerializer
 
     def retrieve(self, request, *args, pk=None, **kwargs):
