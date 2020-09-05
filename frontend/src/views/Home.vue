@@ -218,14 +218,16 @@ export default {
 
   methods: {
     ...mapActions("project", {
-      ProjectsFetch: "fetchList"
-    }),
-    ...mapActions("project", {
+      ProjectsFetch: "fetchList",
       createProject: "create"
+    }),
+    ...mapActions("user", {
+      UsersFetch: "fetchList"
     }),
 
     loadData: function() {
-      this.fetchProjects();
+      this.ProjectsFetch();
+      this.UsersFetch();
     },
 
     saveProject() {
