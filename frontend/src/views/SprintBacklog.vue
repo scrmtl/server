@@ -1,16 +1,58 @@
 <template>
-    <v-content class="tabbody tab-content">
-    SprintBacklog - View
+  <v-content class="tabbody tab-content">
+   <div v-for="lane in laneList" :key="lane.id">
+      <Lane v-bind:lane="lane"></Lane>
+    </div>
   </v-content>
 </template>
 
 <script>
-    export default {
-        
+import Lane from "@/components/Lane.vue";
+import { mapGetters, mapActions, mapState } from "vuex";
+export default {
+  data: () => ({}),
+  components: {
+    Lane
+  },
+  computed: {
+    ...mapGetters("lane", {
+      laneList: "list"
+    }),
+
+    ...mapState([
+      "route" // vuex-router-sync
+    ])
+  },
+
+  methods: {
+    ...mapActions("lane", {
+      fetchLanes: "fetchList"
+    }),
+
+    fetchData() {
+      return this.fetchLanes();
     }
+  },
+
+  watch: {
+    $route: "fetchData"
+  },
+
+  created() {
+    this.fetchData();
+  },
+  mounted: function() {
+    this.fetchData();
+    setInterval(
+      function() {
+        this.fetchData();
+      }.bind(this),
+      10000
+    );
+  }
+};
 </script>
 
 <style lang="css" scoped>
 @import "../main.css";
-
 </style>
