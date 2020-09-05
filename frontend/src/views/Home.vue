@@ -200,7 +200,7 @@ export default {
     dialog: false,
     calendar1menu: false,
     calendar2menu: false,
-    drawer: null,
+    drawer: false,
     tab: null,
     localProject: {}
   }),
