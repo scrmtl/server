@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="lane" min-width="340" elevation="5">
+    <v-card class="lane" min-width="344" elevation="5" max-width="auto">
       <div class="lane-header">
         <p dark>Meine Tasks</p>
       </div>

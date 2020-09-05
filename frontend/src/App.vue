@@ -10,12 +10,6 @@
     <v-content>
       <router-view/>
     </v-content>
-    <v-footer>
-      <span>v-footer</span>
-    </v-footer>
-    <v-bottom-navigation>
-      <span>v-bottom-navigation</span>
-    </v-bottom-navigation>
   </v-app>
 </template>
 
