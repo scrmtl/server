@@ -7,7 +7,6 @@
           <v-navigation-drawer
             v-model="drawer"
             absolute
-            temporary
             right
             width="800"
             color="navbar"
