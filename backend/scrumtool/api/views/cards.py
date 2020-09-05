@@ -196,7 +196,7 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         """
         by_user: str = self.request.query_params.get('byUser', None)
         by_lane: str = self.request.query_params.get('byLane', None)
-        _queryset = models.Task.objects.all().order_by('numbering')
+        _queryset = self.queryset.order_by('numbering')
         logger.info("The following objects are the basic queryset")
         for query in _queryset:
             logger.info(query)

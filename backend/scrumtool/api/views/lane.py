@@ -14,6 +14,12 @@ class LaneViewSet(viewsets.ModelViewSet):
     """
 
     queryset = models.Lane.objects.all()
+
+    def get_queryset(self):
+        if 'board_pk' not in self.kwargs:
+            return self.queryset
+        else:
+            return self.queryset.filter(board=self.kwargs['board_pk'])
     serializer_class = serializers.LaneSerializer
 
     def retrieve(self, request, pk=None, *args, **kwargs):
