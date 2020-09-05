@@ -6,7 +6,8 @@
       </div>
       <v-card-text class="lane-body pa-2">
         <div v-for="task in taskList" :key="task.id">
-          <Task v-bind:task="task" />
+          <Task v-bind:task="task" 
+          v-bind:task_index="task.id"/>
         </div>
       </v-card-text>
       <v-card-actions class="lane-extended"></v-card-actions>

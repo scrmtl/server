@@ -1,7 +1,7 @@
 import createCrudModule from 'vuex-crud';
 
 export default createCrudModule({
-    resource: 'epics', // The name of your CRUD resource (mandatory)
+    resource: 'projects', // The name of your CRUD resource (mandatory)
     // Follow actions are generated:
     // fetchList
     // fetchSingle
