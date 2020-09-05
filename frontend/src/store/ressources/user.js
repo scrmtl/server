@@ -12,5 +12,5 @@ export default createCrudModule({
     
     // Follow getters are generated:
     // list 
-    // byid(id)
+    // byId(id) 
 });

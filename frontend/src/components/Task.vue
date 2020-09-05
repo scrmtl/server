@@ -93,7 +93,7 @@
                       v-on="on"
                     >mdi-calendar-range</v-icon>
                   </template>
-                  <span>Endtime</span>
+                  <span>Planned implementation</span>
                 </v-tooltip>
                 <span>DD/MM/JJJJ</span>
                 <div class="task-icons2">
@@ -138,16 +138,19 @@
                 </div>
               </div>
             </div>
-            <div class="task-user task">
-              <v-avatar height="36" width="36">
-                <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+            <!-- assigned Users -->
+            <div v-for="user in task.assigned_users" :key="user" class="task-user task">
+              <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+              <v-avatar color="red" size="36" v-bind="attrs" v-on="on">
+                <span class="white--text headline">{{GetUserInitial(user)}}</span>
               </v-avatar>
-              <v-avatar height="36" width="36">
-                <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-              </v-avatar>
+              </template>
+              <span>{{UsersById(user).username}}</span>
+              </v-tooltip>
             </div>
             <div>
-              <v-chip-group column class="ml-4">
+              <v-chip-group column class="ml-2">
               <v-chip
                 v-for="(label, i) in task.labels"
                 :key="i"
@@ -168,6 +171,7 @@
 
 <script>
 import DetailView from "../components/DetailView";
+import {mapGetters} from "vuex";
 export default {
   data: () => ({}),
   props: ["task"],
@@ -176,11 +180,26 @@ export default {
   },
 
   methods: {
+    
     showDialog() {
       this.$store.commit("showDetailView");
       this.$store.commit("setDetailTask", this.task);
+    },
+    GetUserInitial(id){
+      var inital = "AA";
+      var user = this.UsersById(id)
+      inital = user.username.substring(0,2);
+      return inital;
     }
+  },
+  computed:{
+    ...mapGetters("user", {
+      UsersById: "byId"
+    }),
+    
+
   }
+
 };
 </script>
 

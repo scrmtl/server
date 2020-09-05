@@ -24,25 +24,62 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.schemas import get_schema_view
 from rest_framework.documentation import include_docs_urls
 
+from rest_framework_nested import routers
+
 from api import views
 
-router = DefaultRouter()
+router = routers.SimpleRouter()
 
-router.register(r'steplist', views.SteplistViewSet)
-router.register(
-    r'steplist/(?P<steplist_pk>[^/.]+)/step',
-    views.StepViewSet)
+router.register(r'projects', views.ProjectViewSet)
+router.register(r'project_users', views.ProjectUserViewSet)
+router.register(r'boards', views.BoardViewSet)
+router.register(r'lanes', views.LaneViewSet)
 router.register(r'epics', views.EpicViewSet)
 router.register(r'features', views.FeatureViewSet)
 router.register(r'tasks', views.TaskViewSet)
-router.register(r'boards', views.BoardViewSet)
-router.register(r'lanes', views.LaneViewSet)
-router.register(r'projects', views.ProjectViewSet)
+router.register(r'steplists', views.SteplistViewSet)
+router.register(r'steps', views.StepViewSet)
 router.register(r'files', views.FileViewSet)
 router.register(r'labels', views.LabelViewSet)
-router.register(r'users', views.ScrumUserViewSet)
-router.register(r'project_users', views.ProjectUserViewSet)
+
 router.register(r'sprints', views.SprintViewSet)
+router.register(r'users', views.PlatformUserViewSet)
+
+# Nested ressources
+project_router = routers.NestedSimpleRouter(
+    router, r'projects', lookup='project')
+project_router.register(r'boards', views.BoardViewSet,
+                        basename='project-boards')
+project_router.register(r'project_users', views.ProjectUserViewSet,
+                        basename='project-project_users')
+project_router.register(r'sprints', views.SprintViewSet,
+                        basename='project-sprints')
+
+board_router = routers.NestedSimpleRouter(
+    router, r'boards', lookup='board')
+board_router.register(r'lanes', views.LaneViewSet,
+                      basename='board-lanes')
+
+lane_router = routers.NestedSimpleRouter(
+    router, r'lanes', lookup='lane')
+lane_router.register(r'epics', views.EpicViewSet,
+                     basename='lane-epics')
+lane_router.register(r'features', views.FeatureViewSet,
+                     basename='lane-features')
+lane_router.register(r'tasks', views.TaskViewSet,
+                     basename='lane-tasks')
+
+task_router = routers.NestedSimpleRouter(
+    router, r'tasks', lookup='task')
+task_router.register(r'steplists', views.SteplistViewSet,
+                     basename='task-steplists')
+task_router.register(r'assigned_users', views.PlatformUserViewSet,
+                     basename='task-assigned_users')
+
+steplist_router = routers.NestedSimpleRouter(
+    router, r'steplists', lookup='steplist')
+steplist_router.register(r'steps', views.StepViewSet,
+                         basename='steplist-steps')
 
 
 # OAuth2 provider endpoints
@@ -82,7 +119,12 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    path('api/', include(router.urls)),
+    path(r'api/', include(router.urls)),
+    path(r'api/', include(project_router.urls)),
+    path(r'api/', include(board_router.urls)),
+    path(r'api/', include(lane_router.urls)),
+    path(r'api/', include(task_router.urls)),
+    path(r'api/', include(steplist_router.urls)),
     path('api-auth/', include('rest_framework.urls')),
     path('schema/', schema_view),
     path('docs/', include_docs_urls(title='Scrumtool API')),
