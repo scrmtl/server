@@ -1,18 +1,15 @@
 <template>
-<div>
-    <v-navigation-drawer
+  <div>
+    <v-dialog
       v-model="visible"
-      absolute
-      left
-      temporary
-      width="800"
-      color="tabbody"
+      persistent
+      max-width="400px"
+      content-class="TaskDialog"
       hide-overlay
       :retain-focus = Boolean(false)
       scrollable
     >
-      <v-container>
-       <v-card class="task mt-4">
+      <v-card class="task mt-4">
         <v-card-title>
           <span class="headline ma-0 pa-1">Task</span>
         </v-card-title>
@@ -92,15 +89,15 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text class color="tabbody" outlined @click="close()">ABBRECHEN</v-btn>
-          <v-btn class="status" color="tabbody" outlined text @click="confirm()">SPEICHERN</v-btn>
+          <v-btn text class color="error" outlined @click="close()">Close</v-btn>
+          <v-btn class="status" color="link" outlined text @click="confirm()">Save</v-btn>
         </v-card-actions>
       </v-card>
-      </v-container>
-    </v-navigation-drawer>
-
-    </div>
+    </v-dialog>
+  </div>
 </template>
+
+
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 
@@ -109,8 +106,7 @@ export default {
   data: () => ({
     Storypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
     TaskData: {},
-    detaildrawer: null,
-    tab: null,
+
     selectedLabel: "",
 
     //Dropdown der Step-Actions

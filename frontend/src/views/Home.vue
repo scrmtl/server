@@ -169,6 +169,7 @@
               </div>
             </v-flex>
           </v-layout>
+          <DetailView></DetailView>
         </v-container>
       </v-col>
       <v-col
@@ -190,6 +191,7 @@
 <script>
 import ProjectCard from "@/components/ProjectCard.vue";
 import MyTasksLane from "@/components/MyTasksLane.vue";
+import DetailView from "../components/DetailView";
 import { mapGetters, mapActions, mapState } from "vuex";
 //import scrmtlServices from '@/services/scrmtlServices.js'
 
@@ -204,7 +206,8 @@ export default {
   }),
   components: {
     ProjectCard,
-    MyTasksLane
+    MyTasksLane,
+    DetailView
   },
   async created() {
     if (!this.$store.getters.getToken) {

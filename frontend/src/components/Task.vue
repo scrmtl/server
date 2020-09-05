@@ -2,9 +2,15 @@
   <div>
     <v-hover>
       <template v-slot="{ hover }">
-        <v-card class="task mt-4" min-width="300" height="160" :elevation="hover ? 14 : 5">
+        <v-card 
+        class="task mt-4" 
+        min-width="300" 
+        height="160" 
+        :elevation="hover ? 14 : 5"
+        @click="showDialog()"
+        >
           <div class="task-header2 task">
-            <span class="task-name" @click="showDialog()">{{task.name}}</span>
+            <span class="task-name">{{task.name}}</span>
             <v-spacer></v-spacer>
             <span class="task-status">
               <!-- Card Status: New -->
@@ -139,17 +145,22 @@
               </div>
             </div>
             <!-- assigned Users -->
-            <div v-for="user in task.assigned_users" :key="user" class="task-user task">
-              <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-              <v-avatar color="red" size="36" v-bind="attrs" v-on="on">
-                <span class="white--text headline">{{GetUserInitial(user)}}</span>
-              </v-avatar>
-              </template>
-              <span>{{UsersById(user).username}}</span>
-              </v-tooltip>
-            </div>
-            <div>
+            <v-row>
+              <v-col>
+                <div v-for="user in task.assigned_users" :key="user" class="task-user task">
+                  <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-avatar color="red" size="36" v-bind="attrs" v-on="on">
+                    <span class="white--text headline">{{GetUserInitial(user)}}</span>
+                  </v-avatar>
+                  </template>
+                  <span>{{UsersById(user).username}}</span>
+                  </v-tooltip>
+                </div>
+              </v-col>
+              
+            </v-row>
+              <div>
               <v-chip-group column class="ml-2">
               <v-chip
                 v-for="(label, i) in task.labels"
@@ -160,23 +171,22 @@
               ></v-chip>
             </v-chip-group>
             </div>
-            
           </v-card-text>
         </v-card>
       </template>
     </v-hover>
-    <DetailView></DetailView>
   </div>
 </template>
 
 <script>
-import DetailView from "../components/DetailView";
 import {mapGetters} from "vuex";
 export default {
-  data: () => ({}),
+  data: () => ({
+    dialog: null,
+  }),
   props: ["task"],
   components: {
-    DetailView
+
   },
 
   methods: {

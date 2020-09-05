@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="lane" min-width="344" elevation="5" max-width="auto">
+    <v-card class="lane" min-width="344" elevation="5">
       <div class="lane-header">
         <p dark>Meine Tasks</p>
       </div>
@@ -9,6 +9,7 @@
           <Task v-bind:task="task" 
           v-bind:task_index="task.id"/>
         </div>
+        <!-- <Task/> -->
       </v-card-text>
       <v-card-actions class="lane-extended"></v-card-actions>
     </v-card>
