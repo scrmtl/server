@@ -191,6 +191,7 @@
 import ProjectCard from "@/components/ProjectCard.vue";
 import MyTasksLane from "@/components/MyTasksLane.vue";
 import { mapGetters, mapActions, mapState } from "vuex";
+import Axios from "axios";
 //import scrmtlServices from '@/services/scrmtlServices.js'
 
 export default {
@@ -213,6 +214,9 @@ export default {
     // Load Projects
     this.ProjectsFetch();
     //Load user's tasks
+
+    // set auth header
+      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`
   },
 
   methods: {

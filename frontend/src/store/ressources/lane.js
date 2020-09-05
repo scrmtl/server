@@ -13,4 +13,10 @@ export default createCrudModule({
     // Follow getters are generated:
     // list 
     // byid(id)
+    customUrlFn(id, type, boardId) {
+        // id will only be available when doing request to single resource, otherwise null
+        // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
+        const rootUrl = `/api/boards/${boardId}`;
+        return id ? `${rootUrl}/lanes/${id}/` : rootUrl;
+      }
 });

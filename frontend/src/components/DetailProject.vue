@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="fisible" absolute right width="800" color="navbar" dark>
+    <v-navigation-drawer v-model="visible" absolute right width="800" color="navbar" dark>
       <v-container>
         <v-card>
           <v-tabs
@@ -130,18 +130,30 @@ export default {
   data: () => ({
     tab: null,
     valueDetail: 50,
-    localProject: {}
+    localProject: {
+      name: "", 
+    }
   }),
   computed: {
     ...mapState({
-      fisible: "detailProjectVisable",
       project: "detailProject"
-    })
+
+      
+    }),
+
+    visible: {
+      get: function() {
+        return this.$store.state.detailProjectVisable;
+      },
+      set: function(newValue) {
+        this.$store.state.detailProjectVisable = newValue;
+      }
+    },
   },
 
   created: function() {
     this.$store.commit("hideProjectDetail");
-    this.localProject = this.project;
+    this.localProject.name = this.project.name;
   },
 
   updated: function() {
@@ -162,7 +174,8 @@ export default {
       updateProject: "update"
     }),
 
-    saveProject(){this.updateProject({
+    saveProject() {
+      this.updateProject({
         id: this.localProject.id + "/",
         data: {
           id: this.localProject.id,
