@@ -46,6 +46,12 @@ class EpicViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """
 
     queryset = models.Epic.objects.all()
+
+    def get_queryset(self):
+        if 'lane_pk' not in self.kwargs:
+            return self.queryset
+        else:
+            return self.queryset.filter(lane=self.kwargs['lane_pk'])
     serializer_class = serializers.EpicSerializer
 
     @action(methods=['delete'], detail=True)
@@ -75,6 +81,14 @@ class FeatureViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """CRUD for Features
     """
     queryset = models.Feature.objects.all()
+
+    def get_queryset(self):
+        if 'lane_pk' not in self.kwargs:
+            return self.queryset
+        else:
+            return self.queryset.filter(lane=self.kwargs['lane_pk'])
+
+    serializer_class = serializers.EpicSerializer
     serializer_class = serializers.FeatureSerializer
 
     @action(methods=['delete'], detail=True)
@@ -105,6 +119,12 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """
 
     queryset = models.Task.objects.all()
+
+    def get_queryset(self):
+        if 'lane_pk' not in self.kwargs:
+            return self.queryset
+        else:
+            return self.queryset.filter(lane=self.kwargs['lane_pk'])
     serializer_class = serializers.TaskSerializerFull
 
     @action(methods=['delete'], detail=True)
@@ -180,7 +200,7 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
             serializer.save()
         return Response(serializer.data)
 
-    def list(self, request):
+    def list(self, request, lane_pk=None):
         """Gets the requested queryset for cards
 
         Parameters
@@ -196,7 +216,7 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         """
         by_user: str = self.request.query_params.get('byUser', None)
         by_lane: str = self.request.query_params.get('byLane', None)
-        _queryset = self.queryset.order_by('numbering')
+        _queryset = self.get_queryset().order_by('numbering')
         logger.info("The following objects are the basic queryset")
         for query in _queryset:
             logger.info(query)

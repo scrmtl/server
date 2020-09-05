@@ -20,7 +20,7 @@ class BoardViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         if 'project_pk' not in self.kwargs:
             return self.queryset
         else:
-            return models.Board.objects.filter(project=self.kwargs['project_pk'])
+            return self.queryset.filter(project=self.kwargs['project_pk'])
     serializer_class = serializers.BoardSerializer
 
     def retrieve(self, request, *args, pk=None, **kwargs):

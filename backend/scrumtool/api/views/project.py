@@ -14,6 +14,9 @@ from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, \
 from .. import models
 from .. import serializers
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class ProjectViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """CRUD for Projects
@@ -73,12 +76,20 @@ class ProjectViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
             list of projects
         """
         by_user = self.request.query_params.get('byUser', None)
-        _queryset = self.queryset
+        _queryset = self.get_queryset()
         current_user: models.PlatformUser = self.request.user
+
+        logger.info("The following objects are the basic queryset")
+        for query in _queryset:
+            logger.info(query)
 
         if by_user is not None and int(by_user) == current_user.id:
             _queryset = self.queryset.filter(
                 project_users__plattform_user__id=current_user.id)
+
+        logger.info("The following objects are requested")
+        for query in _queryset:
+            logger.info(query)
 
         serializer = self.serializer_class(_queryset, many=True)
         return Response(serializer.data)

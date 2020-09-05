@@ -38,23 +38,48 @@ router.register(r'epics', views.EpicViewSet)
 router.register(r'features', views.FeatureViewSet)
 router.register(r'tasks', views.TaskViewSet)
 router.register(r'steplists', views.SteplistViewSet)
-router.register(r'steplists/(?P<steplist_pk>[^/.]+)/steps',
-                views.StepViewSet)
+router.register(r'steps', views.StepViewSet)
 router.register(r'files', views.FileViewSet)
 router.register(r'labels', views.LabelViewSet)
 
 router.register(r'sprints', views.SprintViewSet)
-router.register(r'users', views.ScrumUserViewSet)
+router.register(r'users', views.PlatformUserViewSet)
 
 # Nested ressources
 project_router = routers.NestedSimpleRouter(
     router, r'projects', lookup='project')
 project_router.register(r'boards', views.BoardViewSet,
                         basename='project-boards')
+project_router.register(r'project_users', views.ProjectUserViewSet,
+                        basename='project-project_users')
+project_router.register(r'sprints', views.SprintViewSet,
+                        basename='project-sprints')
+
 board_router = routers.NestedSimpleRouter(
     router, r'boards', lookup='board')
 board_router.register(r'lanes', views.LaneViewSet,
                       basename='board-lanes')
+
+lane_router = routers.NestedSimpleRouter(
+    router, r'lanes', lookup='lane')
+lane_router.register(r'epics', views.EpicViewSet,
+                     basename='lane-epics')
+lane_router.register(r'features', views.FeatureViewSet,
+                     basename='lane-features')
+lane_router.register(r'tasks', views.TaskViewSet,
+                     basename='lane-tasks')
+
+task_router = routers.NestedSimpleRouter(
+    router, r'tasks', lookup='task')
+task_router.register(r'steplists', views.SteplistViewSet,
+                     basename='task-steplists')
+task_router.register(r'assigned_users', views.PlatformUserViewSet,
+                     basename='task-assigned_users')
+
+steplist_router = routers.NestedSimpleRouter(
+    router, r'steplists', lookup='steplist')
+steplist_router.register(r'steps', views.StepViewSet,
+                         basename='steplist-steps')
 
 
 # OAuth2 provider endpoints
@@ -97,6 +122,9 @@ urlpatterns = [
     path(r'api/', include(router.urls)),
     path(r'api/', include(project_router.urls)),
     path(r'api/', include(board_router.urls)),
+    path(r'api/', include(lane_router.urls)),
+    path(r'api/', include(task_router.urls)),
+    path(r'api/', include(steplist_router.urls)),
     path('api-auth/', include('rest_framework.urls')),
     path('schema/', schema_view),
     path('docs/', include_docs_urls(title='Scrumtool API')),
