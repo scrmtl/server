@@ -2,13 +2,7 @@
   <div>
     <v-hover>
       <template v-slot="{ hover }">
-        <v-card
-         class="navbar projectCard"
-         max-width="344" 
-         dark 
-         shaped 
-         :elevation="hover ? 24 : 1"
-         >
+        <v-card class="navbar projectCard" max-width="344" dark shaped :elevation="hover ? 24 : 1">
           <v-list-item three-line>
             <v-list-item-content>
               <v-list-item-title class="headline mb-1">{{project.name}}</v-list-item-title>
@@ -29,12 +23,7 @@
           </v-list-item>
 
           <v-card-actions>
-            <v-btn 
-            text
-            outlined 
-            color="link"
-            @click="showProjectDetail()"
-            >Details</v-btn>
+            <v-btn text outlined color="link" @click="showProjectDetail()">Details</v-btn>
             <v-spacer></v-spacer>
             <v-switch
               v-model="ex11"
@@ -50,14 +39,12 @@
         </v-card>
       </template>
     </v-hover>
-      <div>
-    <DetailProject/>
-  </div>
+    <DetailProject></DetailProject>
   </div>
 </template>
 
 <script>
-import DetailProject from '@/components/DetailProject.vue';
+import DetailProject from "@/components/DetailProject.vue";
 
 export default {
   props: ["project"],
@@ -67,16 +54,22 @@ export default {
       valueDetail: "30/100",
       ex11: true,
       drawer: null,
-      tab: null,
+      tab: null
     };
   },
+  
   components: {
     DetailProject
   },
-  methods:  {
+
+  methods: {
     showProjectDetail() {
+      
+      console.log("hallo?");
+      console.log(this.project);
       this.$store.commit("showProjectDetail");
-      this.$store.commit("setProjectDetail", this.detailproject);
+      this.$store.commit("setProjectDetail", this.project);
+      
     }
   }
 };
