@@ -103,7 +103,9 @@
                   <v-list-item-content class="mt-2">
                     <v-list-item-title>
                       <span>Example-Step1</span> 
-                      <span class="float-right"><v-icon>mdi-delete</v-icon></span>
+                      <span class="float-right">
+                        <v-icon  color="error">mdi-delete</v-icon>
+                      </span>
                     </v-list-item-title>
                   </v-list-item-content>
               </v-list-item>
@@ -117,7 +119,9 @@
                   <v-list-item-content class="mt-2">
                     <v-list-item-title>
                       <span>Example-Step2</span> 
-                      <span class="float-right"><v-icon>mdi-delete</v-icon></span>
+                      <span class="float-right">
+                        <v-icon color="error">mdi-delete</v-icon>
+                      </span>
                     </v-list-item-title>
                   </v-list-item-content>
               </v-list-item>
@@ -131,7 +135,9 @@
                   <v-list-item-content class="mt-2">
                     <v-list-item-title>
                       <span>Example-Step3</span> 
-                      <span class="float-right"><v-icon>mdi-delete</v-icon></span>
+                      <span class="float-right">
+                        <v-icon color="error">mdi-delete</v-icon>
+                      </span>
                     </v-list-item-title>
                   </v-list-item-content>
               </v-list-item>
@@ -145,7 +151,9 @@
                   <v-list-item-content class="mt-2">
                     <v-list-item-title>
                       <span>Example-Step4</span> 
-                      <span class="float-right"><v-icon>mdi-delete</v-icon></span>
+                      <span class="float-right">
+                        <v-icon color="error">mdi-delete</v-icon>
+                      </span>
                     </v-list-item-title>
                   </v-list-item-content>
               </v-list-item>  
@@ -156,12 +164,13 @@
             </v-container>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="error" absolute text left outlined @click="deleteDialog = true">
-              <v-icon left>mdi-bucket-outline</v-icon>DELETE
+            <v-btn color="error" absolute left outlined @click="deleteDialog = true">
+              <v-icon left>mdi-delete</v-icon>
+              <span class="pa-0">Löschen</span>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn text class color="tabbody" outlined @click="close()">ABBRECHEN</v-btn>
-            <v-btn class="status" color="tabbody" outlined text @click="confirm()">SPEICHERN</v-btn>
+            <v-btn class color="tabbody" outlined @click="close()">ABBRECHEN</v-btn>
+            <v-btn class="status" color="tabbody" outlined @click="confirm()">SPEICHERN</v-btn>
           </v-card-actions>
         </v-card>
       </v-container>
