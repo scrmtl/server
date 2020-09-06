@@ -20,3 +20,4 @@ export default createCrudModule({
         return id ? `${rootUrl}/${id}/` : rootUrl;
       }
 });
+

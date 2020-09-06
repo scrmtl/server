@@ -12,41 +12,45 @@
 
 <script>
 import Lane from "@/components/Lane.vue";
-import { mapGetters, mapActions, mapState } from "vuex";
+import { mapGetters, mapActions} from "vuex";
 export default {
-  data: () => ({}),
-  props: ["SprintBacklogBoard"],
+  data: () => ({
+    selectedBoard: {}
+  }),
   components: {
     Lane
+  },
+  methods: {
+    ...mapActions("lane", {
+      fetchLanes: "fetchList"
+    }),
+    getBoardId(){
+      
+      if(!this.selectedBoard){
+        this.selectedBoard = this.boardList.filter(x => x.board_type === "SB").shift();;
+      }
+      return this.selectedBoard.id;
+    },
+
+    fetchData() {
+      this.fetchLanes({ customUrlFnArgs: this.getBoardId()});
+
+    }
   },
   computed: {
     ...mapGetters("lane", {
       laneList: "list"
     }),
-
-    ...mapState([
-      "route" // vuex-router-sync
-    ])
-  },
-
-  methods: {
-    ...mapActions("lane", {
-      fetchLanes: "fetchList"
+    ...mapGetters("board", {
+      boardList: "list"
     }),
-
-    fetchData() {
-      return this.fetchLanes({customUrlFnArgs: this.SprintBacklogBoard.id});
-    }
-  },
-
-  watch: {
-    $route: "fetchData"
   },
 
   created() {
     this.fetchData();
   },
-  mounted: function() {
+
+  mounted() {
     this.fetchData();
     setInterval(
       function() {

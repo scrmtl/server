@@ -125,10 +125,20 @@ export default new Vuex.Store({
     getUsername: state => {
       return state.Userinfo.username;
     },
+    getPbBoard: (state,getters)=> {
+      var arr = getters.board.list;
+      console.log("PB Array: " + arr.toString());
+      var pb = arr.shift();
+      console.log("PB: "+pb.id);
+      return pb;
 
-    // getProjects: state => {
-    //   return state.projects;
-    // }
+    },
+    getSbBoard: state => {
+      return state.board.filter(x => x.board_type === "SB").shift();
+    },
+    getAbBoard: state => {
+      return state.board.filter(x => x.board_type === "AB").shift();
+    },
   },
   modules: {
     task,
