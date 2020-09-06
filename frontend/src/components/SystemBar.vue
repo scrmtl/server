@@ -1,7 +1,12 @@
 <template>
     <v-system-bar color="appbar" dark absolute class="systemBar">
-        <v-icon>mdi-filter-variant</v-icon>
-        <span>ScrumTool</span>
+        <router-link 
+          :to="{name: 'Home'}"
+          style="text-decoration: none; color: inherit;"
+        >
+            <v-icon color="link">mdi-home</v-icon>
+            <span class="link--text">ScrumTool</span>
+        </router-link>
         <v-dialog
             v-model="dialog"
             width="1200"
@@ -9,12 +14,12 @@
             <template v-slot:activator="{ on, attrs }">
                 <v-btn
                 color="link"
-                outlined
+                text
                 x-small
                 dark
                 v-bind="attrs"
                 v-on="on"
-                class="ml-10"
+                class="ml-4"
                 >
                 Benutzerverwaltung
                 </v-btn>
