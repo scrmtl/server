@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="visible" absolute right width="800" color="navbar" dark>
+    <v-navigation-drawer 
+    v-model="visible" 
+    right
+    fixed
+    width="800" 
+    color="navbar" 
+    dark>
       <v-container>
         <v-card>
           <v-tabs

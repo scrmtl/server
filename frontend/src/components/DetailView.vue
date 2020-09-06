@@ -2,12 +2,10 @@
   <div>
     <v-navigation-drawer
       v-model="visible"
-      absolute
       left
-      temporary
+      fixed
       width="800"
       color="tabbody"
-      hide-overlay
       :retain-focus="Boolean(false)"
       scrollable
     >

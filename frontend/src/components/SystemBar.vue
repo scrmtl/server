@@ -4,7 +4,7 @@
           :to="{name: 'Home'}"
           style="text-decoration: none; color: inherit;"
         >
-            <v-icon color="link">mdi-home</v-icon>
+            <span class="mb-5"><v-icon color="link">mdi-home</v-icon></span>
             <span class="link--text">ScrumTool</span>
         </router-link>
         <v-dialog
