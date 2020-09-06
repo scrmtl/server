@@ -8,12 +8,12 @@ import SprintBacklog from "../views/SprintBacklog.vue"
 import SprintPlaning from "../views/SprintPlaning.vue"
 import Statistic from "../views/Statistic.vue"
 import Archive from "../views/Archive.vue"
+import Project from "../views/Project.vue"
 
 import Lane from "@/components/Lane.vue";
 import Epic from "@/components/Epic.vue";
 import Feature from "@/components/Feature.vue";
 import Task from "@/components/Task.vue";
-import ProjectCard from "@/components/ProjectCard.vue";
 
 import DetailView from '@/components/DetailView.vue';
 import DetailProject from '@/components/DetailProject.vue';
@@ -35,12 +35,13 @@ const routes = [
   },
   {
     path: "/project/:id",
-    component: ProjectCard,
+    name: "Project",
+    component: Project,
     props: true,
     children: [
       {
         path: "ProductBacklog",
-        component: ProductBacklog
+        component: ProductBacklog,
       },
       {
         path: "SprintBacklog",

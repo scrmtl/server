@@ -37,7 +37,8 @@ export default new Vuex.Store({
       token: ""
     },
 
-    projects: []
+    projects: [],
+    selectedProject: {}
   },
   // call REST API
   // Use from the components
