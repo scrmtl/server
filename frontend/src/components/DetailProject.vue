@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="visible" absolute right width="800" color="navbar" dark>
+    <v-navigation-drawer 
+    v-model="visible" 
+    right
+    fixed
+    width="800" 
+    color="navbar" 
+    dark>
       <v-container>
         <v-card>
           <v-tabs
@@ -115,8 +121,13 @@
                     prepend-icon="mdi-account-multiple-plus"
                     v-model="localProject.project_users"
                   ></v-select>
-                  <v-btn color="link" text @click="close()">Close</v-btn>
-                  <v-btn color="link" text @click="confirm()">Save</v-btn>
+                  <div>
+                    <v-btn color="link" text @click="close()">Close</v-btn>
+                    <v-btn color="link" text @click="confirm()">Save</v-btn>
+                    <v-btn color="error" absolute text right @click="deleteDialog = true">
+                      <v-icon left>mdi-bucket-outline</v-icon>Delete
+                    </v-btn>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-tab-item>
@@ -124,7 +135,7 @@
               <v-card flat dark color="navbar" tile>
                 <v-card-text>
                   <v-select
-                    :items="['NW', 'PL', 'NS', 'DO', 'IP', 'AC']"
+                    :items="['AC', 'AR']"
                     label="Status*"
                     required
                     prepend-icon="mdi-circle-edit-outline"
@@ -149,8 +160,13 @@
                       <p>nächster Sprintstart: 14.07.20</p>
                     </div>
                   </v-row>
-                  <v-btn color="link" text @click="close()">Close</v-btn>
-                  <v-btn color="link" text @click="confirm()">Save</v-btn>
+                  <div>
+                    <v-btn color="link" text @click="close()">Close</v-btn>
+                    <v-btn color="link" text @click="confirm()">Save</v-btn>
+                    <v-btn color="error" absolute text right @click="deleteDialog = true">
+                      <v-icon left>mdi-bucket-outline</v-icon>Delete
+                    </v-btn>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-tab-item>
@@ -158,6 +174,23 @@
         </v-card>
       </v-container>
     </v-navigation-drawer>
+    <v-dialog 
+    v-model="deleteDialog" 
+    persistent 
+    class="mx-auto"
+    width="600"
+    dark 
+    >
+      <v-card color="tabbody" shaped>
+        <v-card-text class="headline pt-10">
+          <span class="ml-12">Möchten Sie das Projekt wirklich löschen?</span> 
+        </v-card-text>
+        <v-card-actions class="ml-10 pb-10 pt-10">
+          <v-btn width="250" outlined color="error" @click="deleteProject()">Ja</v-btn>
+          <v-btn width="250" outlined color="primary" @click="deleteDialog = false">Nein</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -169,6 +202,8 @@ export default {
     tab: null,
     calendar1menu: false,
     calendar2menu: false,
+
+    deleteDialog: false,
 
     valueDetail: 50,
     localProject: {}
@@ -210,6 +245,9 @@ export default {
     ...mapActions("project", {
       updateProject: "update"
     }),
+    ...mapActions("project", {
+      deletePro: "destroy"
+    }),
 
     saveProject() {
       this.updateProject({
@@ -225,6 +263,14 @@ export default {
           dod: this.localProject.dod
         }
       });
+    },
+
+    deleteProject() {
+      this.deleteDialog = false;
+      this.deletePro({
+        id: this.localProject.id + "/"
+      });
+      this.close();
     }
   }
 };

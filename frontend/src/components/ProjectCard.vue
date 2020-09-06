@@ -31,16 +31,9 @@
           <v-card-actions>
             <v-btn text outlined color="link" @click="showProjectDetail()">Details</v-btn>
             <v-spacer></v-spacer>
-            <v-switch
-              v-model="ex11"
-              label
-              color="link"
-              value="select"
-              hide-details
-              class="projectCardSelect"
-            ></v-switch>
             <v-spacer></v-spacer>
-            <v-btn text class color="error" outlined>...Status</v-btn>
+            <v-btn text color="link" v-if="project.status === 'AC'" >ACTIVE</v-btn>
+            <v-btn text color="grey" v-else-if="project.status === 'AR'" >ARCHIVED</v-btn>
           </v-card-actions>
         </v-card>
       </template>
@@ -70,9 +63,6 @@ export default {
 
   methods: {
     showProjectDetail() {
-      
-      console.log("hallo?");
-      console.log(this.project);
       this.$store.commit("showProjectDetail");
       this.$store.commit("setProjectDetail", this.project);
       

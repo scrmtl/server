@@ -193,6 +193,7 @@ export default {
   methods: {
     
     showDialog() {
+      this.$store.commit("hideDetailView");
       this.$store.commit("showDetailView");
       this.$store.commit("setDetailTask", this.task);
     },
