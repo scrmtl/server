@@ -2,9 +2,15 @@
   <div>
     <v-hover>
       <template v-slot="{ hover }">
-        <v-card class="task mt-4" min-width="300" height="160" :elevation="hover ? 14 : 5">
+        <v-card 
+        class="task mt-4" 
+        min-width="300" 
+        max-height="260" 
+        :elevation="hover ? 14 : 5"
+        @click="showDialog()"
+        >
           <div class="task-header2 task">
-            <span class="task-name" @click="showDialog()">{{task.name}}</span>
+            <span class="task-name">{{task.name}}</span>
             <v-spacer></v-spacer>
             <span class="task-status">
               <!-- Card Status: New -->
@@ -93,7 +99,7 @@
                       v-on="on"
                     >mdi-calendar-range</v-icon>
                   </template>
-                  <span>Endtime</span>
+                  <span>Planned implementation</span>
                 </v-tooltip>
                 <span>DD/MM/JJJJ</span>
                 <div class="task-icons2">
@@ -138,16 +144,25 @@
                 </div>
               </div>
             </div>
-            <div class="task-user task">
-              <v-avatar height="36" width="36">
-                <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-              </v-avatar>
-              <v-avatar height="36" width="36">
-                <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-              </v-avatar>
-            </div>
-            <div>
-              <v-chip-group column class="ml-4">
+            <!-- assigned Users -->
+            <v-row>
+              <v-col>
+                <div v-for="user in task.assigned_users" :key="user" 
+                class="task-user task">
+                  <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-avatar color="red" size="32" v-bind="attrs" v-on="on">
+                    <span class="white--text headline">{{GetUserInitial(user)}}</span>
+                  </v-avatar>
+                  </template>
+                  <span>{{UsersById(user).username}}</span>
+                  </v-tooltip>
+                </div>
+              </v-col>
+              
+            </v-row>
+              <div>
+              <v-chip-group column class="ml-2">
               <v-chip
                 v-for="(label, i) in task.labels"
                 :key="i"
@@ -157,30 +172,46 @@
               ></v-chip>
             </v-chip-group>
             </div>
-            
           </v-card-text>
         </v-card>
       </template>
     </v-hover>
-    <DetailView></DetailView>
   </div>
 </template>
 
 <script>
-import DetailView from "../components/DetailView";
+import {mapGetters} from "vuex";
 export default {
-  data: () => ({}),
+  data: () => ({
+    dialog: null,
+  }),
   props: ["task"],
   components: {
-    DetailView
+
   },
 
   methods: {
+    
     showDialog() {
+      this.$store.commit("hideDetailView");
       this.$store.commit("showDetailView");
       this.$store.commit("setDetailTask", this.task);
+    },
+    GetUserInitial(id){
+      var inital = "AA";
+      var user = this.UsersById(id)
+      inital = user.username.substring(0,2);
+      return inital;
     }
+  },
+  computed:{
+    ...mapGetters("user", {
+      UsersById: "byId"
+    }),
+    
+
   }
+
 };
 </script>
 

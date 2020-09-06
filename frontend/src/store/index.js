@@ -17,9 +17,8 @@ import project from '@/store/ressources/project';
 
 Vue.use(Vuex, Axios);
 
-// const baseUrl = "https://scrmtl.ddns.net/api";
 const baseUrlDefault = "https://scrmtl.ddns.net";
-// const projectPath = "/project/";
+Axios.defaults.baseURL = process.env.VUE_APP_BASE_URL || baseUrlDefault
 
 export default new Vuex.Store({
   // for debugging 
@@ -30,7 +29,9 @@ export default new Vuex.Store({
   // States
   state: {
     detailViewVisable: false,
+    detailProjectVisable: false,
     detailTask: {},
+    detailProject: {},
     Userinfo: {
       username: "",
       token: ""
@@ -46,30 +47,12 @@ export default new Vuex.Store({
       commit("SET_USERNAME", user);
       // set auth header
       Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      Axios.defaults.baseURL = process.env.VUE_APP_BASE_URL || baseUrlDefault
+
     },
 
     logout({ commit }) {
       commit("RESET", '');
     },
-
-    //Project
-    // async fetchProjects({ commit }) {
-    //   const response = await Axios.get(`${baseUrl}${projectPath}`);
-    //   commit("SET_PROJECTS", response.data);
-    // },
-    // async addProject({ commit }, project) {
-    //   const response = await Axios.post(`${baseUrl}${projectPath}`, project);
-    //   commit("NEW_PROJECT", response.data);
-    // },
-    // async updateProject({ commit }, project) {
-    //   const response = await Axios.put(`${baseUrl}${projectPath}${project.id}`, project);
-    //   commit("UPDATE_PROJECT", response.data);
-    // },
-    // async removeProject({ commit }, project) {
-    //   await Axios.delete(`${baseUrl}${projectPath}${project.id}`);
-    //   commit("DELETE_PROJECT", project);
-    // }
   },
   //Update States
   mutations: {
@@ -81,8 +64,18 @@ export default new Vuex.Store({
       state.detailViewVisable = false;
     },
 
+    showProjectDetail(state) {
+      state.detailProjectVisable = true;
+    },
+    
+    hideProjectDetail(state) {
+      state.detailProjectVisable = false;
+    },
     setDetailTask(state, Task){
       state.detailTask = Task;
+    },
+    setProjectDetail(state, ProjectDetail){
+      state.detailProject = ProjectDetail;
     },
 
     increment(state) {
@@ -119,6 +112,9 @@ export default new Vuex.Store({
   getters: {
     getDetailStatus: state => {
       return state.detailViewVisable;
+    },
+    getProjectDetailStatus: state => {
+      return state.detailProjectVisable;
     },
 
     getToken: state => {

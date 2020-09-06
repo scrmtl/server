@@ -1,71 +1,111 @@
 <template>
     <v-system-bar color="appbar" dark absolute class="systemBar">
-        <v-icon>mdi-filter-variant</v-icon>
-        <span>ScrumTool</span>
+        <router-link 
+          :to="{name: 'Home'}"
+          style="text-decoration: none; color: inherit;"
+        >
+            <span class="mb-5"><v-icon color="link">mdi-home</v-icon></span>
+            <span class="link--text">ScrumTool</span>
+        </router-link>
         <v-dialog
             v-model="dialog"
-            width="900"
+            width="1200"
             >
             <template v-slot:activator="{ on, attrs }">
                 <v-btn
                 color="link"
-                outlined
+                text
                 x-small
                 dark
                 v-bind="attrs"
                 v-on="on"
-                class="ml-10"
+                class="ml-4"
                 >
                 Benutzerverwaltung
                 </v-btn>
             </template>
 
-            <v-card color="lanbody">
+            <v-card color="navbar" dark flat>
                 <v-card-title class="headline">
                 Benutzerverwaltung
                 </v-card-title>
                 <v-divider></v-divider>
-
                 <v-card-text>
-                    <v-row>
-                        <v-col cols="12" sm="6">
-                            <v-text-field
-                                label="Vorname"
-                                prepend-icon="mdi-account-check"
-                                required
-                            ></v-text-field>
-                            <v-text-field
-                                label="Nachname"
-                                prepend-icon="mdi-account-check"
-                                required
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6">
-                            <v-text-field
-                                label="E-Mail"
-                                prepend-icon="mdi-at"
-                                required
-                            ></v-text-field>
-                            <v-text-field
-                                label="Projektrolle"
-                                prepend-icon="mdi-account-multiple-check"
-                                required
-                            ></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            color="info"
-                            outlined
+                    <v-data-table
+                    :headers="headers"
+                    :items="desserts"
+                    sort-by="calories"
+                    class="elevation-1"
+                >
+                    <template v-slot:top>
+                    <v-toolbar flat color="navbar">
+                        <v-dialog v-model="createUser" max-width="700px">
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-spacer></v-spacer>
+                            <v-btn
+                            color="link"
+                            class="mb-2"
+                            v-bind="attrs"
+                            v-on="on"
                             small
-                            class="mb-8 mr-2"
-                        >
-                            Benutzer anlegen
-                        </v-btn>
-                    </v-row>
-                <v-divider></v-divider>
-                table
+                            outlined
+                            >Benutzer hinzufügen</v-btn>
+                        </template>
+                        <v-card>
+                            <v-card-title>
+                            <span class="headline">{{ formTitle }}</span>
+                            </v-card-title>
+
+                            <v-card-text> 
+ 
+                                    <v-row>
+                                    <v-col cols="12" sm="6" md="4">
+                                        <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="4">
+                                        <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="4">
+                                        <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="4">
+                                        <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="4">
+                                        <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
+                                    </v-col>
+                                    </v-row>
+
+                            </v-card-text>
+
+                            <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="link" text @click="createUser = false">ABBRECHEN</v-btn>
+                            <v-btn color="link" text @click="save">SPEICHERN</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                        </v-dialog>
+                    </v-toolbar>
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                    <v-icon
+                        small
+                        class="mr-2"
+                        @click="editItem(item)"
+                    >
+                        mdi-pencil
+                    </v-icon>
+                    <v-icon
+                        small
+                        @click="deleteItem(item)"
+                    >
+                        mdi-delete
+                    </v-icon>
+                    </template>
+                    <template v-slot:no-data>
+                    <v-btn color="link" @click="initialize">ZURÜCKSETZEN</v-btn>
+                    </template>
+                </v-data-table>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -74,10 +114,10 @@
                         color="link"
                         class="mr-2"
                         outlined
-                        @click="dialog = false"
+                        @click="createUser = false"
                         small
                     >
-                        Save
+                        SPEICHERN
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -111,6 +151,36 @@ import { mapState } from 'vuex';
             return {
                 user: '',
                 dialog: false,
+                createUser: false,
+                headers: [
+                    {
+                    text: 'Dessert (100g serving)',
+                    align: 'start',
+                    sortable: false,
+                    value: 'name',
+                    },
+                    { text: 'Calories', value: 'calories' },
+                    { text: 'Fat (g)', value: 'fat' },
+                    { text: 'Carbs (g)', value: 'carbs' },
+                    { text: 'Protein (g)', value: 'protein' },
+                    { text: 'Actions', value: 'actions', sortable: false },
+                ],
+                desserts: [],
+                editedIndex: -1,
+                editedItem: {
+                    name: '',
+                    calories: 0,
+                    fat: 0,
+                    carbs: 0,
+                    protein: 0,
+                },
+                defaultItem: {
+                    name: '',
+                    calories: 0,
+                    fat: 0,
+                    carbs: 0,
+                    protein: 0,
+                },
             };
         },
         computed: mapState({

@@ -1,73 +1,73 @@
 <template>
   <div>
-    <v-dialog
+    <v-navigation-drawer
       v-model="visible"
-      persistent
-      max-width="400px"
-      content-class="TaskDialog"
-      hide-overlay
-      :retain-focus = Boolean(false)
+      left
+      fixed
+      width="800"
+      color="tabbody"
+      :retain-focus="Boolean(false)"
       scrollable
     >
-      <v-card class="task mt-4">
-        <v-card-title>
-          <span class="headline ma-0 pa-1">Task</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-text-field
-              label="Taskname*"
-              class="ma-1"
-              required
-              prepend-icon="mdi-information-outline"
-              v-model="TaskData.name"
-            ></v-text-field>
-            <v-textarea
-              label="Taskbeschreibung"
-              prepend-icon="mdi-information-outline"
-              outlined
-              height="70"
-              class="ma-1"
-              v-model="TaskData.description"
-            ></v-textarea>
-            <v-select :items="Storypoints" label="Storypoints" v-model="TaskData.storypoints"></v-select>
-            <v-select
-              :items="['NW', 'PL', 'NS', 'DO', 'IP', 'AC']"
-              :item-text="title"
-              label="Status*"
-              required
-              prepend-icon="mdi-circle-edit-outline"
-              v-model="TaskData.status"
-            ></v-select>
-            <v-text-field label="Feature" v-model="TaskData.feature"></v-text-field>
-            <v-chip-group column>
-              <v-chip
-                v-for="(label_item, i) in TaskData.labels"
-                :key="i"
-                :color="label_item.color"
-                v-text="label_item.title"
-              ></v-chip>
-            </v-chip-group>
-            <v-select
-              :items="labelList"
-              item-text="title"
-              label="Label hinzufügen"
-              :append-outer-icon="'mdi-plus'"
-              v-model="selectedLabel"
-              @click:append-outer="addLabel()"
-            ></v-select>
-            <!--<v-textarea label="Steplist"></v-textarea>-->
-            <v-list multiple>
-              <v-list-item-group v-for="step in TaskData.steps" :key="step.id">
-                <v-row align="center">
-                  <v-list-item-action>
-                    <v-checkbox v-model="step['checked']"></v-checkbox>
-                  </v-list-item-action>
+      <v-container>
+        <v-card class="task mt-4">
+          <v-card-title>
+            <span class="headline ma-0 pa-1">Task</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-text-field
+                label="Taskname*"
+                class="ma-1"
+                required
+                prepend-icon="mdi-information-outline"
+                v-model="TaskData.name"
+              ></v-text-field>
+              <v-textarea
+                label="Taskbeschreibung"
+                prepend-icon="mdi-information-outline"
+                outlined
+                height="70"
+                class="ma-1"
+                v-model="TaskData.description"
+              ></v-textarea>
+              <v-select :items="Storypoints" label="Storypoints" v-model="TaskData.storypoints"></v-select>
+              <v-select
+                :items="['NW', 'PL', 'NS', 'DO', 'IP', 'AC']"
+                label="Status*"
+                required
+                prepend-icon="mdi-circle-edit-outline"
+                v-model="TaskData.status"
+              ></v-select>
+              <v-text-field label="Feature" v-model="TaskData.feature"></v-text-field>
+              <v-chip-group column>
+                <v-chip
+                  v-for="(label_item, i) in TaskData.labels"
+                  :key="i"
+                  :color="label_item.color"
+                  v-text="label_item.title"
+                ></v-chip>
+              </v-chip-group>
+              <v-select
+                :items="labelList"
+                item-text="title"
+                label="Label hinzufügen"
+                :append-outer-icon="'mdi-plus'"
+                v-model="selectedLabel"
+                @click:append-outer="addLabel()"
+              ></v-select>
+              <!--<v-textarea label="Steplist"></v-textarea>-->
+              <v-list multiple>
+                <v-list-item-group v-for="step in TaskData.steps" :key="step.id">
+                  <v-row align="center">
+                    <v-list-item-action>
+                      <v-checkbox v-model="step['checked']"></v-checkbox>
+                    </v-list-item-action>
 
-                  <v-list-item-content>
-                    <v-list-item-title v-text="step['text']"></v-list-item-title>
-                  </v-list-item-content>
-                  <!--<v-menu>
+                    <v-list-item-content>
+                      <v-list-item-title v-text="step['text']"></v-list-item-title>
+                    </v-list-item-content>
+                    <!--<v-menu>
                       <template v-slot:activator="{ on }">
                         <v-btn dark icon v-on="on" class="icon" height="32">
                           <v-icon>mdi-dots-vertical</v-icon>
@@ -80,25 +80,45 @@
                           >{{ item.title }}</v-list-item-title>
                         </v-list-item>
                       </v-list>
-                  </v-menu>-->
-                </v-row>
-              </v-list-item-group>
-            </v-list>
-            <v-text-field label="Step hinzufügen" :append-outer-icon="'mdi-plus'"></v-text-field>
-            <small>*müssen ausgefüllt sein</small>
-          </v-container>
+                    </v-menu>-->
+                  </v-row>
+                </v-list-item-group>
+              </v-list>
+              <v-text-field label="Step hinzufügen" :append-outer-icon="'mdi-plus'"></v-text-field>
+              <small>*müssen ausgefüllt sein</small>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="error" absolute text left outlined @click="deleteDialog = true">
+              <v-icon left>mdi-bucket-outline</v-icon>DELETE
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn text class color="tabbody" outlined @click="close()">ABBRECHEN</v-btn>
+            <v-btn class="status" color="tabbody" outlined text @click="confirm()">SPEICHERN</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-container>
+    </v-navigation-drawer>
+    <v-dialog
+    v-model="deleteDialog" 
+    persistent 
+    class="mx-auto"
+    width="600"
+    dark>
+      <v-card color="tabbody" shaped>
+        <v-card-text class="headline pt-10">
+          <span class="ml-12">
+            Möchten Sie den Task wirklich löschen?
+          </span> 
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text class color="error" outlined @click="close()">Close</v-btn>
-          <v-btn class="status" color="link" outlined text @click="confirm()">Save</v-btn>
+        <v-card-actions class="ml-10 pb-10 pt-10">
+          <v-btn width="250" outlined color="error" @click="deleteTask()">Ja</v-btn>
+          <v-btn width="250" outlined color="primary" @click="deleteDialog = false">Nein</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
 </template>
-
-
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 
@@ -107,8 +127,10 @@ export default {
   data: () => ({
     Storypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
     TaskData: {},
-
+    detaildrawer: null,
+    tab: null,
     selectedLabel: "",
+    deleteDialog: false,
 
     //Dropdown der Step-Actions
     step_actions: [{ title: "Edit" }, { title: "Delete" }]
@@ -146,7 +168,8 @@ export default {
       fetchLabel: "fetchList"
     }),
     ...mapActions("task", {
-      updateTask: "update"
+      updateTask: "update", 
+      deleteTa: "destroy"
     }),
 
     fetchData() {
@@ -203,7 +226,16 @@ export default {
           // steplists: this.TaskData.steplists
         }
       });
+    },
+
+    deleteTask(){
+      this.deleteDialog = false;
+      this.deleteTa({
+        id: this.TaskData.id + "/"
+      });
+      this.close();
     }
+
   },
 
   watch: {

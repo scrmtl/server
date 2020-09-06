@@ -15,6 +15,7 @@ import Feature from "../components/Feature.vue";
 import Task from "../components/Task.vue";
 
 import DetailView from '../components/DetailView.vue';
+import DetailProject from '@/components/DetailProject.vue';
 
 
 
@@ -79,6 +80,11 @@ const routes = [
     path: "/Detail",
     name: "Detail",
     component: DetailView
+  },
+  {
+    path: "/DetailProject",
+    name: "DetailProject",
+    component: DetailProject
   }
 
 
