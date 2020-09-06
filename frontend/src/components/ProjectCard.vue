@@ -33,7 +33,7 @@
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <v-btn text color="link" v-if="project.status === 'AC'" >ACTIVE</v-btn>
-            <v-btn text color="error" v-else-if="project.status === 'AR'" >ARCHIVED</v-btn>
+            <v-btn text color="grey" v-else-if="project.status === 'AR'" >ARCHIVED</v-btn>
           </v-card-actions>
         </v-card>
       </template>
