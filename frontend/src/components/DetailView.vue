@@ -101,12 +101,21 @@
         </v-card>
       </v-container>
     </v-navigation-drawer>
-    <v-dialog v-model="deleteDialog" persistent max-width="300px" dark>
-      <v-card>
-        <v-card-text>Möchten Sie den Task wirklich löschen?</v-card-text>
-        <v-card-actions>
-          <v-btn color="error" @click="deleteTask()">Ja</v-btn>
-          <v-btn color="link" @click="deleteDialog = false">Nein</v-btn>
+    <v-dialog
+    v-model="deleteDialog" 
+    persistent 
+    class="mx-auto"
+    width="600"
+    dark>
+      <v-card color="tabbody" shaped>
+        <v-card-text class="headline pt-10">
+          <span class="ml-12">
+            Möchten Sie den Task wirklich löschen?
+          </span> 
+        </v-card-text>
+        <v-card-actions class="ml-10 pb-10 pt-10">
+          <v-btn width="250" outlined color="error" @click="deleteTask()">Ja</v-btn>
+          <v-btn width="250" outlined color="primary" @click="deleteDialog = false">Nein</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
