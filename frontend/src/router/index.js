@@ -3,12 +3,13 @@ import VueRouter from "vue-router";
 
 import LogIn from "../views/LogIn.vue";
 import Home from "../views/Home.vue";
-import ProductBacklog from "../views/ProductBacklog.vue"
-import SprintBacklog from "../views/SprintBacklog.vue"
-import SprintPlaning from "../views/SprintPlaning.vue"
-import Statistic from "../views/Statistic.vue"
-import Archive from "../views/Archive.vue"
-import Project from "../views/Project.vue"
+import ProductBacklog from "../views/ProductBacklog.vue";
+import SprintBacklog from "../views/SprintBacklog.vue";
+import SprintPlaning from "../views/SprintPlaning.vue";
+import Statistic from "../views/Statistic.vue";
+import Archive from "../views/Archive.vue";
+import Project from "../views/Project.vue";
+import ProjectDashboard from  "../views/ProjectDashboard";
 
 import Lane from "@/components/Lane.vue";
 import Epic from "@/components/Epic.vue";
@@ -39,6 +40,10 @@ const routes = [
     component: Project,
     props: true,
     children: [
+      {
+        path: "",
+        component: ProjectDashboard,
+      },
       {
         path: "ProductBacklog",
         component: ProductBacklog,

@@ -4,6 +4,7 @@
       <AppBar v-bind:id="id"/>
     </v-app-bar>
     <router-view></router-view>
+    
   </v-content>
 </template>
 
@@ -28,6 +29,7 @@
         },
         created() {
             this.fetchData();
+            this.$router.push("");
         }
     }
 </script>

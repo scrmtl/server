@@ -16,11 +16,12 @@ export default {
     return {
       activeTab: `/project/${this.id}`,
       tabs: [
-        { id: 1, name: "Product Backlog", route: `/project/${this.id}/ProductBacklog` },
-        { id: 2, name: "Sprint Planing", route: `/project/${this.id}/SprintPlaning` },
-        { id: 3, name: "Sprint Backlog", route: `/project/${this.id}/SprintBacklog` },
-        { id: 4, name: "Archive", route: `/project/${this.id}/Archive` },
-        { id: 5, name: "Statistic", route: `/project/${this.id}/Statistic`},
+        { id: 1, name: "Dashboard", route: `/project/${this.id}` },
+        { id: 2, name: "Product Backlog", route: `/project/${this.id}/ProductBacklog` },
+        { id: 3, name: "Sprint Planing", route: `/project/${this.id}/SprintPlaning` },
+        { id: 4, name: "Sprint Backlog", route: `/project/${this.id}/SprintBacklog` },
+        { id: 5, name: "Archive", route: `/project/${this.id}/Archive` },
+        { id: 6, name: "Statistic", route: `/project/${this.id}/Statistic`},
         
       ]
     };
