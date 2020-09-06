@@ -85,6 +85,73 @@
                 </v-list-item-group>
               </v-list>
               <v-text-field label="Step hinzufügen" :append-outer-icon="'mdi-plus'"></v-text-field>
+         <v-list
+            subheader
+            flat
+          >
+            <v-subheader>Stepliste</v-subheader>
+            <v-list-item-group
+              v-model="settings"
+            >
+              <v-list-item>
+                  <v-list-item-action>
+                    <v-checkbox
+                      :input-value="active"
+                      color="primary"
+                    ></v-checkbox>
+                  </v-list-item-action>
+                  <v-list-item-content class="mt-2">
+                    <v-list-item-title>
+                      <span>Example-Step1</span> 
+                      <span class="float-right"><v-icon>mdi-delete</v-icon></span>
+                    </v-list-item-title>
+                  </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                  <v-list-item-action>
+                    <v-checkbox
+                      :input-value="active"
+                      color="primary"
+                    ></v-checkbox>
+                  </v-list-item-action>
+                  <v-list-item-content class="mt-2">
+                    <v-list-item-title>
+                      <span>Example-Step2</span> 
+                      <span class="float-right"><v-icon>mdi-delete</v-icon></span>
+                    </v-list-item-title>
+                  </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                  <v-list-item-action>
+                    <v-checkbox
+                      :input-value="active"
+                      color="primary"
+                    ></v-checkbox>
+                  </v-list-item-action>
+                  <v-list-item-content class="mt-2">
+                    <v-list-item-title>
+                      <span>Example-Step3</span> 
+                      <span class="float-right"><v-icon>mdi-delete</v-icon></span>
+                    </v-list-item-title>
+                  </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                  <v-list-item-action>
+                    <v-checkbox
+                      :input-value="active"
+                      color="primary"
+                    ></v-checkbox>
+                  </v-list-item-action>
+                  <v-list-item-content class="mt-2">
+                    <v-list-item-title>
+                      <span>Example-Step4</span> 
+                      <span class="float-right"><v-icon>mdi-delete</v-icon></span>
+                    </v-list-item-title>
+                  </v-list-item-content>
+              </v-list-item>  
+            </v-list-item-group>
+         </v-list>
+
               <small>*müssen ausgefüllt sein</small>
             </v-container>
           </v-card-text>
@@ -131,6 +198,7 @@ export default {
     tab: null,
     selectedLabel: "",
     deleteDialog: false,
+    settings:[],
 
     //Dropdown der Step-Actions
     step_actions: [{ title: "Edit" }, { title: "Delete" }]
