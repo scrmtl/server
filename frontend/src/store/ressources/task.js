@@ -32,5 +32,17 @@ export default createCrudModule({
         }
 
         return rootUrl;
+    },
+
+    getters: {
+        /** @description Add Custom getter 
+         * @param {Array} idArray Array with Task IDs 
+         * @return {Array} Array of Task Objects
+         */
+        byIdArray(state) {
+            return  idArray => 
+                idArray.map(id => state.entities[id.toString()] )
+        },
+        
     }
 });

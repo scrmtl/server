@@ -24,15 +24,9 @@ export default {
     ...mapActions("lane", {
       fetchLanes: "fetchList"
     }),
-    getBoardId(){
-      var boards = this.listBoards;
-      var selectedBoard = boards.filter(x => x.board_type === "SP").shift();
-      var boardId = selectedBoard.id;
-      return boardId;
-    },
 
     fetchData() {
-      this.fetchLanes({ customUrlFnArgs: this.getBoardId() });
+      this.fetchLanes({ customUrlFnArgs: this.boardByType("SP").id });
     },
   },
   computed: {
@@ -40,7 +34,8 @@ export default {
       listLanes: "list"
     }),
     ...mapGetters("board", {
-      listBoards: "list"
+      listBoards: "list",
+      boardByType: "byType"
     }),
   },
   updated(){

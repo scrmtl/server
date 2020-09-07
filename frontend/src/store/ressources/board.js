@@ -23,6 +23,16 @@ export default createCrudModule({
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
         const rootUrl = `/api/projects/${projectId}/boards`;
         return id ? `${rootUrl}/${id}/` : rootUrl;
+    },
+    getters: {
+        /** @description Add Custom getter 
+         * @param {string} type Board Type (PB, SP, AB) 
+         * @return {Object} selected Board
+         */
+        byType(state) {
+            return  type => 
+                Object.values(state.entities).filter(x => x.board_type === type).shift()},
+        
     }
 });
 

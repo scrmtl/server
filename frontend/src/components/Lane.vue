@@ -20,7 +20,7 @@
       </div>
       
       <v-card-text class="lane-body pa-2">
-        <div v-for="task in getLaneTasks()" :key="task.id">
+        <div v-for="task in this.tasksByIdArray(this.lane.task_cards)" :key="task.id">
           <Task v-bind:task="task" />
         </div>
       </v-card-text>
@@ -56,20 +56,11 @@ export default {
         this.fetchTask({ customUrlFnArgs: {laneId: this.lane.id}});
     },
 
-    getLaneTasks(){
-      var LaneTasks = [];
-      this.lane.task_cards.forEach(taskId => {
-        LaneTasks.push(this.tasksById(taskId));
-        console.log(taskId);
-        console.log(this.tasksById(taskId));
-      });
-      console.log(LaneTasks);
-      return LaneTasks;
-    }
   },
   computed:{
     ...mapGetters("task",{
-      tasksById: "byId"
+      tasksById: "byId",
+      tasksByIdArray: "byIdArray"
     })
 
   },
