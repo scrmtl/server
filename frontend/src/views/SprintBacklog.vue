@@ -2,7 +2,7 @@
   <v-content class="tabbody tab-content">
     <v-container fluid class="pl-10">
        <v-row>
-          <div v-for="lane in laneList" :key="lane.id">
+          <div v-for="lane in listLanes" :key="lane.id">
             <Lane v-bind:lane="lane"></Lane>
           </div>
       </v-row>
@@ -12,49 +12,54 @@
 
 <script>
 import Lane from "@/components/Lane.vue";
-import { mapGetters, mapActions, mapState } from "vuex";
+import { mapGetters, mapActions} from "vuex";
 export default {
-  data: () => ({}),
-  props: ["SprintBacklogBoard"],
+  data: () => ({
+    selectedBoard: {}
+  }),
   components: {
     Lane
   },
-  computed: {
-    ...mapGetters("lane", {
-      laneList: "list"
-    }),
-
-    ...mapState([
-      "route" // vuex-router-sync
-    ])
-  },
-
   methods: {
     ...mapActions("lane", {
       fetchLanes: "fetchList"
     }),
+    getBoardId(){
+      var boards = this.listBoards;
+      var selectedBoard = boards.filter(x => x.board_type === "SP").shift();
+      var boardId = selectedBoard.id
+      return boardId;
+    },
 
     fetchData() {
-      return this.fetchLanes({customUrlFnArgs: this.SprintBacklogBoard.id});
-    }
+      this.fetchLanes({ customUrlFnArgs: this.getBoardId() });
+      this.listLanes;
+    },
   },
-
-  watch: {
-    $route: "fetchData"
+  computed: {
+    ...mapGetters("lane", {
+      listLanes: "list"
+    }),
+    ...mapGetters("board", {
+      listBoards: "list"
+    }),
   },
-
-  created() {
+  updated(){
+    this.listLanes;
+  },
+  created(){
     this.fetchData();
   },
-  mounted: function() {
-    this.fetchData();
-    setInterval(
-      function() {
-        this.fetchData();
-      }.bind(this),
-      10000
-    );
-  }
+
+  // mounted() {
+  //   this.fetchData();
+  //   setInterval(
+  //     function() {
+  //       this.fetchData();
+  //     }.bind(this),
+  //     10000
+  //   );
+  // }
 };
 </script>
 

@@ -4,9 +4,7 @@
     <v-system-bar>
       <SystemBar/>
     </v-system-bar>
-    <v-app-bar>
-      <AppBar/>
-    </v-app-bar>
+
     <v-content>
       <router-view/>
     </v-content>
@@ -16,14 +14,13 @@
 <script>
 
 import SystemBar from "@/components/SystemBar.vue"
-import AppBar from "@/components/AppBar.vue"
+
 
 export default {
   name: "App",
 
   components: {
-    SystemBar,
-    AppBar,  
+    SystemBar,  
   },
 
   methods: {

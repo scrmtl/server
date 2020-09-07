@@ -4,7 +4,7 @@
       <template v-slot="{ hover }">
         <v-card class="navbar projectCard" max-width="344" dark shaped :elevation="hover ? 24 : 1">
           <router-link 
-          :to="{name: 'ProductBacklog'}"
+          :to="{name: 'ProjectDashboard', params: {id: project.id }}"
           style="text-decoration: none; color: inherit;"
           >
           <v-list-item 

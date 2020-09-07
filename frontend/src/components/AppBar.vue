@@ -1,38 +1,31 @@
 /* eslint-disable */
 <template>
   <v-app-bar color="navbar" dark absolute class="appBar">
-    <v-tabs
-    background-color="transparent"
-    dark
-    grow
-    >
-    <v-tab to="/">
-      Home
-    </v-tab>
-    <v-tab to="ProductBacklog">
-      Product Backlog
-    </v-tab>
-    <v-tab to="SprintPlaning">
-      Sprint Planing
-    </v-tab>
-    <v-tab to="SprintBacklog">
-      Sprint Backlog
-    </v-tab>
-    <v-tab to="Statistic">
-      Statistic
-    </v-tab>
-    <v-tab to="Archive">
-      Archive
-    </v-tab>
-  </v-tabs>
+    <v-tabs class="tabs" background-color="transparent" slider-color="link"
+    dark centered grow v-model="activeTab">
+      <v-tab v-for="tab in tabs" :key="tab.id" :to="tab.route" exact>{{ tab.name }}</v-tab>     
+    </v-tabs>
   </v-app-bar>
 </template>
 
 <script>
-//import Home from "@/views/Home.vue"
-//import ProductBacklog from "@views/ProductBacklog.vue"
 
 export default {
+  props: ["id"],
+  data() {
+    return {
+      activeTab: `/project/${this.id}`,
+      tabs: [
+        { id: 1, name: "Dashboard", route: `/project/${this.id}` },
+        { id: 2, name: "Product Backlog", route: `/project/${this.id}/ProductBacklog` },
+        { id: 3, name: "Sprint Planing", route: `/project/${this.id}/SprintPlaning` },
+        { id: 4, name: "Sprint Backlog", route: `/project/${this.id}/SprintBacklog` },
+        { id: 5, name: "Archive", route: `/project/${this.id}/Archive` },
+        { id: 6, name: "Statistic", route: `/project/${this.id}/Statistic`},
+        
+      ]
+    };
+  },
   components: {
 
   },
@@ -43,6 +36,7 @@ export default {
 
   }
 };
+
 </script>
 
 <style lang="css" scoped>

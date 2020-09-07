@@ -37,16 +37,18 @@ export default new Vuex.Store({
       token: ""
     },
 
-    projects: []
+    projects: [],
+    selectedProject: {},
+    selectedBoard: {}
   },
-  // call REST API
+  // call REST API (async)
   // Use from the components
   actions: {
     login({ commit }, { token, user }) {
       commit("SET_TOKEN", token);
       commit("SET_USERNAME", user);
       // set auth header
-      Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$state.Userinfo.token}`;
 
     },
 
@@ -54,7 +56,7 @@ export default new Vuex.Store({
       commit("RESET", '');
     },
   },
-  //Update States
+  //Update States (sync)
   mutations: {
     showDetailView(state) {
       state.detailViewVisable = true;
@@ -124,10 +126,6 @@ export default new Vuex.Store({
     getUsername: state => {
       return state.Userinfo.username;
     },
-
-    // getProjects: state => {
-    //   return state.projects;
-    // }
   },
   modules: {
     task,
@@ -140,7 +138,7 @@ export default new Vuex.Store({
     sprint,
     steplist,
     user,
-    project,
+    project
   }
 });
 

@@ -56,60 +56,47 @@
                 v-model="selectedLabel"
                 @click:append-outer="addLabel()"
               ></v-select>
-              <!--<v-textarea label="Steplist"></v-textarea>-->
-              <v-list multiple>
-                <v-list-item-group v-for="step in TaskData.steps" :key="step.id">
-                  <v-row align="center">
+              <v-list subheader flat>
+                <v-subheader>Stepliste</v-subheader>
+                <v-list-item-group>
+                  <v-list-item v-for="step in steplist" :key="step.id">
                     <v-list-item-action>
-                      <v-checkbox v-model="step['checked']"></v-checkbox>
+                      <v-checkbox color="primary" v-model="step.checked"></v-checkbox>
                     </v-list-item-action>
-
-                    <v-list-item-content>
-                      <v-list-item-title v-text="step['text']"></v-list-item-title>
+                    <v-list-item-content class="mt-2">
+                      <v-list-item-title v-text="step.title"></v-list-item-title>
                     </v-list-item-content>
-                    <!--<v-menu>
-                      <template v-slot:activator="{ on }">
-                        <v-btn dark icon v-on="on" class="icon" height="32">
-                          <v-icon>mdi-dots-vertical</v-icon>
-                        </v-btn>
-                      </template>
-                      <v-list>
-                        <v-list-item v-for="(item, i) in step_actions" :key="i">
-                          <v-list-item-title
-                            @click.stop="openStepDialog(item.title, step.id)"
-                          >{{ item.title }}</v-list-item-title>
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>-->
-                  </v-row>
+                    <v-list-item-action>
+                      <v-icon color="error" @click.stop="deleteStep(step.id)">mdi-delete</v-icon>
+                    </v-list-item-action>
+                  </v-list-item>
                 </v-list-item-group>
               </v-list>
-              <v-text-field label="Step hinzufügen" :append-outer-icon="'mdi-plus'"></v-text-field>
+              <v-text-field
+                label="Step hinzufügen"
+                :append-outer-icon="'mdi-plus'"
+                v-model="newStep"
+                @click:append-outer="addStep()"
+              ></v-text-field>
               <small>*müssen ausgefüllt sein</small>
             </v-container>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="error" absolute text left outlined @click="deleteDialog = true">
-              <v-icon left>mdi-bucket-outline</v-icon>DELETE
+            <v-btn color="error" absolute left outlined @click="deleteDialog = true">
+              <v-icon left>mdi-delete</v-icon>
+              <span class="pa-0">Löschen</span>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn text class color="tabbody" outlined @click="close()">ABBRECHEN</v-btn>
-            <v-btn class="status" color="tabbody" outlined text @click="confirm()">SPEICHERN</v-btn>
+            <v-btn class color="tabbody" outlined @click="close()">ABBRECHEN</v-btn>
+            <v-btn class="status" color="tabbody" outlined @click="confirm()">SPEICHERN</v-btn>
           </v-card-actions>
         </v-card>
       </v-container>
     </v-navigation-drawer>
-    <v-dialog
-    v-model="deleteDialog" 
-    persistent 
-    class="mx-auto"
-    width="600"
-    dark>
+    <v-dialog v-model="deleteDialog" persistent class="mx-auto" width="600" dark>
       <v-card color="tabbody" shaped>
         <v-card-text class="headline pt-10">
-          <span class="ml-12">
-            Möchten Sie den Task wirklich löschen?
-          </span> 
+          <span class="ml-12">Möchten Sie den Task wirklich löschen?</span>
         </v-card-text>
         <v-card-actions class="ml-10 pb-10 pt-10">
           <v-btn width="250" outlined color="error" @click="deleteTask()">Ja</v-btn>
@@ -131,6 +118,21 @@ export default {
     tab: null,
     selectedLabel: "",
     deleteDialog: false,
+    settings: [],
+    newStep: "",
+
+    steplist: [
+      {
+        id: 1,
+        title: "test 123",
+        checked: false
+      },
+      {
+        id: 2,
+        title: "test kjdfkl",
+        checked: true
+      }
+    ],
 
     //Dropdown der Step-Actions
     step_actions: [{ title: "Edit" }, { title: "Delete" }]
@@ -168,7 +170,7 @@ export default {
       fetchLabel: "fetchList"
     }),
     ...mapActions("task", {
-      updateTask: "update", 
+      updateTask: "update",
       deleteTa: "destroy"
     }),
 
@@ -228,14 +230,25 @@ export default {
       });
     },
 
-    deleteTask(){
+    deleteTask() {
       this.deleteDialog = false;
       this.deleteTa({
         id: this.TaskData.id + "/"
       });
       this.close();
-    }
+    },
 
+    deleteStep(id) {
+      this.steplist.splice(id-1, 1);
+    },
+
+    addStep() {
+      this.steplist.push({
+        id: this.steplist.length+1,
+        title: this.newStep,
+        checked: false
+      });
+    }
   },
 
   watch: {

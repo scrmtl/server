@@ -3,18 +3,20 @@ import VueRouter from "vue-router";
 
 import LogIn from "../views/LogIn.vue";
 import Home from "../views/Home.vue";
-import ProductBacklog from "../views/ProductBacklog.vue"
-import SprintBacklog from "../views/SprintBacklog.vue"
-import SprintPlaning from "../views/SprintPlaning.vue"
-import Statistic from "../views/Statistic.vue"
-import Archive from "../views/Archive.vue"
+import ProductBacklog from "../views/ProductBacklog.vue";
+import SprintBacklog from "../views/SprintBacklog.vue";
+import SprintPlaning from "../views/SprintPlaning.vue";
+import Statistic from "../views/Statistic.vue";
+import Archive from "../views/Archive.vue";
+import Project from "../views/Project.vue";
+import ProjectDashboard from  "../views/ProjectDashboard";
 
-import Lane from "../components/Lane.vue";
-import Epic from "../components/Epic.vue";
-import Feature from "../components/Feature.vue";
-import Task from "../components/Task.vue";
+import Lane from "@/components/Lane.vue";
+import Epic from "@/components/Epic.vue";
+import Feature from "@/components/Feature.vue";
+import Task from "@/components/Task.vue";
 
-import DetailView from '../components/DetailView.vue';
+import DetailView from '@/components/DetailView.vue';
 import DetailProject from '@/components/DetailProject.vue';
 
 
@@ -33,28 +35,37 @@ const routes = [
     component: Home,
   },
   {
-    path: "/ProductBacklog",
-    name: "ProductBacklog",
-    component: ProductBacklog
-  },{
-    path: "/SprintBacklog",
-    name: "SprintBacklog",
-    component: SprintBacklog
-  },
-  {
-    path: "/SprintPlaning",
-    name: "SprintPlaning",
-    component: SprintPlaning
-  },
-  {
-    path: "/Statistic",
-    name: "Statistic",
-    component: Statistic
-  },
-  {
-    path: "/Archive",
-    name: "Archive",
-    component: Archive
+    path: "/project/:id",
+    component: Project,
+    props: true,
+    children: [
+      {
+        // Default Child
+        path: "",
+        name: "ProjectDashboard",
+        component: ProjectDashboard,
+      },
+      {
+        path: "ProductBacklog",
+        component: ProductBacklog,
+      },
+      {
+        path: "SprintBacklog",
+        component: SprintBacklog
+      },
+      {
+        path: "SprintPlaning",
+        component: SprintPlaning
+      },
+      {
+        path: "Statistic",
+        component: Statistic
+      },
+      {
+        path: "Archive",
+        component: Archive
+      },
+    ]
   },
   {
     path: "/Lane",

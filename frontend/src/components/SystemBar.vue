@@ -4,8 +4,8 @@
           :to="{name: 'Home'}"
           style="text-decoration: none; color: inherit;"
         >
-            <span class="mb-5"><v-icon color="link">mdi-home</v-icon></span>
-            <span class="link--text">ScrumTool</span>
+
+            <span class="link--text"><v-icon size="25" color="link">mdi-home</v-icon>ScrumTool</span>
         </router-link>
         <v-dialog
             v-model="dialog"
@@ -87,7 +87,7 @@
                         </v-dialog>
                     </v-toolbar>
                     </template>
-                    <template v-slot:item.actions="{ item }">
+                    <template v-slot:actions="{ item }">
                     <v-icon
                         small
                         class="mr-2"
@@ -124,18 +124,16 @@
         </v-dialog>
         <v-spacer></v-spacer>
         <v-icon class="systemBarIcon">mdi-account</v-icon>
-        <span class="systemBarUser">{{username}}</span>
-        <v-btn
-        text
-        >
+        <span class="systemBarUser">{{userinfos.username}}</span>
+        <v-btn icon text @click="logout()">
             <v-tooltip bottom color="link">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-icon
-                    class="task-status-icons"
-                    color="link"
-                    v-bind="attrs"
-                    v-on="on"
-                  >mdi-logout</v-icon>
+                    <v-icon
+                        class="task-status-icons"
+                        color="link"
+                        v-bind="attrs"
+                        v-on="on"
+                    >mdi-logout</v-icon>
                 </template>
                 <span>Logout</span>
             </v-tooltip>
@@ -183,9 +181,17 @@ import { mapState } from 'vuex';
                 },
             };
         },
-        computed: mapState({
-            username: state => state.Userinfo.username,
-        })
+        methods:{
+            logout() {
+                this.$store.dispatch("logout");
+                this.$router.push('/login');
+            }
+        },
+        computed: {
+            ...mapState({
+                userinfos: "Userinfo"
+            }),
+        }
     }
 </script>
 
