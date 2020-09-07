@@ -36,12 +36,13 @@ const routes = [
   },
   {
     path: "/project/:id",
-    name: "Project",
     component: Project,
     props: true,
     children: [
       {
+        // Default Child
         path: "",
+        name: "ProjectDashboard",
         component: ProjectDashboard,
       },
       {
