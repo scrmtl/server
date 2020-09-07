@@ -9,8 +9,18 @@ export default createCrudModule({
     // update
     // replace
     // destroy
-    
+
     // Follow getters are generated:
     // list 
     // byid(id)
+    /** @description Custom function to get an array of project_users
+     * @param {number} projectId If set all tasks in that lane are returned (exampleUrl: /api/projects/1/project_users`)
+     * @return {string} Url defined by the arguments
+     */
+    customUrlFn(id, type, projectId) {
+        // id will only be available when doing request to single resource, otherwise null
+        // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
+        const rootUrl = `/api/projects/${projectId}/project_users`;
+        return id ? `${rootUrl}/${id}/` : rootUrl;
+    }
 });
