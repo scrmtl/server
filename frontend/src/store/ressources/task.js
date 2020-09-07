@@ -12,7 +12,7 @@ export default createCrudModule({
 
     // Follow getters are generated:
     // list 
-    // byid(id)
+    // byId(id)
 
     /** @description Custom function to get an array of tasks
      * @param {number} laneId If set all tasks in that lane are returned (exampleUrl: /api/lanes/1/tasks`)

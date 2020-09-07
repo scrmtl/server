@@ -12,7 +12,8 @@ export default createCrudModule({
 
     // Follow getters are generated:
     // list 
-    // byid(id)
+    // byId(id)
+    
     /** @description Custom function to get an array of project_users
      * @param {number} projectId If set all tasks in that lane are returned (exampleUrl: /api/projects/1/project_users`)
      * @return {string} Url defined by the arguments

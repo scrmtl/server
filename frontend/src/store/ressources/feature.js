@@ -12,7 +12,8 @@ export default createCrudModule({
 
     // Follow getters are generated:
     // list 
-    // byid(id)
+    // byId(id)
+    
     /**@description Custom function to get an array of features
      * @param {number} laneId If set all epics in that lane are returned (exampleUrl: /api/lanes/1/features`)
      * @return {string} Url defined by the arguments
