@@ -4,8 +4,8 @@
           :to="{name: 'Home'}"
           style="text-decoration: none; color: inherit;"
         >
-            <span class="mb-5"><v-icon color="link">mdi-home</v-icon></span>
-            <span class="link--text">ScrumTool</span>
+
+            <span class="link--text"><v-icon size="25" color="link">mdi-home</v-icon>ScrumTool</span>
         </router-link>
         <v-dialog
             v-model="dialog"
