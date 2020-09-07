@@ -27,13 +27,12 @@ export default {
     getBoardId(){
       var boards = this.listBoards;
       var selectedBoard = boards.filter(x => x.board_type === "SP").shift();
-      var boardId = selectedBoard.id
+      var boardId = selectedBoard.id;
       return boardId;
     },
 
     fetchData() {
       this.fetchLanes({ customUrlFnArgs: this.getBoardId() });
-      this.listLanes;
     },
   },
   computed: {
@@ -45,7 +44,7 @@ export default {
     }),
   },
   updated(){
-    this.listLanes;
+
   },
   created(){
     this.fetchData();

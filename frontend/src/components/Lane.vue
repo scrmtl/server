@@ -18,13 +18,20 @@
           </v-menu>
         </p>
       </div>
-      <v-card-text class="lane-body pa-2"></v-card-text>
+      
+      <v-card-text class="lane-body pa-2">
+        <div v-for="task in getLaneTasks()" :key="task.id">
+          <Task v-bind:task="task" />
+        </div>
+      </v-card-text>
       <v-card-actions class="lane-extended"></v-card-actions>
     </v-card>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import Task from "@/components/Task.vue";
 export default {
   data: () => ({
     items: [
@@ -36,7 +43,42 @@ export default {
     epicItem: [{ title: "+ New Feature" }, { title: "+ New Task" }],
     featureItem: [{ title: "+ New Task" }]
   }),
-  props: ["lane"]
+  components: {
+    Task
+  },
+  props: ["lane"],
+  methods:{
+    ...mapActions("task", {
+      fetchTask: "fetchList"
+    }),
+
+    fetchData() {
+        this.fetchTask({ customUrlFnArgs: {laneId: this.lane.id}});
+    },
+
+    getLaneTasks(){
+      var LaneTasks = [];
+      this.lane.task_cards.forEach(taskId => {
+        LaneTasks.push(this.tasksById(taskId));
+        console.log(taskId);
+        console.log(this.tasksById(taskId));
+      });
+      console.log(LaneTasks);
+      return LaneTasks;
+    }
+  },
+  computed:{
+    ...mapGetters("task",{
+      tasksById: "byId"
+    })
+
+  },
+  updated(){
+    
+  },
+  created(){
+    this.fetchData();
+  }
 };
 </script>
 

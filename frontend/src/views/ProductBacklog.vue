@@ -35,7 +35,6 @@ export default {
 
     fetchData() {
         this.fetchLanes({ customUrlFnArgs: this.getBoardId() });
-        this.listLanes;
     },
   },
   computed:{
@@ -47,7 +46,7 @@ export default {
     }),
   },
   updated(){
-    this.listLanes;
+
   },
   created(){
     this.fetchData();
