@@ -13,7 +13,7 @@ class PlatformUserViewSet(viewsets.ModelViewSet):
             return self.queryset
         else:
             return self.queryset.filter(task_cards=self.kwargs['task_pk'])
-    serializer_class = serializers.ScrumUserSerializer
+    serializer_class = serializers.PlattformUserSerializer
 
     def retrieve(self, request, *args, pk=None, **kwargs):
         """retrive for full and partial retrieve
@@ -27,4 +27,31 @@ class PlatformUserViewSet(viewsets.ModelViewSet):
         else:
             instance = self.get_object()
         serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+    def list(self, request, lane_pk=None):
+        """Gets the requested queryset for users
+
+        Parameters
+        ----------
+        session : if session argument is set return current user info
+
+        Returns
+        -------
+        Cards
+            list of cards
+        """
+        self_arg: str = request.query_params.get('session', None)
+        _queryset = self.get_queryset()
+
+        current_user: models.PlatformUser = self.request.user
+        # needed to evaluate the lazy queryset
+        if not _queryset:
+            pass
+        if (self_arg is not None and
+                self_arg == "self"):
+            _queryset = _queryset.filter(
+                id=current_user.id)
+
+        serializer = serializers.PlattformUserSerializer(_queryset, many=True)
         return Response(serializer.data)

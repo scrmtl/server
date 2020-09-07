@@ -3,7 +3,7 @@ from .. import models
 from django.utils.translation import gettext_lazy as _
 
 
-class ScrumUserSerializer(serializers.ModelSerializer):
+class PlattformUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PlatformUser
         fields = ('id', 'email', 'username', )
