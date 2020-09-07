@@ -14,6 +14,7 @@ import steplist from '@/store/ressources/steplist';
 import task from '@/store/ressources/task';
 import user from '@/store/ressources/user';
 import project from '@/store/ressources/project';
+import session from '@/store/ressources/session';
 
 Vue.use(Vuex, Axios);
 
@@ -138,7 +139,8 @@ export default new Vuex.Store({
     sprint,
     steplist,
     user,
-    project
+    project,
+    session
   }
 });
 
