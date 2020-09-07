@@ -1,18 +1,23 @@
 """Serializers for Lanes
 """
 from rest_framework import serializers
-from ..models import Lane
+from ..models import Lane, Task
 from ..serializers import card_serializers
 
 
 class LaneSerializer(serializers.ModelSerializer):
     """Serializer for lanes.
     """
+    task_cards = serializers.PrimaryKeyRelatedField(
+        queryset=Task.objects.all(),
+        required=False, many=True)
+
     class Meta:
         model = Lane
         fields = ('id',
                   'name',
                   'numbering',
+                  'task_cards'
                   )
 
 
