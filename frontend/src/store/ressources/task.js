@@ -12,7 +12,7 @@ export default createCrudModule({
 
     // Follow getters are generated:
     // list 
-    // byid(id)
+    // byId(id)
 
     /** @description Custom function to get an array of tasks
      * @param {number} laneId If set all tasks in that lane are returned (exampleUrl: /api/lanes/1/tasks`)
@@ -32,5 +32,17 @@ export default createCrudModule({
         }
 
         return rootUrl;
+    },
+
+    getters: {
+        /** @description Add Custom getter 
+         * @param {Array} idArray Array with Task IDs 
+         * @return {Array} Array of Task Objects
+         */
+        byIdArray(state) {
+            return  idArray => 
+                idArray.map(id => state.entities[id.toString()] )
+        },
+        
     }
 });

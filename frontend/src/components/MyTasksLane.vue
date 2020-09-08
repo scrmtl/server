@@ -5,7 +5,7 @@
         <p dark>Meine Tasks</p>
       </div>
       <v-card-text class="lane-body pa-2">
-        <div v-for="task in taskList" :key="task.id">
+        <div v-for="task in listTasks" :key="task.id">
           <Task v-bind:task="task" 
           v-bind:task_index="task.id"/>
         </div>
@@ -28,7 +28,10 @@ export default {
   },
   computed: {
     ...mapGetters("task", {
-      taskList: "list"
+      listTasks: "list"
+    }),
+    ...mapGetters("session", {
+      listSession: "list"
     }),
 
     ...mapState([
@@ -42,7 +45,7 @@ export default {
     }),
 
     fetchData() {
-      return this.fetchTasks();
+      return this.fetchTasks({ customUrlFnArgs: {byUser: this.listSession.shift().id} });
     }
   },
 
