@@ -141,7 +141,7 @@ export default new Vuex.Store({
     steplist,
     user,
     project,
-    session
+    session,
     project_role
   }
 });
