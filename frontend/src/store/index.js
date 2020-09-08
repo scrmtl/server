@@ -14,6 +14,7 @@ import steplist from '@/store/ressources/steplist';
 import task from '@/store/ressources/task';
 import user from '@/store/ressources/user';
 import project from '@/store/ressources/project';
+import project_role from '@/store/ressources/project_role';
 
 Vue.use(Vuex, Axios);
 
@@ -69,14 +70,14 @@ export default new Vuex.Store({
     showProjectDetail(state) {
       state.detailProjectVisable = true;
     },
-    
+
     hideProjectDetail(state) {
       state.detailProjectVisable = false;
     },
-    setDetailTask(state, Task){
+    setDetailTask(state, Task) {
       state.detailTask = Task;
     },
-    setProjectDetail(state, ProjectDetail){
+    setProjectDetail(state, ProjectDetail) {
       state.detailProject = ProjectDetail;
     },
 
@@ -138,7 +139,8 @@ export default new Vuex.Store({
     sprint,
     steplist,
     user,
-    project
+    project,
+    project_role
   }
 });
 
