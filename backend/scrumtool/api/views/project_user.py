@@ -13,3 +13,8 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         else:
             return self.queryset.filter(project=self.kwargs['project_pk'])
     serializer_class = serializers.ProjectUserSerializer
+
+
+class ProjectRoleViewSet(viewsets.ModelViewSet):
+    queryset = models.ProjectRole.objects.all()
+    serializer_class = serializers.ProjectRoleSerializer

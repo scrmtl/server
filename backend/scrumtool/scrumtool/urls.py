@@ -32,6 +32,7 @@ router = routers.SimpleRouter()
 
 router.register(r'projects', views.ProjectViewSet)
 router.register(r'project_users', views.ProjectUserViewSet)
+router.register(r'project_roles', views.ProjectRoleViewSet)
 router.register(r'boards', views.BoardViewSet)
 router.register(r'lanes', views.LaneViewSet)
 router.register(r'epics', views.EpicViewSet)
