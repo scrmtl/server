@@ -12,7 +12,8 @@ export default createCrudModule({
 
   // Follow getters are generated:
   // list 
-  // byid(id)
+  // byId(id)
+  
   /** @description Custom function to get an array of lanes
    * @param {number} boardId If set all lanes in that board are returned (exampleUrl: /api/board/1/lanes`)
    * @return {string} Url defined by the arguments

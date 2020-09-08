@@ -34,8 +34,7 @@ export default {
     },
 
     fetchData() {
-        this.fetchLanes({ customUrlFnArgs: this.getBoardId() });
-        this.listLanes;
+        this.fetchLanes({ customUrlFnArgs: this.boardByType("PB").id });
     },
   },
   computed:{
@@ -43,11 +42,12 @@ export default {
       listLanes: "list"
     }),
     ...mapGetters("board", {
-      listBoards: "list"
+      listBoards: "list",
+      boardByType: "byType"
     }),
   },
   updated(){
-    this.listLanes;
+
   },
   created(){
     this.fetchData();

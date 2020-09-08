@@ -12,7 +12,8 @@ export default createCrudModule({
 
     // Follow getters are generated:
     // list 
-    // byid(id)
+    // byId(id)
+    
     /**@description Custom function to get an array of features
      * @param {number} taskId If set all steplists in that task are returned (exampleUrl: /api/tasks/1/steplists`)
      * @return {string} Url defined by the arguments

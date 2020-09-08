@@ -215,7 +215,8 @@ export default {
     //Load user's tasks
 
     // set auth header
-      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`
+      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`;
+      this.SessionFetch({ customUrlFnArgs: {all: false}});
   },
 
   methods: {
@@ -225,6 +226,9 @@ export default {
     }),
     ...mapActions("user", {
       UsersFetch: "fetchList"
+    }),
+    ...mapActions("session", {
+      SessionFetch: "fetchList"
     }),
 
     loadData: function() {

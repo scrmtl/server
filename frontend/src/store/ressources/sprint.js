@@ -12,7 +12,8 @@ export default createCrudModule({
 
     // Follow getters are generated:
     // list 
-    // byid(id)
+    // byId(id)
+    
     /** @description Custom function to get an array of sprints
      * @param {number} projectId If set all tasks in that lane are returned (exampleUrl: /api/projects/1/sprints`)
      * @return {string} Url defined by the arguments
