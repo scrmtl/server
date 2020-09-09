@@ -16,6 +16,7 @@ import user from '@/store/ressources/user';
 import project from '@/store/ressources/project';
 import session from '@/store/ressources/session';
 import project_role from '@/store/ressources/project_role';
+import registration from '@/store/ressources/registration';
 
 Vue.use(Vuex, Axios);
 
@@ -141,8 +142,9 @@ export default new Vuex.Store({
     steplist,
     user,
     project,
-    session
-    project_role
+    session,
+    project_role,
+    registration
   }
 });
 

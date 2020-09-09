@@ -4,14 +4,7 @@
     <v-row>
       <div class="projectBtn">
         <div class="my-2">
-          <v-navigation-drawer
-            v-model="drawer"
-            absolute
-            right
-            width="800"
-            color="navbar"
-            dark
-          >
+          <v-navigation-drawer v-model="drawer" absolute right width="800" color="navbar" dark>
             <v-container>
               <v-card>
                 <v-tabs
@@ -168,17 +161,12 @@
           <DetailView></DetailView>
         </v-container>
       </v-col>
-      <v-col
-      cols="2"
-      md="4"
-      sm="2"
-      class="pr-2"
-      >
-      <v-flex>
-        <v-container>
-          <MyTasksLane />
-        </v-container>
-      </v-flex>
+      <v-col cols="2" md="4" sm="2" class="pr-2">
+        <v-flex>
+          <v-container>
+            <MyTasksLane />
+          </v-container>
+        </v-flex>
       </v-col>
     </v-row>
   </v-content>
@@ -215,8 +203,19 @@ export default {
     //Load user's tasks
 
     // set auth header
-      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`;
-      this.SessionFetch({ customUrlFnArgs: {all: false}});
+    Axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${this.$store.getters.getToken}`;
+    this.SessionFetch({ customUrlFnArgs: { all: false } });
+    Axios.interceptors.request.use(config => {
+      if (
+        config.method === "post" &&
+        config.url[config.url.length - 1] !== "/"
+      ) {
+        config.url += "/";
+      }
+      return config;
+    });
   },
 
   methods: {
