@@ -143,35 +143,82 @@
                   <span>{{task.number_of_open_steps}} / {{task.number_of_steps}}</span>
                 </div>
               </div>
+
+
             </div>
+            <v-container >
             <!-- assigned Users -->
             <v-row>
               <v-col>
-                <div v-for="user in task.assigned_users" :key="user" 
-                class="task-user task">
-                  <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                  <v-avatar color="red" size="32" v-bind="attrs" v-on="on">
-                    <span class="white--text headline">{{GetUserInitial(user)}}</span>
-                  </v-avatar>
-                  </template>
-                  <span>{{UsersById(user).username}}</span>
-                  </v-tooltip>
-                </div>
-              </v-col>
-              
-            </v-row>
-              <div>
-              <v-chip-group column class="ml-2">
-              <v-chip
-                v-for="(label, i) in task.labels"
-                :key="i"
-                :color="label.color"
-                v-text="label.title"
+                <section class="avatars-group pa-3 stacked">
+                  <div v-for="avatar in avatarsStackedLimited" 
+                    :key="`avatar-id-${avatar.id}`" 
+                    class="avatars-group__item">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <div v-bind="attrs" v-on="on">
+                          <ProfileAvatar :avatar="avatar"/>
+                          </div>
+                        </template>
+                      <ProfileTooltip :avatar="avatar" />
+                    </v-tooltip>
+                  </div>
+                  <div class="avatars-group__item more">
+                <v-avatar color="primary" size="40px">
+                  <v-menu
+                    v-model="stackedMenu"
+                    lazy
+                    open-delay="1000"
+                    open-on-hover
+                    offset-y
+                    :max-height="menuMaxHeight"
+                    nudge-bottom="8"
+                  >
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon v-on="on">
+                        <v-icon :color="tabbody" >mdi-dots-horizontal</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list dense two-line>
+                      <v-list-item
+                      v-for="avatar in avatarsSorted"
+                        :key="`avatar-menu-id-${avatar.id}`"
+                        avatar
+                      >
+                        <v-list-item-avatar>
+                          <ProfileAvatar :avatar="avatar" custom-class="bordered small" size="32px"/>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title>{{ avatar.username }}</v-list-item-title>
+                          <v-list-item-subtitle>{{ avatar.email }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </v-avatar>
+              </div>
+                </section>
                 
-              ></v-chip>
-            </v-chip-group>
-            </div>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-chip-group class="ml-2">
+                  <v-chip
+                    v-for="label in task.labels"
+                    :key="label.id"
+                    :color="label.color"
+                    v-text="label.title"
+                  ></v-chip>
+                </v-chip-group>
+              </v-col>
+            </v-row>
+            </v-container>
+
+
+              
+            
+            
           </v-card-text>
         </v-card>
       </template>
@@ -181,13 +228,16 @@
 
 <script>
 import {mapGetters} from "vuex";
+import ProfileAvatar from "@/components/Profile/ProfileAvatar.vue";
+import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
 export default {
   data: () => ({
     dialog: null,
   }),
   props: ["task"],
   components: {
-
+    ProfileAvatar,
+    ProfileTooltip
   },
 
   methods: {
@@ -202,19 +252,30 @@ export default {
       var user = this.UsersById(id)
       inital = user.username.substring(0,2);
       return inital;
-    }
+    },
   },
   computed:{
     ...mapGetters("user", {
-      UsersById: "byId"
+      UsersById: "byId",
+      usersByIdArray: "byIdArray"
     }),
-    
-
-  }
+    avatarsSorted () {
+      return (this.usersByIdArray(this.task.assigned_users) && this.usersByIdArray(this.task.assigned_users).length > 0)
+        ? this.usersByIdArray(this.task.assigned_users).sort((a, b) => a.username.localeCompare(b.alt))
+        : null
+    },
+    avatarsStackedLimited () {
+      return (this.avatarsSorted && this.avatarsSorted.length > 0)
+        ? this.avatarsSorted.slice(0, 5)
+        : null
+    }
+  },
+  
 
 };
 </script>
 
 <style lang="css" scoped>
 @import "../main.css";
+@import './Profile/profile.css';
 </style>
