@@ -44,3 +44,15 @@ class ProjectUserSerializer(serializers.ModelSerializer):
                   'role',
                   'project',
                   )
+
+
+class ProjectRoleSerializer(serializers.ModelSerializer):
+    """Serializer for ProjectRoles.
+    """
+    role_name = serializers.CharField(source='get_id_display')
+
+    class Meta:
+        model = ProjectRole
+        fields = ('id',
+                  'role_name',
+                  )
