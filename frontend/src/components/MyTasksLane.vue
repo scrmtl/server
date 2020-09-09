@@ -56,7 +56,7 @@ export default {
   created() {
     this.fetchData();
   },
-  mounted: function() {
+  mounted() {
     this.fetchData();
     setInterval(
       function() {
