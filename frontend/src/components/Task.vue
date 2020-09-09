@@ -180,6 +180,10 @@
                       </v-btn>
                     </template>
                     <v-list dense two-line>
+                      <v-list-item>
+                        <v-icon :color="tabbody" >mdi-plus-circle-outline</v-icon>
+                        Add User
+                      </v-list-item>
                       <v-list-item
                       v-for="avatar in avatarsSorted"
                         :key="`avatar-menu-id-${avatar.id}`"
@@ -191,6 +195,9 @@
                         <v-list-item-content>
                           <v-list-item-title>{{ avatar.username }}</v-list-item-title>
                           <v-list-item-subtitle>{{ avatar.email }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-content>
+                          <v-icon :color="tabbody" >mdi-close-circle-outline</v-icon>
                         </v-list-item-content>
                       </v-list-item>
                     </v-list>
