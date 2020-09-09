@@ -46,7 +46,7 @@ class PlatformUserViewSet(viewsets.ModelViewSet):
 
         current_user: models.PlatformUser = self.request.user
         # needed to evaluate the lazy queryset
-        if not _queryset:
+        if not _queryset.filter(id=1):
             pass
         if (self_arg is not None and
                 self_arg == "self"):

@@ -44,7 +44,6 @@ export default {
     }),
 
     fetchData() {
-      console.log(this.listSession);
       return this.fetchTasks({
         customUrlFnArgs: { byUser: this.listSession.shift().id }
       });
