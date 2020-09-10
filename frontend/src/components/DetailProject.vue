@@ -5,7 +5,7 @@
     right
     fixed
     width="800" 
-    color="navbar" 
+    color="tabbody" 
     dark>
       <v-container>
         <v-card>
