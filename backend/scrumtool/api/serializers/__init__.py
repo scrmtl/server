@@ -9,4 +9,5 @@ from .board_serializers import *
 from .project_serializers import *
 from .platformuser_serializer import *
 from .project_user_serializer import *
-from.sprint_serializer import *
+from .sprint_serializer import SprintSerializer
+from .group_serializer import GroupSerializer

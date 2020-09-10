@@ -200,8 +200,8 @@ export default {
     }
     // Load Projects
     this.ProjectsFetch();
-    //Load user's tasks
-
+    //Load User Groups
+    this.GroupsFetch();
     // set auth header
     Axios.defaults.headers.common[
       "Authorization"
@@ -225,6 +225,9 @@ export default {
     }),
     ...mapActions("user", {
       UsersFetch: "fetchList"
+    }),
+    ...mapActions("group", {
+      GroupsFetch: "fetchList"
     }),
     ...mapActions("session", {
       SessionFetch: "fetchList"

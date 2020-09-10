@@ -42,6 +42,7 @@ router.register(r'steplists', views.SteplistViewSet)
 router.register(r'steps', views.StepViewSet)
 router.register(r'files', views.FileViewSet)
 router.register(r'labels', views.LabelViewSet)
+router.register(r'groups', views.GroupViewSet)
 
 router.register(r'sprints', views.SprintViewSet)
 router.register(r'users', views.PlatformUserViewSet)
