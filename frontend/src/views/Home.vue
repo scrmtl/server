@@ -4,14 +4,7 @@
     <v-row>
       <div class="projectBtn">
         <div class="my-2">
-          <v-navigation-drawer
-            v-model="drawer"
-            absolute
-            right
-            width="800"
-            color="navbar"
-            dark
-          >
+          <v-navigation-drawer v-model="drawer" absolute right width="800" color="navbar" dark>
             <v-container>
               <v-card>
                 <v-tabs
@@ -168,17 +161,12 @@
           <DetailView></DetailView>
         </v-container>
       </v-col>
-      <v-col
-      cols="2"
-      md="4"
-      sm="2"
-      class="pr-2"
-      >
-      <v-flex>
-        <v-container>
-          <MyTasksLane />
-        </v-container>
-      </v-flex>
+      <v-col cols="2" md="4" sm="2" class="pr-2">
+        <v-flex>
+          <v-container>
+            <MyTasksLane />
+          </v-container>
+        </v-flex>
       </v-col>
     </v-row>
   </v-content>
@@ -212,10 +200,22 @@ export default {
     }
     // Load Projects
     this.ProjectsFetch();
-    //Load user's tasks
-
+    //Load User Groups
+    this.GroupsFetch();
     // set auth header
-      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`
+    Axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${this.$store.getters.getToken}`;
+    this.SessionFetch({ customUrlFnArgs: { all: false } });
+    Axios.interceptors.request.use(config => {
+      if (
+        config.method === "post" &&
+        config.url[config.url.length - 1] !== "/"
+      ) {
+        config.url += "/";
+      }
+      return config;
+    });
   },
 
   methods: {
@@ -225,6 +225,12 @@ export default {
     }),
     ...mapActions("user", {
       UsersFetch: "fetchList"
+    }),
+    ...mapActions("group", {
+      GroupsFetch: "fetchList"
+    }),
+    ...mapActions("session", {
+      SessionFetch: "fetchList"
     }),
 
     loadData: function() {

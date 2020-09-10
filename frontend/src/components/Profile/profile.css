@@ -1,0 +1,81 @@
+.avatars-group.grid {
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+  }
+  .avatars-group.stacked {
+    display: flex;
+    flex-direction: row;
+    direction: ltr;
+    max-width: 100%;
+    overflow: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .avatars-group.stacked > * {
+    margin-right: -8px;
+  }
+  .avatars-group.stacked > *:last-of-type {
+    padding-right: 16px;
+  }
+  .avatars-group__item {
+    cursor: default;
+    transition: all 0.1s ease-out;
+  }
+  .avatars-group__item.more {
+    align-items: center;
+    display: flex;
+  }
+  .avatars-group__item.more:hover {
+    transform: none;
+  }
+  .avatars-group__item:hover {
+    transform: translateY(-4px);
+    z-index: 1;
+  }
+  .avatars-group .v-avatar {
+    box-shadow: 0px 0px 0px 2px #fff inset;
+  }
+  .avatars-group .v-avatar img {
+    padding: 2px;
+  }
+  .avatars-group .v-avatar span {
+    align-items: center;
+    display: flex;
+    font-size: 110%;
+    font-weight: 700;
+    height: 100%;
+    justify-content: center;
+    letter-spacing: 0.1rem;
+    text-shadow: 0px 0px 2px rgba(0,0,0,0.56);
+    width: inherit;
+  }
+  .v-avatar.bordered {
+    box-shadow: 0px 0px 0px 2px #fff inset;
+  }
+  .v-avatar.bordered img {
+    padding: 2px;
+  }
+  .v-avatar.bordered.small {
+    box-shadow: 0px 0px 0px 1px #fff inset;
+  }
+  .v-avatar.bordered.small img {
+    padding: 1px;
+  }
+  .presence {
+    box-shadow: 0px 0px 0px 2px #fff inset;
+    border-radius: 50%;
+    bottom: 0px;
+    display: block;
+    height: 14px;
+    position: absolute;
+    width: 14px;
+  }
+  .v-avatar.bordered.small .presence {
+    box-shadow: 0px 0px 0px 1px #fff inset;
+    display: block;
+    height: 8px;
+    position: absolute;
+    width: 8px;
+  }
+  

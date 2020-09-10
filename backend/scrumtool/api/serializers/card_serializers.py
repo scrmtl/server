@@ -1,11 +1,11 @@
 """Serializers for Cards
 """
 import logging
-from .steplist_serializer import StepListSerializerForCards
 from rest_framework import serializers
 from ..models import Card, Task, Feature, Epic, Label, File, \
     Steplist, PlatformUser, Lane
-from .steplist_serializer import StepListSerializerForCards, StepListSerializerCommon
+from .steplist_serializer import StepListSerializerForCards, \
+    StepListSerializerCommon
 logger = logging.getLogger(__name__)
 
 

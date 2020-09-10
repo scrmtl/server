@@ -127,4 +127,7 @@ class Project(RulesModel, IGetProject):
                 self.end is not None):
             delta = self.end - self.start
             self.numOfSprints = math.floor((delta.days / self.sprint_duration))
+        else:
+            self.numOfSprints = 0
+
         super(Project, self).save(*args, **kwargs)

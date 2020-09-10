@@ -14,10 +14,15 @@ import steplist from '@/store/ressources/steplist';
 import task from '@/store/ressources/task';
 import user from '@/store/ressources/user';
 import project from '@/store/ressources/project';
+import session from '@/store/ressources/session';
+import project_role from '@/store/ressources/project_role';
+import registration from '@/store/ressources/registration';
+import group from '@/store/ressources/group';
 
 Vue.use(Vuex, Axios);
 
 const baseUrlDefault = "https://scrmtl.ddns.net";
+//const baseUrlDefault = "http://192.168.178.48:14444";
 Axios.defaults.baseURL = process.env.VUE_APP_BASE_URL || baseUrlDefault
 
 export default new Vuex.Store({
@@ -38,16 +43,17 @@ export default new Vuex.Store({
     },
 
     projects: [],
-    selectedProject: {}
+    selectedProject: {},
+    selectedBoard: {}
   },
-  // call REST API
+  // call REST API (async)
   // Use from the components
   actions: {
     login({ commit }, { token, user }) {
       commit("SET_TOKEN", token);
       commit("SET_USERNAME", user);
       // set auth header
-      Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$state.Userinfo.token}`;
 
     },
 
@@ -55,7 +61,7 @@ export default new Vuex.Store({
       commit("RESET", '');
     },
   },
-  //Update States
+  //Update States (sync)
   mutations: {
     showDetailView(state) {
       state.detailViewVisable = true;
@@ -68,14 +74,14 @@ export default new Vuex.Store({
     showProjectDetail(state) {
       state.detailProjectVisable = true;
     },
-    
+
     hideProjectDetail(state) {
       state.detailProjectVisable = false;
     },
-    setDetailTask(state, Task){
+    setDetailTask(state, Task) {
       state.detailTask = Task;
     },
-    setProjectDetail(state, ProjectDetail){
+    setProjectDetail(state, ProjectDetail) {
       state.detailProject = ProjectDetail;
     },
 
@@ -138,6 +144,10 @@ export default new Vuex.Store({
     steplist,
     user,
     project,
+    session,
+    project_role,
+    registration,
+    group,
   }
 });
 

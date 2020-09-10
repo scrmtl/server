@@ -10,7 +10,7 @@
 
 <script>
     import AppBar from "@/components/AppBar";
-    import { mapActions } from "vuex";
+    import { mapActions, mapGetters } from "vuex";
     export default {
         props: ["id"],
         components: {
@@ -20,8 +20,12 @@
             ...mapActions("board", {
             fetchBoards: "fetchList"
             }),
+            ...mapGetters("board", {
+                listBoards:"list"
+            }),
             fetchData() {
-                return this.fetchBoards({ customUrlFnArgs: this.id });
+                this.fetchBoards({ customUrlFnArgs: this.id });
+                this.listBoards;
             },
         },
         computed:{
@@ -29,7 +33,7 @@
         },
         created() {
             this.fetchData();
-            this.$router.push("");
+            
         }
     }
 </script>

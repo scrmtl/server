@@ -2,7 +2,7 @@
   <v-content class="tabbody tab-content">
     <v-container fluid class="pl-10">
        <v-row>
-          <div v-for="lane in laneList" :key="lane.id">
+          <div v-for="lane in listLanes" :key="lane.id">
             <Lane v-bind:lane="lane"></Lane>
           </div>
       </v-row>
@@ -15,7 +15,9 @@
 import { mapGetters, mapActions } from 'vuex';
 import Lane from "@/components/Lane.vue";
 export default {
-  data: () => ({}),
+  data: () => ({
+
+  }),
   components: {
     Lane
   },
@@ -24,26 +26,28 @@ export default {
             fetchLanes: "fetchList"
             }),
 
-     getBoardId(){
-      var ret = this.boardList.filter(x => x.board_type === "PB").shift().id;
-      console.log(ret);
-      return ret;
+    getBoardId(){
+      var boards = this.listBoards;
+      var selectedBoard = boards.filter(x => x.board_type === "PB").shift();
+      var boardId = selectedBoard.id
+      return boardId;
     },
 
     fetchData() {
-        return this.fetchLanes({ customUrlFnArgs: this.getBoardId() });
+        this.fetchLanes({ customUrlFnArgs: this.boardByType("PB").id });
     },
   },
   computed:{
     ...mapGetters("lane", {
-      laneList: "list"
+      listLanes: "list"
     }),
     ...mapGetters("board", {
-      boardList: "list"
+      listBoards: "list",
+      boardByType: "byType"
     }),
   },
   updated(){
-    console.log(this.ListBoards);
+
   },
   created(){
     this.fetchData();

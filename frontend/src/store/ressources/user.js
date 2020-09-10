@@ -9,7 +9,7 @@ export default createCrudModule({
     // update
     // replace
     // destroy
-    
+
     // Follow getters are generated:
     // list 
     // byId(id) 

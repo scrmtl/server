@@ -2,7 +2,7 @@
   <v-content class="tabbody tab-content">
     <v-container fluid class="pl-10">
        <v-row>
-          <div v-for="lane in laneList" :key="lane.id">
+          <div v-for="lane in listLanes" :key="lane.id">
             <Lane v-bind:lane="lane"></Lane>
           </div>
       </v-row>
@@ -24,41 +24,36 @@ export default {
     ...mapActions("lane", {
       fetchLanes: "fetchList"
     }),
-    getBoardId(){
-      
-      if(!this.selectedBoard){
-        this.selectedBoard = this.boardList.filter(x => x.board_type === "SB").shift();;
-      }
-      return this.selectedBoard.id;
-    },
 
     fetchData() {
-      this.fetchLanes({ customUrlFnArgs: this.getBoardId()});
-
-    }
+      this.fetchLanes({ customUrlFnArgs: this.boardByType("SP").id });
+    },
   },
   computed: {
     ...mapGetters("lane", {
-      laneList: "list"
+      listLanes: "list"
     }),
     ...mapGetters("board", {
-      boardList: "list"
+      listBoards: "list",
+      boardByType: "byType"
     }),
   },
+  updated(){
 
-  created() {
+  },
+  created(){
     this.fetchData();
   },
 
-  mounted() {
-    this.fetchData();
-    setInterval(
-      function() {
-        this.fetchData();
-      }.bind(this),
-      10000
-    );
-  }
+  // mounted() {
+  //   this.fetchData();
+  //   setInterval(
+  //     function() {
+  //       this.fetchData();
+  //     }.bind(this),
+  //     10000
+  //   );
+  // }
 };
 </script>
 

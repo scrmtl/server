@@ -18,13 +18,20 @@
           </v-menu>
         </p>
       </div>
-      <v-card-text class="lane-body pa-2"></v-card-text>
+      
+      <v-card-text class="lane-body pa-2">
+        <div v-for="task in this.tasksByIdArray(this.lane.task_cards)" :key="task.id">
+          <Task v-bind:task="task" />
+        </div>
+      </v-card-text>
       <v-card-actions class="lane-extended"></v-card-actions>
     </v-card>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import Task from "@/components/Task.vue";
 export default {
   data: () => ({
     items: [
@@ -36,7 +43,33 @@ export default {
     epicItem: [{ title: "+ New Feature" }, { title: "+ New Task" }],
     featureItem: [{ title: "+ New Task" }]
   }),
-  props: ["lane"]
+  components: {
+    Task
+  },
+  props: ["lane"],
+  methods:{
+    ...mapActions("task", {
+      fetchTask: "fetchList"
+    }),
+
+    fetchData() {
+        this.fetchTask({ customUrlFnArgs: {laneId: this.lane.id}});
+    },
+
+  },
+  computed:{
+    ...mapGetters("task",{
+      tasksById: "byId",
+      tasksByIdArray: "byIdArray"
+    })
+
+  },
+  updated(){
+    
+  },
+  created(){
+    this.fetchData();
+  }
 };
 </script>
 
