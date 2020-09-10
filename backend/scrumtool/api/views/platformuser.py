@@ -1,26 +1,32 @@
+"""ViewSet for PlatformUser"""
+
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.request import Request
 
 from . import models
 from . import serializers
-from rest_framework.response import Response
 
 
 class PlatformUserViewSet(viewsets.ModelViewSet):
+    """PlatformUser ViewSet to return data to REST api
+    """
     queryset = models.PlatformUser.objects.all()
 
     def get_queryset(self):
         if 'task_pk' not in self.kwargs:
             return super().get_queryset()
         else:
-            return super().get_queryset().filter(task_cards=self.kwargs['task_pk'])
-    serializer_class = serializers.PlattformUserSerializer
+            return super().get_queryset().filter(
+                task_cards=self.kwargs['task_pk'])
+    serializer_class = serializers.PlatformUserSerializer
 
-    def retrieve(self, request, *args, pk=None, **kwargs):
+    def retrieve(self, request: Request, pk=None):
         """retrive for full and partial retrieve
             Instead of id a username can be used
             """
         username: str = pk
-        current_user: models.PlatformUser = self.request.user
+        current_user: models.PlatformUser = request.user
         # return userinfo if user wants to access own profile
         if username is not None and username == current_user.username:
             instance = current_user
@@ -29,7 +35,7 @@ class PlatformUserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    def list(self, request, lane_pk=None):
+    def list(self, request: Request):
         """Gets the requested queryset for users
 
         Parameters
@@ -53,5 +59,5 @@ class PlatformUserViewSet(viewsets.ModelViewSet):
             _queryset = _queryset.filter(
                 id=current_user.id)
 
-        serializer = serializers.PlattformUserSerializer(_queryset, many=True)
+        serializer = serializers.PlatformUserSerializer(_queryset, many=True)
         return Response(serializer.data)

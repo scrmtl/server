@@ -17,10 +17,12 @@ import project from '@/store/ressources/project';
 import session from '@/store/ressources/session';
 import project_role from '@/store/ressources/project_role';
 import registration from '@/store/ressources/registration';
+import group from '@/store/ressources/group';
 
 Vue.use(Vuex, Axios);
 
 const baseUrlDefault = "https://scrmtl.ddns.net";
+//const baseUrlDefault = "http://192.168.178.48:14444";
 Axios.defaults.baseURL = process.env.VUE_APP_BASE_URL || baseUrlDefault
 
 export default new Vuex.Store({
@@ -144,7 +146,8 @@ export default new Vuex.Store({
     project,
     session,
     project_role,
-    registration
+    registration,
+    group,
   }
 });
 

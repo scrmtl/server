@@ -24,8 +24,8 @@
         <v-card-text>
           <v-data-table
             :headers="headers"
-            :items="projectUsers"
-            sort-by="calories"
+            :items="allUserInfo()"
+            sort-by="username"
             class="elevation-1"
           >
             <template v-slot:top>
@@ -122,7 +122,8 @@ export default {
       headers: [
         { text: "Benutzername", value: "username" },
         { text: "E-Mail", value: "email" },
-        { text: "Name", value: "name" }
+        { text: "Name", value: "name" },
+        { text: "Gruppe", value: "group" }
       ],
       editedIndex: -1,
       editedItem: {
@@ -157,14 +158,37 @@ export default {
     },
     initialize() {
       this.fetchUser();
-      console.log("Projekt Benutzer" + this.projectUsers);
+      console.log("Projekt Benutzer" + this.listPlatformUsers);
     },
     ...mapActions("registration", {
       registerUser: "create"
     }),
-    ...mapActions("users", {
+    ...mapActions("user", {
       fetchUser: "fetchList"
-    })
+    }),
+    ...mapActions("group", {
+      fetchGroups: "fetchList"
+    }),
+    allUserInfo() {
+      var data = [];
+      var groupId;
+      try {
+        Object.values(this.listPlatformUsers).forEach(pUser => {
+          groupId = Object.values(pUser.groups).shift();
+          data.push({
+            name: pUser.name,
+            email: pUser.email,
+            username: pUser.username,
+            group: this.groupById(groupId).name
+          });
+        });
+      } catch (error) {
+        if (this.groupById(groupId) === undefined) {
+          this.fetchGroups();
+        }
+      }
+      return data;
+    }
   },
 
   computed: {
@@ -172,7 +196,16 @@ export default {
       userinfos: "Userinfo"
     }),
     ...mapGetters("user", {
-      projectUsers: "list"
+      listPlatformUsers: "list"
+    }),
+    ...mapGetters("group", {
+      groupById: "byId"
+    }),
+    ...mapGetters("group", {
+      listGroups: "list"
+    }),
+    ...mapGetters("session", {
+      listSession: "list"
     })
   }
 };
