@@ -10,9 +10,9 @@ class PlatformUserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if 'task_pk' not in self.kwargs:
-            return self.queryset
+            return super().get_queryset()
         else:
-            return self.queryset.filter(task_cards=self.kwargs['task_pk'])
+            return super().get_queryset().filter(task_cards=self.kwargs['task_pk'])
     serializer_class = serializers.PlattformUserSerializer
 
     def retrieve(self, request, *args, pk=None, **kwargs):

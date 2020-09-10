@@ -9,9 +9,9 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if 'project_pk' not in self.kwargs:
-            return self.queryset
+            return super().get_queryset()
         else:
-            return self.queryset.filter(project=self.kwargs['project_pk'])
+            return super().get_queryset().filter(project=self.kwargs['project_pk'])
     serializer_class = serializers.ProjectUserSerializer
 
 
