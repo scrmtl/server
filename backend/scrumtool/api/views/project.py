@@ -79,7 +79,7 @@ class ProjectViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         _queryset = self.get_queryset().order_by('id')
         current_user: models.PlatformUser = self.request.user
 
-        if not _queryset:
+        if not _queryset.filter(id=1):
             pass
 
         if by_user is not None and int(by_user) == current_user.id:

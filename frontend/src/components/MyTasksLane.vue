@@ -44,7 +44,6 @@ export default {
     }),
 
     fetchData() {
-      console.log(this.listSession);
       return this.fetchTasks({
         customUrlFnArgs: { byUser: this.listSession.shift().id }
       });
@@ -58,7 +57,7 @@ export default {
   created() {
     this.fetchData();
   },
-  mounted: function() {
+  mounted() {
     this.fetchData();
     setInterval(
       function() {
