@@ -13,7 +13,7 @@ export default createCrudModule({
     // Follow getters are generated:
     // list 
     // byId(id)
-    
+
     /** @description Custom function to get an array of project_users
      * @param {number} projectId If set all tasks in that lane are returned (exampleUrl: /api/projects/1/project_users`)
      * @return {string} Url defined by the arguments
@@ -23,5 +23,7 @@ export default createCrudModule({
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
         const rootUrl = `/api/projects/${projectId}/project_users`;
         return id ? `${rootUrl}/${id}/` : rootUrl;
+        //const rootURL = `/api/project_users/?project=${projectId}`
+        //return rootUrl;
     }
 });

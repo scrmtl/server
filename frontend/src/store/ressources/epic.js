@@ -13,7 +13,7 @@ export default createCrudModule({
     // Follow getters are generated:
     // list 
     // byId(id)
-    
+
     /**@description Custom function to get an array of epics
      * @param {number} laneId If set all epics in that lane are returned (exampleUrl: /api/lanes/1/epics`)
      * @return {string} Url defined by the arguments
@@ -26,6 +26,8 @@ export default createCrudModule({
         rootUrl = `/api/lanes/${laneId}/epics`;
         rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
 
+        //const rootURL = `/api/epics/?lane=${laneId}`
+        //return rootUrl;
         return rootUrl;
     }
 });
