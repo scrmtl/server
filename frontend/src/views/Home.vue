@@ -200,7 +200,7 @@ export default {
 
   },
   created() {
-    
+    // safe route
     if (!this.$store.getters.getToken) {
       this.$router.push("/login");
     }
