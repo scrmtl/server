@@ -22,6 +22,8 @@ export default createCrudModule({
         // id will only be available when doing request to single resource, otherwise null
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
         const rootUrl = `/api/projects/${projectId}/boards`;
+        //const rootURL = `/api/boards/?project=${projectId}`
+        //return rootUrl;
         return id ? `${rootUrl}/${id}/` : rootUrl;
     },
     getters: {
@@ -30,9 +32,10 @@ export default createCrudModule({
          * @return {Object} selected Board
          */
         byType(state) {
-            return  type => 
-                Object.values(state.entities).filter(x => x.board_type === type).shift()},
-        
+            return type =>
+                Object.values(state.entities).filter(x => x.board_type === type).shift()
+        },
+
     }
 });
 
