@@ -29,9 +29,7 @@
       <v-card-actions>
         <v-btn color="success">Register</v-btn>
         <v-spacer></v-spacer>
-        <!--<router-link :to="{name:'home'}">-->
-        <v-btn color="info" @click="login()">Login</v-btn>
-        <!--</router-link>-->
+        <v-btn color="info" @click.native="login()">Login</v-btn>
       </v-card-actions>
     </v-card>
 
@@ -64,10 +62,10 @@ export default {
         this.errorMessage = response.errorMessage;        
         const token = response.access_token;
         const user = this.username;
-        console.log(user);
         this.$store.dispatch("login", { token, user });
+        console.log(response);
         if (response.access_token !== "") {
-          this.$router.push('/');
+          this.$router.push("/")
         } else {
           this.loginFalse = true;
         }

@@ -38,7 +38,7 @@
         </v-card>
       </template>
     </v-hover>
-    <DetailProject></DetailProject>
+    <DetailProject v-bind:project="this.project" />
   </div>
 </template>
 

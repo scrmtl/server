@@ -154,14 +154,20 @@
                   <div v-for="avatar in avatarsStackedLimited" 
                     :key="`avatar-id-${avatar.id}`" 
                     class="avatars-group__item">
-                      <v-tooltip bottom>
+                      <v-menu
+                          v-model="menu"
+                          open-delay="1500"
+                          open-on-hover
+                          :nudge-width="200"
+                          offset-y
+                        >
                         <template v-slot:activator="{ on, attrs }">
                           <div v-bind="attrs" v-on="on">
                           <ProfileAvatar :avatar="avatar"/>
                           </div>
                         </template>
                       <ProfileTooltip :avatar="avatar" />
-                    </v-tooltip>
+                    </v-menu>
                   </div>
                   <div class="avatars-group__item more">
                 <v-avatar color="primary" size="40px">
@@ -180,10 +186,6 @@
                       </v-btn>
                     </template>
                     <v-list dense two-line>
-                      <v-list-item>
-                        <v-icon :color="tabbody" >mdi-plus-circle-outline</v-icon>
-                        Add User
-                      </v-list-item>
                       <v-list-item
                       v-for="avatar in avatarsSorted"
                         :key="`avatar-menu-id-${avatar.id}`"
@@ -193,11 +195,8 @@
                           <ProfileAvatar :avatar="avatar" custom-class="bordered small" size="32px"/>
                         </v-list-item-avatar>
                         <v-list-item-content>
-                          <v-list-item-title>{{ avatar.username }}</v-list-item-title>
-                          <v-list-item-subtitle>{{ avatar.email }}</v-list-item-subtitle>
-                        </v-list-item-content>
-                        <v-list-item-content>
-                          <v-icon :color="tabbody" >mdi-close-circle-outline</v-icon>
+                          <v-list-item-title>{{ avatar.name }}</v-list-item-title>
+                          <v-list-item-subtitle>{{ avatar.username }}</v-list-item-subtitle>
                         </v-list-item-content>
                       </v-list-item>
                     </v-list>

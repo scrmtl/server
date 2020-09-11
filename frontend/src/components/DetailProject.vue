@@ -113,6 +113,9 @@
                     class="ma-0"
                     v-model="localProject.dod"
                   ></v-textarea>
+                  
+                  
+            
                   <v-select
                     :items="['User1', 'User2', 'User3', 'User4']"
                     label="Projekt Mitglieder*"
@@ -195,9 +198,10 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import {mapActions, mapGetters } from "vuex";
 export default {
   name: "DetailProject",
+  props: ["project"],
   data: () => ({
     tab: null,
     calendar1menu: false,
@@ -209,8 +213,11 @@ export default {
     localProject: {}
   }),
   computed: {
-    ...mapState({
-      project: "detailProject"
+    // ...mapState({
+    //   project: "detailProject"
+    // }),
+    ...mapGetters("projectUser", {
+      listProjectUsers: "list"
     }),
 
     visible: {
@@ -226,10 +233,14 @@ export default {
   created: function() {
     this.$store.commit("hideProjectDetail");
     this.localProject.name = this.project.name;
+    console.log(this.project.id)
+    this.fetchProjectUsers({ customUrlFnArgs: this.project.id});
+
   },
 
   updated: function() {
     this.localProject = this.project;
+    this.fetchProjectUsers({ customUrlFnArgs: this.project.id});
   },
 
   methods: {
@@ -243,10 +254,11 @@ export default {
     },
 
     ...mapActions("project", {
-      updateProject: "update"
-    }),
-    ...mapActions("project", {
+      updateProject: "update",
       deletePro: "destroy"
+    }),
+    ...mapActions("projectUser", {
+      fetchProjectUsers: "fetchList"
     }),
 
     saveProject() {
