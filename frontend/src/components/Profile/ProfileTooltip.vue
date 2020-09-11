@@ -1,6 +1,6 @@
 <template>
   
-    <v-list dark>
+    <v-list color="accent">
       <v-list-item>
         <v-list-item-avatar>
           <ProfileAvatar :avatar="avatar" custom-class="bordered small" size="32px"/>

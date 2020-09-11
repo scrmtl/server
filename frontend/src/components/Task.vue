@@ -155,7 +155,6 @@
                     :key="`avatar-id-${avatar.id}`" 
                     class="avatars-group__item">
                       <v-menu
-                          v-model="menu"
                           open-delay="1500"
                           open-on-hover
                           :nudge-width="200"
@@ -170,38 +169,38 @@
                     </v-menu>
                   </div>
                   <div class="avatars-group__item more">
-                <v-avatar color="primary" size="40px">
-                  <v-menu
-                    v-model="stackedMenu"
-                    lazy
-                    open-delay="1000"
-                    open-on-hover
-                    offset-y
-                    :max-height="menuMaxHeight"
-                    nudge-bottom="8"
-                  >
-                    <template v-slot:activator="{ on }">
-                      <v-btn icon v-on="on">
-                        <v-icon :color="tabbody" >mdi-dots-horizontal</v-icon>
-                      </v-btn>
-                    </template>
-                    <v-list dense two-line>
-                      <v-list-item
-                      v-for="avatar in avatarsSorted"
-                        :key="`avatar-menu-id-${avatar.id}`"
-                        avatar
+                    <v-avatar color="primary" size="40px">
+                      <v-menu
+                        v-model="stackedMenu"
+                        
+                        open-delay="1000"
+                        open-on-hover
+                        offset-y
+                        :max-height="menuMaxHeight"
+                        nudge-bottom="8"
                       >
-                        <v-list-item-avatar>
-                          <ProfileAvatar :avatar="avatar" custom-class="bordered small" size="32px"/>
-                        </v-list-item-avatar>
-                        <v-list-item-content>
-                          <v-list-item-title>{{ avatar.name }}</v-list-item-title>
-                          <v-list-item-subtitle>{{ avatar.username }}</v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </v-avatar>
+                        <template v-slot:activator="{ on }">
+                          <v-btn icon v-on="on">
+                            <v-icon color="link" >mdi-dots-horizontal</v-icon>
+                          </v-btn>
+                        </template>
+                        <v-list dense two-line color="accent">
+                          <v-list-item
+                          v-for="avatar in avatarsSorted"
+                            :key="`avatar-menu-id-${avatar.id}`"
+                            
+                          >
+                            <v-list-item-avatar>
+                              <ProfileAvatar :avatar="avatar" custom-class="bordered small" size="32px"/>
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                              <v-list-item-title>{{ avatar.name }}</v-list-item-title>
+                              <v-list-item-subtitle>{{ avatar.username }}</v-list-item-subtitle>
+                            </v-list-item-content>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </v-avatar>
               </div>
                 </section>
                 
@@ -239,6 +238,9 @@ import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
 export default {
   data: () => ({
     dialog: null,
+    menuMaxHeight: `${(60 * 5) + 4}px`,
+    stackedLimit: 6,
+    stackedMenu: false
   }),
   props: ["task"],
   components: {

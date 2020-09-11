@@ -195,31 +195,18 @@ export default {
     DetailView
   },
   beforeCreate(){
-    // set auth header
-    Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`;
-
-  },
-  created() {
-    
+    // safe home route
     if (!this.$store.getters.getToken) {
       this.$router.push("/login");
     }
     else{
+      // set auth header
+      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`;
+    }
+  },
+  created() {
     
     this.loadData();
-    
-    }
-    
-       
-    // Load Projects
-    this.ProjectsFetch();
-    //Load User Groups
-    this.GroupsFetch();
-    // set auth header
-    Axios.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${this.$store.getters.getToken}`;
-    this.SessionFetch({ customUrlFnArgs: { all: false } });
     Axios.interceptors.request.use(config => {
       if (
         config.method === "post" &&
@@ -246,11 +233,13 @@ export default {
       SessionFetch: "fetchList"
     }),
 
-    loadData: function() {
+    loadData() {
+      // Load Projects
       this.ProjectsFetch();
+      //Load User Groups
+      this.GroupsFetch();
       this.UsersFetch();
       this.SessionFetch({ customUrlFnArgs: {all: false}});
-      
     },
 
     saveProject() {
@@ -280,13 +269,13 @@ export default {
     })
   },
   mounted() {
-    this.fetchData();
-    setInterval(
-      function() {
-        this.loadData();
-      }.bind(this),
-      15000
-    );
+    this.loadData();
+    // setInterval(
+    //   function() {
+    //     this.loadData();
+    //   }.bind(this),
+    //   15000
+    // );
   }
 };
 </script>

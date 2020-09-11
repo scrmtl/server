@@ -21,6 +21,7 @@
   .avatars-group__item {
     cursor: default;
     transition: all 0.1s ease-out;
+    
   }
   .avatars-group__item.more {
     align-items: center;
