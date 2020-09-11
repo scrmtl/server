@@ -15,7 +15,7 @@ import task from '@/store/ressources/task';
 import user from '@/store/ressources/user';
 import project from '@/store/ressources/project';
 import session from '@/store/ressources/session';
-import project_role from '@/store/ressources/project_role';
+import projectRole from '@/store/ressources/projectRole';
 import registration from '@/store/ressources/registration';
 import group from '@/store/ressources/group';
 
@@ -34,16 +34,17 @@ export default new Vuex.Store({
   // States
   state: {
     detailViewVisable: false,
-    detailProjectVisable: false,
     detailTask: {},
-    detailProject: {},
     Userinfo: {
       username: "",
       token: ""
     },
 
-    projects: [],
-    selectedProject: {},
+    selectedProject: {
+      detailProjectVisable: false,
+      createProjectVisable: false,
+      detailProject: {},
+    },
     selectedBoard: {}
   },
   // call REST API (async)
@@ -71,19 +72,27 @@ export default new Vuex.Store({
       state.detailViewVisable = false;
     },
 
-    showProjectDetail(state) {
-      state.detailProjectVisable = true;
+    showProjectDetail(state, withCreate = false) {
+      state.selectedProject.detailProjectVisable = true;
+      if(withCreate){
+        state.selectedProject.createProjectVisable = true;
+      }
     },
 
     hideProjectDetail(state) {
-      state.detailProjectVisable = false;
+      state.selectedProject.detailProjectVisable = false;
+      state.selectedProject.createProjectVisable = false;
+      state.selectedProject.detailProject = {};
+
+
+    },
+    setSelectedProjectDetail(state, project) {
+      state.selectedProject.detailProject = project;
     },
     setDetailTask(state, Task) {
       state.detailTask = Task;
     },
-    setProjectDetail(state, ProjectDetail) {
-      state.detailProject = ProjectDetail;
-    },
+    
 
     increment(state) {
       state.count++;
@@ -121,7 +130,7 @@ export default new Vuex.Store({
       return state.detailViewVisable;
     },
     getProjectDetailStatus: state => {
-      return state.detailProjectVisable;
+      return state.selectedProject.detailProjectVisable;
     },
 
     getToken: state => {
@@ -145,7 +154,7 @@ export default new Vuex.Store({
     user,
     project,
     session,
-    project_role,
+    projectRole,
     registration,
     group,
   }
