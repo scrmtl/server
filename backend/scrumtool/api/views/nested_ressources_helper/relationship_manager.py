@@ -31,14 +31,19 @@ class NestedMtmMixin(mixins.UpdateModelMixin, mixins.DestroyModelMixin):
             Has to provide items in query_params (key, value)
 
         example:
-        ---> tasks/1/?labels=1
+            tasks/1/?labels=1
 
         """
         instance = self.get_object()
-        for key, value in request.query_params.items():
-            attr = self._get_mtm_attribute(key=key, instance=instance)
-            attr.add(value)
+        try:
+            for key, value in request.query_params.items():
+                attr = self._get_mtm_attribute(key=key, instance=instance)
+                attr.add(value)
             instance.save()
+        except ValueError as error:
+            return Response(status=status.HTTP_400_BAD_REQUEST,
+                            data=str(error))
+
         if not request.query_params.dict():
             return super().partial_update(request, args, kwargs)
         return Response(self.get_serializer(instance).data)
@@ -56,15 +61,20 @@ class NestedMtmMixin(mixins.UpdateModelMixin, mixins.DestroyModelMixin):
 
         """
         instance = self.get_object()
-        for key, value in request.query_params.items():
-            attr = self._get_mtm_attribute(key=key, instance=instance)
-            attr.remove(value)
+        try:
+            for key, value in request.query_params.items():
+                attr = self._get_mtm_attribute(key=key, instance=instance)
+                attr.remove(value)
             instance.save()
+        except ValueError as error:
+            return Response(status=status.HTTP_400_BAD_REQUEST,
+                            data=str(error))
         if not request.query_params.dict():
             return super().destroy(request, args, kwargs)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def _get_mtm_attribute(self, key, instance):
+        error_msg = ""
         if hasattr(instance, key):
             attr = getattr(instance, key)
             attr_type = instance._meta.get_field(key).get_internal_type()
@@ -74,19 +84,21 @@ class NestedMtmMixin(mixins.UpdateModelMixin, mixins.DestroyModelMixin):
                 if not self.allowed_attr or (key in self.allowed_attr):
                     return attr
                 else:
-                    logger.warning(
-                        "Access to attribute '%s' is permitted",
+                    error_msg = (
+                        "Access to attribute '%s' is permitted" %
                         key)
             else:
-                logger.warning(
+                error_msg = (
                     "An attribute '%s' that is not a many to many"
-                    "relation but of type '%s' was tried to manipulate",
-                    key, attr_type)
+                    "relation but of type '%s' was tried to manipulate"
+                    % (key, attr_type))
         else:
-            logger.warning(
+            error_msg = (
                 "An attribute '%s' that is not a member of %s"
-                "was tried to manipulate",
-                key, instance)
+                "was tried to manipulate"
+                % (key, instance))
+        logger.warning(error_msg)
+        raise ValueError(error_msg)
 
 
 class NestedComponentViewSet(viewsets.GenericViewSet):
