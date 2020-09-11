@@ -5,13 +5,22 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
+from rest_framework import permissions, status, mixins, generics
+from api.views.nested_ressources_helper import NestedComponentViewSet, \
+    NestedMtmMixin
+
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
 from api import models
 from api import serializers
 
 
-class SprintViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
+class SprintViewSet(AutoPermissionViewSetMixin,
+                    NestedMtmMixin,
+                    mixins.CreateModelMixin,
+                    mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin,
+                    NestedComponentViewSet):
     """CRUD for Sprints
     """
 
@@ -19,7 +28,7 @@ class SprintViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         if 'project_pk' not in self.kwargs:
-            return self.queryset
+            return super().get_queryset()
         else:
-            return self.queryset.filter(project=self.kwargs['project_pk'])
+            return super().get_queryset().filter(project=self.kwargs['project_pk'])
     serializer_class = serializers.SprintSerializer

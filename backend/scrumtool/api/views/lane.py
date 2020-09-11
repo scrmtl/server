@@ -2,14 +2,22 @@
 """
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework import permissions, status, mixins, generics
+from api.views.nested_ressources_helper import NestedComponentViewSet, \
+    NestedMtmMixin
 
 from django.shortcuts import get_object_or_404
-
+from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 from .. import models
 from .. import serializers
 
 
-class LaneViewSet(viewsets.ModelViewSet):
+class LaneViewSet(AutoPermissionViewSetMixin,
+                  NestedMtmMixin,
+                  mixins.CreateModelMixin,
+                  mixins.ListModelMixin,
+                  mixins.RetrieveModelMixin,
+                  NestedComponentViewSet):
     """CRUD for Lanes
     """
 
