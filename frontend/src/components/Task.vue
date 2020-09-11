@@ -7,7 +7,7 @@
         min-width="300" 
         max-height="260" 
         :elevation="hover ? 14 : 5"
-        @click="showDialog()"
+        @click="showTaskDetail()"
         >
           <div class="task-header2 task">
             <span class="task-name">{{task.name}}</span>
@@ -228,6 +228,7 @@
         </v-card>
       </template>
     </v-hover>
+    <DetailTask/>
   </div>
 </template>
 
@@ -235,6 +236,7 @@
 import {mapGetters} from "vuex";
 import ProfileAvatar from "@/components/Profile/ProfileAvatar.vue";
 import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
+import DetailTask from "@/components/DetailTask.vue";
 export default {
   data: () => ({
     dialog: null,
@@ -245,15 +247,15 @@ export default {
   props: ["task"],
   components: {
     ProfileAvatar,
-    ProfileTooltip
+    ProfileTooltip,
+    DetailTask
   },
 
   methods: {
     
-    showDialog() {
-      this.$store.commit("hideDetailView");
-      this.$store.commit("showDetailView");
-      this.$store.commit("setDetailTask", this.task);
+    showTaskDetail() {
+      this.$store.commit("showTaskDetail", false);
+      this.$store.commit("setSelectedTaskDetail", this.task);
     },
     GetUserInitial(id){
       var inital = "AA";

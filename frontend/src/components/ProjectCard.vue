@@ -38,7 +38,7 @@
         </v-card>
       </template>
     </v-hover>
-    <DetailProject/>
+    <DetailProject />
   </div>
 </template>
 
@@ -76,8 +76,7 @@ export default {
 
   },
   created(){
-    console.log(this.project.id);
-    this.fetchProjectUsers({ customUrlFnArgs: {projectId: this.project.id}});
+    // this.fetchProjectUsers({ customUrlFnArgs: {projectId: this.project.id}});
   }
 };
 </script>

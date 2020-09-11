@@ -41,9 +41,14 @@ export default new Vuex.Store({
     },
 
     selectedProject: {
-      detailProjectVisable: false,
-      createProjectVisable: false,
-      detailProject: {},
+      visableDetail: false,
+      visableCreate: false,
+      details: {},
+    },
+    selectedTask: {
+      visableDetail: false,
+      visableCreate: false,
+      details: {},
     },
     selectedBoard: {}
   },
@@ -72,23 +77,39 @@ export default new Vuex.Store({
       state.detailViewVisable = false;
     },
 
-    showProjectDetail(state, withCreate = false) {
-      state.selectedProject.detailProjectVisable = true;
+    showTaskDetail(state, withCreate = false) {
+      state.selectedTask.visableDetail = true;
       if(withCreate){
-        state.selectedProject.createProjectVisable = true;
+        state.selectedTask.visableCreate = true;
+      }
+    },
+    hideTaskDetail(state) {
+      state.selectedTask.visableDetail = false;
+      state.selectedTask.visableCreate = false;
+      state.selectedTask.details = {};
+    },
+    setSelectedTaskDetail(state, task) {
+      state.selectedTask.details = task;
+    },
+
+    showProjectDetail(state, withCreate = false) {
+      state.selectedProject.visableDetail = true;
+      if(withCreate){
+        state.selectedProject.visableCreate = true;
       }
     },
 
     hideProjectDetail(state) {
-      state.selectedProject.detailProjectVisable = false;
-      state.selectedProject.createProjectVisable = false;
-      state.selectedProject.detailProject = {};
-
-
+      state.selectedProject.visableDetail = false;
+      state.selectedProject.visableCreate = false;
+      state.selectedProject.details = {};
     },
+
     setSelectedProjectDetail(state, project) {
-      state.selectedProject.detailProject = project;
+      state.selectedProject.details = project;
     },
+
+    //Legacy
     setDetailTask(state, Task) {
       state.detailTask = Task;
     },
@@ -97,7 +118,7 @@ export default new Vuex.Store({
     increment(state) {
       state.count++;
     },
-
+    // User login and logout
     SET_TOKEN(state, token) {
       state.Userinfo.token = token;
     },
@@ -130,7 +151,10 @@ export default new Vuex.Store({
       return state.detailViewVisable;
     },
     getProjectDetailStatus: state => {
-      return state.selectedProject.detailProjectVisable;
+      return state.selectedProject.visableDetail;
+    },
+    getTaskDetailStatus: state => {
+      return state.selectedTask.visableDetail;
     },
 
     getToken: state => {

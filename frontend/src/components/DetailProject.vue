@@ -134,7 +134,7 @@
                 </v-card-text>
               </v-card>
               <!-- Project Sprint Infos -->
-              <v-card v-if="!this.selectedProject.createProjectVisable"
+              <v-card v-if="!this.selectedProject.visableCreate"
                 flat
                 dark
                 color="navbar"
@@ -169,7 +169,7 @@
                   <v-select
                     :items="['Active', 'Archived']"
                     label="Status"
-                    :readonly="this.selectedProject.createProjectVisable"
+                    :readonly="this.selectedProject.visableCreate"
                     prepend-icon="mdi-circle-edit-outline"
                     v-model="this.projectNamedStatus"
 
@@ -177,7 +177,7 @@
                 </v-card-text>
               </v-card>
 
-              <v-card v-if="!this.selectedProject.createProjectVisable" flat dark color="navbar" tile>
+              <v-card v-if="!this.selectedProject.visableCreate" flat dark color="navbar" tile>
                 <v-card-title class="title">
                   <span class="headline ma-4">Project users</span>
                   <v-btn icon>
@@ -210,9 +210,9 @@
           </v-tabs-items>
           <div>
           <v-btn color="link" text @click="close()">Close</v-btn>
-            <v-btn v-if="!this.selectedProject.createProjectVisable" color="link" text @click="confirm()">Save</v-btn>
-            <v-btn v-if="this.selectedProject.createProjectVisable" color="link" :disabled="!isFormValid" text @click="addProject()">Create</v-btn>
-            <v-btn v-if="!this.selectedProject.createProjectVisable" color="error" text absolute right @click="deleteDialog = true">
+            <v-btn v-if="!this.selectedProject.visableCreate" color="link" text @click="confirm()">Save</v-btn>
+            <v-btn v-if="this.selectedProject.visableCreate" color="link" :disabled="!isFormValid" text @click="addProject()">Create</v-btn>
+            <v-btn v-if="!this.selectedProject.visableCreate" color="error" text absolute right @click="deleteDialog = true">
               <v-icon left>mdi-bucket-outline</v-icon>Delete
             </v-btn>
           </div>
@@ -344,7 +344,7 @@ export default {
       try {
         Object.values(this.listProjectUsers).forEach(projectUser =>
           {
-            plattformUser = Object.values(this.platformUserById(projectUser.plattform_user)).shift();
+            plattformUser = Object.values(this.plattformUserById(projectUser.plattform_user)).shift();
 
             data.push({
             name: plattformUser.name,
@@ -391,6 +391,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(["selectedProject"]),
     ...mapGetters("projectUser", {
       listProjectUsers: "list",
       projectUserById: "byId"
@@ -401,28 +402,28 @@ export default {
     }),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
-      platformUserById: "byId"
+      plattformUserById: "byId"
     }),
-    ...mapState(["selectedProject"]),
+    
 
     visibleDrawer: {
       get() {
-        return this.selectedProject.detailProjectVisable;
+        return this.selectedProject.visableDetail;
       },
       set(newValue) {
-        this.selectedProject.detailProjectVisable = newValue;
+        this.selectedProject.visableDetail = newValue;
       }
     }
   },
 
   created() {
     this.fetchProjectRoles();
-    this.localProject = this.selectedProject.detailProject;
+    this.localProject = this.selectedProject.details;
     this.projectNamedStatus = this.GetProjectNamedStatus(this.localProject.status);
   },
 
   updated() {
-    this.localProject = this.selectedProject.detailProject;
+    this.localProject = this.selectedProject.details;
     this.projectNamedStatus = this.GetProjectNamedStatus(this.localProject.status);
 
   },
@@ -431,5 +432,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import "../main.css";
+  @import "../main.css";
+  @import './Profile/profile.css';
 </style>
