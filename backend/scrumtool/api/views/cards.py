@@ -6,8 +6,9 @@ from .. import models
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework import permissions, status
-from api.views.nested_ressources_helper.relationship_manager import NestedViewSet
+from rest_framework import permissions, status, mixins, generics
+from api.views.nested_ressources_helper import NestedComponentViewSet, \
+    NestedMtmMixin
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import viewsets
@@ -116,7 +117,12 @@ class FeatureViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
                     label, task)
 
 
-class TaskViewSet(AutoPermissionViewSetMixin, NestedViewSet):
+class TaskViewSet(AutoPermissionViewSetMixin,
+                  NestedMtmMixin,
+                  mixins.CreateModelMixin,
+                  mixins.ListModelMixin,
+                  mixins.RetrieveModelMixin,
+                  viewsets.GenericViewSet):
     """CRUD for Tasks
     """
 
@@ -124,9 +130,9 @@ class TaskViewSet(AutoPermissionViewSetMixin, NestedViewSet):
 
     def get_queryset(self):
         if 'lane_pk' not in self.kwargs:
-            return self.queryset
+            return super().get_queryset()
         else:
-            return self.queryset.filter(lane=self.kwargs['lane_pk'])
+            return super().get_queryset().filter(lane=self.kwargs['lane_pk'])
     serializer_class = serializers.TaskSerializerFull
 
     @action(methods=['delete'], detail=True)

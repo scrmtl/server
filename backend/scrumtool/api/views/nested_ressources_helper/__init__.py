@@ -1,1 +1,1 @@
-from .relationship_manager import NestedMtMViewSet
+from .relationship_manager import NestedMtmMixin, NestedComponentViewSet
