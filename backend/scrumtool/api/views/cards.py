@@ -6,8 +6,11 @@ from .. import models
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework import permissions, status
+from rest_framework import permissions, status, mixins, generics
+from api.views.nested_ressources_helper import NestedComponentViewSet, \
+    NestedMtmMixin
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework import viewsets
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 from rest_framework.decorators import action
@@ -84,9 +87,9 @@ class FeatureViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         if 'lane_pk' not in self.kwargs:
-            return self.queryset
+            return super().get_queryset()
         else:
-            return self.queryset.filter(lane=self.kwargs['lane_pk'])
+            return super().get_queryset().filter(lane=self.kwargs['lane_pk'])
 
     serializer_class = serializers.EpicSerializer
     serializer_class = serializers.FeatureSerializer
@@ -114,7 +117,12 @@ class FeatureViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
                     label, task)
 
 
-class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
+class TaskViewSet(AutoPermissionViewSetMixin,
+                  NestedMtmMixin,
+                  mixins.CreateModelMixin,
+                  mixins.ListModelMixin,
+                  mixins.RetrieveModelMixin,
+                  viewsets.GenericViewSet):
     """CRUD for Tasks
     """
 
@@ -122,9 +130,9 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         if 'lane_pk' not in self.kwargs:
-            return self.queryset
+            return super().get_queryset()
         else:
-            return self.queryset.filter(lane=self.kwargs['lane_pk'])
+            return super().get_queryset().filter(lane=self.kwargs['lane_pk'])
     serializer_class = serializers.TaskSerializerFull
 
     @action(methods=['delete'], detail=True)
@@ -149,11 +157,11 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         logger.info('Removed label: %s with from task: %s',
                     label, task)
 
-    def retrieve(self, request, *args, pk=None, **kwargs):
+    def retrieve(self, request: Request, *args, pk=None, **kwargs):
         """retrive for full and partial retrieve
             Add ?DetailLevel=full for full data
             """
-        detaillevel = self.request.query_params.get('DetailLevel', None)
+        detaillevel = request.query_params.get('DetailLevel', None)
         if detaillevel is not None:
             if detaillevel == 'full':
                 instance = self.get_object()
@@ -182,10 +190,11 @@ class TaskViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
             serializer.save()
         return Response(serializer.data)
 
-    def partial_update(self, request, pk=None):
+    def partial_update(self, request, *args, **kwargs):
         """update task
             Add ?DetailLevel=full for full data
             """
+        super().partial_update(request, args, kwargs)
         detaillevel = self.request.query_params.get('DetailLevel', None)
         if detaillevel is not None:
             if detaillevel == 'full':

@@ -4,11 +4,22 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.request import Request
 
+from rest_framework import permissions, status, mixins, generics
+from api.views.nested_ressources_helper import NestedComponentViewSet, \
+    NestedMtmMixin
+
 from . import models
 from . import serializers
 
+from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
-class PlatformUserViewSet(viewsets.ModelViewSet):
+
+class PlatformUserViewSet(AutoPermissionViewSetMixin,
+                          NestedMtmMixin,
+                          mixins.CreateModelMixin,
+                          mixins.ListModelMixin,
+                          mixins.RetrieveModelMixin,
+                          NestedComponentViewSet):
     """PlatformUser ViewSet to return data to REST api
     """
     queryset = models.PlatformUser.objects.all()
@@ -35,7 +46,7 @@ class PlatformUserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    def list(self, request: Request):
+    def list(self, request: Request, task_pk=None):
         """Gets the requested queryset for users
 
         Parameters

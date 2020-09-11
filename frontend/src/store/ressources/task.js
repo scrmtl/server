@@ -27,10 +27,11 @@ export default createCrudModule({
         if (laneId) {
             rootUrl = `/api/lanes/${laneId}/tasks`;
             rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
+            //rootURL = `/api/tasks/?lane=${taskId}`
         } else if (byUser) {
             rootUrl = `/api/tasks/?byUser=${byUser}`;
+            //rootURL = `/api/tasks/?lane=${taskId}`
         }
-
         return rootUrl;
     },
 
@@ -40,9 +41,9 @@ export default createCrudModule({
          * @return {Array} Array of Task Objects
          */
         byIdArray(state) {
-            return  idArray => 
-                idArray.map(id => state.entities[id.toString()] )
+            return idArray =>
+                idArray.map(id => state.entities[id.toString()])
         },
-        
+
     }
 });
