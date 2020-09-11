@@ -42,11 +42,21 @@ export default {
     ...mapActions("task", {
       fetchTasks: "fetchList"
     }),
+    ...mapActions("session", {
+      SessionFetch: "fetchList"
+    }),
 
     fetchData() {
-      return this.fetchTasks({
-        customUrlFnArgs: { byUser: this.listSession.shift().id }
-      });
+      try {
+        this.fetchTasks({
+          customUrlFnArgs: { byUser: this.listSession.shift().id }
+        });
+      } catch (error) {
+        if(this.listSession === undefined){
+          this.SessionFetch({ customUrlFnArgs: {all: false}});
+        }
+      }
+
     }
   },
 
