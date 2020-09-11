@@ -118,7 +118,8 @@ AUTH_PASSWORD_VALIDATORS = [
             'NumericPasswordValidator'),
     },
 ]
-
+# Disable mail verification for all-auth
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

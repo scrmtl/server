@@ -6,8 +6,7 @@
       </div>
       <v-card-text class="lane-body pa-2">
         <div v-for="task in listTasks" :key="task.id">
-          <Task v-bind:task="task" 
-          v-bind:task_index="task.id"/>
+          <Task v-bind:task="task" v-bind:task_index="task.id" />
         </div>
         <!-- <Task/> -->
       </v-card-text>
@@ -45,7 +44,9 @@ export default {
     }),
 
     fetchData() {
-      return this.fetchTasks({ customUrlFnArgs: {byUser: this.listSession.shift().id} });
+      return this.fetchTasks({
+        customUrlFnArgs: { byUser: this.listSession.shift().id }
+      });
     }
   },
 
