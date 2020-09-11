@@ -105,13 +105,15 @@ class NestedComponentViewSet(viewsets.GenericViewSet):
     def get_queryset(self):
 
         queryset = super().get_queryset()
+        model = self.get_serializer().Meta.model
         filter_params: Q = None
         for key, value in self.request.query_params.items():
-            q = Q(**{"%s__id" % key: value})
-            if filter_params:
-                filter_params = filter_params & q
-            else:
-                filter_params = q
+            if hasattr(model, key):
+                q = Q(**{"%s__id" % key: value})
+                if filter_params:
+                    filter_params = filter_params & q
+                else:
+                    filter_params = q
         if filter_params:
             queryset = queryset.filter(filter_params)
         return queryset
