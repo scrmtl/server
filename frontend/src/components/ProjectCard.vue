@@ -29,7 +29,7 @@
           </v-list-item>
           </router-link>
           <v-card-actions>
-            <v-btn text outlined color="link" @click="showProjectDetail()">Details</v-btn>
+            <v-btn text outlined color="link" @click="showProjectDetail()">Details</v-btn>         
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <v-btn text color="link" v-if="project.status === 'AC'" >ACTIVE</v-btn>
@@ -38,12 +38,13 @@
         </v-card>
       </template>
     </v-hover>
-    <DetailProject v-bind:project="this.project" />
+    <DetailProject/>
   </div>
 </template>
 
 <script>
 import DetailProject from "@/components/DetailProject.vue";
+import {  mapActions } from "vuex";
 
 export default {
   props: ["project"],
@@ -53,7 +54,7 @@ export default {
       valueDetail: "30/100",
       ex11: true,
       drawer: null,
-      tab: null
+      tab: null,
     };
   },
   
@@ -62,11 +63,21 @@ export default {
   },
 
   methods: {
+    ...mapActions("projectUser", {
+      fetchProjectUsers: "fetchList"
+    }),
+
     showProjectDetail() {
-      this.$store.commit("showProjectDetail");
-      this.$store.commit("setProjectDetail", this.project);
-      
-    }
+      this.$store.commit("showProjectDetail", false);
+      this.$store.commit("setSelectedProjectDetail", this.project);
+    },
+  },
+  computed:{
+
+  },
+  created(){
+    console.log(this.project.id);
+    this.fetchProjectUsers({ customUrlFnArgs: {projectId: this.project.id}});
   }
 };
 </script>
