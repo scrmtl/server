@@ -206,17 +206,28 @@ export default {
     MyTasksLane,
     DetailView
   },
-  async created() {
+  beforeCreate(){
+    // set auth header
+    Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`;
+
+  },
+  created() {
+    
     if (!this.$store.getters.getToken) {
       this.$router.push("/login");
     }
+    else{
+    
+    this.loadData();
+    
+    }
+    
+       
     // Load Projects
-    this.ProjectsFetch();
+    // this.ProjectsFetch();
     //Load user's tasks
-
-    // set auth header
-      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`;
-      this.SessionFetch({ customUrlFnArgs: {all: false}});
+    
+    // this.SessionFetch({ customUrlFnArgs: {all: false}});
   },
 
   methods: {
@@ -234,6 +245,8 @@ export default {
     loadData: function() {
       this.ProjectsFetch();
       this.UsersFetch();
+      this.SessionFetch({ customUrlFnArgs: {all: false}});
+      
     },
 
     saveProject() {
@@ -263,12 +276,12 @@ export default {
     })
   },
   mounted() {
-    this.loadData();
+    this.fetchData();
     setInterval(
       function() {
         this.loadData();
       }.bind(this),
-      10000
+      15000
     );
   }
 };
