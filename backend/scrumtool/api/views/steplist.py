@@ -42,10 +42,10 @@ class SteplistViewSet(AutoPermissionViewSetMixin,
         -------
         json : Single steplist element with an array of steps
         """
-        _steplist = get_object_or_404(self.get_queryset(), pk=pk)
-        _serializer_class = serializers.StepListSerializer(_steplist)
+        steplist = get_object_or_404(self.get_queryset(), pk=pk)
+        serializer = self.get_serializer(steplist)
 
-        return Response(_serializer_class.data)
+        return Response(serializer.data)
 
 
 class StepViewSet(viewsets.ModelViewSet):
@@ -58,6 +58,7 @@ class StepViewSet(viewsets.ModelViewSet):
             return self.queryset
         else:
             return self.queryset.filter(steplist=self.kwargs['steplist_pk'])
+
     serializer_class = serializers.StepSerializer
 
     def update(self, request, steplist_pk=None, pk=None):
