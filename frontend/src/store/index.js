@@ -11,6 +11,7 @@ import lane from '@/store/ressources/lane';
 import projectUser from '@/store/ressources/projectUser';
 import sprint from '@/store/ressources/sprint';
 import steplist from '@/store/ressources/steplist';
+import step from '@/store/ressources/step';
 import task from '@/store/ressources/task';
 import user from '@/store/ressources/user';
 import project from '@/store/ressources/project';
@@ -79,7 +80,7 @@ export default new Vuex.Store({
 
     showTaskDetail(state, withCreate = false) {
       state.selectedTask.visableDetail = true;
-      if(withCreate){
+      if (withCreate) {
         state.selectedTask.visableCreate = true;
       }
     },
@@ -94,7 +95,7 @@ export default new Vuex.Store({
 
     showProjectDetail(state, withCreate = false) {
       state.selectedProject.visableDetail = true;
-      if(withCreate){
+      if (withCreate) {
         state.selectedProject.visableCreate = true;
       }
     },
@@ -113,7 +114,7 @@ export default new Vuex.Store({
     setDetailTask(state, Task) {
       state.detailTask = Task;
     },
-    
+
 
     increment(state) {
       state.count++;
@@ -181,6 +182,7 @@ export default new Vuex.Store({
     projectRole,
     registration,
     group,
+    step,
   }
 });
 
