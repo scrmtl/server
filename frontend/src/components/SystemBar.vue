@@ -183,6 +183,9 @@ export default {
           });
         });
       } catch (error) {
+        if (groupId === undefined) {
+          this.fetchGroups();
+        }
         if (this.groupById(groupId) === undefined) {
           this.fetchGroups();
         }
