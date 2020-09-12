@@ -55,9 +55,9 @@ class StepViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if 'steplist_pk' not in self.kwargs:
-            return self.queryset
+            return super().get_queryset()
         else:
-            return self.queryset.filter(steplist=self.kwargs['steplist_pk'])
+            return super().get_queryset().filter(steplist=self.kwargs['steplist_pk'])
 
     serializer_class = serializers.StepSerializer
 
