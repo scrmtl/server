@@ -8,6 +8,3 @@ from django.dispatch import receiver
 def create_user_profile(sender, instance: PlatformUser, created, **kwargs):
     if created:
         instance.groups.add(Group.objects.get(name='standard'))
-    else:
-        if instance.groups.all().filter(name='admin'):
-            pass
