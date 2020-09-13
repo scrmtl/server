@@ -19,76 +19,120 @@
           <v-tab-item>
             <v-card flat dark color="secondary" tile>
               <v-card-title>
-                <span class="headline ma-0 pa-1">Task</span>
+                <span class="headline ma-0 pa-1">{{localTask.name}}</span>
               </v-card-title>
               <v-card-text>
-                <v-form ref="form" v-model="isFormValid" lazy-validation>
-                  <!-- Taskname -->
-                  <v-text-field
-                    label="Name"
-                    required
-                    :rules="TaskNameRules"
-                    :counter="50"
-                    prepend-icon="mdi-information-outline"
-                    class="ma-1"
-                    v-model="localTask.name"
-                  ></v-text-field>
-                  <v-textarea
-                    label="Description"
-                    prepend-icon="mdi-information-outline"
-                    outlined
-                    height="70"
-                    class="ma-1"
-                    v-model="localTask.description"
-                  ></v-textarea>
-                  <v-chip-group column>
-                    <v-chip
-                      v-for="(label_item, i) in localTask.labels"
-                      :key="i"
-                      :color="label_item.color"
-                      v-text="label_item.title"
-                    ></v-chip>
-                  </v-chip-group>
-                </v-form>
+                <v-container grid-list-md>
+                  <v-row  align="center">
+                    <v-col>
+                      <v-form ref="form" v-model="isFormValid" lazy-validation>
+                        <!-- Taskname -->
+                        <v-text-field
+                          label="Name"
+                          required
+                          :rules="taskNameRules"
+                          :counter="50"
+                          prepend-icon="mdi-information-outline"
+                          class="ma-1"
+                          v-model="localTask.name"
+                        ></v-text-field>
+                        <!-- Task description -->
+                        <v-textarea
+                          label="Description"
+                          prepend-icon="mdi-information-outline"
+                          required
+                          outlined
+                          class="ma-1"
+                          v-model="localTask.description"
+                        ></v-textarea>
+                      </v-form>
+                    </v-col>
+                  </v-row>
+                  <v-row  align="center">
+                    <v-col>
+                      <v-autocomplete
+                        v-model="this.taskNamedStatus"
+                        :items="availableStatus"
+                        :readonly="this.selectedTask.visableCreate"
+                        outlined
+                        dense
+                        label="Status"
+                      ></v-autocomplete>
+                    </v-col>
+                    <v-col>
+                      <v-autocomplete
+                        v-model="localTask.storypoints"
+                        :items="availableStorypoints"
+                        outlined
+                        dense
+                        label="Story points"
+                      ></v-autocomplete>
+                    </v-col>
+                  </v-row>
+                  <v-row align="center">
+                      <Label></Label>
+                  </v-row>
+                  <v-row align="center">
+                      <v-card v-if="!this.selectedTask.visableCreate" flat dark color="secondary" tile>
+                        <v-card-title class="title">
+                          <span class="headline ma-4">Assigned users</span>
+                          <v-btn icon>
+                            <v-icon color="link">mdi-dots-horizontal</v-icon>
+                          </v-btn>
+                        </v-card-title>
+                        <v-card-text>
+                          <section class="avatars-group grid pa-3">
+                            <div
+                              v-for="avatar in allAssignedUsers"
+                              :key="`avatar-id-${avatar.id}`"
+                              class="avatars-group__item"
+                            >
+                              <v-menu open-delay="1500" open-on-hover :nudge-width="200" offset-y>
+                                <template v-slot:activator="{ on, attrs }">
+                                  <div v-bind="attrs" v-on="on">
+                                    <ProfileAvatar :avatar="avatar" />
+                                  </div>
+                                </template>
+                                <ProfileTooltip :avatar="avatar" />
+                              </v-menu>
+                            </div>
+                          </section>
+                        </v-card-text>
+                      </v-card>
+                  </v-row>
+                </v-container>
               </v-card-text>
             </v-card>
 
-            <v-card v-if="!this.selectedTask.visableCreate" flat dark color="secondary" tile>
-              <v-card-title class="title">
-                <span class="headline ma-4">Assigned users</span>
-                <v-btn icon>
-                  <v-icon color="link">mdi-dots-horizontal</v-icon>
-                </v-btn>
-              </v-card-title>
-              <v-card-text>
-                <section class="avatars-group grid pa-3">
-                  <div
-                    v-for="avatar in allAssignedUsers"
-                    :key="`avatar-id-${avatar.id}`"
-                    class="avatars-group__item"
-                  >
-                    <v-menu open-delay="1500" open-on-hover :nudge-width="200" offset-y>
-                      <template v-slot:activator="{ on, attrs }">
-                        <div v-bind="attrs" v-on="on">
-                          <ProfileAvatar :avatar="avatar" />
-                        </div>
-                      </template>
-                      <ProfileTooltip :avatar="avatar" />
-                    </v-menu>
-                  </div>
-                </section>
-              </v-card-text>
-            </v-card>
+            
           </v-tab-item>
           <!-- Step Tab -->
           <v-tab-item>
-            <v-card flat dark color="secondary" tile>
-              <v-list-item-group>
-                <v-list-item v-for="steplist in selectedTask.details.steplists" :key="steplist">
-                  <Steplist v-bind:steplistId="steplist" />
-                </v-list-item>
-              </v-list-item-group>
-            </v-card>
+            
+                <v-card flat dark color="secondary" tile>
+                  <v-card-text>
+                  <v-container grid-list-md>
+                    <v-row align="center">
+                      <v-col>
+                        <v-list>
+                          <v-list-group value="true" v-for="steplist in selectedTask.details.steplists" :key="steplist">
+                            <template v-slot:activator>
+                              <v-list-item-content>
+                                <v-list-item-title class="white--text">Default Steplist</v-list-item-title>
+                              </v-list-item-content>
+                            </template>
+                            <Steplist v-bind:steplistId="steplist" />
+                          </v-list-group>
+                        </v-list>
+                        
+                      </v-col>
+                      
+                    </v-row>
+                  </v-container>
+                  </v-card-text>
+                </v-card>
+              
+            
           </v-tab-item>
         </v-tabs-items>
         <!-- actions -->
@@ -134,15 +178,18 @@
 import ProfileAvatar from "@/components/Profile/ProfileAvatar.vue";
 import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
 import Steplist from "@/components/Steplist.vue";
+import Label from "@/components/Label.vue";
 import { mapActions, mapGetters, mapState } from "vuex";
 export default {
   name: "DetailTask",
   data: () => ({
     tab: null,
+    availableStatus: ["New", "Planned", "Not Started", "In Progress", "Done", "Accepted"],
+    availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
     deleteDialog: false,
     taskNamedStatus: "New",
     localTask: {},
-    projectNameRules: [
+    taskNameRules: [
       v => !!v || "Name is required",
       v => (v && v.length <= 50) || "Name must be less than 50 characters"
     ]
@@ -150,7 +197,8 @@ export default {
   components: {
     ProfileAvatar,
     ProfileTooltip,
-    Steplist
+    Steplist,
+    Label
   },
   methods: {
     ...mapActions("label", {

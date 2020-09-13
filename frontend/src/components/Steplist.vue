@@ -26,8 +26,8 @@
             <v-list-item-title :class="{done: step.checked}">{{ step.text}}</v-list-item-title>
             <v-list-item-subtitle></v-list-item-subtitle>
           </v-list-item-content>
-          <v-btn fab ripple small color="red" v-if="active" @click="removeStep(step.id)">
-            <v-icon class="white--text">mdi-close</v-icon>
+          <v-btn fab ripple icon small color="red" v-if="active" @click="removeStep(step.id)">
+            <v-icon >mdi-close-circle</v-icon>
           </v-btn>
         </template>
       </v-list-item>
