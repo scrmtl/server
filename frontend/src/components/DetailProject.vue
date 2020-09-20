@@ -1,10 +1,12 @@
 <template>
   <div>
     <v-navigation-drawer 
-    v-model="visibleDrawer" 
+    v-model="visibleDrawer"  
     right
-    fixed
-    width="800" 
+    app
+    temporary
+    
+    width="600" 
     color="navbar" 
     dark>
       <v-container>

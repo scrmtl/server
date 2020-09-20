@@ -1,11 +1,15 @@
 <template>
-    <v-content class="tabbody tab-content">
-    <v-app-bar>
-      <AppBar v-bind:id="id"/>
-    </v-app-bar>
+<div>
+
+    <AppBar v-bind:id="id"/>
+
     <router-view></router-view>
+
     
-  </v-content>
+
+
+</div>
+               
 </template>
 
 <script>

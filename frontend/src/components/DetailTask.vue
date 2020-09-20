@@ -1,6 +1,14 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="visibleDrawer" right fixed width="800" color="secondary" dark>
+    <v-navigation-drawer 
+    v-model="visibleDrawer" 
+    right
+    app
+    temporary
+
+    width="600" 
+    color="secondary" 
+    dark>
       <v-container>
         <v-tabs
           v-model="tab"
@@ -189,6 +197,7 @@ export default {
     deleteDialog: false,
     taskNamedStatus: "New",
     localTask: {},
+    isFormValid: null,
     taskNameRules: [
       v => !!v || "Name is required",
       v => (v && v.length <= 50) || "Name must be less than 50 characters"

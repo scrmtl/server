@@ -1,45 +1,36 @@
 /* eslint-disable */
 <template>
-  <v-content class="tabbody tab-content">
-    <v-row>
-      <div class="projectBtn">
-        <div class="my-2">
-          <v-btn text color="link" large @click="showCreateProject()">
-            <v-icon class="mr-1">mdi-folder-plus</v-icon>Create Project
-          </v-btn>
-          <DetailProject />
-        </div>
-      </div>
-    </v-row>
-    <v-row>
-      <v-col cols="12" sm="6" md="8">
-        <v-container fluid>
-          <v-layout>
-            <v-flex>
-              <div v-for="project in listProjects" :key="project.id">
-                <ProjectCard v-bind:project="project" />
-              </div>
-            </v-flex>
-          </v-layout>
-          <DetailView></DetailView>
-        </v-container>
-      </v-col>
-      <v-col cols="2" md="4" sm="2" class="pr-2">
-        <v-flex>
-          <v-container>
+    
+    <v-container fluid class="tabbody">
+      <v-row>
+         <v-col dense>
+           <div class="projectBtn my-2">
+              <v-btn text color="link" large @click="showCreateProject()">
+                <v-icon class="mr-1">mdi-folder-plus</v-icon>Create Project
+              </v-btn>
+            </div>
+          </v-col>
+      </v-row>
+      <v-row> 
+        <v-col lg="8"  >
+          <div v-for="project in listProjects" :key="project.id">
+            <ProjectCard v-bind:project="project" />
+          </div>
+        </v-col>
+        <v-col lg="4"  >
             <MyTasksLane />
-          </v-container>
-        </v-flex>
-      </v-col>
-    </v-row>
-  </v-content>
+        </v-col>
+      </v-row>
+    </v-container>
+    
+
 </template>
 
 <script>
 import ProjectCard from "@/components/ProjectCard.vue";
 import MyTasksLane from "@/components/MyTasksLane.vue";
-import DetailView from "@/components/DetailView";
-import DetailProject from "@/components/DetailProject.vue";
+
+
 import { mapGetters, mapActions, mapState } from "vuex";
 import Axios from "axios";
 //import scrmtlServices from '@/services/scrmtlServices.js'
@@ -57,8 +48,7 @@ export default {
   components: {
     ProjectCard,
     MyTasksLane,
-    DetailView,
-    DetailProject
+
   },
   beforeCreate(){
     // safe home route
@@ -150,6 +140,6 @@ export default {
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="css" >
 @import "../main.css";
 </style>

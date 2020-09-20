@@ -1,10 +1,11 @@
 <template>
-  <v-system-bar color="appbar" dark absolute class="systemBar">
-    <router-link :to="{name: 'Home'}" style="text-decoration: none; color: inherit;">
-      <span class="link--text">
-        <v-icon size="25" color="link">mdi-home</v-icon>ScrumTool
-      </span>
-    </router-link>
+  <v-app-bar color="appbar" app dark dense flat class="systemBar">
+    <v-btn icon text color="appbar" :to="{name: 'Home'}">
+      <v-icon large color="link">mdi-home</v-icon>
+    </v-btn>
+    
+    <v-toolbar-title class="link--text">ScrumTool</v-toolbar-title>
+
     <v-dialog v-model="dialog" width="1200">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -106,7 +107,7 @@
         <span>Logout</span>
       </v-tooltip>
     </v-btn>
-  </v-system-bar>
+  </v-app-bar>
 </template>
 
 <script>

@@ -68,11 +68,11 @@
     overflow-y: auto;
     background-color: lightgray;
     padding-left: -2px;
-    max-height: 100vh;
+    min-height: 100vh;
     min-width: auto;
     border-style: solid;
     border-top-style: hidden;
-    border-bottom-style: hidden;
+    border-bottom-style: #6441A4;
     border-left-color: #6441A4;
     border-right-color: #6441A4;
   }

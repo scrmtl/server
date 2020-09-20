@@ -3,9 +3,11 @@
     <v-hover>
       <template v-slot="{ hover }">
         <v-card 
-        class="task mt-4" 
-        min-width="300" 
-        max-height="260" 
+        class="task mb-12" 
+        min-width="350"
+        max-width="400"
+        min-height="100"
+        max-height="150" 
         :elevation="hover ? 14 : 5"
         @click="showTaskDetail()"
         >
@@ -140,7 +142,7 @@
                     </template>
                     <span>open steps</span>
                   </v-tooltip>
-                  <span>{{task.number_of_open_steps}} / {{task.number_of_steps}}</span>
+                  <span>{{task.number_of_steps-task.number_of_open_steps}} / {{task.number_of_steps}}</span>
                 </div>
               </div>
 
@@ -228,7 +230,7 @@
         </v-card>
       </template>
     </v-hover>
-    <DetailTask/>
+    
   </div>
 </template>
 
@@ -236,7 +238,7 @@
 import {mapGetters} from "vuex";
 import ProfileAvatar from "@/components/Profile/ProfileAvatar.vue";
 import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
-import DetailTask from "@/components/DetailTask.vue";
+
 export default {
   data: () => ({
     dialog: null,
@@ -248,7 +250,7 @@ export default {
   components: {
     ProfileAvatar,
     ProfileTooltip,
-    DetailTask
+    
   },
 
   methods: {

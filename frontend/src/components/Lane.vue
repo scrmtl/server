@@ -1,23 +1,26 @@
 <template>
   <div>
-    <v-card class="mx-auto lane mr-10" max-width="320" elevation="5">
-      <div class="lane-header">
-        <p dark>
+    <v-card class="lane" max-width="420" elevation="5">
+      
+      <v-card-title class="navbar white--text">
+        <div>
           {{ lane.name }}
-          <v-menu>
-            <template v-slot:activator="{ on }">
-              <v-btn dark icon v-on="on" class="icon" height="32">
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item v-for="(item, i) in items" :key="i">
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </p>
-      </div>
+        </div>
+        <v-spacer></v-spacer>
+        <v-menu>
+          <template v-slot:activator="{ on }">
+            <v-btn dark icon v-on="on" class="icon" height="32">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item v-for="(item, i) in items" :key="i">
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-card-title>
+      
       
       <v-card-text class="lane-body pa-2">
         <div v-for="task in this.tasksByIdArray(this.lane.task_cards)" :key="task.id">

@@ -1,18 +1,22 @@
 <template>
-  <div>
-    <v-card class="lane" min-width="344" elevation="5">
-      <div class="lane-header">
-        <p dark>Meine Tasks</p>
-      </div>
-      <v-card-text class="lane-body pa-2">
-        <div v-for="task in listTasks" :key="task.id">
-          <Task v-bind:task="task" v-bind:task_index="task.id" />
-        </div>
-        <!-- <Task/> -->
-      </v-card-text>
-      <v-card-actions class="lane-extended"></v-card-actions>
-    </v-card>
-  </div>
+
+  <v-card class="lane" max-width="420"  elevation="5">
+    <v-card-title class="navbar white--text">
+      Meine Tasks
+    </v-card-title>
+    <v-card-text class="lane-body">
+      <v-container fluid>
+        <v-row  v-for="task in listTasks" :key="task.id">
+          <v-col>
+            <Task v-bind:task="task" v-bind:task_index="task.id" />
+          </v-col>
+        </v-row>
+      </v-container>
+        
+
+    </v-card-text>
+  </v-card>
+
 </template>
 
 <script>
@@ -79,6 +83,6 @@ export default {
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="css" >
 @import "../main.css";
 </style>

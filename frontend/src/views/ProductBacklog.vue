@@ -1,14 +1,15 @@
 <template>
-  <v-content class="tabbody tab-content">
-    <v-container fluid class="pl-10">
-       <v-row>
-          <div v-for="lane in listLanes" :key="lane.id">
-            <Lane v-bind:lane="lane"></Lane>
-          </div>
-      </v-row>
-    </v-container>
 
-  </v-content>
+  <v-container fluid class="tabbody">
+    <v-row></v-row>
+    <v-row >
+      <v-col v-for="lane in listLanes" :key="lane.id">
+        <Lane v-bind:lane="lane"></Lane>
+      </v-col>
+    </v-row>
+  </v-container>
+
+
 </template>
 
 <script>

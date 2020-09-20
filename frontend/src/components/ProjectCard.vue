@@ -2,7 +2,7 @@
   <div>
     <v-hover>
       <template v-slot="{ hover }">
-        <v-card class="navbar projectCard" max-width="344" dark shaped :elevation="hover ? 24 : 1">
+        <v-card class="navbar projectCard" max-width="350" dark shaped :elevation="hover ? 24 : 1">
           <router-link 
           :to="{name: 'ProjectDashboard', params: {id: project.id }}"
           style="text-decoration: none; color: inherit;"
@@ -38,12 +38,12 @@
         </v-card>
       </template>
     </v-hover>
-    <DetailProject />
+    
   </div>
 </template>
 
 <script>
-import DetailProject from "@/components/DetailProject.vue";
+
 import {  mapActions } from "vuex";
 
 export default {
@@ -59,7 +59,7 @@ export default {
   },
   
   components: {
-    DetailProject
+    
   },
 
   methods: {
