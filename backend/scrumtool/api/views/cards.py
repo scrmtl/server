@@ -1,7 +1,7 @@
 """Controller methods in the app for cards
 """
 # import the logging library
-from .. import serializers
+from api import serializers as apiSerializers
 from .. import models
 from django.http import Http404
 from django.shortcuts import get_object_or_404
@@ -22,12 +22,12 @@ class FileViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """CRUD for Files
     """
     queryset = models.File.objects.all()
-    serializer_class = serializers.FileSerializer
+    serializer_class = apiSerializers.FileSerializer
 
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, format=None):
-        serializer = serializers.FileSerializer(data=request.data)
+        serializer = apiSerializers.FileSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -55,7 +55,7 @@ class EpicViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
             return self.queryset
         else:
             return self.queryset.filter(lane=self.kwargs['lane_pk'])
-    serializer_class = serializers.EpicSerializer
+    serializer_class = apiSerializers.EpicSerializer
 
     @action(methods=['delete'], detail=True)
     def remove_labels_from_task(self, request, pk=None):
@@ -91,8 +91,8 @@ class FeatureViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         else:
             return super().get_queryset().filter(lane=self.kwargs['lane_pk'])
 
-    serializer_class = serializers.EpicSerializer
-    serializer_class = serializers.FeatureSerializer
+    serializer_class = apiSerializers.EpicSerializer
+    serializer_class = apiSerializers.FeatureSerializer
 
     @action(methods=['delete'], detail=True)
     def remove_labels_from_task(self, request, pk=None):
@@ -133,21 +133,21 @@ class TaskViewSet(AutoPermissionViewSetMixin,
             return super().get_queryset()
         else:
             return super().get_queryset().filter(lane=self.kwargs['lane_pk'])
-    serializer_class = serializers.TaskSerializerFull
+    serializer_class = apiSerializers.TaskSerializer
 
     @action(methods=['delete'], detail=True)
     def remove_labels_from_task(self, request, pk=None):
         labels_to_remove = request.data['labels']
         for label in labels_to_remove:
             self.remove_label(label)
-        return Response(serializers.TaskSerializerFull(self.get_object()).data,
+        return Response(apiSerializers.TaskSerializerFull(self.get_object()).data,
                         status=status.HTTP_200_OK)
 
     @action(methods=['delete'], detail=True)
     def remove_label_from_task(self, request, pk=None):
         label_to_remove = request.data['label']
         self.remove_label(label_to_remove)
-        return Response(serializers.TaskSerializerFull(self.get_object()).data,
+        return Response(apiSerializers.TaskSerializerFull(self.get_object()).data,
                         status=status.HTTP_200_OK)
 
     def remove_label(self, label_data):
@@ -165,7 +165,7 @@ class TaskViewSet(AutoPermissionViewSetMixin,
         if detaillevel is not None:
             if detaillevel == 'full':
                 instance = self.get_object()
-                serializer = serializers.TaskSerializerFull(instance)
+                serializer = apiSerializers.TaskSerializerFull(instance)
                 return Response(serializer.data)
 
         instance = self.get_object()
@@ -180,11 +180,12 @@ class TaskViewSet(AutoPermissionViewSetMixin,
         if detaillevel is not None:
             if detaillevel == 'full':
                 instance = self.get_object()
-                serializer = serializers.TaskSerializerFull(data=request.data)
+                serializer = apiSerializers.TaskSerializerFull(
+                    data=request.data)
                 return Response(serializer.data)
 
         instance = self.get_object()
-        serializer = serializers.TaskSerializerFull(
+        serializer = self.get_serializer(
             data=request.data, instance=instance)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
@@ -199,11 +200,12 @@ class TaskViewSet(AutoPermissionViewSetMixin,
         if detaillevel is not None:
             if detaillevel == 'full':
                 instance = self.get_object()
-                serializer = serializers.TaskSerializerFull(data=request.data)
+                serializer = apiSerializers.TaskSerializerFull(
+                    data=request.data)
                 return Response(serializer.data)
 
         instance = self.get_object()
-        serializer = serializers.TaskSerializerFull(
+        serializer = self.get_serializer(
             instance=instance, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
@@ -240,5 +242,5 @@ class TaskViewSet(AutoPermissionViewSetMixin,
             _queryset = _queryset.filter(
                 lane__id=int(by_lane))
 
-        serializer = serializers.TaskSerializer(_queryset, many=True)
+        serializer = apiSerializers.TaskSerializer(_queryset, many=True)
         return Response(serializer.data)

@@ -2,10 +2,11 @@
 """
 import logging
 from rest_framework import serializers
-from ..models import Card, Task, Feature, Epic, Label, File, \
+from api.models import Card, Task, Feature, Epic, Label, File, \
     Steplist, PlatformUser, Lane
 from .steplist_serializer import StepListSerializerForCards, \
     StepListSerializerCommon
+from .simple_history_serializers import HistoricalRecordField
 logger = logging.getLogger(__name__)
 
 
@@ -66,7 +67,7 @@ class CardSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',
                   'description', 'numbering',
                   'storypoints', 'status',
-                  'lane', 'sprint',
+                  'lane', 'sprint'
                   )
 
     def update(self, instance, validated_data):
@@ -119,12 +120,14 @@ class TaskSerializerFull(serializers.ModelSerializer):
         queryset=PlatformUser.objects.all(), required=False, many=True)
     number_of_steps = serializers.SerializerMethodField()
     number_of_open_steps = serializers.SerializerMethodField()
+    history = HistoricalRecordField(read_only=True)
 
     class Meta:
         model = Task
         fields = CardSerializer.Meta.fields + \
             ('feature', 'assigned_users', 'labels', 'steplists',
-             'number_of_steps', 'number_of_open_steps')
+             'number_of_steps', 'number_of_open_steps',
+             'history',)
 
     def get_number_of_steps(self, obj):
         steps = 0
@@ -296,6 +299,30 @@ class TaskSerializerFull(serializers.ModelSerializer):
         return instance
 
 
+class ChangeSerializer(serializers.Serializer):
+    diff_changes = serializers.SerializerMethodField()
+    history_user = serializers.PrimaryKeyRelatedField(
+        queryset=Task.history.model.objects.all(), required=False)
+    history_date = serializers.DateTimeField()
+
+    def get_diff_changes(self, obj):
+        if not obj.prev_record:
+            return
+        delta = obj.diff_against(obj.prev_record)
+        change_obj = []
+        for change in delta.changes:
+            changes = {}
+            changes["field"] = change.field
+            changes["old"] = change.old
+            changes["new"] = change.new
+            change_obj.append(changes)
+        return change_obj
+
+
+class ChangesListSerializer(serializers.ListSerializer):
+    child = ChangeSerializer()
+
+
 class TaskSerializer(serializers.ModelSerializer):
     """Serializer for Task-Cards
     """
@@ -320,12 +347,14 @@ class TaskSerializer(serializers.ModelSerializer):
         queryset=PlatformUser.objects.all(), required=False, many=True)
     number_of_steps = serializers.SerializerMethodField()
     number_of_open_steps = serializers.SerializerMethodField()
+    history = ChangesListSerializer(required=False,
+                                    read_only=True)
 
     class Meta:
         model = Task
         fields = CardSerializer.Meta.fields + \
             ('feature', 'assigned_users', 'labels', 'steplists',
-             'number_of_steps', 'number_of_open_steps')
+             'number_of_steps', 'number_of_open_steps', 'history',)
 
     def get_number_of_steps(self, obj):
         steps = 0
