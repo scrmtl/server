@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rules.apps.AutodiscoverRulesConfig',
     'api',
+    'simple_history',
 
 ]
 
@@ -71,7 +72,7 @@ MIDDLEWARE = [
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'scrumtool.urls'
