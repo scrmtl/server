@@ -1,7 +1,6 @@
 <template>
 
   <v-container fluid class="tabbody">
-    <v-row></v-row>
     <v-row >
       <v-col v-for="lane in listLanes" :key="lane.id">
         <Lane v-bind:lane="lane"></Lane>

@@ -1,6 +1,6 @@
 /* eslint-disable */
 <template>
-  <v-app-bar color="navbar" dense flat app  absolute class="appBar">
+  <v-app-bar color="navbar" dense flat app  absolute >
     <v-tabs background-color="transparent" slider-color="link"
     dark centered grow v-model="activeTab">
       <v-tab v-for="tab in tabs" :key="tab.id" :to="tab.route" exact>{{ tab.name }}</v-tab>     

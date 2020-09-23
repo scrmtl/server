@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="lane" max-width="420" elevation="5">
+    <v-card class="lane"  max-width="420"  elevation="5">
       
       <v-card-title class="navbar white--text">
         <div>

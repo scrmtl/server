@@ -3,7 +3,7 @@
     
     <v-container fluid class="tabbody">
       <v-row>
-         <v-col dense>
+         <v-col >
            <div class="projectBtn my-2">
               <v-btn text color="link" large @click="showCreateProject()">
                 <v-icon class="mr-1">mdi-folder-plus</v-icon>Create Project
@@ -11,13 +11,13 @@
             </div>
           </v-col>
       </v-row>
-      <v-row> 
-        <v-col lg="8"  >
+      <v-row align="start" justify="center"> 
+        <v-col cols="8" >
           <div v-for="project in listProjects" :key="project.id">
             <ProjectCard v-bind:project="project" />
           </div>
         </v-col>
-        <v-col lg="4"  >
+        <v-col cols="4">
             <MyTasksLane />
         </v-col>
       </v-row>
@@ -61,7 +61,6 @@ export default {
     }
   },
   created() {
-    
     this.loadData();
     Axios.interceptors.request.use(config => {
       if (

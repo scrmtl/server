@@ -68,8 +68,6 @@
     overflow-y: auto;
     background-color: lightgray;
     padding-left: -2px;
-    min-height: 100vh;
-    min-width: auto;
     border-style: solid;
     border-top-style: hidden;
     border-bottom-style: #6441A4;

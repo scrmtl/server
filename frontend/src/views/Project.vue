@@ -1,14 +1,17 @@
 <template>
-<div>
+<v-container fluid class="tabbody">
+    <v-row>
+        <AppBar v-bind:id="id"/>
+    </v-row>
+    <v-row>
+        <router-view></router-view>
+    </v-row>
+    
+  </v-container>
 
-    <AppBar v-bind:id="id"/>
-
-    <router-view></router-view>
 
     
 
-
-</div>
                
 </template>
 
