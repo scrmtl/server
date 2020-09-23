@@ -6,21 +6,16 @@
     
     <v-toolbar-title class="link--text">ScrumTool</v-toolbar-title>
 
-    <v-dialog v-model="dialog" width="1200">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="link"
-          text
-          x-small
-          dark
-          v-bind="attrs"
-          v-on="on"
-          class="ml-4"
-        >Benutzerverwaltung</v-btn>
-      </template>
-      <PlattformUserManagement/>
-      
-    </v-dialog>
+
+    <v-btn
+      color="link"
+      text
+      x-small
+      dark
+      @click.stop="dialog = true"
+    >Benutzerverwaltung</v-btn>
+    <PlattformUserManagement v-model="dialog"/>
+    
     <v-spacer></v-spacer>
     <v-icon class="systemBarIcon">mdi-account</v-icon>
     <span class="systemBarUser">{{userinfos.username}}</span>
@@ -36,8 +31,9 @@
 </template>
 
 <script>
+import PlattformUserManagement from "@/components/PlattformUserManagement.vue";
 import { mapState, mapGetters } from "vuex";
-import PlattformUserManagement from "@components/PlattformUserManagement.vue"
+
 export default {
   data() {
     return {

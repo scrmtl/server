@@ -1,4 +1,5 @@
 <template>
+    <v-dialog v-model="value" width="1200">
     <v-card color="navbar" dark flat>
         <v-card-title class="headline">Benutzerverwaltung</v-card-title>
         <v-divider></v-divider>
@@ -72,15 +73,19 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="link" class="mr-2" outlined @click="createUser = false" small>SPEICHERN</v-btn>
+          <v-btn color="link" class="mr-2" outlined @click.stop="close()" small>CLOSE</v-btn>
         </v-card-actions>
     </v-card>
+    </v-dialog>
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
-
+    name: "PlattformUserManagement",
+    props: {
+      value: Boolean, 
+    },
     data: () => ({
         user: "",
         createUser: false,
@@ -130,27 +135,39 @@ export default {
                 }
             });
         },
+        close() {
+          this.$emit('input', false);
+        },
         allUserInfo() {
             var data = [];
-            var groupId;
-            try {
-                Object.values(this.listPlatformUsers).forEach(pUser => {
-                groupId = Object.values(pUser.groups).shift();
-                data.push({
-                    name: pUser.name,
-                    email: pUser.email,
-                    username: pUser.username,
-                    group: this.groupById(groupId).name
-                });
-                });
-            } catch (error) {
-                if (groupId === undefined) {
-                this.fetchGroups();
-                }
-                if (this.groupById(groupId) === undefined) {
-                this.fetchGroups();
-                }
-            }
+            // TODO Bug on fetchGroup Error Handling
+            // var groupId;
+            // Object.values(this.listPlatformUsers).forEach(
+            //   pUser => {
+            //     groupId = Object.values(pUser.groups).shift();
+            //     data.push({
+            //         name: pUser.name,
+            //         email: pUser.email,
+            //         username: pUser.username,
+            //         group: this.groupById(groupId).catch(() => this.fetchGroups()).name
+            //     });
+            //   });
+
+            // try {
+            //     Object.values(this.listPlatformUsers).forEach(pUser => {
+            //     groupId = Object.values(pUser.groups).shift();
+            //     data.push({
+            //         name: pUser.name,
+            //         email: pUser.email,
+            //         username: pUser.username,
+            //         group: this.groupById(groupId).name
+            //     });
+            //     });
+            // } catch (error) {
+            //     if (groupId === undefined) {
+            //       //this.fetchGroups();
+            //     }
+            // }
             return data;
         }
 
