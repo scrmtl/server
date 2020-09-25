@@ -9,6 +9,8 @@ from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 
+from simple_history.models import HistoricalRecords
+
 from api.rules_predicates import is_dev_in_project, \
     is_po_in_project, is_sm_in_project, is_project_team_member, is_admin
 
@@ -47,6 +49,8 @@ class Sprint(RulesModel, IGetProject):
         related_name='sprints',
         on_delete=models.CASCADE,
         help_text='Project this sprint object is part of.')
+
+    history = HistoricalRecords()
 
     # @property
     # def start(self):
