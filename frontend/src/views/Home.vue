@@ -1,7 +1,7 @@
 /* eslint-disable */
 <template>
     
-    <v-container fluid class="tabbody">
+    <v-container fluid>
       <v-row>
          <v-col >
            <div class="projectBtn my-2">
@@ -32,7 +32,6 @@ import MyTasksLane from "@/components/MyTasksLane.vue";
 
 
 import { mapGetters, mapActions, mapState } from "vuex";
-import Axios from "axios";
 //import scrmtlServices from '@/services/scrmtlServices.js'
 
 export default {
@@ -51,18 +50,18 @@ export default {
 
   },
   beforeCreate(){
-    // safe home route
-    if (!this.$store.getters.getToken) {
-      this.$router.push("/login");
-    }
-    else{
-      // set auth header
-      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`;
-    }
+    // // safe home route
+    // if (!this.$store.getters.getToken) {
+    //   this.$router.push("/login");
+    // }
+    // else{
+    //   // set auth header
+    //   Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`;
+    // }
   },
   created() {
     this.loadData();
-    Axios.interceptors.request.use(config => {
+    this.$http.interceptors.request.use(config => {
       if (
         config.method === "post" &&
         config.url[config.url.length - 1] !== "/"

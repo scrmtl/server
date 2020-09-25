@@ -6,7 +6,7 @@
     <DetailProject/>
     <DetailTask/>
     <!-- v-main is necessary. Do not use v-content -->
-    <v-main>
+    <v-main class="tabbody">
         <router-view/>      
     </v-main>
     
@@ -21,10 +21,10 @@
 
 <script>
 
-import SystemBar from "@/components/SystemBar.vue";
-import DetailProject from "@/components/DetailProject.vue";
-import DetailTask from "@/components/DetailTask.vue";
-
+import SystemBar from "@/components/TheSystemBar.vue";
+import DetailProject from "@/components/TheDetailProject.vue";
+import DetailTask from "@/components/TheDetailTask.vue";
+import Axios from "axios";
 export default {
   name: "App",
   data: () => ({
@@ -39,6 +39,17 @@ export default {
   methods: {
     
   },
+  created(){
+    Axios.interceptors.response.use(undefined, function (err) {
+      return new Promise(() =>{
+        // TODO klären ob err.config vorhanden bei 401??
+        if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
+          this.$store.dispatch("logout")
+        }
+        throw err;
+      });
+    });
+  }
 };
 </script>
 

@@ -32,7 +32,7 @@
 
 <script>
 import PlattformUserManagement from "@/components/PlattformUserManagement.vue";
-import { mapState, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -46,8 +46,10 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch("logout");
-      this.$router.push("/login");
+      this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push('/login')
+        })
     },
     
     initialize() {
@@ -60,8 +62,8 @@ export default {
       ...mapGetters("session", {
         listSession: "list"
       }),
-      ...mapState({
-        userinfos: "Userinfo"
+      ...mapGetters(
+        {userinfos: "getUserinfo"
       }),
   },
   mounted(){

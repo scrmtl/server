@@ -1,82 +1,94 @@
 <template>
-  <div class="tabbody tab-content" >
-    <v-row>
-      <v-card width="400" class="mx-auto mt-10" @submit.prevent="register">
-        <v-card-title>
-          <h1 class="display-1">Sign In</h1>
-        </v-card-title>
-        <v-card-text>
-          <v-form>
-            <v-text-field
-              label="Username"
-              v-model="username"
-              prepend-icon="mdi-account-circle"
-              @keydown.enter="login()"
-            />
-            <v-text-field
-              label="Password"
-              v-model="password"
-              :type="showPassword ? 'text' : 'password'"
-              prepend-icon="mdi-lock"
-              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-              @click:append="showPassword = !showPassword"
-              @keydown.enter="login()"
-              value
-              name="password"
-            />
-          </v-form>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-btn color="success">Register</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="info" @click.native="login()">Login</v-btn>
-        </v-card-actions>
-      </v-card>
+  <v-container fluid >
+    <v-row ro no-gutters align="center" justify="center">
+      <v-col cols="4">
+        <v-card class="ma-4" >
+          <v-card-title>
+            <h1 >Sign In</h1>
+          </v-card-title>
+          <v-card-text>
+            <v-form ref="form" v-model="isFormVaild">
+              <v-text-field
+                label="Username"
+                :counter="150"
+                v-model="username"
+                :rules="usernameRules"
+                prepend-icon="mdi-account-circle"
+                @keydown.enter="login()"
+                required
+              />
+              <v-text-field
+                label="Password"
+                v-model="password"
+                :rules="passwordRules"
+                :type="showPassword ? 'text' : 'password'"
+                prepend-icon="mdi-lock"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="showPassword = !showPassword"
+                @keydown.enter="login()"
+                required
+              />
+            </v-form>
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-btn color="success">Register</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn :disabled="!isFormVaild" color="info" @click="login()">Login</v-btn>
+          </v-card-actions>
+        </v-card>
+        
+      </v-col>
+      
     </v-row>
     <v-row>
-      <v-snackbar v-model="loginFalse">{{ bentuzerausgabe }}</v-snackbar>
+      <v-snackbar v-model="isLoginError">{{ errorMessage }}</v-snackbar>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>
-import AuthService from "@/services/AuthService.js";
+import { mapGetters } from 'vuex';
 
 export default {
   data() {
     return {
+      isFormVaild: null,
+      isLoginError: false,
       showPassword: false,
-      loginFalse: false,
       username: "",
       password: "",
-      errorMessage: "", 
-      bentuzerausgabe: "Benutzername oder Passwort ist falsch...", 
+      errorMessage: "Username or password is invalid",
+      usernameRules: [
+        v => !!v || 'Name is required',
+        v => (v && v.length <= 150) || 'Name must be less than 150 characters',
+        v => ((v || '').indexOf(' ') < 0) || 'No spaces are allowed',       
+      ],
+      passwordRules: [
+        v => !!v || 'password is required',
+      ],
     };
   },
   methods:{
-    async login() {
-      try {
+    login() {
+        this.isLoginError = false;
         const credentials = {
           username: this.username,
           password: this.password
         };
-        const response = await AuthService.login(credentials);
-        this.errorMessage = response.errorMessage;        
-        const token = response.access_token;
-        const user = this.username;
-        this.$store.dispatch("login", { token, user });
-        console.log(response);
-        if (response.access_token !== "") {
-          this.$router.push("/")
-        } else {
-          this.loginFalse = true;
-        }
-      } catch (error) {
-        this.errorMessage = error.response.data.msg;
-        this.loginFalse = true;
-      }
-    }
+        
+        this.$store.dispatch("login",  credentials )
+        .then(() => this.$router.push('/'))
+        .catch(err => {
+          console.log(err.error_description);
+          this.isLoginError = true;
+        })
+    },
+  },
+  computed:{
+    ...mapGetters(
+        ["authStatus", "isLoggedIn"]
+      ),
   }
 };
 

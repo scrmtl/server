@@ -37,8 +37,10 @@ export default new Vuex.Store({
     detailViewVisable: false,
     detailTask: {},
     Userinfo: {
+      status: "",
       username: "",
-      token: ""
+      token: localStorage.getItem('token') || '',
+      refreshToken: localStorage.getItem('refreshToken') || '',
     },
 
     selectedProject: {
@@ -56,17 +58,59 @@ export default new Vuex.Store({
   // call REST API (async)
   // Use from the components
   actions: {
-    login({ commit }, { token, user }) {
-      commit("SET_TOKEN", token);
-      commit("SET_USERNAME", user);
-      // set auth header
-      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$state.Userinfo.token}`;
+    // login({ commit }, { token, user }) {
+    //   commit("SET_TOKEN", token);
+    //   commit("SET_USERNAME", user);
+    //   // set auth header
+    //   Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$state.Userinfo.token}`;
 
-    },
+    // },
 
-    logout({ commit }) {
-      commit("RESET", '');
+    login({commit}, credentials){
+      return new Promise((resolve, reject) => {
+        commit('AUTH_REQUEST');
+        Axios({
+          method: "post",
+          url: "o/token/",
+          auth: {
+            username: "ttLwLjOKoJWtm5NDRRfGbgfioDhS7hwGZ0iaAzzD",
+            password: "SPWysYuxLcr4ju0ITzqKASIQObiWaaUQbKb4ofYgJTv2QmkFSqfgroR3GIOg1QH41okgg0UHPh3gbTUiXuKKuj85Qy241hyBrn851v6eTVOpRujVWzZZP3npTki1Znnc"
+          }, 
+          data:
+            "grant_type=password&username=" + credentials.username + "&password=" + credentials.password + "&scope=write"
+           })
+        .then(resp => {
+          const token = resp.data.access_token;
+          const refreshToken = resp.data.refresh_token;
+          console.log(credentials);
+          const user = credentials.username;
+          localStorage.setItem('token', token);
+          localStorage.setItem('refreshToken', refreshToken);
+          Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          commit('AUTH_SUCCESS', {token, refreshToken, user});
+          resolve(resp);
+        })
+        .catch(err => {
+          commit('AUTH_ERROR');
+          localStorage.removeItem('token');
+          localStorage.removeItem('refreshToken');
+          reject(err);
+        })
+      })
     },
+    logout({commit}){
+      return new Promise((resolve) => {
+        commit('LOGOUT');
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        delete Axios.defaults.headers.common['Authorization'];
+        resolve();
+      })
+    }
+
+    // logout({ commit }) {
+    //   commit("RESET", '');
+    // },
   },
   //Update States (sync)
   mutations: {
@@ -120,31 +164,24 @@ export default new Vuex.Store({
       state.count++;
     },
     // User login and logout
-    SET_TOKEN(state, token) {
+    AUTH_REQUEST(state){
+      state.Userinfo.status = "loading";
+    },
+    AUTH_SUCCESS(state, {token, refreshToken, user}){
+      state.Userinfo.status = "success";
       state.Userinfo.token = token;
+      state.Userinfo.refreshToken = refreshToken;
+      state.Userinfo.username = user;
     },
-    SET_USERNAME(state, username) {
-      state.Userinfo.username = username;
+    AUTH_ERROR(state){
+      state.Userinfo.status = "error";
     },
-    RESET(state) {
-      state.Userinfo.username = "";
+    LOGOUT(state){
+      state.Userinfo.status = "";
       state.Userinfo.token = "";
+      state.Userinfo.refreshToken = "";
+      state.Userinfo.username = "";
     },
-    // SET_PROJECTS(state, projects) {
-    //   state.projects = projects;
-    // },
-    // NEW_PROJECT(state, project) {
-    //   state.projects.unshift(project);
-    // },
-    // UPDATE_PROJECT(state, updatedProject) {
-    //   const index = state.projects.findIndex(t => t.id === updatedProject.id);
-    //   if (index !== -1) {
-    //     state.tasks.splice(index, 1, updatedProject);
-    //   }
-    // },
-    // DELETE_PROJECT(state, project) {
-    //   state.projects = state.projects.filter(prj => project.id !== prj.id);
-    // }
 
   },
   getters: {
@@ -162,9 +199,17 @@ export default new Vuex.Store({
       return state.Userinfo.token;
     },
 
-    getUsername: state => {
-      return state.Userinfo.username;
+    getUserinfo: state => {
+      return state.Userinfo;
     },
+
+    isLoggedIn: state => {
+      return !!state.Userinfo.token;
+    },
+    authStatus: state => {
+      return state.Userinfo.status;
+    },
+    
   },
   modules: {
     task,

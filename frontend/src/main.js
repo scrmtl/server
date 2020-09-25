@@ -9,7 +9,13 @@ import Axios from "axios";
 Vue.config.productionTip = false;
 
 // set auth header
-Axios.defaults.headers.common['Authorization'] = `Bearer ${store.state.token}`;
+// Axios.defaults.headers.common['Authorization'] = `Bearer ${store.state.token}`;
+// Vue.prototype.$http = Axios;
+const token = localStorage.getItem('token');
+if (token) {
+  Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+
 
 new Vue({
   router,

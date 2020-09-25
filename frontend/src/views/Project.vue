@@ -16,7 +16,7 @@
 </template>
 
 <script>
-    import AppBar from "@/components/AppBar";
+    import AppBar from "@/components/TheAppBar";
     import { mapActions, mapGetters } from "vuex";
     export default {
         props: ["id"],
