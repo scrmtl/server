@@ -154,15 +154,6 @@ export default new Vuex.Store({
       state.selectedProject.details = project;
     },
 
-    //Legacy
-    setDetailTask(state, Task) {
-      state.detailTask = Task;
-    },
-
-
-    increment(state) {
-      state.count++;
-    },
     // User login and logout
     AUTH_REQUEST(state){
       state.Userinfo.status = "loading";
