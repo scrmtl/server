@@ -3,7 +3,7 @@
     <v-list color="accent">
       <v-list-item>
         <v-list-item-avatar>
-          <ProfileAvatar :avatar="avatar" custom-class="bordered small" size="32px"/>
+          <ProfileAvatar :avatar="avatar" size="32px"/>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>{{ avatar.name }}</v-list-item-title>

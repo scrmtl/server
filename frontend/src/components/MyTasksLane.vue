@@ -1,17 +1,15 @@
 <template>
 
-  <v-card class="lane " max-width="420"    elevation="5">
+  <v-card class="lane " max-width="420"  elevation="5">
     <v-card-title class="navbar white--text" >
-      Meine Tasks
+      My Tasks
     </v-card-title>
     <v-card-text class="lane-body"  >
-      <v-container fluid>
         <v-row  v-for="task in listTasks" :key="task.id">
           <v-col>
             <Task v-bind:task="task" v-bind:task_index="task.id" />
           </v-col>
         </v-row>
-      </v-container>
         
 
     </v-card-text>

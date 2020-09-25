@@ -3,8 +3,10 @@
     <v-row>
         <AppBar v-bind:id="id"/>
     </v-row>
-    <v-row>
-        <router-view></router-view>
+    <v-row class="d-flex" dense>
+        <v-col cols="12">
+            <router-view></router-view>
+        </v-col>
     </v-row>
     
   </v-container>

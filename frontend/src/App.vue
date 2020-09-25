@@ -42,7 +42,6 @@ export default {
   created(){
     Axios.interceptors.response.use(undefined, function (err) {
       return new Promise(() =>{
-        // TODO klären ob err.config vorhanden bei 401??
         if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
           this.$store.dispatch("logout")
         }

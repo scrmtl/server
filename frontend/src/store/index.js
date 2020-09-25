@@ -107,10 +107,6 @@ export default new Vuex.Store({
         resolve();
       })
     }
-
-    // logout({ commit }) {
-    //   commit("RESET", '');
-    // },
   },
   //Update States (sync)
   mutations: {

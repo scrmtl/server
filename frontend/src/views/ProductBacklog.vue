@@ -1,14 +1,11 @@
 <template>
-
-  <v-container fluid class="tabbody">
     <v-row >
-      <v-col v-for="lane in listLanes" :key="lane.id">
-        <Lane v-bind:lane="lane"></Lane>
+      <v-col dense class="d-flex flex-nowrap overflow-x-auto">
+        <div class="ma-4" v-for="lane in listLanes" :key="lane.id">
+          <Lane v-bind:lane="lane"></Lane>
+        </div>
       </v-col>
     </v-row>
-  </v-container>
-
-
 </template>
 
 <script>

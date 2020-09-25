@@ -76,11 +76,10 @@ export default {
           username: this.username,
           password: this.password
         };
-        
         this.$store.dispatch("login",  credentials )
         .then(() => this.$router.push('/'))
         .catch(err => {
-          console.log(err.error_description);
+          console.log(err);
           this.isLoginError = true;
         })
     },

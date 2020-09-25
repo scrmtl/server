@@ -29,7 +29,7 @@
 <script>
 import ProjectCard from "@/components/ProjectCard.vue";
 import MyTasksLane from "@/components/MyTasksLane.vue";
-
+import Axios from "axios";
 
 import { mapGetters, mapActions, mapState } from "vuex";
 //import scrmtlServices from '@/services/scrmtlServices.js'
@@ -61,7 +61,7 @@ export default {
   },
   created() {
     this.loadData();
-    this.$http.interceptors.request.use(config => {
+    Axios.interceptors.request.use(config => {
       if (
         config.method === "post" &&
         config.url[config.url.length - 1] !== "/"

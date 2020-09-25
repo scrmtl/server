@@ -1,6 +1,11 @@
 <template>
-  <div>
-    <v-card class="lane"  max-width="420"  elevation="5">
+    <v-card 
+      class="lane"
+      min-width="370"
+      max-width="420" 
+      
+      
+    >
       
       <v-card-title class="navbar white--text">
         <div>
@@ -22,14 +27,14 @@
       </v-card-title>
       
       
-      <v-card-text class="lane-body pa-2">
-        <div v-for="task in this.tasksByIdArray(this.lane.task_cards)" :key="task.id">
-          <Task v-bind:task="task" />
-        </div>
+      <v-card-text class="lane-body">
+        <v-row v-for="task in this.tasksByIdArray(this.lane.task_cards)" :key="task.id">
+          <v-col>
+            <Task v-bind:task="task" />
+          </v-col>
+        </v-row>
       </v-card-text>
-      <v-card-actions class="lane-extended"></v-card-actions>
     </v-card>
-  </div>
 </template>
 
 <script>

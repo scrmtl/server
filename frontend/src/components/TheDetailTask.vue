@@ -83,17 +83,16 @@
                   <v-row align="center">
                       <v-card v-if="!this.selectedTask.visableCreate" flat dark color="secondary" tile>
                         <v-card-title class="title">
-                          <span class="headline ma-4">Assigned users</span>
+                          <span class="headline">Assigned users</span>
                           <v-btn icon>
                             <v-icon color="link">mdi-dots-horizontal</v-icon>
                           </v-btn>
                         </v-card-title>
                         <v-card-text>
-                          <section class="avatars-group grid pa-3">
-                            <div
+                          <v-row>
+                            <v-col
                               v-for="avatar in allAssignedUsers"
                               :key="`avatar-id-${avatar.id}`"
-                              class="avatars-group__item"
                             >
                               <v-menu open-delay="1500" open-on-hover :nudge-width="200" offset-y>
                                 <template v-slot:activator="{ on, attrs }">
@@ -103,8 +102,8 @@
                                 </template>
                                 <ProfileTooltip :avatar="avatar" />
                               </v-menu>
-                            </div>
-                          </section>
+                            </v-col>
+                          </v-row>
                         </v-card-text>
                       </v-card>
                   </v-row>

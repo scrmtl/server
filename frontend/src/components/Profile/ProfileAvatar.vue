@@ -27,7 +27,7 @@ export default {
       type: String
     },
     size: {
-      default: '48px',
+      default: '36px',
       type: String
     }
   },

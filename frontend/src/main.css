@@ -43,7 +43,7 @@
 }
 .lane{
   margin-top: 20px;
-  margin-left: -20px;
+
   }
 .epic {
     float: left;
@@ -65,12 +65,11 @@
     margin-left: -24px;
   }
 .lane-body {
-    overflow-y: auto;
-    background-color: lightgray;
+    background-color: #2E4057;
     padding-left: -2px;
     border-style: solid;
     border-top-style: hidden;
-    border-bottom-style: #6441A4;
+    border-bottom-color: #6441A4;
     border-left-color: #6441A4;
     border-right-color: #6441A4;
   }
@@ -221,14 +220,14 @@
 .task-labels {
     padding-top: 6px;
     padding-left: 6px;
-    height: 36px;
+    height: 32px;
     background-color: #87A6B3;
 }
 .task-name {
     float: left;
     font-weight: bold;
     margin-left: 6px;
-    height: 40px;
+    height: 36px;
     padding-top: 8px;
   }
 .task-status {
