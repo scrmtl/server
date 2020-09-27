@@ -1,29 +1,26 @@
 /* eslint-disable */
 <template>
-    
-    <v-container fluid>
-      <v-row>
-         <v-col >
-           <div class="projectBtn my-2">
-              <v-btn text color="link" large @click="showCreateProject()">
-                <v-icon class="mr-1">mdi-folder-plus</v-icon>Create Project
-              </v-btn>
-            </div>
-          </v-col>
-      </v-row>
-      <v-row align="start" justify="center"> 
-        <v-col cols="8" >
-          <div v-for="project in listProjects" :key="project.id">
-            <ProjectCard v-bind:project="project" />
-          </div>
-        </v-col>
-        <v-col cols="4">
-            <MyTasksLane />
-        </v-col>
-      </v-row>
-    </v-container>
-    
-
+  <v-container fluid>
+    <v-row>
+      <v-col>
+        <div class="projectBtn my-2">
+          <v-btn text color="link" large @click="showCreateProject()">
+            <v-icon class="mr-1">mdi-folder-plus</v-icon>Create Project
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row align="start" justify="center">
+      <v-col cols="8">
+        <div v-for="project in listProjects" :key="project.id">
+          <ProjectCard v-bind:project="project" />
+        </div>
+      </v-col>
+      <v-col cols="4">
+        <MyTasksLane />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -41,15 +38,13 @@ export default {
     calendar2menu: false,
     drawer: false,
     tab: null,
-    localProject: {},
-    
+    localProject: {}
   }),
   components: {
     ProjectCard,
-    MyTasksLane,
-
+    MyTasksLane
   },
-  beforeCreate(){
+  beforeCreate() {
     // // safe home route
     // if (!this.$store.getters.getToken) {
     //   this.$router.push("/login");
@@ -63,7 +58,7 @@ export default {
     this.loadData();
     Axios.interceptors.request.use(config => {
       if (
-        config.method === "post" &&
+        (config.method === "post") | (config.method === "patch") &&
         config.url[config.url.length - 1] !== "/"
       ) {
         config.url += "/";
@@ -86,7 +81,6 @@ export default {
     ...mapActions("session", {
       SessionFetch: "fetchList"
     }),
-    
 
     loadData() {
       // Load Projects
@@ -94,9 +88,9 @@ export default {
       //Load User Groups
       this.GroupsFetch();
       this.UsersFetch();
-      this.SessionFetch({ customUrlFnArgs: {all: false}});
+      this.SessionFetch({ customUrlFnArgs: { all: false } });
     },
-    showCreateProject(){
+    showCreateProject() {
       this.$store.commit("showProjectDetail", true);
     },
 
