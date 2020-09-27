@@ -6,9 +6,15 @@
 
     <v-toolbar-title class="link--text">ScrumTool</v-toolbar-title>
 
-    <v-btn color="link" text x-small dark @click.stop="dialog = true"
-      >Benutzerverwaltung</v-btn
-    >
+    <v-btn
+      color="link"
+      text
+      x-small
+      dark
+      @click.stop="dialog = true"
+      v-if="getGroupId == 1"
+      >Benutzerverwaltung
+    </v-btn>
     <PlattformUserManagement v-model="dialog" v-if="dialog" />
 
     <v-spacer></v-spacer>
@@ -33,12 +39,13 @@
 
 <script>
 import PlattformUserManagement from "@/components/PlattformUserManagement.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   data() {
     return {
-      dialog: false
+      dialog: false,
+      groupId: 0
     };
   },
   components: {
@@ -50,9 +57,26 @@ export default {
         this.$router.push("/login");
       });
     },
-
-    initialize() {
-      this.listSession();
+    ...mapActions("session", {
+      fetchSession: "fetchList"
+    }),
+    fetchGroupId() {
+      this.groupId = -1;
+      this.fetchSession({
+        id: null,
+        customUrlFnArgs: { all: false }
+      })
+        .then(() => {
+          //get groupId
+          this.groupId = Object.values(this.listSession)
+            .shift()
+            .groups.shift();
+        })
+        .catch(() => {
+          if (this.groupId <= 0) {
+            this.groupId = 0;
+          }
+        });
     }
   },
 
@@ -60,7 +84,16 @@ export default {
     ...mapGetters("session", {
       listSession: "list"
     }),
-    ...mapGetters({ userinfos: "getUserinfo" })
+    ...mapGetters("group", {
+      groupById: "byId"
+    }),
+    ...mapGetters({ userinfos: "getUserinfo" }),
+    getGroupId: function() {
+      if (this.groupId === 0) {
+        this.fetchGroupId();
+      }
+      return this.groupId;
+    }
   },
   mounted() {
     this.listSession;

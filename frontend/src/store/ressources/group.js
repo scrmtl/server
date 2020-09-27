@@ -17,5 +17,20 @@ export default createCrudModule({
     // Follow getters are generated:
     // list 
     // byId(id)
+    getters: {
+        /** @description Get the ID of a group by it's name 
+         * @param {string} groupName Name of the group 
+         * @return {object} group with the given name
+         */
+        byGroupName(state) {
+            return groupName => {
+                for (const [key, value] of Object.entries(state.entities)) {
+                    if (value.name === groupName) {
+                        return parseInt(key)
+                    }
+                }
+            }
+        },
 
+    }
 });

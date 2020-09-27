@@ -13,9 +13,9 @@
           <template v-slot:[`item.group`]="{ item }">
             <v-select
               :items="groupNames"
-              :value="item.group"
+              :value="item.group.name"
               prepend-icon="mdi-circle-edit-outline"
-              @input="updateGroup(item)"
+              @change="updateGroup($event, item)"
             ></v-select>
           </template>
           <template v-slot:top>
@@ -30,8 +30,8 @@
                     v-on="on"
                     small
                     outlined
-                    >Benutzer hinzufügen</v-btn
-                  >
+                    >Benutzer hinzufügen
+                  </v-btn>
                 </template>
                 <v-card>
                   <v-card-title>
@@ -62,12 +62,30 @@
                         <v-text-field
                           v-model="editedItem.password"
                           label="Passwort"
+                          :rules="passwordRules"
+                          :type="showPassword ? 'text' : 'password'"
+                          prepend-icon="mdi-lock"
+                          :append-icon="
+                            showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                          "
+                          @click:append="showPassword = !showPassword"
+                          @keydown.enter="login()"
+                          required
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="editedItem.repeated_password"
                           label="Passwort wiederholen"
+                          :rules="passwordRules"
+                          :type="showPassword ? 'text' : 'password'"
+                          prepend-icon="mdi-lock"
+                          :append-icon="
+                            showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                          "
+                          @click:append="showPassword = !showPassword"
+                          @keydown.enter="login()"
+                          required
                         ></v-text-field>
                       </v-col>
                     </v-row>
@@ -122,6 +140,8 @@ export default {
     fetchErrors: [],
     user: "",
     groupNames: [],
+    showPassword: false,
+    passwordRules: [v => !!v || "password is required"],
     createUser: false,
     formTitle: "Benutzer Form",
     headers: [
@@ -164,25 +184,18 @@ export default {
           this.fetchErrors.push(error);
         })
         .then(() => {
-          var test = this.groupById(1);
-          console.log(test);
           var listgroupsvalues = [];
           this.listGroups.forEach(group => {
             listgroupsvalues.push(group.name);
           });
           this.groupNames = listgroupsvalues;
-          console.log(this.groupNames);
         });
     },
-    updateGroup(item) {
-      console.log(item);
-      var test1 = Object.values(item.group).shift();
-      var test2 = Object.values(item.group);
-      var test3 = item.group;
-      console.log(test1, test2, test3);
-      this.updateUser({ id: item.id, data: { group: item.group } }).then(() =>
-        this.fetchAll()
-      );
+    updateGroup(newGroup, item) {
+      this.updateUser({
+        id: item.id,
+        data: { groups: [this.byGroupName(newGroup)] }
+      }).then(() => this.fetchAll());
     },
     saveUser() {
       this.registerUser({
@@ -194,6 +207,9 @@ export default {
           password2: this.editedItem.repeated_password
         }
       }).then(() => this.fetchAll());
+      let setAll = (obj, val) => Object.keys(obj).forEach(k => (obj[k] = val));
+      setAll(this.editedItem, "");
+      this.createUser = false;
     },
     close() {
       this.$emit("input", false);
@@ -209,7 +225,7 @@ export default {
             name: pUser.name,
             email: pUser.email,
             username: pUser.username,
-            group: group.name,
+            group: group,
             id: pUser.id
           });
         } else {
@@ -228,7 +244,8 @@ export default {
     }),
     ...mapGetters("group", {
       groupById: "byId",
-      listGroups: "list"
+      listGroups: "list",
+      byGroupName: "byGroupName"
     })
   }
 };
