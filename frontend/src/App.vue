@@ -2,7 +2,7 @@
 <template>
   <v-app >
     
-    <SystemBar/>
+    <SystemBar v-if="this.$store.getters.isLoggedIn"/>
     <DetailProject/>
     <DetailTask/>
     <!-- v-main is necessary. Do not use v-content -->
