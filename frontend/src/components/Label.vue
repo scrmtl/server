@@ -15,7 +15,7 @@
     >
       <template v-slot:no-data>
         <v-list-item>
-          <span class="subheading">Create </span>
+          <span class="subheading">Create</span>
           <v-chip
             :color="`${colors[nonce - 1]} lighten-3`"
             label
@@ -35,7 +35,7 @@
           
         >
           <span class="pr-2">
-            {{ item.text }}
+            {{ item.title }}
           </span>
           <v-icon
             small
@@ -46,7 +46,7 @@
       <template v-slot:item="{ index, item }">
         <v-text-field
           v-if="editing === item"
-          v-model="editing.text"
+          v-model="editing.title"
           autofocus
           flat
           
@@ -62,7 +62,7 @@
           label
           small
         >
-          {{ item.text }}
+          {{ item.title }}
         </v-chip>
         <v-spacer></v-spacer>
         <v-list-item-action @click.stop>
@@ -90,11 +90,11 @@
       items: [
         { header: 'Select an label or create one' },
         {
-          text: 'Foo',
+          title: 'Foo',
           color: 'blue',
         },
         {
-          text: 'Bar',
+          title: 'Bar',
           color: 'red',
         },
       ],
@@ -102,7 +102,7 @@
       menu: false,
       model: [
         {
-          text: 'Foo',
+          title: 'Foo',
           color: 'blue',
         },
       ],
@@ -118,7 +118,7 @@
         this.model = val.map(v => {
           if (typeof v === 'string') {
             v = {
-              text: v,
+              title: v,
               color: this.colors[this.nonce - 1],
             }
 
@@ -147,13 +147,14 @@
 
         const hasValue = val => val != null ? val : ''
 
-        const text = hasValue(itemText)
+        const title = hasValue(itemText)
         const query = hasValue(queryText)
 
-        return text.toString()
+        return title.toString()
           .toLowerCase()
           .indexOf(query.toString().toLowerCase()) > -1
       },
     },
+
   }
 </script>
