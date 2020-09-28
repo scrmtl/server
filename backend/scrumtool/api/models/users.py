@@ -8,7 +8,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 from api.rules_predicates import is_dev_in_project, \
-    is_po_in_project, is_sm_in_project, is_project_team_member
+    is_po_in_project, is_sm_in_project, is_project_team_member, \
+    can_change_user
 
 
 class ProjectRole(RulesModel):

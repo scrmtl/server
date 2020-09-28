@@ -59,5 +59,15 @@ def is_project_team_member(user, project_object):
         return True
 
 
+@rules.predicate
+def is_own_profile(user, platform_user_object):
+    if user.id == platform_user_object.id:
+        True
+    else:
+        False
+
+
 is_admin = rules.is_group_member('admin')
 is_default_user = rules.is_group_member('standard')
+
+can_change_user = is_admin | is_own_profile
