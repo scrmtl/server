@@ -45,20 +45,18 @@ export default {
       fetchTasks: "fetchList"
     }),
     ...mapActions("session", {
-      SessionFetch: "fetchList"
+      fetchSession: "fetchList"
     }),
 
     fetchData() {
-      try {
-        this.fetchTasks({
-          customUrlFnArgs: { byUser: this.listSession.shift().id }
-        });
-      } catch (error) {
-        if(this.listSession === undefined){
-          this.SessionFetch({ customUrlFnArgs: {all: false}});
+      this.fetchSession({ customUrlFnArgs: {all: false}})
+        .then(resp => {
+          if(resp.status === 200){
+            this.fetchTasks({
+              customUrlFnArgs: { byUser: this.listSession.shift().id }})
+          }
         }
-      }
-
+      )
     }
   },
 
@@ -71,12 +69,6 @@ export default {
   },
   mounted() {
     this.fetchData();
-    setInterval(
-      function() {
-        this.fetchData();
-      }.bind(this),
-      10000
-    );
   }
 };
 </script>
