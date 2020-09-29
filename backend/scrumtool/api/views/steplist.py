@@ -5,12 +5,20 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
+from rest_framework import permissions, status, mixins, generics
+from api.views.nested_ressources_helper import NestedComponentViewSet, \
+    NestedMtmMixin
 
 from .. import models
 from .. import serializers
 
 
-class SteplistViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
+class SteplistViewSet(AutoPermissionViewSetMixin,
+                      NestedMtmMixin,
+                      mixins.CreateModelMixin,
+                      mixins.ListModelMixin,
+                      mixins.RetrieveModelMixin,
+                      NestedComponentViewSet):
     """Handels events that influence the whole list
 
     Parameters
@@ -22,9 +30,9 @@ class SteplistViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         if 'task_pk' not in self.kwargs:
-            return self.queryset
+            return super().get_queryset()
         else:
-            return self.queryset.filter(task=self.kwargs['task_pk'])
+            return super().get_queryset().filter(task=self.kwargs['task_pk'])
     serializer_class = serializers.StepListSerializerCommon
 
     def retrieve(self, request, pk=None):
@@ -34,10 +42,10 @@ class SteplistViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
         -------
         json : Single steplist element with an array of steps
         """
-        _steplist = get_object_or_404(self.get_queryset(), pk=pk)
-        _serializer_class = serializers.StepListSerializer(_steplist)
+        steplist = get_object_or_404(self.get_queryset(), pk=pk)
+        serializer = self.get_serializer(steplist)
 
-        return Response(_serializer_class.data)
+        return Response(serializer.data)
 
 
 class StepViewSet(viewsets.ModelViewSet):
@@ -47,9 +55,10 @@ class StepViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if 'steplist_pk' not in self.kwargs:
-            return self.queryset
+            return super().get_queryset()
         else:
-            return self.queryset.filter(steplist=self.kwargs['steplist_pk'])
+            return super().get_queryset().filter(steplist=self.kwargs['steplist_pk'])
+
     serializer_class = serializers.StepSerializer
 
     def update(self, request, steplist_pk=None, pk=None):

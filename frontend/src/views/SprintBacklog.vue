@@ -1,13 +1,12 @@
 <template>
-  <v-content class="tabbody tab-content">
-    <v-container fluid class="pl-10">
-       <v-row>
-          <div v-for="lane in listLanes" :key="lane.id">
-            <Lane v-bind:lane="lane"></Lane>
-          </div>
-      </v-row>
-    </v-container>
-  </v-content>
+
+    <v-row dense>
+      <v-col dense class="d-flex flex-nowrap overflow-x-auto" >
+        <div class="ma-4" v-for="lane in listLanes" :key="lane.id">
+          <Lane v-bind:lane="lane"></Lane>
+        </div>
+      </v-col>
+    </v-row>
 </template>
 
 <script>
@@ -59,4 +58,5 @@ export default {
 
 <style lang="css" scoped>
 @import "../main.css";
+
 </style>

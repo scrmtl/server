@@ -150,7 +150,7 @@ class StepListSerializerCommon(serializers.ModelSerializer):
 
     class Meta:
         model = Steplist
-        fields = ('name', 'id', 'task')
+        fields = ('name', 'id', 'task', 'steplistitem_set')
         extra_kwargs = {
             "id": {
                 "read_only": False,

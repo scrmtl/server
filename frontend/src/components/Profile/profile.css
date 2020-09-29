@@ -21,6 +21,7 @@
   .avatars-group__item {
     cursor: default;
     transition: all 0.1s ease-out;
+    
   }
   .avatars-group__item.more {
     align-items: center;
@@ -34,7 +35,7 @@
     z-index: 1;
   }
   .avatars-group .v-avatar {
-    box-shadow: 0px 0px 0px 2px #fff inset;
+    box-shadow: 0px 0px 0px 2px #2E4057 inset;
   }
   .avatars-group .v-avatar img {
     padding: 2px;
@@ -51,19 +52,19 @@
     width: inherit;
   }
   .v-avatar.bordered {
-    box-shadow: 0px 0px 0px 2px #fff inset;
+    box-shadow: 0px 0px 0px 2px #2E4057 inset;
   }
   .v-avatar.bordered img {
     padding: 2px;
   }
   .v-avatar.bordered.small {
-    box-shadow: 0px 0px 0px 1px #fff inset;
+    box-shadow: 0px 0px 0px 1px #2E4057 inset;
   }
   .v-avatar.bordered.small img {
     padding: 1px;
   }
   .presence {
-    box-shadow: 0px 0px 0px 2px #fff inset;
+    box-shadow: 0px 0px 0px 2px #2E4057 inset;
     border-radius: 50%;
     bottom: 0px;
     display: block;

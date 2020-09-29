@@ -1,7 +1,7 @@
 <template>
     <v-content class="tabbody tab-content">
-    SprintPlaning - View
-  </v-content>
+      SprintPlaning - View
+    </v-content>
 </template>
 
 <script>

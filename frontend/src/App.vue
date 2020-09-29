@@ -1,39 +1,58 @@
 /* eslint-disable */
-<template id="app">
-  <v-app>
-    <v-system-bar>
-      <SystemBar/>
-    </v-system-bar>
+<template>
+  <v-app >
+    
+    <SystemBar v-if="this.$store.getters.isLoggedIn"/>
+    <DetailProject/>
+    <DetailTask/>
+    <!-- v-main is necessary. Do not use v-content -->
+    <v-main class="tabbody">
+        <router-view/>      
+    </v-main>
+    
 
-    <v-content>
-      <router-view/>
-    </v-content>
+    <v-footer color="appbar" class="white--text" app>
+      <span>dark, cool, easy</span>
+      <v-spacer></v-spacer>
+      <span>&copy; {{ new Date().getFullYear() }}</span>
+    </v-footer>
   </v-app>
 </template>
 
 <script>
 
-import SystemBar from "@/components/SystemBar.vue"
-
-
+import SystemBar from "@/components/TheSystemBar.vue";
+import DetailProject from "@/components/TheDetailProject.vue";
+import DetailTask from "@/components/TheDetailTask.vue";
+import Axios from "axios";
 export default {
   name: "App",
-
+  data: () => ({
+    //
+  }),
   components: {
-    SystemBar,  
+    SystemBar,
+    DetailProject, 
+    DetailTask
   },
 
   methods: {
     
   },
-
-  data: () => ({
-    //
-  })
+  created(){
+    Axios.interceptors.response.use(undefined, function (err) {
+      return new Promise(() =>{
+        if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
+          this.$store.dispatch("logout")
+        }
+        throw err;
+      });
+    });
+  }
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="css" >
 @import "/main.css";
 
 

@@ -11,11 +11,12 @@ import lane from '@/store/ressources/lane';
 import projectUser from '@/store/ressources/projectUser';
 import sprint from '@/store/ressources/sprint';
 import steplist from '@/store/ressources/steplist';
+import step from '@/store/ressources/step';
 import task from '@/store/ressources/task';
 import user from '@/store/ressources/user';
 import project from '@/store/ressources/project';
 import session from '@/store/ressources/session';
-import project_role from '@/store/ressources/project_role';
+import projectRole from '@/store/ressources/projectRole';
 import registration from '@/store/ressources/registration';
 import group from '@/store/ressources/group';
 
@@ -34,32 +35,78 @@ export default new Vuex.Store({
   // States
   state: {
     detailViewVisable: false,
-    detailProjectVisable: false,
     detailTask: {},
-    detailProject: {},
     Userinfo: {
+      status: "",
       username: "",
-      token: ""
+      token: localStorage.getItem('token') || '',
+      refreshToken: localStorage.getItem('refreshToken') || '',
     },
 
-    projects: [],
-    selectedProject: {},
+    selectedProject: {
+      visableDetail: false,
+      visableCreate: false,
+      details: {},
+    },
+    selectedTask: {
+      visableDetail: false,
+      visableCreate: false,
+      details: {},
+    },
     selectedBoard: {}
   },
   // call REST API (async)
   // Use from the components
   actions: {
-    login({ commit }, { token, user }) {
-      commit("SET_TOKEN", token);
-      commit("SET_USERNAME", user);
-      // set auth header
-      Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$state.Userinfo.token}`;
+    // login({ commit }, { token, user }) {
+    //   commit("SET_TOKEN", token);
+    //   commit("SET_USERNAME", user);
+    //   // set auth header
+    //   Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$state.Userinfo.token}`;
 
-    },
+    // },
 
-    logout({ commit }) {
-      commit("RESET", '');
+    login({commit}, credentials){
+      return new Promise((resolve, reject) => {
+        commit('AUTH_REQUEST');
+        Axios({
+          method: "post",
+          url: "o/token/",
+          auth: {
+            username: "ttLwLjOKoJWtm5NDRRfGbgfioDhS7hwGZ0iaAzzD",
+            password: "SPWysYuxLcr4ju0ITzqKASIQObiWaaUQbKb4ofYgJTv2QmkFSqfgroR3GIOg1QH41okgg0UHPh3gbTUiXuKKuj85Qy241hyBrn851v6eTVOpRujVWzZZP3npTki1Znnc"
+          }, 
+          data:
+            "grant_type=password&username=" + credentials.username + "&password=" + credentials.password + "&scope=write"
+           })
+        .then(resp => {
+          const token = resp.data.access_token;
+          const refreshToken = resp.data.refresh_token;
+          console.log(credentials);
+          const user = credentials.username;
+          localStorage.setItem('token', token);
+          localStorage.setItem('refreshToken', refreshToken);
+          Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          commit('AUTH_SUCCESS', {token, refreshToken, user});
+          resolve(resp);
+        })
+        .catch(err => {
+          commit('AUTH_ERROR');
+          localStorage.removeItem('token');
+          localStorage.removeItem('refreshToken');
+          reject(err);
+        })
+      })
     },
+    logout({commit}){
+      return new Promise((resolve) => {
+        commit('LOGOUT');
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        delete Axios.defaults.headers.common['Authorization'];
+        resolve();
+      })
+    }
   },
   //Update States (sync)
   mutations: {
@@ -71,49 +118,57 @@ export default new Vuex.Store({
       state.detailViewVisable = false;
     },
 
-    showProjectDetail(state) {
-      state.detailProjectVisable = true;
+    showTaskDetail(state, withCreate = false) {
+      state.selectedTask.visableDetail = true;
+      if (withCreate) {
+        state.selectedTask.visableCreate = true;
+      }
+    },
+    hideTaskDetail(state) {
+      state.selectedTask.visableDetail = false;
+      state.selectedTask.visableCreate = false;
+      state.selectedTask.details = {};
+    },
+    setSelectedTaskDetail(state, task) {
+      state.selectedTask.details = task;
+    },
+
+    showProjectDetail(state, withCreate = false) {
+      state.selectedProject.visableDetail = true;
+      if (withCreate) {
+        state.selectedProject.visableCreate = true;
+      }
     },
 
     hideProjectDetail(state) {
-      state.detailProjectVisable = false;
-    },
-    setDetailTask(state, Task) {
-      state.detailTask = Task;
-    },
-    setProjectDetail(state, ProjectDetail) {
-      state.detailProject = ProjectDetail;
+      state.selectedProject.visableDetail = false;
+      state.selectedProject.visableCreate = false;
+      state.selectedProject.details = {};
     },
 
-    increment(state) {
-      state.count++;
+    setSelectedProjectDetail(state, project) {
+      state.selectedProject.details = project;
     },
 
-    SET_TOKEN(state, token) {
+    // User login and logout
+    AUTH_REQUEST(state){
+      state.Userinfo.status = "loading";
+    },
+    AUTH_SUCCESS(state, {token, refreshToken, user}){
+      state.Userinfo.status = "success";
       state.Userinfo.token = token;
+      state.Userinfo.refreshToken = refreshToken;
+      state.Userinfo.username = user;
     },
-    SET_USERNAME(state, username) {
-      state.Userinfo.username = username;
+    AUTH_ERROR(state){
+      state.Userinfo.status = "error";
     },
-    RESET(state) {
-      state.Userinfo.username = "";
+    LOGOUT(state){
+      state.Userinfo.status = "";
       state.Userinfo.token = "";
+      state.Userinfo.refreshToken = "";
+      state.Userinfo.username = "";
     },
-    // SET_PROJECTS(state, projects) {
-    //   state.projects = projects;
-    // },
-    // NEW_PROJECT(state, project) {
-    //   state.projects.unshift(project);
-    // },
-    // UPDATE_PROJECT(state, updatedProject) {
-    //   const index = state.projects.findIndex(t => t.id === updatedProject.id);
-    //   if (index !== -1) {
-    //     state.tasks.splice(index, 1, updatedProject);
-    //   }
-    // },
-    // DELETE_PROJECT(state, project) {
-    //   state.projects = state.projects.filter(prj => project.id !== prj.id);
-    // }
 
   },
   getters: {
@@ -121,16 +176,27 @@ export default new Vuex.Store({
       return state.detailViewVisable;
     },
     getProjectDetailStatus: state => {
-      return state.detailProjectVisable;
+      return state.selectedProject.visableDetail;
+    },
+    getTaskDetailStatus: state => {
+      return state.selectedTask.visableDetail;
     },
 
     getToken: state => {
       return state.Userinfo.token;
     },
 
-    getUsername: state => {
-      return state.Userinfo.username;
+    getUserinfo: state => {
+      return state.Userinfo;
     },
+
+    isLoggedIn: state => {
+      return !!state.Userinfo.token;
+    },
+    authStatus: state => {
+      return state.Userinfo.status;
+    },
+    
   },
   modules: {
     task,
@@ -145,9 +211,10 @@ export default new Vuex.Store({
     user,
     project,
     session,
-    project_role,
+    projectRole,
     registration,
     group,
+    step,
   }
 });
 

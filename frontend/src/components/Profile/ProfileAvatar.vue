@@ -27,7 +27,7 @@ export default {
       type: String
     },
     size: {
-      default: '48px',
+      default: '36px',
       type: String
     }
   },
@@ -51,6 +51,14 @@ export default {
         var initials = "AA";
         initials = name.substring(0,2);
         return initials;
+        // const parts = name.split(' ')
+        // let initials = ''
+        // for (var i = 0; i < parts.length; i++) {
+        //   if (parts[i].length > 0 && parts[i] !== '') {
+        //     initials += parts[i][0]
+        //   }
+        // }
+        // return initials
     }
   }
 }

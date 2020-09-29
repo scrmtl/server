@@ -13,7 +13,7 @@ export default createCrudModule({
   // Follow getters are generated:
   // list 
   // byId(id)
-  
+
   /** @description Custom function to get an array of lanes
    * @param {number} boardId If set all lanes in that board are returned (exampleUrl: /api/board/1/lanes`)
    * @return {string} Url defined by the arguments
@@ -23,5 +23,7 @@ export default createCrudModule({
     // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
     const rootUrl = `/api/boards/${boardId}/lanes`;
     return id ? `${rootUrl}/${id}/` : rootUrl;
+    //const rootURL = `/api/lanes/?boards=${boardId}`
+    //return rootUrl;
   }
 });

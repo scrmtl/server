@@ -1,11 +1,19 @@
 """ViewSet for PlatformUser"""
 from rest_framework import viewsets
-
+from rest_framework import permissions, status, mixins, generics
+from api.views.nested_ressources_helper import NestedComponentViewSet, \
+    NestedMtmMixin
+from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 from . import models
 from . import serializers
 
 
-class ProjectUserViewSet(viewsets.ModelViewSet):
+class ProjectUserViewSet(AutoPermissionViewSetMixin,
+                         NestedMtmMixin,
+                         mixins.CreateModelMixin,
+                         mixins.ListModelMixin,
+                         mixins.RetrieveModelMixin,
+                         NestedComponentViewSet):
     """ProjectUser ViewSet to return data to REST api
     """
     queryset = models.ProjectUser.objects.all()
@@ -19,7 +27,12 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ProjectUserSerializer
 
 
-class ProjectRoleViewSet(viewsets.ModelViewSet):
+class ProjectRoleViewSet(AutoPermissionViewSetMixin,
+                         NestedMtmMixin,
+                         mixins.CreateModelMixin,
+                         mixins.ListModelMixin,
+                         mixins.RetrieveModelMixin,
+                         NestedComponentViewSet):
     """ProjectRole ViewSet to return data to REST api
     """
     queryset = models.ProjectRole.objects.all()

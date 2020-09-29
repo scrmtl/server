@@ -1,18 +1,20 @@
 <template>
-  <div>
-    <v-card class="lane" min-width="344" elevation="5">
-      <div class="lane-header">
-        <p dark>Meine Tasks</p>
-      </div>
-      <v-card-text class="lane-body pa-2">
-        <div v-for="task in listTasks" :key="task.id">
-          <Task v-bind:task="task" v-bind:task_index="task.id" />
-        </div>
-        <!-- <Task/> -->
-      </v-card-text>
-      <v-card-actions class="lane-extended"></v-card-actions>
-    </v-card>
-  </div>
+
+  <v-card class="lane " max-width="420"  elevation="5">
+    <v-card-title class="navbar white--text" >
+      My Tasks
+    </v-card-title>
+    <v-card-text class="lane-body"  >
+        <v-row  v-for="task in listTasks" :key="task.id">
+          <v-col>
+            <Task v-bind:task="task" v-bind:task_index="task.id" />
+          </v-col>
+        </v-row>
+        
+
+    </v-card-text>
+  </v-card>
+
 </template>
 
 <script>
@@ -42,11 +44,19 @@ export default {
     ...mapActions("task", {
       fetchTasks: "fetchList"
     }),
+    ...mapActions("session", {
+      fetchSession: "fetchList"
+    }),
 
     fetchData() {
-      return this.fetchTasks({
-        customUrlFnArgs: { byUser: this.listSession.shift().id }
-      });
+      this.fetchSession({ customUrlFnArgs: {all: false}})
+        .then(resp => {
+          if(resp.status === 200){
+            this.fetchTasks({
+              customUrlFnArgs: { byUser: this.listSession.shift().id }})
+          }
+        }
+      )
     }
   },
 
@@ -59,16 +69,10 @@ export default {
   },
   mounted() {
     this.fetchData();
-    setInterval(
-      function() {
-        this.fetchData();
-      }.bind(this),
-      10000
-    );
   }
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="css" >
 @import "../main.css";
 </style>

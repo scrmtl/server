@@ -12,6 +12,8 @@ from api.models.users import PlatformUser
 from django.core.validators import RegexValidator
 from django.core.exceptions import PermissionDenied
 
+from simple_history.models import HistoricalRecords
+
 from api.models.model_interfaces import IGetBoard, IGetProject
 
 from api.rules_predicates import can_change_board
@@ -82,6 +84,8 @@ class Card(RulesModel, IGetBoard, IGetProject):
         on_delete=models.DO_NOTHING,
         null=True, blank=True,
         help_text='Sprint this card is part of.')
+    # to track changes in inheritetd models inherit=True
+    history = HistoricalRecords(inherit=True)
 
     class Meta:
         """Meta definition for Card."""
@@ -205,7 +209,6 @@ class Label(RulesModel):
 
 class Epic(Card):
     """Model definition for Epic."""
-
     class Meta:
         """Meta definition for Epic."""
 

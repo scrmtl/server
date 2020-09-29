@@ -1,15 +1,24 @@
 <template>
-    <v-content class="tabbody tab-content">
-    <v-app-bar>
-      <AppBar v-bind:id="id"/>
-    </v-app-bar>
-    <router-view></router-view>
+<v-container fluid class="tabbody">
+    <v-row>
+        <AppBar v-bind:id="id"/>
+    </v-row>
+    <v-row class="d-flex" dense>
+        <v-col cols="12">
+            <router-view></router-view>
+        </v-col>
+    </v-row>
     
-  </v-content>
+  </v-container>
+
+
+    
+
+               
 </template>
 
 <script>
-    import AppBar from "@/components/AppBar";
+    import AppBar from "@/components/TheAppBar";
     import { mapActions, mapGetters } from "vuex";
     export default {
         props: ["id"],
