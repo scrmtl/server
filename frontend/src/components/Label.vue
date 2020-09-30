@@ -28,9 +28,7 @@
           :input-value="selected"
           label
         >
-          <span class="pr-2">
-            {{ item.title }}
-          </span>
+          <span class="pr-2"> {{ item.text }} id: {{ item.id }} </span>
           <v-icon small @click="parent.selectItem(item)"
             >mdi-close-circle</v-icon
           >
@@ -39,7 +37,7 @@
       <template v-slot:item="{ index, item }">
         <v-text-field
           v-if="editing === item"
-          v-model="editing.title"
+          v-model="editing.text"
           autofocus
           flat
           background-color="transparent"
@@ -48,11 +46,11 @@
           @keyup.enter="edit(index, item)"
         ></v-text-field>
         <v-chip v-else :color="`${item.color}`" label small>
-          {{ item.title }}
+          {{ item.text }}
         </v-chip>
         <v-spacer></v-spacer>
-        <v-list-item-action @click.stop>
-          <v-btn icon @click.stop.prevent="edit(index, item)">
+        <v-list-item-action @click.stop.prevent="edit(index, item)">
+          <v-btn icon>
             <v-icon>{{ editing !== item ? "mdi-pencil" : "mdi-check" }}</v-icon>
           </v-btn>
         </v-list-item-action>
@@ -71,7 +69,7 @@ export default {
   data: () => ({
     activator: null,
     attach: null,
-    colors: ["green", "purple", "indigo", "cyan", "teal", "orange"],
+    colors: ["#EF9A9A", "#9fa8da", "#90CAF9", "##81d4fa", "#80deea", "#A5D6A7"],
     editing: null,
     fetchErrors: [],
     index: -1,
@@ -87,33 +85,66 @@ export default {
   watch: {
     model(val, prev) {
       if (val.length === prev.length) return;
-
-      this.model = val.map(v => {
-        if (typeof v === "string") {
-          v = {
-            title: v,
-            color: this.colors[this.nonce - 1]
-          };
-
-          this.items.push(v);
-
-          this.nonce++;
-        }
-
-        return v;
-      });
+      this.model = val
+        //skip adding label if it is newly created
+        //-> Promise is going to add it after with response of backend
+        .filter(v => {
+          if (typeof v === "string") {
+            v = {
+              text: v,
+              color: this.colors[this.nonce - 1]
+            };
+            this.createLabel({ data: { title: v.text, color: v.color } }).then(
+              function(value) {
+                //add label to local label stack
+                var label = value.data;
+                label["text"] = label.title;
+                this.items.push(label);
+                this.model.push(label);
+                //add label to task in backend
+                var labelIds = this.task.labels;
+                labelIds.push(label.id);
+                this.updateTask({
+                  id: this.task.id,
+                  data: { labels: labelIds }
+                }).then(
+                  function(value) {
+                    var task = value.data;
+                    this.fetchTask({ id: task.id });
+                  }.bind(this)
+                );
+              }.bind(this)
+            );
+            this.nonce++;
+            return false;
+          }
+          return true;
+        })
+        .map(v => {
+          return v;
+        });
     }
   },
 
   methods: {
     ...mapActions("label", {
-      fetchLabels: "fetchList"
+      fetchLabels: "fetchList",
+      updateLabel: "update",
+      createLabel: "create"
+    }),
+    ...mapActions("task", {
+      fetchTask: "fetch",
+      updateTask: "update"
     }),
     edit(index, item) {
       if (!this.editing) {
         this.editing = item;
         this.index = index;
       } else {
+        this.updateLabel({
+          id: item.id,
+          data: { title: item.text, color: item.color }
+        });
         this.editing = null;
         this.index = -1;
       }
@@ -124,11 +155,11 @@ export default {
 
       const hasValue = val => (val != null ? val : "");
 
-      const title = hasValue(itemText);
+      const text = hasValue(itemText);
       const query = hasValue(queryText);
 
       return (
-        title
+        text
           .toString()
           .toLowerCase()
           .indexOf(query.toString().toLowerCase()) > -1
@@ -141,22 +172,28 @@ export default {
         })
         .then(() => {
           this.listLabels.forEach(label => {
+            //do not use title instead of text. v-combobox needs a text property
+            label["text"] = label.title;
             this.items.push(label);
-            this.model.push(label);
           });
+          this.fillTaskLabels(this.task);
         });
-      console.log("label IDs: " + this.getLabelIds(this.Task));
+      this.fetchTask({ id: this.task.id });
     },
-    getLabelIds(Task) {
+    fillTaskLabels(task) {
+      task.labels.forEach(labelId => {
+        this.model.push(this.labelById(labelId));
+      });
       var labelIds = [];
-      Task.labels.forEach(label => {
+      task.labels.forEach(label => {
         labelIds.push(label.id);
       });
     }
   },
   computed: {
     ...mapGetters("label", {
-      listLabels: "list"
+      listLabels: "list",
+      labelById: "byId"
     })
   },
   created() {
