@@ -13,4 +13,15 @@ export default createCrudModule({
     // Follow getters are generated:
     // list 
     // byId(id)
+    getters: {
+        /** @description Add Custom getter 
+         * @param {Array} idArray Array with label IDs 
+         * @return {Array} Array of Label Objects
+         */
+        byIdArray(state) {
+            return idArray =>
+                idArray.map(id => state.entities[id.toString()])
+        },
+
+    }
 });

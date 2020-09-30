@@ -326,10 +326,11 @@ class ChangesListSerializer(serializers.ListSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     """Serializer for Task-Cards
     """
-    labels = LabelSerializer(
+    labels = serializers.PrimaryKeyRelatedField(
         many=True,
         required=False,
-        read_only=False)
+        read_only=False,
+        queryset=Label.objects.all()),
     # serializers.PrimaryKeyRelatedField(
     #    many=True,
     #    required=False,
