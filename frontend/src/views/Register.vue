@@ -38,6 +38,7 @@
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
+            <v-btn @click="back()">BACK</v-btn>
             <v-spacer></v-spacer>
             <v-btn :disabled="!isFormVaild" color="info" @click="register()"
               >register</v-btn
@@ -68,6 +69,7 @@ export default {
       eMail: "",
       eMail_repeat: "",
       password_repeat: "",
+      errorHappend: false,
       errorMessage: "Username or password is invalid",
       usernameRules: [
         v => !!v || "Name is required",
@@ -83,28 +85,45 @@ export default {
     }),
 
     register() {
+        this.errorHappend = false;
       if (this.eMail == this.eMail_repeat) {
         if (this.password == this.password_repeat) {
-          try {
-            this.registerUser({
-              data: {
-                name: this.name,
-                email: this.eMail,
-                username: this.username,
-                password1: this.password,
-                password2: this.password_repeat
+          this.registerUser({
+            data: {
+              name: this.name,
+              email: this.eMail,
+              username: this.username,
+              password1: this.password,
+              password2: this.password_repeat
+            }
+          }).catch(err => {
+            if (err.response === undefined) {
+              this.errorHappend = false;
+            } else {
+              console.log(err.response.status);
+              console.log(err.response.data);
+              this.errorHappend = true;
+              if (err.response.data.email === undefined) {
+                if (err.response.data.password1 === undefined) {
+                  if (err.response.data.username === undefined) {
+                    this.errorHappend = false;
+                  } else {
+                    this.errorMessage = err.response.data.username[0];
+                    this.isRegisterError = true;
+                  }
+                } else {
+                  this.errorMessage = err.response.data.password1[0];
+                  this.isRegisterError = true;
+                }
+              } else {
+                this.errorMessage = err.response.data.email[0];
+                this.isRegisterError = true;
               }
-            }).then(() => this.fetchAll());
-            let setAll = (obj, val) =>
-              Object.keys(obj).forEach(k => (obj[k] = val));
-            setAll(this.editedItem, "");
-            this.createUser = false;
-            this.$router.push("/login");
-          } catch (err) {
-            //console.log(err);
-            this.errorMessage = "The Backend does not work...";
-            this.isRegisterError = true;
-          }
+            }
+            if (this.errorHappend == false) {
+              this.$router.push("/login");
+            }
+          });
         } else {
           this.errorMessage = "Password does not macht";
           this.isRegisterError = true;
@@ -113,6 +132,10 @@ export default {
         this.errorMessage = "E-Mail Adress does not match";
         this.isRegisterError = true;
       }
+    },
+
+    back() {
+      this.$router.push("/login");
     }
   },
   computed: {
