@@ -4,22 +4,20 @@
       <v-col cols="4">
         <v-card class="ma-4">
           <v-card-title>
-            <h1>Sign In</h1>
+            <h1>Register</h1>
           </v-card-title>
           <v-card-text>
             <v-form ref="form" v-model="isFormVaild">
+              <v-text-field label="Your name" v-model="name"> </v-text-field>
               <v-text-field
-                label="E-Mail Adresse *"
+                label="E-Mail Adress *"
                 v-model="eMail"
               ></v-text-field>
               <v-text-field
-                label="E-Mail Adresse wiederholen *"
+                label="Repeat E-Mail Adress *"
                 v-model="eMail_repeat"
               ></v-text-field>
-              <v-text-field
-                label="Gewünschter Benutzername"
-                v-model="username"
-              ></v-text-field>
+              <v-text-field label="Username" v-model="username"></v-text-field>
               <v-text-field
                 label="Passwort *"
                 v-model="password"
@@ -40,30 +38,31 @@
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
-            <v-btn color="success">Register</v-btn>
             <v-spacer></v-spacer>
-            <v-btn :disabled="!isFormVaild" color="info" @click="login()"
-              >Login</v-btn
+            <v-btn :disabled="!isFormVaild" color="info" @click="register()"
+              >register</v-btn
             >
           </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
     <v-row>
-      <v-snackbar v-model="isLoginError">{{ errorMessage }}</v-snackbar>
+      <v-snackbar v-model="isRegisterError">{{ errorMessage }}</v-snackbar>
     </v-row>
   </v-container>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import Axios from "axios";
 
 export default {
   data() {
     return {
       isFormVaild: null,
-      isLoginError: false,
+      isRegisterError: false,
       showPassword: false,
       showPassword_repeat: false,
+      name: "",
       username: "",
       password: "",
       eMail: "",
@@ -79,19 +78,41 @@ export default {
     };
   },
   methods: {
-    login() {
-      this.isLoginError = false;
-      const credentials = {
-        username: this.username,
-        password: this.password
-      };
-      this.$store
-        .dispatch("login", credentials)
-        .then(() => this.$router.push("/"))
-        .catch(err => {
-          console.log(err);
-          this.isLoginError = true;
-        });
+    ...mapActions("registration", {
+      registerUser: "create"
+    }),
+
+    register() {
+      if (this.eMail == this.eMail_repeat) {
+        if (this.password == this.password_repeat) {
+          try {
+            this.registerUser({
+              data: {
+                name: this.name,
+                email: this.eMail,
+                username: this.username,
+                password1: this.password,
+                password2: this.password_repeat
+              }
+            }).then(() => this.fetchAll());
+            let setAll = (obj, val) =>
+              Object.keys(obj).forEach(k => (obj[k] = val));
+            setAll(this.editedItem, "");
+            this.createUser = false;
+            this.$router.push("/login");
+          } catch (err) {
+            //console.log(err);
+            this.errorMessage = "The Backend does not work...";
+            this.isRegisterError = true;
+          }
+        } else {
+          this.errorMessage = "Password does not macht";
+          this.isRegisterError = true;
+        }
+      } else {
+        this.errorMessage = "E-Mail Adress does not match";
+        this.isRegisterError = true;
+      }
     }
   },
   computed: {
@@ -104,6 +125,15 @@ export default {
     this.username = "";
     this.password = "";
     this.password_repeat = "";
+    Axios.interceptors.request.use(config => {
+      if (
+        (config.method === "post") | (config.method === "patch") &&
+        config.url[config.url.length - 1] !== "/"
+      ) {
+        config.url += "/";
+      }
+      return config;
+    });
   }
 };
 </script>
