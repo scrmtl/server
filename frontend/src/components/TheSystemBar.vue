@@ -68,9 +68,8 @@ export default {
       })
         .then(() => {
           //get groupId
-          this.groupId = Object.values(this.listSession)
-            .shift()
-            .groups.shift();
+          var session = Object.values(this.listSession)[0];
+          this.groupId = session.groups[0];
         })
         .catch(() => {
           if (this.groupId <= 0) {

@@ -82,7 +82,7 @@
                     </v-col>
                   </v-row>
                   <v-row align="center">
-                    <Label v-bind:task="localTask"></Label>
+                    <Label v-bind:task="selectedTask.details"></Label>
                   </v-row>
                   <v-row align="center">
                     <v-card
@@ -346,9 +346,16 @@ export default {
 
     visibleDrawer: {
       get() {
+        console.log("visible Drawer get");
         return this.selectedTask.visableDetail;
       },
       set(newValue) {
+        if (newValue) {
+          this.$store.commit("showTaskDetail", true);
+        } else {
+          this.$store.commit("hideTaskDetail", true);
+        }
+
         this.selectedTask.visableDetail = newValue;
       }
     }
