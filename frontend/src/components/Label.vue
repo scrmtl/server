@@ -69,7 +69,7 @@ export default {
   data: () => ({
     activator: null,
     attach: null,
-    colors: ["#EF9A9A", "#9fa8da", "#90CAF9", "##81d4fa", "#80deea", "#A5D6A7"],
+    colors: ["#EF9A9A", "#9fa8da", "#90CAF9", "#81d4fa", "#80deea", "#A5D6A7"],
     editing: null,
     fetchErrors: [],
     index: -1,
@@ -133,9 +133,10 @@ export default {
         });
       var labelIds = [];
       val.forEach(label => {
+        if (label.id === undefined) return;
         labelIds.push(label.id);
       });
-      if (!labelIds) return;
+      if (labelIds.length < 1) return;
       this.updateTask({
         id: this.task.id,
         data: {
@@ -145,13 +146,17 @@ export default {
           lane: this.task.lane
         },
         customUrlFnArgs: {}
-      }).then(
-        function(value) {
-          var task = value.data;
-          this.fetchTask({ id: task.id, customUrlFnArgs: {} });
-          return value;
-        }.bind(this)
-      );
+      })
+        .then(
+          function(value) {
+            var task = value.data;
+            this.fetchTask({ id: task.id, customUrlFnArgs: {} });
+            return value;
+          }.bind(this)
+        )
+        .catch(function(err) {
+          console.error("Error while updating tasks:", err);
+        });
     },
     task(val, prev) {
       if (val.id === prev.id) return;
@@ -200,6 +205,7 @@ export default {
       );
     },
     fetchAll(task) {
+      if (task.id === undefined) return;
       this.fetchLabels({ customUrlFnArgs: {} })
         .catch(error => {
           this.fetchErrors.push(error);
