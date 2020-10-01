@@ -85,7 +85,6 @@ export default {
     },
     register() {
       this.$router.push("/register");
-      console.log("FICK");
     }
 
   },
