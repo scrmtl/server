@@ -137,38 +137,13 @@
                 <ProfileTooltip :avatar="avatar" />
               </v-menu>
             </div>
-            <v-col align-self="center">
+            <v-col align-self="center" v-if="task.assigned_users.length > 5">
               <v-avatar color="primary" size="32px">
-                <v-menu
-                  v-model="stackedMenu"
-                  open-delay="1000"
-                  open-on-hover
-                  offset-y
-                  :max-height="menuMaxHeight"
-                  nudge-bottom="8"
+                <span 
+                  class="white--text"
                 >
-                  <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on" size="32px">
-                      <v-icon color="link">mdi-dots-horizontal</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-list dense two-line color="accent">
-                    <v-list-item
-                      v-for="avatar in avatarsSorted"
-                      :key="`avatar-menu-id-${avatar.id}`"
-                    >
-                      <v-list-item-avatar>
-                        <ProfileAvatar :avatar="avatar" size="32px" />
-                      </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title>{{ avatar.name }}</v-list-item-title>
-                        <v-list-item-subtitle>{{
-                          avatar.username
-                        }}</v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
+                  +{{ task.assigned_users.length - 5 }}
+                </span>
               </v-avatar>
             </v-col>
           </v-row>
