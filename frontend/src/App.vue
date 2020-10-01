@@ -1,15 +1,13 @@
 /* eslint-disable */
 <template>
-  <v-app >
-    
-    <SystemBar v-if="this.$store.getters.isLoggedIn"/>
-    <DetailProject/>
-    <DetailTask/>
+  <v-app>
+    <SystemBar v-if="this.$store.getters.isLoggedIn" />
+    <DetailProject v-if="this.$store.getters.isLoggedIn" />
+    <DetailTask v-if="this.$store.getters.isLoggedIn" />
     <!-- v-main is necessary. Do not use v-content -->
     <v-main class="tabbody">
-        <router-view/>      
+      <router-view />
     </v-main>
-    
 
     <v-footer color="appbar" class="white--text" app>
       <span>dark, cool, easy</span>
@@ -20,7 +18,6 @@
 </template>
 
 <script>
-
 import SystemBar from "@/components/TheSystemBar.vue";
 import DetailProject from "@/components/TheDetailProject.vue";
 import DetailTask from "@/components/TheDetailTask.vue";
@@ -32,18 +29,16 @@ export default {
   }),
   components: {
     SystemBar,
-    DetailProject, 
+    DetailProject,
     DetailTask
   },
 
-  methods: {
-    
-  },
-  created(){
-    Axios.interceptors.response.use(undefined, function (err) {
-      return new Promise(() =>{
+  methods: {},
+  created() {
+    Axios.interceptors.response.use(undefined, function(err) {
+      return new Promise(() => {
         if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
-          this.$store.dispatch("logout")
+          this.$store.dispatch("logout");
         }
         throw err;
       });
@@ -54,6 +49,4 @@ export default {
 
 <style lang="css" >
 @import "/main.css";
-
-
 </style>

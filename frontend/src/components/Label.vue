@@ -106,13 +106,21 @@ export default {
                 labelIds.push(label.id);
                 this.updateTask({
                   id: this.task.id,
-                  data: { labels: labelIds }
+                  data: {
+                    labels: labelIds,
+                    feature: this.task.feature,
+                    name: this.task.name,
+                    lane: this.task.lane
+                  },
+                  customUrlFnArgs: {}
                 }).then(
                   function(value) {
                     var task = value.data;
-                    this.fetchTask({ id: task.id });
+                    this.fetchTask({ id: task.id, customUrlFnArgs: {} });
+                    return value;
                   }.bind(this)
                 );
+                return value;
               }.bind(this)
             );
             this.nonce++;
@@ -123,6 +131,33 @@ export default {
         .map(v => {
           return v;
         });
+      var labelIds = [];
+      val.forEach(label => {
+        labelIds.push(label.id);
+      });
+      if (!labelIds) return;
+      this.updateTask({
+        id: this.task.id,
+        data: {
+          labels: labelIds,
+          feature: this.task.feature,
+          name: this.task.name,
+          lane: this.task.lane
+        },
+        customUrlFnArgs: {}
+      }).then(
+        function(value) {
+          var task = value.data;
+          this.fetchTask({ id: task.id, customUrlFnArgs: {} });
+          return value;
+        }.bind(this)
+      );
+    },
+    task(val, prev) {
+      if (val.id === prev.id) return;
+      this.items = [{ header: "Select an label or create one" }];
+      this.model = [];
+      this.fetchAll(val);
     }
   },
 
@@ -133,7 +168,7 @@ export default {
       createLabel: "create"
     }),
     ...mapActions("task", {
-      fetchTask: "fetch",
+      fetchTask: "fetchSingle",
       updateTask: "update"
     }),
     edit(index, item) {
@@ -150,7 +185,6 @@ export default {
       }
     },
     filter(item, queryText, itemText) {
-      console.log("filter called; item: " + item + queryText + itemText);
       if (item.header) return false;
 
       const hasValue = val => (val != null ? val : "");
@@ -165,20 +199,23 @@ export default {
           .indexOf(query.toString().toLowerCase()) > -1
       );
     },
-    fetchAll() {
-      this.fetchLabels()
+    fetchAll(task) {
+      this.fetchLabels({ customUrlFnArgs: {} })
         .catch(error => {
           this.fetchErrors.push(error);
+          console.log("error");
+          return error;
         })
-        .then(() => {
+        .then(value => {
           this.listLabels.forEach(label => {
             //do not use title instead of text. v-combobox needs a text property
             label["text"] = label.title;
             this.items.push(label);
           });
-          this.fillTaskLabels(this.task);
+          this.fillTaskLabels(task);
+          return value;
         });
-      this.fetchTask({ id: this.task.id });
+      this.fetchTask({ id: task.id, customUrlFnArgs: {} });
     },
     fillTaskLabels(task) {
       task.labels.forEach(labelId => {
@@ -197,7 +234,7 @@ export default {
     })
   },
   created() {
-    this.fetchAll();
+    //this.fetchAll();
   }
 };
 </script>
