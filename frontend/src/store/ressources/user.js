@@ -21,7 +21,7 @@ export default createCrudModule({
         byIdArray(state) {
             return function (idArray) {
                 if (idArray === undefined) return undefined
-                idArray.map(id => state.entities[id.toString()])
+                return idArray.map(id => state.entities[id.toString()])
             }
         },
 
