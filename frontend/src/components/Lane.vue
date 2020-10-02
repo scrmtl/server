@@ -21,11 +21,8 @@
       </v-menu>
     </v-card-title>
 
-    <v-card-text class="lane-body">
-      <v-row
-        v-for="task in this.tasksByIdArray(this.lane.task_cards)"
-        :key="task.id"
-      >
+    <v-card-text v-if="laneTasks" class="lane-body">
+      <v-row v-for="task in laneTasks" :key="task.id">
         <v-col>
           <Task v-bind:task="task" />
         </v-col>
@@ -46,7 +43,8 @@ export default {
       { title: "+ New Task" }
     ],
     epicItem: [{ title: "+ New Feature" }, { title: "+ New Task" }],
-    featureItem: [{ title: "+ New Task" }]
+    featureItem: [{ title: "+ New Task" }],
+    laneTasks: []
   }),
   components: {
     Task
@@ -57,8 +55,19 @@ export default {
       fetchTask: "fetchList"
     }),
 
-    fetchData() {
-      this.fetchTask({ customUrlFnArgs: { laneId: this.lane.id } });
+    fetchData(lane) {
+      this.fetchTask({ customUrlFnArgs: { laneId: lane.id } }).then(
+        function() {
+          this.laneTasks = this.tasksByIdArray(lane.task_cards);
+        }.bind(this)
+      );
+    }
+  },
+  watch: {
+    lane(currentLane, prevLane) {
+      if ((currentLane === undefined) | (prevLane.id === currentLane.id))
+        return;
+      this.fetchData(currentLane);
     }
   },
   computed: {
@@ -69,7 +78,7 @@ export default {
   },
   updated() {},
   created() {
-    this.fetchData();
+    this.fetchData(this.lane);
   }
 };
 </script>
