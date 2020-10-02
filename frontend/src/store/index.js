@@ -66,7 +66,7 @@ export default new Vuex.Store({
 
     // },
 
-    login({commit}, credentials){
+    login({ commit }, credentials) {
       return new Promise((resolve, reject) => {
         commit('AUTH_REQUEST');
         Axios({
@@ -75,30 +75,30 @@ export default new Vuex.Store({
           auth: {
             username: "ttLwLjOKoJWtm5NDRRfGbgfioDhS7hwGZ0iaAzzD",
             password: "SPWysYuxLcr4ju0ITzqKASIQObiWaaUQbKb4ofYgJTv2QmkFSqfgroR3GIOg1QH41okgg0UHPh3gbTUiXuKKuj85Qy241hyBrn851v6eTVOpRujVWzZZP3npTki1Znnc"
-          }, 
+          },
           data:
             "grant_type=password&username=" + credentials.username + "&password=" + credentials.password + "&scope=write"
-           })
-        .then(resp => {
-          const token = resp.data.access_token;
-          const refreshToken = resp.data.refresh_token;
-          console.log(credentials);
-          const user = credentials.username;
-          localStorage.setItem('token', token);
-          localStorage.setItem('refreshToken', refreshToken);
-          Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          commit('AUTH_SUCCESS', {token, refreshToken, user});
-          resolve(resp);
         })
-        .catch(err => {
-          commit('AUTH_ERROR');
-          localStorage.removeItem('token');
-          localStorage.removeItem('refreshToken');
-          reject(err);
-        })
+          .then(resp => {
+            const token = resp.data.access_token;
+            const refreshToken = resp.data.refresh_token;
+            console.log(credentials);
+            const user = credentials.username;
+            localStorage.setItem('token', token);
+            localStorage.setItem('refreshToken', refreshToken);
+            Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            commit('AUTH_SUCCESS', { token, refreshToken, user });
+            resolve(resp);
+          })
+          .catch(err => {
+            commit('AUTH_ERROR');
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            reject(err);
+          })
       })
     },
-    logout({commit}){
+    logout({ commit }) {
       return new Promise((resolve) => {
         commit('LOGOUT');
         localStorage.removeItem('token');
@@ -120,9 +120,7 @@ export default new Vuex.Store({
 
     showTaskDetail(state, withCreate = false) {
       state.selectedTask.visableDetail = true;
-      if (withCreate) {
-        state.selectedTask.visableCreate = true;
-      }
+      state.selectedTask.visableCreate = withCreate;
     },
     hideTaskDetail(state) {
       state.selectedTask.visableDetail = false;
@@ -151,19 +149,19 @@ export default new Vuex.Store({
     },
 
     // User login and logout
-    AUTH_REQUEST(state){
+    AUTH_REQUEST(state) {
       state.Userinfo.status = "loading";
     },
-    AUTH_SUCCESS(state, {token, refreshToken, user}){
+    AUTH_SUCCESS(state, { token, refreshToken, user }) {
       state.Userinfo.status = "success";
       state.Userinfo.token = token;
       state.Userinfo.refreshToken = refreshToken;
       state.Userinfo.username = user;
     },
-    AUTH_ERROR(state){
+    AUTH_ERROR(state) {
       state.Userinfo.status = "error";
     },
-    LOGOUT(state){
+    LOGOUT(state) {
       state.Userinfo.status = "";
       state.Userinfo.token = "";
       state.Userinfo.refreshToken = "";
@@ -196,7 +194,7 @@ export default new Vuex.Store({
     authStatus: state => {
       return state.Userinfo.status;
     },
-    
+
   },
   modules: {
     task,

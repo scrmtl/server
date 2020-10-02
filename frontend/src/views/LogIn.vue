@@ -32,7 +32,7 @@
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
-            <v-btn color="success">Register</v-btn>
+            <v-btn color="success" @click="register()">Register</v-btn>
             <v-spacer></v-spacer>
             <v-btn :disabled="!isFormVaild" color="info" @click="login()">Login</v-btn>
           </v-card-actions>
@@ -83,6 +83,10 @@ export default {
           this.isLoginError = true;
         })
     },
+    register() {
+      this.$router.push("/register");
+    }
+
   },
   computed:{
     ...mapGetters(

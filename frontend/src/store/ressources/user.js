@@ -19,9 +19,11 @@ export default createCrudModule({
          * @return {Array} Array of User Objects
          */
         byIdArray(state) {
-            return  idArray => 
-                idArray.map(id => state.entities[id.toString()] )
+            return function (idArray) {
+                if (idArray === undefined) return undefined
+                return idArray.map(id => state.entities[id.toString()])
+            }
         },
-        
+
     }
 });

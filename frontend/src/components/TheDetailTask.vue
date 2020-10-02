@@ -1,14 +1,14 @@
 <template>
   <div>
-    <v-navigation-drawer 
-    v-model="visibleDrawer" 
-    right
-    app
-    temporary
-
-    width="600" 
-    color="secondary" 
-    dark>
+    <v-navigation-drawer
+      v-model="visibleDrawer"
+      right
+      app
+      temporary
+      width="600"
+      color="secondary"
+      dark
+    >
       <v-container>
         <v-tabs
           v-model="tab"
@@ -23,15 +23,19 @@
           <v-tab>Steps</v-tab>
         </v-tabs>
         <!-- Details Tab -->
-        <v-tabs-items v-model="tab" background-color="secondary" color="secondary">
+        <v-tabs-items
+          v-model="tab"
+          background-color="secondary"
+          color="secondary"
+        >
           <v-tab-item>
             <v-card flat dark color="secondary" tile>
               <v-card-title>
-                <span class="headline ma-0 pa-1">{{localTask.name}}</span>
+                <span class="headline ma-0 pa-1">{{ localTask.name }}</span>
               </v-card-title>
               <v-card-text>
                 <v-container grid-list-md>
-                  <v-row  align="center">
+                  <v-row align="center">
                     <v-col>
                       <v-form ref="form" v-model="isFormValid" lazy-validation>
                         <!-- Taskname -->
@@ -56,7 +60,7 @@
                       </v-form>
                     </v-col>
                   </v-row>
-                  <v-row  align="center">
+                  <v-row align="center">
                     <v-col>
                       <v-autocomplete
                         v-model="this.taskNamedStatus"
@@ -78,81 +82,98 @@
                     </v-col>
                   </v-row>
                   <v-row align="center">
-                      <Label></Label>
+                    <Label v-bind:task="selectedTask.details"></Label>
                   </v-row>
                   <v-row align="center">
-                      <v-card v-if="!this.selectedTask.visableCreate" flat dark color="secondary" tile>
-                        <v-card-title class="title">
-                          <span class="headline">Assigned users</span>
-                          <v-btn icon>
-                            <v-icon color="link">mdi-dots-horizontal</v-icon>
-                          </v-btn>
-                        </v-card-title>
-                        <v-card-text>
-                          <v-row>
-                            <v-col
-                              v-for="avatar in allAssignedUsers"
-                              :key="`avatar-id-${avatar.id}`"
+                    <v-card
+                      v-if="!this.selectedTask.visableCreate"
+                      flat
+                      dark
+                      color="secondary"
+                      tile
+                    >
+                      <v-card-title class="title">
+                        <span class="headline">Assigned users</span>
+                        <v-btn icon>
+                          <v-icon color="link">mdi-dots-horizontal</v-icon>
+                        </v-btn>
+                      </v-card-title>
+                      <v-card-text>
+                        <v-row>
+                          <v-col
+                            v-for="avatar in allAssignedUsers"
+                            :key="`avatar-id-${avatar.id}`"
+                          >
+                            <v-menu
+                              open-delay="1500"
+                              open-on-hover
+                              :nudge-width="200"
+                              offset-y
                             >
-                              <v-menu open-delay="1500" open-on-hover :nudge-width="200" offset-y>
-                                <template v-slot:activator="{ on, attrs }">
-                                  <div v-bind="attrs" v-on="on">
-                                    <ProfileAvatar :avatar="avatar" />
-                                  </div>
-                                </template>
-                                <ProfileTooltip :avatar="avatar" />
-                              </v-menu>
-                            </v-col>
-                          </v-row>
-                        </v-card-text>
-                      </v-card>
+                              <template v-slot:activator="{ on, attrs }">
+                                <div v-bind="attrs" v-on="on">
+                                  <ProfileAvatar :avatar="avatar" />
+                                </div>
+                              </template>
+                              <ProfileTooltip :avatar="avatar" />
+                            </v-menu>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
                   </v-row>
                 </v-container>
               </v-card-text>
             </v-card>
-
-            
           </v-tab-item>
           <!-- Step Tab -->
           <v-tab-item>
-            
-                <v-card flat dark color="secondary" tile>
-                  <v-card-text>
-                  <v-container grid-list-md>
-                    <v-row align="center">
-                      <v-col>
-                        <v-list>
-                          <v-list-group value="true" v-for="steplist in selectedTask.details.steplists" :key="steplist">
-                            <template v-slot:activator>
-                              <v-list-item-content>
-                                <v-list-item-title class="white--text">Default Steplist</v-list-item-title>
-                              </v-list-item-content>
-                            </template>
-                            <Steplist v-bind:steplistId="steplist" />
-                          </v-list-group>
-                        </v-list>
-                        
-                      </v-col>
-                      
-                    </v-row>
-                  </v-container>
-                  </v-card-text>
-                </v-card>
-              
-            
+            <v-card flat dark color="secondary" tile>
+              <v-card-text>
+                <v-container grid-list-md>
+                  <v-row align="center">
+                    <v-col>
+                      <v-list>
+                        <v-list-group
+                          value="true"
+                          v-for="steplist in selectedTask.details.steplists"
+                          :key="steplist"
+                        >
+                          <template v-slot:activator>
+                            <v-list-item-content>
+                              <v-list-item-title class="white--text"
+                                >Default Steplist</v-list-item-title
+                              >
+                            </v-list-item-content>
+                          </template>
+                          <Steplist v-bind:steplistId="steplist" />
+                        </v-list-group>
+                      </v-list>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+            </v-card>
           </v-tab-item>
         </v-tabs-items>
         <!-- actions -->
         <div>
           <v-btn color="link" text @click="close()">Close</v-btn>
-          <v-btn v-if="!this.selectedTask.visableCreate" color="link" text @click="confirm()">Save</v-btn>
+          <v-btn
+            v-if="!this.selectedTask.visableCreate"
+            color="link"
+            text
+            @click="confirm()"
+            >Save</v-btn
+          >
           <v-btn
             v-if="this.selectedTask.visableCreate"
             color="link"
             :disabled="!isFormValid"
             text
             @click="addTask()"
-          >Create</v-btn>
+            >Create</v-btn
+          >
           <v-btn
             v-if="!this.selectedTask.visableCreate"
             color="error"
@@ -168,14 +189,28 @@
     </v-navigation-drawer>
 
     <!-- Delete Dialog -->
-    <v-dialog v-model="deleteDialog" persistent class="mx-auto" width="600" dark>
+    <v-dialog
+      v-model="deleteDialog"
+      persistent
+      class="mx-auto"
+      width="600"
+      dark
+    >
       <v-card color="tabbody" shaped>
         <v-card-text class="headline pt-10">
           <span class="ml-12">Möchten Sie den Task wirklich löschen?</span>
         </v-card-text>
         <v-card-actions class="ml-10 pb-10 pt-10">
-          <v-btn width="250" outlined color="error" @click="deleteTask()">Ja</v-btn>
-          <v-btn width="250" outlined color="primary" @click="deleteDialog = false">Nein</v-btn>
+          <v-btn width="250" outlined color="error" @click="deleteTask()"
+            >Ja</v-btn
+          >
+          <v-btn
+            width="250"
+            outlined
+            color="primary"
+            @click="deleteDialog = false"
+            >Nein</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -191,7 +226,14 @@ export default {
   name: "DetailTask",
   data: () => ({
     tab: null,
-    availableStatus: ["New", "Planned", "Not Started", "In Progress", "Done", "Accepted"],
+    availableStatus: [
+      "New",
+      "Planned",
+      "Not Started",
+      "In Progress",
+      "Done",
+      "Accepted"
+    ],
     availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
     deleteDialog: false,
     taskNamedStatus: "New",
@@ -307,7 +349,13 @@ export default {
         return this.selectedTask.visableDetail;
       },
       set(newValue) {
-        this.selectedTask.visableDetail = newValue;
+        if (newValue) {
+          this.$store.commit("showTaskDetail", false);
+        } else {
+          this.$store.commit("hideTaskDetail", false);
+        }
+
+        //this.selectedTask.visableDetail = newValue;
       }
     }
   },

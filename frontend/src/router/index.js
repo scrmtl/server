@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import LogIn from "../views/LogIn.vue";
+import Register from "../views/Register.vue";
 import Home from "../views/Home.vue";
 import ProductBacklog from "../views/ProductBacklog.vue";
 import SprintBacklog from "../views/SprintBacklog.vue";
@@ -9,12 +10,13 @@ import SprintPlaning from "../views/SprintPlaning.vue";
 import Statistic from "../views/Statistic.vue";
 import Archive from "../views/Archive.vue";
 import Project from "../views/Project.vue";
-import ProjectDashboard from  "../views/ProjectDashboard";
+import ProjectDashboard from "../views/ProjectDashboard";
 
 import Lane from "@/components/Lane.vue";
 import Epic from "@/components/Epic.vue";
 import Feature from "@/components/Feature.vue";
 import Task from "@/components/Task.vue";
+//import { component } from "vue/types/umd";
 
 
 
@@ -28,6 +30,11 @@ const routes = [
     path: "/login",
     name: "LogIn",
     component: LogIn
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register
   },
   {
     path: "/",
@@ -94,10 +101,15 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if(to.name !== "LogIn" && !localStorage.getItem('token')){
-    next({ name: "LogIn" });
+  if (to.name !== "LogIn" && !localStorage.getItem('token') && to.name !== "Register") {
+    if (to.name == "Register") {
+      next({ name: "Register" });
+    }
+    else {
+      next({ name: "LogIn" });
+    }
   }
-  else{
+  else {
     next();
   }
 });
