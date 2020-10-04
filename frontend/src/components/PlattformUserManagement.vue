@@ -1,7 +1,7 @@
 <template>
   <v-dialog persistent scrollable v-model="dialog" max-width="1200">
     <v-card color="tabbody" dark flat>
-      <v-card-title class="headline">Benutzerverwaltung</v-card-title>
+      <v-card-title class="headline">Plattform user management</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
         <v-data-table
@@ -14,13 +14,12 @@
             <v-select
               :items="groupNames"
               :value="item.group.name"
-              prepend-icon="mdi-circle-edit-outline"
               @change="updateGroup($event, item)"
             ></v-select>
           </template>
           <template v-slot:top>
             <v-toolbar flat color="tabbody">
-              <v-dialog v-model="createUser" >
+              <v-dialog v-model="createUser" persistent max-width="1200">
                 <template v-slot:activator="{ on, attrs }">
                   <v-spacer></v-spacer>
                   <v-btn
@@ -30,10 +29,11 @@
                     v-on="on"
                     small
                     outlined
-                    >Benutzer hinzufügen
+                    >add user
                   </v-btn>
                 </template>
-                <v-card>
+                
+                <v-card class="tabbody" dark >
                   <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
                   </v-card-title>
@@ -94,10 +94,10 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="link" text v-on:click="createUser = false"
-                      >ABBRECHEN</v-btn
+                      >CANCEL</v-btn
                     >
                     <v-btn color="link" text v-on:click="saveUser"
-                      >SPEICHERN</v-btn
+                      >SAVE</v-btn
                     >
                   </v-card-actions>
                 </v-card>
@@ -111,7 +111,7 @@
             <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
           </template>
           <template v-slot:no-data>
-            <v-btn color="link" @click="fetchAll">ZURÜCKSETZEN</v-btn>
+            <v-btn color="link" @click="fetchAll">RESET</v-btn>
           </template>
         </v-data-table>
       </v-card-text>

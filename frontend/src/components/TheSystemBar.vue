@@ -13,7 +13,7 @@
       dark
       @click="plattformManagementDialog = true"
       v-if="getGroupId == 1"
-      >Benutzerverwaltung
+      > Plattform User Management
     </v-btn>
     <PlattformUserManagement  @close-dialog="plattformManagementDialog = false" :dialog="plattformManagementDialog" v-if="plattformManagementDialog" />
 
