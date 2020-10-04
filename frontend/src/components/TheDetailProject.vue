@@ -130,7 +130,7 @@
                           :counter="3"
                           :readonly="!this.selectedProject.visableCreate"
                           persistent-hint
-                          hint="in time days (not workdays)"
+                          hint="in calendar days (not workdays)"
                           prepend-icon="mdi-information-outline"
                           v-model="localProject.sprint_duration"
                         ></v-text-field>
@@ -192,16 +192,14 @@
                         :rotate="-90"
                         :size="100"
                         :width="15"
-                        :value="valueDetail"
+                        :value="finshedSprints"
                         color="link"
-                      >{{ valueDetail }}</v-progress-circular>
+                      >{{ finshedSprints }}/{{localProject.numOfSprints}}</v-progress-circular>
                     </div>
                     <div class="ma-4">
-                      <p>Sprints absolviert: 75</p>
-                      <p>Sprints geplant: {{localProject.numOfSprints}}</p>
-                      <p>Sprintlänge in Zeittage: {{localProject.sprint_duration}}</p>
-                      <p>nächster Sprintende: 13.07.20</p>
-                      <p>nächster Sprintstart: 14.07.20</p>
+                      <p>Finished sprints: {{finshedSprints}}</p>
+                      <p>Sprint duration in calendar days: {{localProject.sprint_duration}}</p>
+                      <p>Number of Sprints: {{localProject.numOfSprints}}</p>
                     </div>
                   </v-row>
                 </v-card-text> 
@@ -305,7 +303,7 @@ export default {
     calendar2menu: false,
     deleteDialog: false,    
     isFormValid: null,
-    valueDetail: 50,
+    finshedSprints: 0,
     projectNamedStatus: "New",
     localProject: {},
     rules: {
@@ -512,7 +510,6 @@ export default {
 
   updated() {
     this.localProject = this.selectedProject.details;
-    // this.fetchProjectUser({ customUrlFnArgs:  {projectId: this.localProject.id}  });
     this.projectNamedStatus = this.GetProjectNamedStatus(this.localProject.status);
 
   },
