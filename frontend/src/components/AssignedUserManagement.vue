@@ -17,12 +17,12 @@
           class="tabbody"
           dark
         >
-        
+
           <template v-slot:[`item.actions`]="{item}">
 
             <v-icon
               small
-              @click="deleteUser(item)"
+              @click="removeAssignedUser(item)"
             >
               mdi-delete
             </v-icon>
@@ -66,6 +66,12 @@ export default {
     close() {
       this.$emit("close-dialog");
     },
+    removeAssignedUser(user){
+      this.$emit("removeUser", user);
+    },
+    addAssignedUser(user){
+      this.$emit("addUser", user);
+    }
   }
 }
 </script>
