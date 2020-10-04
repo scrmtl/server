@@ -27,6 +27,9 @@
           <v-tabs-items v-model="tab" background-color="navbar" color="navbar">
             <v-tab-item>
               <v-card flat dark color="navbar" tile>
+                <v-card-title >
+                  <span class="headline">{{ localProject.name }}</span>
+                </v-card-title>
                 <v-card-text>
                   <v-form
                   ref="form"
@@ -184,23 +187,25 @@
                 dark
                 color="navbar"
                 tile>
+                <v-card-title>
+                  <span class="subtitle-1">Sprint informations</span>
+                </v-card-title>
                 <v-card-text>
-                  <span class="headline ma-4">Sprintinformationen</span>
                   <v-row>
-                    <div class="ma-4">
+                    <v-col>
                       <v-progress-circular
                         :rotate="-90"
                         :size="100"
                         :width="15"
-                        :value="finshedSprints"
+                        :value="completedSprints"
                         color="link"
-                      >{{ finshedSprints }}/{{localProject.numOfSprints}}</v-progress-circular>
-                    </div>
-                    <div class="ma-4">
-                      <p>Finished sprints: {{finshedSprints}}</p>
+                      ></v-progress-circular>
+                    </v-col>
+                    <v-col>
+                      <p>completed sprints: {{completedSprints}}</p>
+                      <p>planned sprints: {{localProject.numOfSprints}}</p>
                       <p>Sprint duration in calendar days: {{localProject.sprint_duration}}</p>
-                      <p>Number of Sprints: {{localProject.numOfSprints}}</p>
-                    </div>
+                    </v-col>
                   </v-row>
                 </v-card-text> 
               </v-card>
@@ -303,7 +308,7 @@ export default {
     calendar2menu: false,
     deleteDialog: false,    
     isFormValid: null,
-    finshedSprints: 0,
+    completedSprints: 0,
     projectNamedStatus: "New",
     localProject: {},
     rules: {
