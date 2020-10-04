@@ -1,16 +1,13 @@
 <template>
-    <v-content class="tabbody tab-content">
-      SprintPlaning - View
-    </v-content>
+  <v-main class="tabbody tab-content">
+    SprintPlaning - View
+  </v-main>
 </template>
 
 <script>
-    export default {
-        
-    }
+export default {};
 </script>
 
 <style lang="css" scoped>
 @import "../main.css";
-
 </style>

@@ -346,17 +346,16 @@ export default {
 
     visibleDrawer: {
       get() {
-        console.log("visible Drawer get");
         return this.selectedTask.visableDetail;
       },
       set(newValue) {
         if (newValue) {
-          this.$store.commit("showTaskDetail", true);
+          this.$store.commit("showTaskDetail", false);
         } else {
-          this.$store.commit("hideTaskDetail", true);
+          this.$store.commit("hideTaskDetail", false);
         }
 
-        this.selectedTask.visableDetail = newValue;
+        //this.selectedTask.visableDetail = newValue;
       }
     }
   },

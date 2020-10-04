@@ -238,9 +238,6 @@ export default {
       listLabels: "list",
       labelById: "byId"
     })
-  },
-  created() {
-    //this.fetchAll();
   }
 };
 </script>
