@@ -379,7 +379,8 @@ export default {
           status: this.GetProjectStatus(this.projectNamedStatus),
           project_users: this.localProject.project_users
         }
-      })
+      });
+      this.$store.commit("hideProjectDetail");
     },
 
     GetProjectStatus(namedStatus){
