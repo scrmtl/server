@@ -1,6 +1,6 @@
 <template>
-  <v-dialog persistent v-model="value" width="1200">
-    <v-card color="navbar" dark flat>
+  <v-dialog persistent scrollable v-model="dialog" max-width="1200">
+    <v-card color="tabbody" dark flat>
       <v-card-title class="headline">Benutzerverwaltung</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
@@ -8,7 +8,7 @@
           :headers="headers"
           :items="allUserInfo()"
           sort-by="username"
-          class="elevation-1"
+          class="tabbody"
         >
           <template v-slot:[`item.group`]="{ item }">
             <v-select
@@ -19,8 +19,8 @@
             ></v-select>
           </template>
           <template v-slot:top>
-            <v-toolbar flat color="navbar">
-              <v-dialog v-model="createUser" max-width="700px">
+            <v-toolbar flat color="tabbody">
+              <v-dialog v-model="createUser" >
                 <template v-slot:activator="{ on, attrs }">
                   <v-spacer></v-spacer>
                   <v-btn
@@ -118,7 +118,7 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="link" class="mr-2" outlined small @click.stop="close"
+        <v-btn color="link" class="mr-2" outlined small @click="close"
           >CLOSE
         </v-btn>
       </v-card-actions>
@@ -131,7 +131,7 @@ import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   name: "PlattformUserManagement",
   props: {
-    value: Boolean
+    dialog: { type: Boolean, default: false },
   },
   created() {
     this.fetchAll();
@@ -145,10 +145,10 @@ export default {
     createUser: false,
     formTitle: "Benutzer Form",
     headers: [
-      { text: "Benutzername", value: "username" },
+      { text: "User name", value: "username" },
       { text: "E-Mail", value: "email" },
       { text: "Name", value: "name" },
-      { text: "Gruppe", value: "group" }
+      { text: "Rights", value: "group", sortable: false }
     ],
     editedIndex: -1,
     editedItem: {
@@ -212,7 +212,7 @@ export default {
       this.createUser = false;
     },
     close() {
-      this.$emit("input", false);
+      this.$emit("close-dialog");
     },
     allUserInfo() {
       var data = [];
