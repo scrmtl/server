@@ -175,9 +175,6 @@ import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
 export default {
   data: () => ({
     dialog: null,
-    menuMaxHeight: `${60 * 5 + 4}px`,
-    stackedLimit: 6,
-    stackedMenu: false
   }),
   props: ["task"],
   components: {
