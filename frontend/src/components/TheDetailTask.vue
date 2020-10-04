@@ -130,7 +130,7 @@
           <v-tab-item>
             <v-card flat dark color="secondary" tile>
               <v-card-text>
-                <v-container grid-list-md>
+
                   <v-row align="center">
                     <v-col>
                       <v-list>
@@ -151,7 +151,7 @@
                       </v-list>
                     </v-col>
                   </v-row>
-                </v-container>
+
               </v-card-text>
             </v-card>
           </v-tab-item>

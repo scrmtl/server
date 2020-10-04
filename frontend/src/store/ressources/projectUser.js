@@ -21,9 +21,27 @@ export default createCrudModule({
     customUrlFn(id, type, projectId) {
         // id will only be available when doing request to single resource, otherwise null
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
-        const rootUrl = `/api/projects/${projectId}/project_users`;
-        return id ? `${rootUrl}/${id}/` : rootUrl;
-        //const rootURL = `/api/project_users/?project=${projectId}`
-        //return rootUrl;
+        var rootUrl = '/api/project_users';
+        if (projectId != null) {
+            rootUrl = `/api/project_users/?project=${projectId}`
+        }
+        rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
+        return rootUrl;
+
+    },
+
+    getters: {
+        /** @description Add Custom getter 
+         * @param {Array} idArray Array with project User IDs 
+         * @return {Array} Array of User Objects
+         */
+        byIdArray(state) {
+            return function (idArray) {
+                if (idArray === undefined) return undefined
+                return idArray.map(id => state.entities[id.toString()])
+            }
+        },
+
     }
+
 });
