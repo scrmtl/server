@@ -42,7 +42,7 @@
                         <v-text-field
                           label="Project name"
                           required
-                          :rules="[rules.required, rules.counter]"
+                          :rules="[rules.required, rules.maxCharacter]"
                           :counter="50"
                           prepend-icon="mdi-information-outline"
                           v-model="localProject.name"
@@ -236,9 +236,17 @@
                   tile>
                   <v-card-title class="title">
                     <span class="headline">Assigned project users</span>
-                    <v-btn icon>
+                    <v-btn 
+                      icon
+                      @click="userManagementDialog = true">
                         <v-icon color="link" >mdi-dots-horizontal</v-icon>
                     </v-btn>
+                    <AssignedUserManagement 
+                      @close-dialog="userManagementDialog = false" 
+                      :dialog="userManagementDialog"  
+                      :dialogName="'Assigned project user'"
+                      :assignedUsers="allAssignedUsers"
+                      />
                   </v-card-title>
                   <v-card-text>
                     <v-row> 
@@ -299,37 +307,33 @@
 <script>
 import ProfileAvatar from "@/components/Profile/ProfileAvatar.vue";
 import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
+import AssignedUserManagement from "@/components/AssignedUserManagement.vue";
 import {mapActions, mapGetters, mapState } from "vuex";
 export default {
-  name: "DetailProject",
+  name: "TheDetailProject",
   data: () => ({
     tab: null,
     calendar1menu: false,
     calendar2menu: false,
-    deleteDialog: false,    
+    deleteDialog: false,
+    userManagementDialog: false,  
     isFormValid: null,
     completedSprints: 0,
     projectNamedStatus: "New",
     localProject: {},
     rules: {
       required: value => !!value || 'Required',
-      counter: value => value.length <= 20 || 'Max 50 characters',
+      maxCharacter: value => value.length <= 50 || 'Max 50 characters',
       duration: value => {
         const pattern = /^([0-9]{1,3})$/
         return pattern.test(value) || 'Invalid Duration'
       }
-    },
-    projectNameRules: [
-        v => !!v || 'Name is required',
-        v => (v && v.length <= 50) || 'Name must be less than 50 characters',
-      ],
-    projectSprintDurationRules: [
-      v => !!v || 'Duration is required',
-    ]
+    }
   }),
   components: {
     ProfileAvatar,
-    ProfileTooltip
+    ProfileTooltip,
+    AssignedUserManagement
   },
   methods: {
     ...mapActions("project", {
@@ -408,33 +412,7 @@ export default {
     
 
 
-    // GetAllProjectUsers(){
-    //   var data = [];
-    //   var plattformUser;
-    //   try {
-    //     Object.values(this.listProjectUsers).forEach(projectUser =>
-    //       {
-    //         plattformUser = Object.values(this.plattformUserById(projectUser.plattform_user)).shift();
 
-    //         data.push({
-    //         name: plattformUser.name,
-    //         email: plattformUser.email,
-    //         username: plattformUser.username,
-    //         role: this.projectRoleById(projectUser.role).role_name
-    //         });
-    //       }
-    //     )
-    //     console.log(data);
-    //   } catch (error) {
-    //     if (this.listProjectRoles === undefined) {
-    //       this.fetchProjectRoles();
-    //     }
-    //     if (this.listPlattformUsers === undefined) {
-    //       this.fetchPlattformUsers();
-    //     }
-    //   }
-    //   return data;
-    // },
 
     saveProject() {
       this.updateProject({
@@ -492,7 +470,6 @@ export default {
           )
         })
       }
-      console.log(assignedUsers);
       return assignedUsers;
     },
 
