@@ -1,9 +1,18 @@
 <template>
-  <v-card class="lane " max-width="420" elevation="5">
+  <v-card 
+  class="lane" 
+  max-width="420" 
+  elevation="5"
+  max-height="100vh"
+  >
     <v-card-title class="navbar white--text">
       My Tasks
     </v-card-title>
-    <v-card-text class="lane-body" v-if="allFetched">
+    <v-card-text
+    class="lane-body scroll" 
+    v-if="allFetched" 
+    max-height="200"
+    >
       <v-row v-for="task in listTasks" :key="task.id">
         <v-col>
           <Task v-bind:task="task" v-bind:task_index="task.id" />
