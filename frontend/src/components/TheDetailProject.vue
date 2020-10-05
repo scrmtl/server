@@ -9,8 +9,8 @@
     width="600" 
     color="navbar" 
     dark>
-      <v-container>
-        
+
+      <v-container> 
           <v-tabs
             v-model="tab"
             dark
@@ -27,7 +27,9 @@
           <v-tabs-items v-model="tab" background-color="navbar" color="navbar">
             <v-tab-item>
               <v-card flat dark color="navbar" tile>
-                
+                <v-card-title >
+                  <span class="headline">{{ localProject.name }}</span>
+                </v-card-title>
                 <v-card-text>
                   <v-form
                   ref="form"
@@ -35,104 +37,148 @@
                   lazy-validation
                   >
                     <!-- Projectname -->
-                    <v-text-field
-                      label="Projektname"
-                      required
-                      :rules="projectNameRules"
-                      :counter="50"
-                      prepend-icon="mdi-information-outline"
-                      class="ma-1"
-                      v-model="localProject.name"
-                    ></v-text-field>
+                    <v-row align="center">
+                      <v-col>
+                        <v-text-field
+                          label="Project name"
+                          required
+                          :rules="[rules.required, rules.maxCharacter]"
+                          :counter="50"
+                          prepend-icon="mdi-information-outline"
+                          v-model="localProject.name"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
                     <!-- Project start -->
-                    <v-menu
-                      ref="menu"
-                      v-model="calendar1menu"
-                      :close-on-content-click="false"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="290px"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="localProject.start"
-                          label="Projekt Start"
-                          hint="YYYY-MM-DD"
-                          prepend-icon="mdi-calendar-range"
-                          required
-                          :rules="[v => !!v || 'Item is required']"
-                          persistent-hint
-                          class="ma-1"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker v-model="localProject.start" no-title scrollable>
-                        <v-spacer></v-spacer>
-                        <v-btn text color="primary" @click="calendar1menu = false">Cancel</v-btn>
-                        <v-btn text color="primary" @click="calendar1menu = false">OK</v-btn>
-                      </v-date-picker>
-                    </v-menu>
+                    <v-row align="center">
+                      <v-col>
+                        <v-menu
+                          ref="menu"
+                          v-model="calendar1menu"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="localProject.start"
+                              label="Project start"
+                              hint="YYYY-MM-DD"
+                              prepend-icon="mdi-calendar-range"
+                              required
+                              :rules="[rules.required]"
+                              persistent-hint
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker 
+                            v-model="localProject.start" 
+                            no-title 
+                            scrollable 
+                            :readonly="!this.selectedProject.visableCreate">
+                            <v-spacer></v-spacer>
+                            <v-btn text color="primary" @click="calendar1menu = false">Cancel</v-btn>
+                            <v-btn text color="primary" @click="calendar1menu = false">OK</v-btn>
+                          </v-date-picker>
+                        </v-menu>
+                      </v-col>
+                    </v-row>
                     <!-- Project end -->
-                    <v-menu
-                      ref="menu"
-                      v-model="calendar2menu"
-                      :close-on-content-click="false"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="290px"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
+                    <v-row align="center">
+                      <v-col>
+                        <v-menu
+                          ref="menu"
+                          v-model="calendar2menu"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="localProject.end"
+                              label="Project end"
+                              hint="YYYY-MM-DD"
+                              prepend-icon="mdi-calendar-range"
+                              required
+                              readonly
+                              :rules="[rules.required]"
+                              persistent-hint
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker 
+                            v-model="localProject.end" 
+                            no-title 
+                            scrollable 
+                            :readonly="!this.selectedProject.visableCreate">
+                            <v-spacer></v-spacer>
+                            <v-btn text color="primary" @click="calendar2menu = false">Cancel</v-btn>
+                            <v-btn text color="primary" @click="calendar2menu = false">OK</v-btn>
+                          </v-date-picker>
+                        </v-menu>
+                      </v-col>
+                    </v-row>
+                    <!-- Sprint duration -->
+                    <v-row align="center">
+                      <v-col>
                         <v-text-field
-                          v-model="localProject.end"
-                          label="Projekt Ende"
-                          hint="YYYY-MM-DD"
-                          prepend-icon="mdi-calendar-range"
+                          label="Sprint duration"
                           required
-                          :rules="[v => !!v || 'Item is required']"
+                          :rules="[rules.required, rules.duration]"
+                          :counter="3"
+                          :readonly="!this.selectedProject.visableCreate"
                           persistent-hint
-                          class="ma-1"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
+                          hint="in calendar days (not workdays)"
+                          prepend-icon="mdi-information-outline"
+                          v-model="localProject.sprint_duration"
                         ></v-text-field>
-                      </template>
-                      <v-date-picker v-model="localProject.end" no-title scrollable>
-                        <v-spacer></v-spacer>
-                        <v-btn text color="primary" @click="calendar2menu = false">Cancel</v-btn>
-                        <v-btn text color="primary" @click="calendar2menu = false">OK</v-btn>
-                      </v-date-picker>
-                    </v-menu>
+                      </v-col>
+                    </v-row>
                     <!-- Projectdiscription -->
-                    <v-textarea
-                      label="Projektbeschreibung"
-                      prepend-icon="mdi-information-outline"
-                      outlined
-                      height="70"
-                      class="ma-1"
-                      v-model="localProject.description"
-                    ></v-textarea>
+                    <v-row align="center">
+                      <v-col>
+                        <v-textarea
+                          label="Project description"
+                          prepend-icon="mdi-information-outline"
+                          outlined
+                          min-height="70"
+                          v-model="localProject.description"
+                        ></v-textarea>
+                      </v-col>
+                    </v-row>
                     <!-- Definition of Ready -->
-                    <v-textarea
-                      label="Definition of Ready"
-                      prepend-icon="mdi-information-outline"
-                      outlined
-                      height="70"
-                      class="ma-1"
-                      v-model="localProject.dor"
-                    ></v-textarea>
+                    <v-row align="center">
+                      <v-col>
+                        <v-textarea
+                          label="Definition of Ready"
+                          prepend-icon="mdi-information-outline"
+                          outlined
+                          min-height="70"
+                          class="ma-1"
+                          v-model="localProject.dor"
+                        ></v-textarea>
+                      </v-col>
+                    </v-row>
                     <!-- Definition of Done -->
-                    <v-textarea
-                      label="Definition of Done"
-                      prepend-icon="mdi-information-outline"
-                      outlined
-                      height="70"
-                      class="ma-0"
-                      v-model="localProject.dod"
-                    ></v-textarea>
+                    <v-row align="center">
+                      <v-col>
+                        <v-textarea
+                          label="Definition of Done"
+                          prepend-icon="mdi-information-outline"
+                          outlined
+                          min-height="70"
+                          class="ma-0"
+                          v-model="localProject.dod"
+                        ></v-textarea>
+                      </v-col>
+                    </v-row>
                   </v-form>
-                  
+                    
                 </v-card-text>
               </v-card>
               <!-- Project Sprint Infos -->
@@ -141,73 +187,90 @@
                 dark
                 color="navbar"
                 tile>
+                <v-card-title>
+                  <span class="subtitle-1">Sprint informations</span>
+                </v-card-title>
                 <v-card-text>
-                  <span class="headline ma-4">Sprintinformationen</span>
                   <v-row>
-                    <div class="ma-4">
+                    <v-col>
                       <v-progress-circular
                         :rotate="-90"
                         :size="100"
                         :width="15"
-                        :value="valueDetail"
+                        :value="completedSprints"
                         color="link"
-                      >{{ valueDetail }}</v-progress-circular>
-                    </div>
-                    <div class="ma-4">
-                      <p>Sprints absolviert: 75</p>
-                      <p>Sprints geplant: 100</p>
-                      <p>Sprintlänge in Wochentagen: 20</p>
-                      <p>nächster Sprintende: 13.07.20</p>
-                      <p>nächster Sprintstart: 14.07.20</p>
-                    </div>
+                      ></v-progress-circular>
+                    </v-col>
+                    <v-col>
+                      <p>completed sprints: {{completedSprints}}</p>
+                      <p>planned sprints: {{localProject.numOfSprints}}</p>
+                      <p>Sprint duration in calendar days: {{localProject.sprint_duration}}</p>
+                    </v-col>
                   </v-row>
                 </v-card-text> 
               </v-card>
             </v-tab-item>
             <!-- Settings Tab -->
             <v-tab-item>
-              <v-card flat dark color="navbar" tile>
-                <v-card-text>
-                  <v-select
-                    :items="['Active', 'Archived']"
-                    label="Status"
-                    :readonly="this.selectedProject.visableCreate"
-                    prepend-icon="mdi-circle-edit-outline"
-                    v-model="this.projectNamedStatus"
+                <v-card flat dark color="navbar" tile>
+                  <v-card-text>
+                    <v-row align="center">
+                      <v-col>
+                        <v-select
+                          :items="['Active', 'Archived']"
+                          label="Status"
+                          :readonly="this.selectedProject.visableCreate"
+                          prepend-icon="mdi-circle-edit-outline"
+                          v-model="this.projectNamedStatus"
 
-                  ></v-select>
-                </v-card-text>
-              </v-card>
-
-              <v-card v-if="!this.selectedProject.visableCreate" flat dark color="navbar" tile>
-                <v-card-title class="title">
-                  <span class="headline ma-4">Project users</span>
-                  <v-btn icon>
-                      <v-icon color="link" >mdi-dots-horizontal</v-icon>
-                  </v-btn>
-                </v-card-title>
-                <v-card-text>
-                <section class="avatars-group grid pa-3">
-                  <div v-for="avatar in GetAllProjectUsers" 
-                    :key="`avatar-id-${avatar.id}`" 
-                    class="avatars-group__item">
-                      <v-menu
-                          open-delay="1500"
-                          open-on-hover
-                          :nudge-width="200"
-                          offset-y
-                        >
-                        <template v-slot:activator="{ on, attrs }">
-                          <div v-bind="attrs" v-on="on">
-                          <ProfileAvatar :avatar="avatar"/>
-                          </div>
-                        </template>
-                      <ProfileTooltip :avatar="avatar" />
-                    </v-menu>
-                  </div>
-                </section>
-                </v-card-text>
-              </v-card>
+                        ></v-select>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>              
+                <v-card 
+                  v-if="!this.selectedProject.visableCreate" 
+                  flat 
+                  dark 
+                  color="navbar" 
+                  tile>
+                  <v-card-title class="title">
+                    <span class="headline">Assigned project users</span>
+                    <v-btn 
+                      icon
+                      @click="userManagementDialog = true">
+                        <v-icon color="link" >mdi-dots-horizontal</v-icon>
+                    </v-btn>
+                    <AssignedUserManagement 
+                      @close-dialog="userManagementDialog = false" 
+                      :dialog="userManagementDialog"  
+                      :dialogName="'Assigned project user'"
+                      :assignedUsers="allAssignedUsers"
+                      />
+                  </v-card-title>
+                  <v-card-text>
+                    <v-row> 
+                      <v-col
+                        v-for="avatar in allAssignedUsers"
+                        :key="`avatar-id-${avatar.id}`"
+                      >
+                        <v-menu
+                            open-delay="1500"
+                            open-on-hover
+                            :nudge-width="200"
+                            offset-y
+                          >
+                          <template v-slot:activator="{ on, attrs }">
+                            <div v-bind="attrs" v-on="on">
+                            <ProfileAvatar :avatar="avatar"/>
+                            </div>
+                          </template>
+                          <ProfileTooltip :avatar="avatar" />
+                        </v-menu>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
             </v-tab-item>
           </v-tabs-items>
           <div>
@@ -218,7 +281,6 @@
               <v-icon left>mdi-bucket-outline</v-icon>Delete
             </v-btn>
           </div>
-       
       </v-container>
     </v-navigation-drawer>
     <!-- Delete Dialog -->
@@ -245,26 +307,33 @@
 <script>
 import ProfileAvatar from "@/components/Profile/ProfileAvatar.vue";
 import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
+import AssignedUserManagement from "@/components/AssignedUserManagement.vue";
 import {mapActions, mapGetters, mapState } from "vuex";
 export default {
-  name: "DetailProject",
+  name: "TheDetailProject",
   data: () => ({
     tab: null,
     calendar1menu: false,
     calendar2menu: false,
-    deleteDialog: false,    
+    deleteDialog: false,
+    userManagementDialog: false,  
     isFormValid: null,
-    valueDetail: 50,
+    completedSprints: 0,
     projectNamedStatus: "New",
     localProject: {},
-    projectNameRules: [
-        v => !!v || 'Name is required',
-        v => (v && v.length <= 50) || 'Name must be less than 50 characters',
-      ],
+    rules: {
+      required: value => !!value || 'Required',
+      maxCharacter: value => value.length <= 50 || 'Max 50 characters',
+      duration: value => {
+        const pattern = /^([0-9]{1,3})$/
+        return pattern.test(value) || 'Invalid Duration'
+      }
+    }
   }),
   components: {
     ProfileAvatar,
-    ProfileTooltip
+    ProfileTooltip,
+    AssignedUserManagement
   },
   methods: {
     ...mapActions("project", {
@@ -274,6 +343,7 @@ export default {
     }),
 
     ...mapActions("projectUser", {
+      fetchProjectUser: "fetchList",
       createProjectUser: "create",
       destroyProjectUser: "delete"
 
@@ -306,11 +376,11 @@ export default {
           sprint_duration: this.localProject.sprint_duration,
           dor: this.localProject.dor,
           dod: this.localProject.dod,
-          numOfSprints: this.localProject.numOfSprints,
           status: this.GetProjectStatus(this.projectNamedStatus),
           project_users: this.localProject.project_users
         }
-      })
+      });
+      this.$store.commit("hideProjectDetail");
     },
 
     GetProjectStatus(namedStatus){
@@ -340,33 +410,10 @@ export default {
       return namedStatus;
     },
 
-    GetAllProjectUsers(){
-      var data = [];
-      var plattformUser;
-      try {
-        Object.values(this.listProjectUsers).forEach(projectUser =>
-          {
-            plattformUser = Object.values(this.plattformUserById(projectUser.plattform_user)).shift();
+    
 
-            data.push({
-            name: plattformUser.name,
-            email: plattformUser.email,
-            username: plattformUser.username,
-            role: this.projectRoleById(projectUser.role).role_name
-            });
-          }
-        )
-        console.log(data);
-      } catch (error) {
-        if (this.listProjectRoles === undefined) {
-          this.fetchProjectRoles();
-        }
-        if (this.listPlattformUsers === undefined) {
-          this.fetchPlattformUsers();
-        }
-      }
-      return data;
-    },
+
+
 
     saveProject() {
       this.updateProject({
@@ -376,8 +423,6 @@ export default {
           name: this.localProject.name,
           description: this.localProject.description,
           status: this.GetProjectStatus(this.projectNamedStatus),
-          start: this.localProject.start,
-          end: this.localProject.end,
           dor: this.localProject.dor,
           dod: this.localProject.dod
         }
@@ -396,7 +441,8 @@ export default {
     ...mapState(["selectedProject"]),
     ...mapGetters("projectUser", {
       listProjectUsers: "list",
-      projectUserById: "byId"
+      projectUserById: "byId",
+      projectUsersByIdArray: "byIdArray"
     }),
     ...mapGetters("projectRole", {
       listProjectRoles: "list",
@@ -404,9 +450,29 @@ export default {
     }),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
-      plattformUserById: "byId"
+      plattformUserById: "byId",
     }),
     
+    allAssignedUsers(){
+      
+      var projectUsers = this.projectUsersByIdArray(this.localProject.project_users);
+      var assignedUsers = [];
+      if (projectUsers && projectUsers.length > 0){
+        projectUsers.forEach(prjUser => {
+          var plattformUser = this.plattformUserById(prjUser.plattform_user);
+          assignedUsers.push(
+            {
+              id: plattformUser.id,
+              email: plattformUser.email,
+              name: plattformUser.name,
+              username: plattformUser.username,
+              role: this.projectRoleById(prjUser.role).role_name,
+            }
+          )
+        })
+      }
+      return assignedUsers;
+    },
 
     visibleDrawer: {
       get() {
@@ -419,6 +485,7 @@ export default {
   },
 
   created() {
+    this.fetchProjectUser();
     this.fetchProjectRoles();
     this.localProject = this.selectedProject.details;
     this.projectNamedStatus = this.GetProjectNamedStatus(this.localProject.status);

@@ -1,26 +1,25 @@
 <template>
-  <v-dialog persistent v-model="value" width="1200">
-    <v-card color="navbar" dark flat>
-      <v-card-title class="headline">Benutzerverwaltung</v-card-title>
+  <v-dialog persistent scrollable v-model="dialog" max-width="1200">
+    <v-card color="tabbody" dark flat>
+      <v-card-title class="headline">Plattform user management</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
         <v-data-table
           :headers="headers"
           :items="allUserInfo()"
           sort-by="username"
-          class="elevation-1"
+          class="tabbody"
         >
           <template v-slot:[`item.group`]="{ item }">
             <v-select
               :items="groupNames"
               :value="item.group.name"
-              prepend-icon="mdi-circle-edit-outline"
               @change="updateGroup($event, item)"
             ></v-select>
           </template>
           <template v-slot:top>
-            <v-toolbar flat color="navbar">
-              <v-dialog v-model="createUser" max-width="700px">
+            <v-toolbar flat color="tabbody">
+              <v-dialog v-model="createUser" persistent max-width="1200">
                 <template v-slot:activator="{ on, attrs }">
                   <v-spacer></v-spacer>
                   <v-btn
@@ -30,10 +29,11 @@
                     v-on="on"
                     small
                     outlined
-                    >Benutzer hinzufügen
+                    >add user
                   </v-btn>
                 </template>
-                <v-card>
+                
+                <v-card class="tabbody" dark >
                   <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
                   </v-card-title>
@@ -94,10 +94,10 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="link" text v-on:click="createUser = false"
-                      >ABBRECHEN</v-btn
+                      >CANCEL</v-btn
                     >
                     <v-btn color="link" text v-on:click="saveUser"
-                      >SPEICHERN</v-btn
+                      >SAVE</v-btn
                     >
                   </v-card-actions>
                 </v-card>
@@ -111,14 +111,14 @@
             <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
           </template>
           <template v-slot:no-data>
-            <v-btn color="link" @click="fetchAll">ZURÜCKSETZEN</v-btn>
+            <v-btn color="link" @click="fetchAll">RESET</v-btn>
           </template>
         </v-data-table>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="link" class="mr-2" outlined small @click.stop="close"
+        <v-btn color="link" class="mr-2" outlined small @click="close"
           >CLOSE
         </v-btn>
       </v-card-actions>
@@ -131,7 +131,7 @@ import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   name: "PlattformUserManagement",
   props: {
-    value: Boolean
+    dialog: { type: Boolean, default: false },
   },
   created() {
     this.fetchAll();
@@ -145,10 +145,10 @@ export default {
     createUser: false,
     formTitle: "Benutzer Form",
     headers: [
-      { text: "Benutzername", value: "username" },
+      { text: "User name", value: "username" },
       { text: "E-Mail", value: "email" },
       { text: "Name", value: "name" },
-      { text: "Gruppe", value: "group" }
+      { text: "Rights", value: "group", sortable: false }
     ],
     editedIndex: -1,
     editedItem: {
@@ -212,7 +212,7 @@ export default {
       this.createUser = false;
     },
     close() {
-      this.$emit("input", false);
+      this.$emit("close-dialog");
     },
     allUserInfo() {
       var data = [];

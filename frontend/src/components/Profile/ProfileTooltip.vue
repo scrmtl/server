@@ -7,7 +7,7 @@
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>{{ avatar.name }}</v-list-item-title>
-          <v-list-item-subtitle>Rolle</v-list-item-subtitle>
+          <v-list-item-subtitle v-if="avatar.role">{{ avatar.role }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>

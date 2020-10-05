@@ -94,9 +94,18 @@
                     >
                       <v-card-title class="title">
                         <span class="headline">Assigned users</span>
-                        <v-btn icon>
+                        <v-btn 
+                          icon
+                          @click="assignedUserDialog = true"
+                          >
                           <v-icon color="link">mdi-dots-horizontal</v-icon>
                         </v-btn>
+                        <AssignedUserManagement 
+                          @close-dialog="assignedUserDialog = false" 
+                          :dialog="assignedUserDialog"  
+                          :dialogName="'Assigned user'"
+                          :assignedUsers="allAssignedUsers"
+                        />
                       </v-card-title>
                       <v-card-text>
                         <v-row>
@@ -130,7 +139,7 @@
           <v-tab-item>
             <v-card flat dark color="secondary" tile>
               <v-card-text>
-                <v-container grid-list-md>
+
                   <v-row align="center">
                     <v-col>
                       <v-list>
@@ -151,7 +160,7 @@
                       </v-list>
                     </v-col>
                   </v-row>
-                </v-container>
+
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -221,6 +230,7 @@ import ProfileAvatar from "@/components/Profile/ProfileAvatar.vue";
 import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
 import Steplist from "@/components/Steplist.vue";
 import Label from "@/components/Label.vue";
+import AssignedUserManagement from "@/components/AssignedUserManagement.vue";
 import { mapActions, mapGetters, mapState } from "vuex";
 export default {
   name: "DetailTask",
@@ -236,6 +246,7 @@ export default {
     ],
     availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
     deleteDialog: false,
+    assignedUserDialog: false,
     taskNamedStatus: "New",
     localTask: {},
     isFormValid: null,
@@ -248,7 +259,8 @@ export default {
     ProfileAvatar,
     ProfileTooltip,
     Steplist,
-    Label
+    Label,
+    AssignedUserManagement
   },
   methods: {
     ...mapActions("label", {

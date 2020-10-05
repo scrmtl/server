@@ -21,9 +21,11 @@ export default createCrudModule({
     customUrlFn(id, type, projectId) {
         // id will only be available when doing request to single resource, otherwise null
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
-        const rootUrl = `/api/projects/${projectId}/sprints`;
-        return id ? `${rootUrl}/${id}/` : rootUrl;
-        //const rootURL = `/api/sprints/?project=${projectId}`
-        //return rootUrl;
-    }
+        var rootUrl = '/api/sprints';
+        if (projectId != null) {
+            rootUrl = `/api/sprints/?project=${projectId}`
+        }
+        rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
+        return rootUrl;
+    },
 });

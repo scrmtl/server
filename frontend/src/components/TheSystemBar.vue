@@ -11,11 +11,11 @@
       text
       x-small
       dark
-      @click.stop="dialog = true"
+      @click="plattformManagementDialog = true"
       v-if="getGroupId == 1"
-      >Benutzerverwaltung
+      > Plattform User Management
     </v-btn>
-    <PlattformUserManagement v-model="dialog" v-if="dialog" />
+    <PlattformUserManagement  @close-dialog="plattformManagementDialog = false" :dialog="plattformManagementDialog" v-if="plattformManagementDialog" />
 
     <v-spacer></v-spacer>
     <v-icon class="systemBarIcon">mdi-account</v-icon>
@@ -44,7 +44,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
-      dialog: false,
+      plattformManagementDialog: false,
       groupId: 0
     };
   },
