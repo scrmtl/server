@@ -1,0 +1,16 @@
+{
+    /*
+    "python.pythonPath": "/home/hermi/.virtualenvs/djangoVenv/bin/python",
+    "editor.formatOnSave": true,
+    "python.linting.pycodestyleEnabled": false,
+    //"python.linting.pylintPath": "/home/hermi/.virtualenvs/djangoVenv/lib/python3.7/site-packages/pylint",
+    //"python.linting.pylintPath": "/home/hermi/.local/lib/python3.7/site-packages/pylint",
+    "python.linting.pylintArgs": [
+        "--load-plugins",
+        "pylint_django"
+    ],
+    "python.linting.pylintEnabled": false,
+    "python.linting.enabled": false,
+    */
+    "python.dataScience.debugJustMyCode": false
+}

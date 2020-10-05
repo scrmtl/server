@@ -1,0 +1,29 @@
+@startuml
+
+title Ein DefaultUser möchte ein Projekt anlegen
+left to right direction
+actor "DefaultUser" as du
+actor "Admin" as admin
+actor "Projekt Verwalter" as pv
+
+package ScrumToolBackend {
+  usecase "Projekt erstellen" as UC1
+  package Projekt{
+    usecase "Projekt verwalten" as UC2
+  }
+}
+du --> UC1
+admin --> UC1
+pv --> UC2
+
+du <|-- pv 
+
+note as note1
+    Wie kann ein Neu angemeldeter 
+    Benutzer das Recht erhalten Projekte zu erstellen?
+end note
+
+note1 .. du
+note1 .. pv
+
+@enduml

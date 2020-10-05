@@ -1,0 +1,366 @@
+[
+    {
+        "model": "api.project",
+        "pk": 1,
+        "fields": {
+            "name": "DefaultProject",
+            "description": ""
+        }
+    },
+    {
+        "model": "api.board",
+        "pk": 1,
+        "fields": {
+            "project": 1,
+            "name": "Product Backlog",
+            "description": "As described in the Scrum Guide, the Product Backlog is an ordered list of everything that is known to be needed in the product. It is the single source of requirements for any changes to be made to the product. The Product Owner is responsible for the Product Backlog, including its content, availability, and ordering.\r\n- https://www.scrum.org/resources/what-is-a-product-backlog",
+            "board_type": "PB",
+            "display_lane_horizontal": false
+        }
+    },
+    {
+        "model": "api.board",
+        "pk": 2,
+        "fields": {
+            "project": 1,
+            "name": "Sprint Backlog",
+            "description": "As described in the Scrum Guide, the Sprint Backlog is the set of Product Backlog items selected for the Sprint, plus a plan for delivering the product Increment and realizing the Sprint Goal. The Sprint Backlog is a forecast by the Development Team about what functionality will be in the next Increment and the work needed to deliver that functionality into a \u201cDone\u201d Increment.\r\n- https://www.scrum.org/resources/what-is-a-sprint-backlog",
+            "board_type": "SP",
+            "display_lane_horizontal": false
+        }
+    },
+    {
+        "model": "api.board",
+        "pk": 3,
+        "fields": {
+            "project": 1,
+            "name": "Archive Board",
+            "description": "",
+            "board_type": "AB",
+            "display_lane_horizontal": false
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 1,
+        "fields": {
+            "board": 2,
+            "name": "Next (Sprint Backlog)",
+            "numbering": 0
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 2,
+        "fields": {
+            "board": 2,
+            "name": "Doing",
+            "numbering": 1
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 3,
+        "fields": {
+            "board": 2,
+            "name": "On Hold/Blocked",
+            "numbering": 2
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 4,
+        "fields": {
+            "board": 2,
+            "name": "Ready (for Review)",
+            "numbering": 3
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 5,
+        "fields": {
+            "board": 2,
+            "name": "Done",
+            "numbering": 4
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 6,
+        "fields": {
+            "board": 1,
+            "name": "Bugs",
+            "numbering": 0
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 7,
+        "fields": {
+            "board": 1,
+            "name": "Ideas",
+            "numbering": 1
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 8,
+        "fields": {
+            "board": 1,
+            "name": "Produkt Backlog",
+            "numbering": 2
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 9,
+        "fields": {
+            "board": 1,
+            "name": "Growning (for Refinement)",
+            "numbering": 3
+        }
+    },
+    {
+        "model": "api.lane",
+        "pk": 10,
+        "fields": {
+            "board": 1,
+            "name": "Ready (for next Sprints)",
+            "numbering": 4
+        }
+    },
+    {
+        "model": "api.projectrole",
+        "pk": 1,
+        "fields": {}
+    },
+    {
+        "model": "api.projectrole",
+        "pk": 2,
+        "fields": {}
+    },
+    {
+        "model": "api.projectrole",
+        "pk": 3,
+        "fields": {}
+    },
+    {
+        "model": "api.epic",
+        "pk": 1,
+        "fields": {
+            "lane": 1,
+            "name": "DefaultEpic",
+            "description": "",
+            "numbering": 0,
+            "storypoints": 0,
+            "status": "ns",
+            "labels": [],
+            "files": [],
+            "sprint": null
+        }
+    },
+    {
+        "model": "api.feature",
+        "pk": 1,
+        "fields": {
+            "lane": 1,
+            "name": "DefaultFeature",
+            "description": "",
+            "numbering": 0,
+            "storypoints": 0,
+            "status": "ns",
+            "epic": 1,
+            "labels": [],
+            "files": []
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 1,
+        "fields": {
+            "name": "admin",
+            "permissions": [
+                57,
+                58,
+                59,
+                60,
+                61,
+                62,
+                63,
+                64,
+                1,
+                4,
+                49,
+                50,
+                51,
+                52,
+                45,
+                46,
+                47,
+                48,
+                53,
+                54,
+                55,
+                56,
+                69,
+                70,
+                71,
+                72,
+                73,
+                74,
+                75,
+                76,
+                77,
+                78,
+                79,
+                80,
+                81,
+                82,
+                83,
+                84,
+                85,
+                86,
+                87,
+                88,
+                89,
+                90,
+                91,
+                92,
+                65,
+                66,
+                67,
+                68,
+                93,
+                94,
+                95,
+                96,
+                97,
+                98,
+                99,
+                100,
+                113,
+                114,
+                115,
+                116,
+                101,
+                102,
+                103,
+                104,
+                109,
+                110,
+                111,
+                112,
+                105,
+                106,
+                107,
+                108,
+                9,
+                10,
+                11,
+                12,
+                5,
+                6,
+                7,
+                8,
+                41,
+                42,
+                43,
+                44,
+                13,
+                14,
+                15,
+                16,
+                29,
+                30,
+                31,
+                32,
+                25,
+                26,
+                27,
+                28,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24
+            ]
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 2,
+        "fields": {
+            "name": "standard",
+            "permissions": [
+                69,
+                70,
+                71,
+                72,
+                73,
+                74,
+                75,
+                76,
+                77,
+                78,
+                79,
+                80,
+                81,
+                82,
+                83,
+                84,
+                85,
+                86,
+                87,
+                88,
+                89,
+                90,
+                91,
+                92,
+                65,
+                66,
+                67,
+                68,
+                93,
+                94,
+                95,
+                96,
+                97,
+                98,
+                99,
+                100,
+                113,
+                114,
+                115,
+                116,
+                101,
+                102,
+                103,
+                104,
+                109,
+                110,
+                111,
+                112,
+                105,
+                106,
+                107,
+                108,
+                44,
+                32,
+                40,
+                20
+            ]
+        }
+    }
+]

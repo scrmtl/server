@@ -1,0 +1,82 @@
+version: "3.7"
+# IMPORTANT: docker-compose.yml must be started first!!!
+services:
+    scrmtldb:
+        image: postgres
+        container_name: scrmtldb
+        restart: always
+        environment:
+            POSTGRES_USER: scrumAdmin
+            POSTGRES_PASSWORD: MeinNeuesPassword
+            POSTGRES_DB: scrumdb
+        volumes: 
+        - /srv/db/scrmtl/data:/var/lib/postgresql/data
+        networks:
+        - appnetwork
+
+    scrmtlbackend:
+        image: docker.pkg.github.com/scrmtl/server/scrmtl-backend:latest
+        container_name: scrmtlbackend
+        restart: always
+        depends_on:
+        - scrmtldb
+        environment:
+            POSTGRES_HOST: scrmtldb
+            POSTGRES_USER: scrumAdmin
+            POSTGRES_PASSWORD: MeinNeuesPassword
+            POSTGRES_DB: scrumdb
+            BACKEND_ALLOWED_HOSTS: scrmtl.ddns.net
+            # maybe Trailing slash is necessary, if not run on root
+            # OVERWRITEWEBROOT: /scrmtl
+        labels:
+        # actived traefik routing
+        - traefik.enable=true
+        # Choose network
+        - traefik.docker.network=extern
+        # http config
+        - traefik.http.routers.scrmtlbackend.rule=Host(`scrmtl.ddns.net`)
+        - traefik.http.routers.scrmtlbackend.entrypoints=web
+        # https config
+        - traefik.http.routers.scrmtlbackend.middlewares=HttpsRedirect@file
+        - traefik.http.routers.scrmtlbackend-secured.entrypoints=websecure
+        - traefik.http.routers.scrmtlbackend-secured.tls=true
+        - traefik.http.routers.scrmtlbackend-secured.tls.certresolver=myresolver
+        - traefik.http.routers.scrmtlbackend-secured.rule=Host(`scrmtl.ddns.net`)
+        - traefik.http.routers.scrmtlbackend-secured.middlewares=ScrmtlBackendMiddlewares@file
+        networks:
+        - appnetwork
+        - extern
+
+    scrmtlfrontend:
+        image: docker.pkg.github.com/scrmtl/server/scrmtl-frontend:latest
+        container_name: scrmtlfrontend
+        restart: always
+        depends_on:
+        - scrmtldb
+        - scrmtlbackend
+        labels:
+        # actived traefik routing
+        - traefik.enable=true
+        # Choose network
+        - traefik.docker.network=extern
+        # http config
+        - traefik.http.routers.scrmtlfrontend.rule=Host(`scrmtl.ddns.net`) && PathPrefix(`/app`)
+        - traefik.http.routers.scrmtlfrontend.entrypoints=web
+        # https config
+        - traefik.http.routers.scrmtlfrontend.middlewares=HttpsRedirect@file
+        - traefik.http.routers.scrmtlfrontend-secured.entrypoints=websecure
+        - traefik.http.routers.scrmtlfrontend-secured.tls=true
+        - traefik.http.routers.scrmtlfrontend-secured.tls.certresolver=myresolver
+        - traefik.http.routers.scrmtlfrontend-secured.rule=Host(`scrmtl.ddns.net`) && PathPrefix(`/app`)
+        - traefik.http.routers.scrmtlfrontend-secured.middlewares=ScrmtlFrontendMiddlewares@file
+        networks:
+        - extern
+
+
+networks:
+    extern:
+        external: true
+        driver: bridge
+    appnetwork:
+        external: false
+        driver: bridge
