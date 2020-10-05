@@ -1,14 +1,17 @@
 <template>
-  <v-dialog persistent scrollable v-model="dialog" max-width="1200">
+  <v-dialog persistent scrollable v-model="dialog" max-width="1500">
     <v-card color="tabbody" dark flat>
       <v-card-title class="headline">Plattform user management</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
+        <v-layout column style="height: 40vh">
+        <v-flex style="overflow: auto">
         <v-data-table
           :headers="headers"
           :items="allUserInfo()"
           sort-by="username"
           class="tabbody"
+          scrollable
         >
           <template v-slot:[`item.group`]="{ item }">
             <v-select
@@ -114,6 +117,8 @@
             <v-btn color="link" @click="fetchAll">RESET</v-btn>
           </template>
         </v-data-table>
+        </v-flex>
+        </v-layout>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
@@ -147,6 +152,7 @@ export default {
       { text: "User name", value: "username" },
       { text: "E-Mail", value: "email" },
       { text: "Name", value: "name" },
+      { text: "Projects", value: "project" },
       { text: "Rights", value: "group", sortable: false }
     ],
     editedIndex: -1,

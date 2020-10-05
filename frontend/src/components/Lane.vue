@@ -1,5 +1,9 @@
 <template>
-  <v-card class="lane" min-width="370" max-width="420">
+  <v-card class="lane" 
+  min-width="370" 
+  max-width="420" 
+  height="80vh"
+  >
     <v-card-title class="navbar white--text">
       <div>
         {{ lane.name }}
@@ -20,14 +24,19 @@
         </v-list>
       </v-menu>
     </v-card-title>
-
-    <v-card-text v-if="laneTasks" class="lane-body">
-      <v-row v-for="task in laneTasks" :key="task.id">
-        <v-col>
-          <Task v-bind:task="task" />
-        </v-col>
-      </v-row>
-    </v-card-text>
+    <v-layout column>
+      <v-flex style="overflow: auto">
+        <v-card-text v-if="laneTasks" 
+        class="lane-body"
+        >
+          <v-row v-for="task in laneTasks" :key="task.id">
+            <v-col>
+              <Task v-bind:task="task" />
+            </v-col>
+          </v-row>       
+        </v-card-text>
+      </v-flex>
+    </v-layout>  
   </v-card>
 </template>
 

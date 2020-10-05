@@ -6,11 +6,12 @@
   padding-right: 20px;
 }
 .appBar {
+  max-height: 100vh;
   padding: 8px;
 }
 .tab-content {
     padding: 10px;
-    min-height: 100vw;
+    min-height: 100vh;
     max-width: 100vw;
     overflow-y: hidden;
   }
@@ -41,10 +42,6 @@
 .status {
   margin-right: 8px;
 }
-.lane{
-  margin-top: 20px;
-
-  }
 .epic {
     float: left;
   }
@@ -64,7 +61,13 @@
     margin-right: 6px;
     margin-left: -24px;
   }
+  .lane{
+    margin-top: 20px;
+    height: 75vh;
+    }
 .lane-body {
+    /* height: 100vh; */
+    height: 75vh;
     background-color: #2E4057;
     padding-left: -2px;
     border-style: solid;
@@ -73,14 +76,14 @@
     border-left-color: #6441A4;
     border-right-color: #6441A4;
   }
-.lane-extended {
-    background-color: lightgray;
+/* .lane-extended {
+    background-color: #2E4057;
     border-style: solid;
     border-top-style: hidden;
     border-left-color: #6441A4;
     border-right-color: #6441A4;
     border-bottom-color: #6441A4;
-  }
+  } */
 .epic-header {
     background-color: #6441A4;
     width: 300px;
@@ -291,10 +294,11 @@
   margin-right: 9.5px;
   width: 64px;
 }
-
 .TaskDialog {
   position: absolute;
   top: 10;
   right: 0;
 }
-
+.scroll {
+  overflow-y: auto;
+}
