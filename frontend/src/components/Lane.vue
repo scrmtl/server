@@ -1,9 +1,5 @@
 <template>
-  <v-card class="lane" 
-  min-width="370" 
-  max-width="420" 
-  height="80vh"
-  >
+  <v-card class="lane" min-width="370" max-width="420" height="80vh">
     <v-card-title class="navbar white--text">
       <div>
         {{ lane.name }}
@@ -26,17 +22,15 @@
     </v-card-title>
     <v-layout column>
       <v-flex style="overflow: auto">
-        <v-card-text v-if="laneTasks" 
-        class="lane-body"
-        >
+        <v-card-text v-if="laneTasks" class="lane-body">
           <v-row v-for="task in laneTasks" :key="task.id">
             <v-col>
               <Task v-bind:task="task" />
             </v-col>
-          </v-row>       
+          </v-row>
         </v-card-text>
       </v-flex>
-    </v-layout>  
+    </v-layout>
   </v-card>
 </template>
 
@@ -53,7 +47,9 @@ export default {
     ],
     epicItem: [{ title: "+ New Feature" }, { title: "+ New Task" }],
     featureItem: [{ title: "+ New Task" }],
-    laneTasks: []
+    laneTasks: [],
+    laneEpics: [],
+    laneFeature: []
   }),
   components: {
     Task
@@ -63,11 +59,27 @@ export default {
     ...mapActions("task", {
       fetchTask: "fetchList"
     }),
+    ...mapActions("feature", {
+      fetchFeature: "fetchList"
+    }),
+    ...mapActions("epic", {
+      fetchEpic: "fetchList"
+    }),
 
     fetchData(lane) {
       this.fetchTask({ customUrlFnArgs: { laneId: lane.id } }).then(
         function() {
           this.laneTasks = this.tasksByIdArray(lane.task_cards);
+        }.bind(this)
+      );
+      this.fetchEpic({ customUrlFnArgs: { laneId: lane.id } }).then(
+        function() {
+          this.laneEpics = this.epicsByIdArray(lane.task_cards);
+        }.bind(this)
+      );
+      this.fetchFeature({ customUrlFnArgs: { laneId: lane.id } }).then(
+        function() {
+          this.laneFeature = this.featuresByIdArray(lane.task_cards);
         }.bind(this)
       );
     }
@@ -83,6 +95,14 @@ export default {
     ...mapGetters("task", {
       tasksById: "byId",
       tasksByIdArray: "byIdArray"
+    }),
+    ...mapGetters("feature", {
+      featuresById: "byId",
+      featuresByIdArray: "byIdArray"
+    }),
+    ...mapGetters("epic", {
+      epicsById: "byId",
+      epicsByIdArray: "byIdArray"
     })
   },
   updated() {},

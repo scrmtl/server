@@ -25,11 +25,22 @@ export default createCrudModule({
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
         var rootUrl = id ? `/api/features/${id}` : '/api/features/';
         if (laneId) {
-            rootURL = `/api/features/?lane=${laneId}`
+            rootUrl = `/api/features/?lane=${laneId}`
         } else if (byUser) {
             rootUrl = `/api/features/?byUser=${byUser}`;
-            //rootURL = `/api/features/?lane=${laneId}`
+            //rootUrl = `/api/features/?lane=${laneId}`
         }
         return rootUrl;
+    },
+    getters: {
+        /** @description Add Custom getter 
+         * @param {Array} idArray Array with Task IDs 
+         * @return {Array} Array of Task Objects
+         */
+        byIdArray(state) {
+            return idArray =>
+                idArray.map(id => state.entities[id.toString()])
+        },
+
     },
 });
