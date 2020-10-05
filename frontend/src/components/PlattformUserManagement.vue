@@ -32,10 +32,10 @@
                     >add user
                   </v-btn>
                 </template>
-                
+                <!-- Add plttform user dialog -->
                 <v-card class="tabbody" dark >
                   <v-card-title>
-                    <span class="headline">{{ formTitle }}</span>
+                    <span class="headline">Add new plattform user</span>
                   </v-card-title>
 
                   <v-card-text>
@@ -143,7 +143,6 @@ export default {
     showPassword: false,
     passwordRules: [v => !!v || "password is required"],
     createUser: false,
-    formTitle: "Benutzer Form",
     headers: [
       { text: "User name", value: "username" },
       { text: "E-Mail", value: "email" },
@@ -245,7 +244,7 @@ export default {
     ...mapGetters("group", {
       groupById: "byId",
       listGroups: "list",
-      byGroupName: "byGroupName"
+      byGroupName: "byName"
     })
   }
 };

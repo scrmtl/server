@@ -22,7 +22,7 @@ export default createCrudModule({
          * @param {string} groupName Name of the group 
          * @return {object} group with the given name
          */
-        byGroupName(state) {
+        byName(state) {
             return groupName => {
                 for (const [key, value] of Object.entries(state.entities)) {
                     if (value.name === groupName) {
