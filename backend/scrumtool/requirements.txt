@@ -44,7 +44,7 @@ mccabe==0.6.1
 paramiko==2.7.1
 passlib==1.7.1
 Pillow==7.1.1
-psutil==5.5.1
+psutil==5.6.6
 psycopg2-binary==2.8.4
 pyaml==20.3.1
 pycodestyle==2.5.0
