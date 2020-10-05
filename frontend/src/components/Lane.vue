@@ -67,7 +67,7 @@ export default {
     }),
 
     fetchData(lane) {
-      if (lane.id === undefiend) return;
+      if (lane.id === undefined) return;
       this.fetchTask({ customUrlFnArgs: { laneId: lane.id } }).then(
         function() {
           this.laneTasks = this.tasksByIdArray(lane.task_cards);
