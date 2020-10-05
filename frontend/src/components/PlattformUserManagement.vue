@@ -3,15 +3,15 @@
     <v-card color="tabbody" dark flat>
       <v-card-title class="headline">Plattform user management</v-card-title>
       <v-divider></v-divider>
-      <v-card-text>
-        <v-layout column style="height: 40vh">
-        <v-flex style="overflow: auto">
+        <v-card-text>
+          
+        
         <v-data-table
           :headers="headers"
           :items="allUserInfo()"
           sort-by="username"
           class="tabbody"
-          scrollable
+          
         >
           <template v-slot:[`item.group`]="{ item }">
             <v-select
@@ -117,8 +117,6 @@
             <v-btn color="link" @click="fetchAll">RESET</v-btn>
           </template>
         </v-data-table>
-        </v-flex>
-        </v-layout>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
