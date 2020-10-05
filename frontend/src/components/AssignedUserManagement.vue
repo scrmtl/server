@@ -17,9 +17,14 @@
           class="tabbody"
           dark
         >
-
+          <template v-slot:[`item.group`]="{ item }">
+            <v-select
+              :items="availableRoles"
+              :value="item.role.name"
+              @change="updateRole($event, item)"
+            ></v-select>
+          </template>
           <template v-slot:[`item.actions`]="{item}">
-
             <v-icon
               small
               @click="removeAssignedUser(item)"
@@ -45,6 +50,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 export default {
   name: "AssignedUserManagement",
   props: {
@@ -60,18 +66,38 @@ export default {
       { text: "Role", value: "role" },
       { text: "Actions", value: "actions", sortable: false }
     ],
+    availableRoles: []
   }),
 
   methods:{
+    ...mapActions("projectUser", {
+      fetchUser: "fetchList",
+      updateProjectUser: "update"
+    }),
+    ...mapActions("projectRole", {
+      fetchRoles: "fetchList"
+    }),
+    
     close() {
       this.$emit("close-dialog");
     },
     removeAssignedUser(user){
-      this.$emit("removeUser", user);
+      this.$emit("remove-user", user);
     },
     addAssignedUser(user){
-      this.$emit("addUser", user);
-    }
+      this.$emit("add-user", user);
+    },
+    updateRole(newRole, item) {
+      this.updateProjectUser({
+        id: item.id,
+        data: { role: [this.byRoleName(newRole)] }
+      }).then(() => this.fetchAll());
+    },
+  },
+  computed:{
+    ...mapGetters("projectRole",{
+        byRoleName: "byName"
+    })
   }
 }
 </script>
