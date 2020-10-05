@@ -67,6 +67,7 @@ export default {
     }),
 
     fetchData(lane) {
+      if (lane.id === undefiend) return;
       this.fetchTask({ customUrlFnArgs: { laneId: lane.id } }).then(
         function() {
           this.laneTasks = this.tasksByIdArray(lane.task_cards);
@@ -74,12 +75,12 @@ export default {
       );
       this.fetchEpic({ customUrlFnArgs: { laneId: lane.id } }).then(
         function() {
-          this.laneEpics = this.epicsByIdArray(lane.task_cards);
+          this.laneEpics = this.epicsByIdArray(lane.epic_cards);
         }.bind(this)
       );
       this.fetchFeature({ customUrlFnArgs: { laneId: lane.id } }).then(
         function() {
-          this.laneFeature = this.featuresByIdArray(lane.task_cards);
+          this.laneFeature = this.featuresByIdArray(lane.feature_cards);
         }.bind(this)
       );
     }
