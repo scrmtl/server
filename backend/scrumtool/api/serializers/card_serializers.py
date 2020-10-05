@@ -105,7 +105,7 @@ class FeatureSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Feature
-        fields = CardSerializer.Meta.fields + ('labels', 'steplists')
+        fields = CardSerializer.Meta.fields + ('labels', 'steplists', 'epic')
 
 
 class TaskSerializerFull(serializers.ModelSerializer):
