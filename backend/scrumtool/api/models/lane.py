@@ -44,9 +44,10 @@ class Lane(RulesModel, IGetProject, IGetBoard):
 
     def __str__(self):
         """Unicode representation of Lane."""
-        return "{0} with numbering {1}".format(self.name,
-                                               self.numbering,
-                                               )
+        return "{0} ID: {2}with numbering {1}".format(self.name,
+                                                      self.numbering,
+                                                      self.id,
+                                                      )
 
     @property
     def project(self):

@@ -16,6 +16,8 @@ from api.models.model_interfaces import IGetProject
 
 import api.models.sprint as customModels
 
+from api.model_managers import TemplateManager
+
 
 class Project(RulesModel, IGetProject):
     """Model definition for Project."""
@@ -63,6 +65,12 @@ class Project(RulesModel, IGetProject):
         blank=True,
         help_text='Number of Sprints possible '
     )
+    is_template = models.BooleanField(
+        default=False
+    )
+    objects = models.Manager()
+    template_objects = TemplateManager()
+
     @property
     def project(self):
         """Getter for the parent project
@@ -107,11 +115,10 @@ class Project(RulesModel, IGetProject):
 
     def __str__(self):
         """Unicode representation of Project."""
-        return "{0}: {1} Description:{2}  ".format(self.name,
-                                                   self.pk,
-                                                   self.description,
-
-                                                   )
+        return "{0} ID: {1} Description:{2}  ".format(self.name,
+                                                      self.pk,
+                                                      self.description,
+                                                      )
 
     def save(self, *args, **kwargs):
         if Project.objects.filter(pk=self.id).exists():

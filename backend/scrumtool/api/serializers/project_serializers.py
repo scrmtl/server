@@ -1,7 +1,7 @@
 """Serializers for Projects
 """
 from rest_framework import serializers
-from ..models import Project, ProjectUser
+from ..models import Project, ProjectUser, Board
 from ..serializers import board_serializers, project_user_serializer
 
 
@@ -19,6 +19,10 @@ class ProjectSerializer(serializers.ModelSerializer):
         queryset=ProjectUser.objects.all(),
         required=False,
         many=True)
+    boards = serializers.PrimaryKeyRelatedField(
+        queryset=Board.objects.all(),
+        required=False,
+        many=True)
 
     class Meta:
         model = Project
@@ -33,6 +37,7 @@ class ProjectSerializer(serializers.ModelSerializer):
                   'dor',
                   'dod',
                   'numOfSprints',
+                  'boards',
                   )
         read_only_fields = ('numOfSprints',)
 
@@ -64,7 +69,7 @@ class ProjectSerializerFull(serializers.ModelSerializer):
                   'dor',
                   'dod',
                   'numOfSprints',
-                  'boards'
+                  'boards',
                   )
         read_only_fields = ('numOfSprints',)
 
@@ -73,6 +78,8 @@ def date_validator(data):
     """
     Check that start is before end.
     """
+    if (not (('start' in data.keys()) and ('end' in data.keys()))):
+        return data
     if data['start'] > data['end']:
         raise serializers.ValidationError("end must occur after start")
     return data

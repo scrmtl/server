@@ -57,28 +57,6 @@ class EpicViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
             return self.queryset.filter(lane=self.kwargs['lane_pk'])
     serializer_class = apiSerializers.EpicSerializer
 
-    @action(methods=['delete'], detail=True)
-    def remove_labels_from_task(self, request, pk=None):
-        labels_to_remove = request.data['labels']
-        for label in labels_to_remove:
-            self.remove_label(label)
-        return Response(self.serializer_class(self.get_object()).data,
-                        status=status.HTTP_200_OK)
-
-    @action(methods=['delete'], detail=True)
-    def remove_label_from_task(self, request, pk=None):
-        label_to_remove = request.data['label']
-        self.remove_label(label_to_remove)
-        return Response(self.serializer_class(self.get_object()).data,
-                        status=status.HTTP_200_OK)
-
-    def remove_label(self, label_data):
-        label = get_object_or_404(models.Label, pk=label_data['id'])
-        task = self.get_object()
-        task.labels.remove(label)
-        logger.info('Removed label: %s with from Epic: %s',
-                    label, task)
-
 
 class FeatureViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """CRUD for Features
@@ -93,28 +71,6 @@ class FeatureViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
 
     serializer_class = apiSerializers.EpicSerializer
     serializer_class = apiSerializers.FeatureSerializer
-
-    @action(methods=['delete'], detail=True)
-    def remove_labels_from_task(self, request, pk=None):
-        labels_to_remove = request.data['labels']
-        for label in labels_to_remove:
-            self.remove_label(label)
-        return Response(self.serializer_class(self.get_object()).data,
-                        status=status.HTTP_200_OK)
-
-    @action(methods=['delete'], detail=True)
-    def remove_label_from_task(self, request, pk=None):
-        label_to_remove = request.data['label']
-        self.remove_label(label_to_remove)
-        return Response(self.serializer_class(self.get_object()).data,
-                        status=status.HTTP_200_OK)
-
-    def remove_label(self, label_data):
-        label = get_object_or_404(models.Label, pk=label_data['id'])
-        task = self.get_object()
-        task.labels.remove(label)
-        logger.info('Removed label: %s with from feature: %s',
-                    label, task)
 
 
 class TaskViewSet(AutoPermissionViewSetMixin,
@@ -134,28 +90,6 @@ class TaskViewSet(AutoPermissionViewSetMixin,
         else:
             return super().get_queryset().filter(lane=self.kwargs['lane_pk'])
     serializer_class = apiSerializers.TaskSerializer
-
-    @action(methods=['delete'], detail=True)
-    def remove_labels_from_task(self, request, pk=None):
-        labels_to_remove = request.data['labels']
-        for label in labels_to_remove:
-            self.remove_label(label)
-        return Response(apiSerializers.TaskSerializerFull(self.get_object()).data,
-                        status=status.HTTP_200_OK)
-
-    @action(methods=['delete'], detail=True)
-    def remove_label_from_task(self, request, pk=None):
-        label_to_remove = request.data['label']
-        self.remove_label(label_to_remove)
-        return Response(apiSerializers.TaskSerializerFull(self.get_object()).data,
-                        status=status.HTTP_200_OK)
-
-    def remove_label(self, label_data):
-        label = get_object_or_404(models.Label, pk=label_data['id'])
-        task = self.get_object()
-        task.labels.remove(label)
-        logger.info('Removed label: %s with from task: %s',
-                    label, task)
 
     def retrieve(self, request: Request, *args, pk=None, **kwargs):
         """retrive for full and partial retrieve

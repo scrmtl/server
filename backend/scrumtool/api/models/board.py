@@ -70,9 +70,9 @@ class Board(RulesModel, IGetProject, IGetBoard):
 
     def __str__(self):
         """Unicode representation of Board."""
-        return "{0}: {1}".format(self.name,
-                                 self.description,
-                                 )
+        return "{0} ID: {1}".format(self.name,
+                                    self.id,
+                                    )
 
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
