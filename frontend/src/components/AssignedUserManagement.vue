@@ -91,7 +91,7 @@ export default {
       this.updateProjectUser({
         id: item.id,
         data: { role: [this.byRoleName(newRole)] }
-      }).then(() => this.fetchAll());
+      });
     },
   },
   computed:{
