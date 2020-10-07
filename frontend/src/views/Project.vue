@@ -1,8 +1,6 @@
 <template>
 <v-container fluid class="tabbody">
-    <v-row>
-        <AppBar v-bind:id="id"/>
-    </v-row>
+
     <v-row class="d-flex" dense>
         <v-col cols="12">
             <router-view></router-view>
@@ -18,12 +16,12 @@
 </template>
 
 <script>
-    import AppBar from "@/components/TheAppBar";
+
     import { mapActions, mapGetters } from "vuex";
     export default {
         props: ["id"],
         components: {
-            AppBar
+            
         },
         methods:{
             ...mapActions("board", {
