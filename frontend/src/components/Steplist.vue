@@ -16,18 +16,37 @@
       </v-list-item>
     </v-list>
     <v-list-item-group>
-      <v-list-item v-for="(step) in getStepArray()" :key="step.numbering">
+      <v-list-item
+        v-for="(step, index) in getStepArray()"
+        :key="step.numbering"
+      >
         <template #default="{ active, toggle }">
           <v-list-item-action>
-            <v-checkbox v-model="step.checked" @click="toggle"></v-checkbox>
+            <v-checkbox
+              v-model="step.checked"
+              @click="
+                toggle;
+                updateStepFn(step, index);
+              "
+            ></v-checkbox>
           </v-list-item-action>
 
           <v-list-item-content>
-            <v-list-item-title :class="{done: step.checked}">{{ step.text}}</v-list-item-title>
+            <v-list-item-title :class="{ done: step.checked }">{{
+              step.text
+            }}</v-list-item-title>
             <v-list-item-subtitle></v-list-item-subtitle>
           </v-list-item-content>
-          <v-btn fab ripple icon small color="red" v-if="active" @click="removeStep(step.id)">
-            <v-icon >mdi-close-circle</v-icon>
+          <v-btn
+            fab
+            ripple
+            icon
+            small
+            color="red"
+            v-if="active"
+            @click="removeStep(step.id)"
+          >
+            <v-icon>mdi-close-circle</v-icon>
           </v-btn>
         </template>
       </v-list-item>
@@ -92,6 +111,16 @@ export default {
       //prepare for new step
       this.newStep = "";
     },
+    updateStepFn(step, index) {
+      this.updateStep({
+        id: step.id,
+        data: {
+          checked: step.checked,
+          numbering: index
+        },
+        customUrlFnArgs: {}
+      });
+    },
     fetchMyData() {
       this.fetchSteplist({ id: this.steplistId });
       this.fetchSteps({ customUrlFnArgs: { steplistId: this.steplistId } });
@@ -108,7 +137,6 @@ export default {
   },
   created() {
     this.fetchMyData();
-  },
-  updated() {}
+  }
 };
 </script>

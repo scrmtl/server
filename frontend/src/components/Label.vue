@@ -85,11 +85,14 @@ export default {
   watch: {
     model(val, prev) {
       if (val.length === prev.length) return;
+      //If new Label is created
+      var updateLabel = true;
       this.model = val
         //skip adding label if it is newly created
         //-> Promise is going to add it after with response of backend
         .filter(v => {
           if (typeof v === "string") {
+            updateLabel = false;
             v = {
               text: v,
               color: this.colors[this.nonce - 1]
@@ -97,29 +100,13 @@ export default {
             this.createLabel({ data: { title: v.text, color: v.color } }).then(
               function(value) {
                 //add label to local label stack
+                if (value.data.id === undefined) return value;
                 var label = value.data;
                 label["text"] = label.title;
                 this.items.push(label);
                 this.model.push(label);
-                //add label to task in backend
-                var labelIds = this.task.labels;
-                labelIds.push(label.id);
-                this.updateTask({
-                  id: this.task.id,
-                  data: {
-                    labels: labelIds,
-                    feature: this.task.feature,
-                    name: this.task.name,
-                    lane: this.task.lane
-                  },
-                  customUrlFnArgs: {}
-                }).then(
-                  function(value) {
-                    var task = value.data;
-                    this.fetchTask({ id: task.id, customUrlFnArgs: {} });
-                    return value;
-                  }.bind(this)
-                );
+                //add label ID to task labels
+                this.task.labels.push(value.data.id);
                 return value;
               }.bind(this)
             );
@@ -131,32 +118,10 @@ export default {
         .map(v => {
           return v;
         });
-      var labelIds = [];
-      val.forEach(label => {
-        if (label.id === undefined) return;
-        labelIds.push(label.id);
-      });
-      if (labelIds.length < 1) return;
-      this.updateTask({
-        id: this.task.id,
-        data: {
-          labels: labelIds,
-          feature: this.task.feature,
-          name: this.task.name,
-          lane: this.task.lane
-        },
-        customUrlFnArgs: {}
-      })
-        .then(
-          function(value) {
-            var task = value.data;
-            this.fetchTask({ id: task.id, customUrlFnArgs: {} });
-            return value;
-          }.bind(this)
-        )
-        .catch(function(err) {
-          console.error("Error while updating tasks:", err);
-        });
+      //if no new label is created override labels in task with updated list
+      if (updateLabel) {
+        this.task.labels = val.map(label => label.id);
+      }
     },
     task(val, prev) {
       if (val.id === prev.id) return;

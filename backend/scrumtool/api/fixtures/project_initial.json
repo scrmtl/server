@@ -4,7 +4,8 @@
         "pk": 1,
         "fields": {
             "name": "DefaultProject",
-            "description": ""
+            "description": "",
+            "is_template": true
         }
     },
     {

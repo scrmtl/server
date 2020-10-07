@@ -139,9 +139,7 @@
             </div>
             <v-col align-self="center" v-if="task.assigned_users.length > 5">
               <v-avatar color="primary" size="32px">
-                <span 
-                  class="white--text"
-                >
+                <span class="white--text">
                   +{{ task.assigned_users.length - 5 }}
                 </span>
               </v-avatar>
@@ -174,7 +172,7 @@ import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
 
 export default {
   data: () => ({
-    dialog: null,
+    dialog: null
   }),
   props: ["task"],
   components: {
@@ -184,8 +182,8 @@ export default {
 
   methods: {
     showTaskDetail() {
-      this.$store.commit("showTaskDetail", false);
       this.$store.commit("setSelectedTaskDetail", this.task);
+      this.$store.commit("showTaskDetail", false);
     },
     GetUserInitial(id) {
       var inital = "AA";
