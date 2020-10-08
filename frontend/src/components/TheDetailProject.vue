@@ -246,6 +246,7 @@
                       :dialog="userManagementDialog"  
                       :dialogName="'Assigned project user'"
                       :assignedUsers="allAssignedUsers"
+                      roleEditing
                       />
                   </v-card-title>
                   <v-card-text>
@@ -316,7 +317,7 @@ export default {
     calendar1menu: false,
     calendar2menu: false,
     deleteDialog: false,
-    userManagementDialog: false,  
+    userManagementDialog: false,
     isFormValid: null,
     completedSprints: 0,
     projectNamedStatus: "New",
@@ -439,6 +440,7 @@ export default {
   },
   computed: {
     ...mapState(["selectedProject"]),
+    ...mapGetters(["projectUsersbyIdArrayWithDetails"]),
     ...mapGetters("projectUser", {
       listProjectUsers: "list",
       projectUserById: "byId",
@@ -454,23 +456,7 @@ export default {
     }),
     
     allAssignedUsers(){
-      var projectUsers = this.projectUsersByIdArray(this.localProject.project_users);
-      var assignedUsers = [];
-      if (projectUsers && projectUsers.length > 0){
-        projectUsers.forEach(prjUser => {
-          var plattformUser = this.plattformUserById(prjUser.plattform_user);
-          assignedUsers.push(
-            {
-              id: plattformUser.id,
-              email: plattformUser.email,
-              name: plattformUser.name,
-              username: plattformUser.username,
-              role: this.projectRoleById(prjUser.role).role_name,
-            }
-          )
-        })
-      }
-      return assignedUsers;
+      return this.projectUsersbyIdArrayWithDetails(this.localProject.project_users);
     },
 
     visibleDrawer: {

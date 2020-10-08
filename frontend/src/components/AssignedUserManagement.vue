@@ -59,7 +59,7 @@
             <v-select
               :items="availableRoles"
               :value="item.role.name"
-              :readonly="!isRoleEditingAllowed"
+              
               @change="updateRole($event, item)"
             ></v-select>
           </template>
@@ -97,13 +97,13 @@ export default {
     dialogName: { type: String, default: "Assigned user" },
     color: { type: String, default: ""},
     assignedUsers: Array,
-    isRoleEditingAllowed: { type: Boolean, default: false },
+    roleEditing: { type: Boolean, default: false },
   },
   data: () => ({
     headers: [
-      { text: "Benutzername", value: "username" },
-      { text: "Name", value: "name" },
-      { text: "Role", value: "role" },
+      { text: "Benutzername", value: "plattform_user.username" },
+      { text: "Name", value: "plattform_user.name" },
+      { text: "Role", value: "role.role_name" },
       { text: "Actions", value: "actions", sortable: false }
     ],
     availableRoles: [],

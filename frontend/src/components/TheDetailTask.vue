@@ -384,6 +384,7 @@ export default {
   },
   computed: {
     ...mapState(["selectedTask"]),
+    ...mapGetters(["plattformUsersbyIdArrayWithDetails"]),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
       plattformUserById: "byId",
@@ -398,6 +399,9 @@ export default {
     }),
 
     allAssignedUsers() {
+      // return this.plattformUsersbyIdArrayWithDetails(this.localTask.assigned_users);
+      
+      
       return this.plattformUsersByIdArray(this.localTask.assigned_users) &&
         this.plattformUsersByIdArray(this.localTask.assigned_users).length > 0
         ? this.plattformUsersByIdArray(
