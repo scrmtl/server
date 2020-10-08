@@ -42,7 +42,7 @@
                         <v-text-field
                           label="Project name"
                           required
-                          :rules="[rules.required, rules.maxCharacter]"
+                          :rules="[rules.required]"
                           :counter="50"
                           prepend-icon="mdi-information-outline"
                           v-model="localProject.name"
@@ -454,7 +454,6 @@ export default {
     }),
     
     allAssignedUsers(){
-      
       var projectUsers = this.projectUsersByIdArray(this.localProject.project_users);
       var assignedUsers = [];
       if (projectUsers && projectUsers.length > 0){
