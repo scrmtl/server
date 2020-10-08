@@ -24,7 +24,20 @@
                   outlined
                   dense
                   label="Search User"
+                  v-model="selectedUser"
+                  :items="availableUsers"
+                  :filter="nameUsernameFilter"
+                  clearable
                 >
+                  <template v-slot:item="data">
+                    <v-list-item-avatar>
+                      <ProfileAvatar :avatar="data.item"/>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title v-html="data.item.username"></v-list-item-title>
+                      <v-list-item-subtitle v-html="data.item.name"></v-list-item-subtitle>
+                    </v-list-item-content>
+                  </template>
                 </v-autocomplete>
               </v-col>
               
@@ -33,8 +46,9 @@
                   outlined 
                   color="link"
                   text
+                  
                 >
-                  <v-icon left>mdi-plus-circle-outline</v-icon>Add User
+                  <v-icon left>mdi-plus-circle-outline</v-icon>Add User/s
                 </v-btn>
               </v-col>
             </v-row>
@@ -45,6 +59,7 @@
             <v-select
               :items="availableRoles"
               :value="item.role.name"
+              :readonly="!isRoleEditingAllowed"
               @change="updateRole($event, item)"
             ></v-select>
           </template>
@@ -81,7 +96,8 @@ export default {
     dialog: { type: Boolean, default: false },
     dialogName: { type: String, default: "Assigned user" },
     color: { type: String, default: ""},
-    assignedUsers: Array
+    assignedUsers: Array,
+    isRoleEditingAllowed: { type: Boolean, default: false },
   },
   data: () => ({
     headers: [
@@ -90,7 +106,9 @@ export default {
       { text: "Role", value: "role" },
       { text: "Actions", value: "actions", sortable: false }
     ],
-    availableRoles: []
+    availableRoles: [],
+    availableUsers: [],
+    selectedUser: [],
   }),
 
   methods:{
@@ -117,6 +135,16 @@ export default {
         data: { role: this.byRoleName(newRole) }
       });
     },
+
+    nameUsernameFilter (item, queryText, itemText) {
+        const textOne = item.name.toLowerCase()
+        const textTwo = item.username.toLowerCase()
+        const searchText = queryText.toLowerCase()
+        console.log(itemText);
+        return textOne.indexOf(searchText) > -1 ||
+          textTwo.indexOf(searchText) > -1
+    },
+
   },
   computed:{
     ...mapGetters("projectRole",{
