@@ -41,7 +41,6 @@ export default createCrudModule({
                 return idArray.map(id => state.entities[id.toString()])
             }
         },
-
     }
 
 });

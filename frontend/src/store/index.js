@@ -195,6 +195,43 @@ export default new Vuex.Store({
       return state.Userinfo.status;
     },
 
+    projectUsersbyIdArrayWithDetails: state => {
+      return function(idArray){
+        let resultArray = [];
+        if(idArray !== undefined && state.projectRole.entities !== undefined && state.projectUser.entities !== undefined){
+          idArray.map(id => state.projectUser.entities[id.toString()]).forEach(projectUser => {
+            resultArray.push({
+              id: projectUser.id,
+              role: state.projectRole.entities[projectUser.role],
+              plattform_user: state.user.entities[projectUser.plattform_user],
+              project: projectUser.project,
+            })
+          });
+        }
+        console.log(resultArray);
+        return resultArray;
+
+      }
+    },
+
+    plattformUsersbyIdArrayWithDetails: state => {
+      return function(idArray){
+        let resultArray = [];
+        if(idArray !== undefined && state.projectRole.entities !== undefined && state.projectUser.entities !== undefined && state.user.entities !== undefined){
+          idArray.map(id => state.user.entities[id.string()]).forEach( user => {
+            resultArray.push({
+              id: user["id"],
+              role: {},
+              plattform_user: user,
+              // project: projectUser.project,
+            })
+          })
+        }
+        console.log(resultArray);
+        return resultArray;
+      }
+    }
+
 
   },
   modules: {
