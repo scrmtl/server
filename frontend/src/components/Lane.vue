@@ -61,6 +61,7 @@ export default {
   methods: {
     ...mapActions("task", {
       fetchTask: "fetchList",
+      fetchSingleTask: "fetchSingle",
       createTask: "create"
     }),
     ...mapActions("feature", {
@@ -147,19 +148,49 @@ export default {
           }.bind(this)
         );
       } else {
-        this.createTask({
-          data: {
-            name: "myTaskCard",
-            description: "",
-            numbering: 1,
-            storypoints: 0,
-            lane: this.lane,
-            feature: this.feature_cards[0].id
-          }
-        });
+        this.createTaskHelper(this.lane.id);
       }
+    },
+    createTaskHelper(laneId) {
+      this.$store.commit("showTaskDetail", true);
+      var task = {
+        lane: laneId,
+        feature: this.laneFeature[0].id
+      };
+      this.$store.commit("setSelectedTaskDetail", task);
+      /*
+      this.createTask({
+        data: {
+          name: "myTaskCard",
+          description: "",
+          numbering: 1,
+          storypoints: 0,
+          lane: laneId,
+          feature: this.laneFeature[0].id
+        },
+        customUrlFnArgs: {}
+      }).then(
+        function(value) {
+          if (!(value.data.id === undefined)) {
+            this.fetchSingleTask({
+              id: value.data.id,
+              customUrlFnArgs: {}
+            }).then(
+              function(value) {
+                if (!(value.data.id === undefined)) {
+                  this.laneTasks.push(this.tasksById(value.data.id));
+                }
+              }.bind(this)
+            );
+          }
+        }.bind(this)
+      );
+      
+      */
+      this.createInProgress = false;
     }
   },
+
   watch: {
     lane(currentLane, prevLane) {
       if ((currentLane === undefined) | (prevLane.id === currentLane.id))
@@ -168,17 +199,7 @@ export default {
     },
     laneFeature(currentLane, prevLane) {
       if (this.createInProgress & !(currentLane.length === prevLane.length)) {
-        this.createTask({
-          data: {
-            name: "myTaskCard",
-            description: "",
-            numbering: 1,
-            storypoints: 0,
-            lane: this.lane,
-            feature: this.feature_cards[0].id
-          }
-        });
-        this.createInProgress = false;
+        this.createTaskHelper(currentLane.id);
       }
     }
   },
