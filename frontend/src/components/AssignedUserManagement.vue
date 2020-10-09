@@ -17,7 +17,31 @@
           class="tabbody"
           dark
         >
-          <template v-slot:[`item.group`]="{ item }">
+          <template v-slot:top>
+            <v-row >
+              <v-col>
+                <v-autocomplete
+                  outlined
+                  dense
+                  label="Search User"
+                >
+                </v-autocomplete>
+              </v-col>
+              
+              <v-col>
+                <v-btn 
+                  outlined 
+                  color="link"
+                  text
+                >
+                  <v-icon left>mdi-plus-circle-outline</v-icon>Add User
+                </v-btn>
+              </v-col>
+            </v-row>
+            
+            
+          </template>
+          <template v-slot:[`item.role`]="{ item }">
             <v-select
               :items="availableRoles"
               :value="item.role.name"

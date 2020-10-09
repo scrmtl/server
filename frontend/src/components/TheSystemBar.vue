@@ -1,51 +1,82 @@
 <template>
-  <v-app-bar color="appbar" app dark dense flat>
-    <v-btn icon text color="appbar" :to="{ name: 'Home' }">
-      <v-icon large color="link">mdi-home</v-icon>
-    </v-btn>
+  
+  <v-app-bar color="appbar" app dark prominent dense :shrink-on-scroll="this.$route.params.id === undefined">
+    <v-container fluid>
+      <v-row>
+        <v-btn class="mt-n3" icon color="appbar" :to="{ name: 'Home' }">
+          <v-icon large color="link">mdi-home</v-icon>
+        </v-btn>
+        <span class="mt-n1 mx-2 ">Scrum Tool</span>
+        
+        
+        <v-btn
+          color="link"
+          text
+          class="mt-1"
+          x-small
+          dark
+          @click="plattformManagementDialog = true"
+          v-if="getGroupId == 1"
+          > Plattform User Management
+        </v-btn>
+        <PlattformUserManagement  @close-dialog="plattformManagementDialog = false" :dialog="plattformManagementDialog" v-if="plattformManagementDialog" />
+        <v-spacer></v-spacer>
 
-    <v-toolbar-title class="link--text">ScrumTool</v-toolbar-title>
-
-    <v-btn
-      color="link"
-      text
-      x-small
-      dark
-      @click="plattformManagementDialog = true"
-      v-if="getGroupId == 1"
-      > Plattform User Management
-    </v-btn>
-    <PlattformUserManagement  @close-dialog="plattformManagementDialog = false" :dialog="plattformManagementDialog" v-if="plattformManagementDialog" />
-
-    <v-spacer></v-spacer>
-    <v-icon class="systemBarIcon">mdi-account</v-icon>
-    <span class="systemBarUser">{{ userinfos.username }}</span>
-    <v-btn icon text @click="logout()">
-      <v-tooltip bottom color="link">
-        <template v-slot:activator="{ on, attrs }">
-          <v-icon
-            class="task-status-icons"
-            color="link"
-            v-bind="attrs"
-            v-on="on"
-            >mdi-logout</v-icon
+        <v-btn
+          class="mt-n1"
+          dense
+          text
           >
-        </template>
-        <span>Logout</span>
-      </v-tooltip>
-    </v-btn>
+          <v-icon>mdi-account</v-icon>
+          {{ userinfos.username }}
+        </v-btn>
+
+        <v-btn class="mt-n3" icon @click="logout()">
+          <v-tooltip bottom color="link">
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                color="link"
+                v-bind="attrs"
+                v-on="on"
+                >mdi-logout</v-icon
+              >
+            </template>
+            <span>Logout</span>
+          </v-tooltip>
+        </v-btn>
+        
+      </v-row>
+      <v-row >
+        <v-tabs v-if="this.$route.params.id !== undefined" background-color="transparent" slider-color="link"
+        dark centered grow v-model="activeTab">
+          <v-tab v-for="tab in tabs" :key="tab.id" :to="tab.route" exact>{{ tab.name }}</v-tab>     
+        </v-tabs>
+      </v-row>
+    </v-container>
+
+    
   </v-app-bar>
 </template>
 
 <script>
 import PlattformUserManagement from "@/components/PlattformUserManagement.vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 
 export default {
   data() {
     return {
       plattformManagementDialog: false,
-      groupId: 0
+      groupId: 0,
+      activeTab: `/project/${this.$route.params.id}`,
+      tabs: [
+        { id: 1, name: "Dashboard", route: `/project/${this.$route.params.id}` },
+        { id: 2, name: "Product Backlog", route: `/project/${this.$route.params.id}/ProductBacklog` },
+        { id: 3, name: "Sprint Planing", route: `/project/${this.$route.params.id}/SprintPlaning` },
+        { id: 4, name: "Sprint Backlog", route: `/project/${this.$route.params.id}/SprintBacklog` },
+        { id: 5, name: "Archive", route: `/project/${this.$route.params.id}/Archive` },
+        { id: 6, name: "Statistic", route: `/project/${this.$route.params.id}/Statistic`},
+        
+      ]
     };
   },
   components: {
@@ -80,6 +111,7 @@ export default {
   },
 
   computed: {
+    ...mapState(["selectedProject"]),
     ...mapGetters("session", {
       listSession: "list"
     }),
@@ -96,6 +128,7 @@ export default {
   },
   mounted() {
     this.listSession;
+    console.log(this.$route.params.id)
   }
 };
 </script>
