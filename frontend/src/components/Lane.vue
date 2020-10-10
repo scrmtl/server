@@ -1,18 +1,18 @@
 <template>
-  <v-card class="lane" min-width="370" max-width="420" height="80vh">
+  <v-card min-width="385" max-width="420">
     <v-card-title class="navbar white--text">
       <div>
         {{ lane.name }}
       </div>
       <v-spacer></v-spacer>
-      <v-menu>
+      <v-menu offset-y close-on-click>
         <template v-slot:activator="{ on }">
           <v-btn dark icon v-on="on" class="icon" height="32">
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
         <v-list>
-          <v-list-item v-for="(item, i) in items" :key="i">
+          <v-list-item v-for="(item, i) in items" :key="i" link>
             <v-list-tile @click="handle_function_call(item.action)">
               <v-list-item-title>
                 {{ item.title }}
@@ -22,17 +22,16 @@
         </v-list>
       </v-menu>
     </v-card-title>
-    <v-layout column>
-      <v-flex style="overflow: auto">
-        <v-card-text v-if="laneTasks" class="lane-body">
-          <v-row v-for="task in laneTasks" :key="task.id">
-            <v-col>
+        <v-card-text class="lane-body  flex-column" v-if="laneTasks" >
+
+            <v-row justify="center"  class="" v-for="task in laneTasks" :key="task.id">
+            
               <Task v-bind:task="task" />
-            </v-col>
-          </v-row>
+            
+            </v-row>
+         
+          
         </v-card-text>
-      </v-flex>
-    </v-layout>
   </v-card>
 </template>
 
@@ -42,9 +41,6 @@ import Task from "@/components/Task.vue";
 export default {
   data: () => ({
     items: [
-      { title: "+ New Lane", action: undefined },
-      { title: "+ New Epic", action: undefined },
-      { title: "+ New Feature", action: undefined },
       { title: "+ New Task", action: "createEmptyTask" }
     ],
     epicItem: [{ title: "+ New Feature" }, { title: "+ New Task" }],

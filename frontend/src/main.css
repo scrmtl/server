@@ -61,15 +61,16 @@
     margin-right: 6px;
     margin-left: -24px;
   }
-  .lane{
+  /* .lane{
     margin-top: 20px;
     height: 75vh;
-    }
+    } */
 .lane-body {
     /* height: 100vh; */
-    height: 75vh;
+    overflow-y: auto;
+    height: calc(95vh - 225px);
     background-color: #2E4057;
-    padding-left: -2px;
+    /* padding-left: -2px; */
     border-style: solid;
     border-top-style: hidden;
     border-bottom-color: #6441A4;
