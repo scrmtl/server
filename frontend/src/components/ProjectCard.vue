@@ -76,7 +76,7 @@ export default {
 
   },
   created(){
-    // this.fetchProjectUsers({ customUrlFnArgs: {projectId: this.project.id}});
+    
   }
 };
 </script>

@@ -246,7 +246,7 @@
                       :assignedUsers="allAssignedUsers"
                       :availableUsers="listPlattfromUsers"
                       :dialog="userManagementDialog"  
-                      :dialogName="'Assigned project user'"
+                      :dialogName="'Assigned project users'"
                       roleEditing
                       />
                   </v-card-title>
@@ -441,7 +441,6 @@ export default {
   },
   computed: {
     ...mapState(["selectedProject"]),
-    // ...mapGetters(["projectUsersbyIdArrayWithDetails"]),
     ...mapGetters("projectUser", {
       listProjectUsers: "list",
       projectUserById: "byId",

@@ -31,23 +31,56 @@ export default createCrudModule({
          */
         byIdArrayWithDetails(state) {
             return function(idArray, projectId){
-              let resultArray = [];
-              let projectUsers = this.$store.getters["projectUser/list"];
-              let projectRoles = this.$store.getters["projectRole/list"];
-              if(idArray !== undefined && projectRoles !== undefined && projectUsers !== undefined && state.entities !== undefined){
-                idArray.map(id => state.entities[id.toString()]).forEach( user => {
-                  let projectUser = projectUsers.find(projectUser => projectUser.plattform_user == user.id && projectUser.project == projectId);
-                  resultArray.push({
-                    id: user.id,
-                    role: projectUser ? projectRoles.find(role => role.id === projectUser.role): "",
-                    plattform_user: user,
-                    project: projectId,
-                  })
-                })
-              }
-              return resultArray.sort((a, b) =>
-                a.plattform_user.username.localeCompare(b.plattform_user.alt)
-              );
+                let resultArray = [];
+                let projectUsers = this.$store.getters["projectUser/list"];
+                let projectRoles = this.$store.getters["projectRole/list"];
+                if(idArray !== undefined && projectRoles !== undefined && projectUsers !== undefined && state.entities !== undefined){
+                    idArray.map(id => state.entities[id.toString()]).forEach( user => {
+                    let projectUser = projectUsers.find(projectUser => projectUser.plattform_user == user.id && projectUser.project == projectId);
+                    resultArray.push({
+                        id: user.id,
+                        role: projectUser ? projectRoles.find(role => role.id === projectUser.role): "",
+                        plattform_user: user,
+                        project: projectId,
+                    })
+                    })
+                }
+                return resultArray.sort((a, b) =>
+                    a.plattform_user.username.localeCompare(b.plattform_user.alt)
+                );
+            }
+        },
+
+        byProjectIdWithDetails(state){
+            return function(projectId){
+                let resultArray = [];
+                let projectUsers = this.$store.getters["projectUser/list"];
+                let projectRoles = this.$store.getters["projectRole/list"];
+                if(projectRoles !== undefined && projectUsers !== undefined && state.entities !== undefined){
+                    projectUsers.filter(projectUser => projectUser.project === projectId).forEach(projectUser =>{
+                        let user = state.entities[projectUser.plattform_user.toString()]
+                        resultArray.push({
+                            id: user.id,
+                            role: projectRoles.find(role => role.id === projectUser.role),
+                            plattform_user: user,
+                            project: projectId,
+                        })
+                    })
+                }
+                return resultArray;
+            }
+        },
+        byProjectId(state){
+            return function(projectId){
+                let resultArray = [];
+                let projectUsers = this.$store.getters["projectUser/list"];
+                if(projectUsers !== undefined && state.entities !== undefined){
+                    projectUsers.filter(projectUser => projectUser.project === projectId).forEach(projectUser =>{
+                        let user = state.entities[projectUser.plattform_user.toString()]
+                        resultArray.push(user)
+                    })
+                }
+                return resultArray;
             }
         }
 
