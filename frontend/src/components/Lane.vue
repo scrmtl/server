@@ -74,11 +74,12 @@ export default {
     },
     fetchData(lane) {
       if (lane.id === undefined) return;
-      this.fetchTask({ customUrlFnArgs: { laneId: lane.id } }).then(
-        function() {
-          this.laneTasks = this.tasksByIdArray(lane.task_cards);
-        }.bind(this)
-      );
+      this.laneTasks = this.tasksByIdArray(lane.task_cards);
+      // this.fetchTask({ customUrlFnArgs: { laneId: lane.id } }).then(
+      //   function() {
+      //     this.laneTasks = this.tasksByIdArray(lane.task_cards);
+      //   }.bind(this)
+      // );
       this.fetchEpic({ customUrlFnArgs: { laneId: lane.id } }).then(
         function() {
           this.laneEpics = this.epicsByIdArray(lane.epic_cards);

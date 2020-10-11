@@ -6,7 +6,14 @@
             <router-view></router-view>
         </v-col>
     </v-row>
-    
+    <v-overlay :value="boardsIsLoading || lanesIsLoading || tasksIsLoading || sprintsIsLoading">
+        <v-progress-circular
+            :size="70"
+            :width="7"
+            color="link"
+            indeterminate
+        ></v-progress-circular>
+    </v-overlay>
   </v-container>
 
 
@@ -17,9 +24,12 @@
 
 <script>
 
-    import { mapActions, mapGetters } from "vuex";
+    import { mapActions, mapState } from "vuex";
     export default {
         props: ["id"],
+        data: () => ({
+            loading: false
+        }),
         components: {
             
         },
@@ -33,16 +43,27 @@
             ...mapActions("task", {
             fetchTasks: "fetchList"
             }),
-            ...mapGetters("board", {
-                listBoards:"list"
+            ...mapActions("sprint", {
+            fetchSprints: "fetchList"
             }),
+
             fetchData() {
                 this.fetchBoards({ customUrlFnArgs: this.id });
                 this.fetchLanes({ customUrlFnArgs: this.id });
                 this.fetchTasks({customUrlFnArgs: { projectId: this.id } })
+                this.fetchSprints({ customUrlFnArgs: this.id });
             },
         },
         computed:{
+            ...mapState("board", {
+                boardsIsLoading: "isFetchingList"}),
+            ...mapState("lane", {
+                lanesIsLoading: "isFetchingList"}),
+            ...mapState("task", {
+                tasksIsLoading: "isFetchingList"}),
+            ...mapState("sprint", {
+                sprintsIsLoading: "isFetchingList"}),
+
 
         },
         created() {

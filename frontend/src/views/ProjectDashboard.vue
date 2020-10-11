@@ -3,7 +3,7 @@
     <v-row>
 
       <v-col lg="4"  >
-        <MyTasksLane />
+        <span>Dashboard - View</span>
       </v-col>
     </v-row>
     
@@ -11,11 +11,11 @@
 </template>
 
 <script>
-  import MyTasksLane from "@/components/MyTasksLane.vue";
+
   export default {
         
     components: {
-      MyTasksLane,
+      
     },
   }
 </script>
