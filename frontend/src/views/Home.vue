@@ -45,14 +45,7 @@ export default {
     MyTasksLane
   },
   beforeCreate() {
-    // // safe home route
-    // if (!this.$store.getters.getToken) {
-    //   this.$router.push("/login");
-    // }
-    // else{
-    //   // set auth header
-    //   Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`;
-    // }
+
   },
   created() {
     this.loadData();

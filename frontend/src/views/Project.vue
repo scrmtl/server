@@ -32,7 +32,6 @@
             }),
             fetchData() {
                 this.fetchBoards({ customUrlFnArgs: this.id });
-                this.listBoards;
             },
         },
         computed:{
