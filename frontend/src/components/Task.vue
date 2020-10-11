@@ -2,7 +2,7 @@
   <v-hover>
     <template v-slot="{ hover }">
       <v-card
-        class="task"
+        class="task my-2 flex-nowrap"
         min-width="350"
         max-width="350"
         :elevation="hover ? 14 : 5"
