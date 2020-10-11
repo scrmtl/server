@@ -118,9 +118,11 @@ export default new Vuex.Store({
       state.detailViewVisable = false;
     },
 
-    showTaskDetail(state, withCreate = false) {
+    showTaskDetail(state, withCreate) {
       state.selectedTask.visableDetail = true;
-      state.selectedTask.visableCreate = withCreate;
+      if (!(withCreate === undefined)) {
+        state.selectedTask.visableCreate = withCreate;
+      }
     },
     hideTaskDetail(state) {
       state.selectedTask.visableDetail = false;

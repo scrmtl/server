@@ -20,7 +20,7 @@
           tile
         >
           <v-tab>Details</v-tab>
-          <v-tab>Steps</v-tab>
+          <v-tab v-if="!selectedTask.visableCreate">Steps</v-tab>
         </v-tabs>
         <!-- Details Tab -->
         <v-tabs-items
@@ -81,8 +81,8 @@
                       ></v-autocomplete>
                     </v-col>
                   </v-row>
-                  <v-row align="center">
-                    <Label v-bind:task="selectedTask.details"></Label>
+                  <v-row v-if="!selectedTask.visableCreate" align="center">
+                    <Label v-bind:task="localTask"></Label>
                   </v-row>
                   <v-row align="center">
                     <v-card
@@ -94,15 +94,12 @@
                     >
                       <v-card-title class="title">
                         <span class="headline">Assigned users</span>
-                        <v-btn 
-                          icon
-                          @click="assignedUserDialog = true"
-                          >
+                        <v-btn icon @click="assignedUserDialog = true">
                           <v-icon color="link">mdi-dots-horizontal</v-icon>
                         </v-btn>
-                        <AssignedUserManagement 
-                          @close-dialog="assignedUserDialog = false" 
-                          :dialog="assignedUserDialog"  
+                        <AssignedUserManagement
+                          @close-dialog="assignedUserDialog = false"
+                          :dialog="assignedUserDialog"
                           :dialogName="'Assigned user'"
                           :assignedUsers="allAssignedUsers"
                         />
@@ -136,31 +133,29 @@
             </v-card>
           </v-tab-item>
           <!-- Step Tab -->
-          <v-tab-item>
+          <v-tab-item v-if="!selectedTask.visableCreate">
             <v-card flat dark color="secondary" tile>
               <v-card-text>
-
-                  <v-row align="center">
-                    <v-col>
-                      <v-list>
-                        <v-list-group
-                          value="true"
-                          v-for="steplist in selectedTask.details.steplists"
-                          :key="steplist"
-                        >
-                          <template v-slot:activator>
-                            <v-list-item-content>
-                              <v-list-item-title class="white--text"
-                                >Default Steplist</v-list-item-title
-                              >
-                            </v-list-item-content>
-                          </template>
-                          <Steplist v-bind:steplistId="steplist" />
-                        </v-list-group>
-                      </v-list>
-                    </v-col>
-                  </v-row>
-
+                <v-row align="center">
+                  <v-col>
+                    <v-list>
+                      <v-list-group
+                        value="true"
+                        v-for="steplist in selectedTask.details.steplists"
+                        :key="steplist"
+                      >
+                        <template v-slot:activator>
+                          <v-list-item-content>
+                            <v-list-item-title class="white--text"
+                              >Default Steplist</v-list-item-title
+                            >
+                          </v-list-item-content>
+                        </template>
+                        <Steplist v-bind:steplistId="steplist" />
+                      </v-list-group>
+                    </v-list>
+                  </v-col>
+                </v-row>
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -210,7 +205,7 @@
           <span class="ml-12">Möchten Sie den Task wirklich löschen?</span>
         </v-card-text>
         <v-card-actions class="ml-10 pb-10 pt-10">
-          <v-btn width="250" outlined color="error" @click="deleteTask()"
+          <v-btn width="250" outlined color="error" @click="deleteTaskFn"
             >Ja</v-btn
           >
           <v-btn
@@ -271,6 +266,7 @@ export default {
     }),
     ...mapActions("task", {
       createTask: "create",
+      fetchSingleTask: "fetchSingle",
       updateTask: "update",
       deleteTask: "destroy"
     }),
@@ -287,11 +283,65 @@ export default {
       this.$store.commit("hideTaskDetail");
     },
 
-    addTask() {},
+    addTask() {
+      this.createTask({
+        data: {
+          name: this.localTask.name,
+          description: this.localTask.description,
+          storypoints: this.localTask.storypoints,
+          lane: this.localTask.lane,
+          feature: this.localTask.feature
+        },
+        customUrlFnArgs: {}
+      }).then(
+        function(value) {
+          if (!(value.data.id === undefined)) {
+            this.fetchSingleTask({
+              id: value.data.id,
+              customUrlFnArgs: {}
+            });
+          }
+        }.bind(this)
+      );
+      this.close();
+    },
 
-    saveTask() {},
+    saveTask() {
+      this.updateTask({
+        id: this.localTask.id + "/",
+        data: {
+          name: this.localTask.name,
+          description: this.localTask.description,
+          storypoints: this.localTask.storypoints,
 
-    deleteTask() {},
+          status: this.localTask.status,
+          lane: this.localTask.lane,
+          sprint: this.localTask.sprint,
+          feature: this.localTask.feature,
+          labels: this.localTask.labels
+          // steplists: this.localTask.steplists
+        },
+        customUrlFnArgs: {}
+      }).then(
+        function(value) {
+          if (!(value.data.id === undefined)) {
+            this.fetchSingleTask({
+              id: value.data.id,
+              customUrlFnArgs: {}
+            });
+          }
+        }.bind(this)
+      );
+    },
+
+    deleteTaskFn() {
+      this.deleteDialog = false;
+      this.deleteTask({
+        id: this.localTask.id + "/",
+        customUrlFnArgs: {}
+      });
+      this.close();
+    },
 
     GetTaskStatus(namedStatus) {
       var status = "AC";
@@ -366,9 +416,9 @@ export default {
       },
       set(newValue) {
         if (newValue) {
-          this.$store.commit("showTaskDetail", false);
+          this.$store.commit("showTaskDetail");
         } else {
-          this.$store.commit("hideTaskDetail", false);
+          this.$store.commit("hideTaskDetail");
         }
 
         //this.selectedTask.visableDetail = newValue;
