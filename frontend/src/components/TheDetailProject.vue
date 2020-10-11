@@ -242,10 +242,11 @@
                         <v-icon color="link" >mdi-dots-horizontal</v-icon>
                     </v-btn>
                     <AssignedUserManagement 
-                      @close-dialog="userManagementDialog = false" 
+                      @close-dialog="userManagementDialog = false"
+                      :assignedUsers="allAssignedUsers"
+                      :availableUsers="listPlattfromUsers"
                       :dialog="userManagementDialog"  
                       :dialogName="'Assigned project user'"
-                      :assignedUsers="allAssignedUsers"
                       roleEditing
                       />
                   </v-card-title>

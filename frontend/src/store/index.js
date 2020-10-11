@@ -211,26 +211,38 @@ export default new Vuex.Store({
           });
         }
         console.log(resultArray);
-        return resultArray;
+        return resultArray.sort((a, b) =>
+          a.plattform_user.username.localeCompare(b.plattform_user.alt)
+        );
 
       }
     },
 
-    plattformUsersbyIdArrayWithDetails: state => {
-      return function(idArray){
+    plattformUsersbyIdArrayWithDetails: (state, rootGetters) => {
+      return function(idArray, projectId){
         let resultArray = [];
         if(idArray !== undefined && state.projectRole.entities !== undefined && state.projectUser.entities !== undefined && state.user.entities !== undefined){
-          idArray.map(id => state.user.entities[id.string()]).forEach( user => {
+          idArray.map(id => state.user.entities[id]).forEach( user => {
+            var projectUsers = rootGetters["projectUser/list"];
+            
+            var projectUserArray = projectUsers.filter(projectUser => projectUser.plattform_user == user.id && projectUser.project == projectId);
+            var projectUser = null;
+            if (projectUserArray.length == 1) {
+              projectUser = projectUserArray.shift();
+            }
+            projectUser ? state.projectRole.entities[projectUser.role]: null;
             resultArray.push({
-              id: user["id"],
-              role: {},
+              id: user.id,
+              role: "",
               plattform_user: user,
-              // project: projectUser.project,
+              project: projectId,
             })
           })
         }
         console.log(resultArray);
-        return resultArray;
+        return resultArray.sort((a, b) =>
+          a.plattform_user.username.localeCompare(b.plattform_user.alt)
+        );
       }
     }
 

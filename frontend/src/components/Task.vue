@@ -193,6 +193,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(["plattformUsersbyIdArrayWithDetails"]),
     ...mapGetters("user", {
       UsersById: "byId",
       usersByIdArray: "byIdArray"
@@ -201,12 +202,7 @@ export default {
       labelById: "byId"
     }),
     avatarsSorted() {
-      return this.usersByIdArray(this.task.assigned_users) &&
-        this.usersByIdArray(this.task.assigned_users).length > 0
-        ? this.usersByIdArray(this.task.assigned_users).sort((a, b) =>
-            a.username.localeCompare(b.alt)
-          )
-        : null;
+      return this.plattformUsersbyIdArrayWithDetails(this.task.assigned_users, this.task.project);
     },
     avatarsStackedLimited() {
       return this.avatarsSorted && this.avatarsSorted.length > 0

@@ -384,7 +384,7 @@ export default {
   },
   computed: {
     ...mapState(["selectedTask"]),
-    ...mapGetters(["plattformUsersbyIdArrayWithDetails"]),
+    ...mapGetters(["plattformUsersbyIdArrayWithDetails", "plattformUsersbyIdArrayWithDetails"]),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
       plattformUserById: "byId",
@@ -399,15 +399,15 @@ export default {
     }),
 
     allAssignedUsers() {
-      // return this.plattformUsersbyIdArrayWithDetails(this.localTask.assigned_users);
+      return this.plattformUsersbyIdArrayWithDetails(this.localTask.assigned_users, this.localTask.project);
       
       
-      return this.plattformUsersByIdArray(this.localTask.assigned_users) &&
-        this.plattformUsersByIdArray(this.localTask.assigned_users).length > 0
-        ? this.plattformUsersByIdArray(
-            this.localTask.assigned_users
-          ).sort((a, b) => a.username.localeCompare(b.alt))
-        : null;
+      // return this.plattformUsersByIdArray(this.localTask.assigned_users) &&
+      //   this.plattformUsersByIdArray(this.localTask.assigned_users).length > 0
+      //   ? this.plattformUsersByIdArray(
+      //       this.localTask.assigned_users
+      //     ).sort((a, b) => a.username.localeCompare(b.alt))
+      //   : null;
     },
 
     visibleDrawer: {
