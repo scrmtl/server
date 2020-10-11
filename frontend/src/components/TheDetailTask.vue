@@ -384,11 +384,11 @@ export default {
   },
   computed: {
     ...mapState(["selectedTask"]),
-    ...mapGetters(["plattformUsersbyIdArrayWithDetails", "plattformUsersbyIdArrayWithDetails"]),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
       plattformUserById: "byId",
-      plattformUsersByIdArray: "byIdArray"
+      plattformUsersByIdArray: "byIdArray",
+      plattformUsersbyIdArrayWithDetails: "byIdArrayWithDetails"
     }),
     ...mapGetters("projectRole", {
       listProjectRoles: "list",

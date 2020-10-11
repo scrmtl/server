@@ -193,16 +193,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["plattformUsersbyIdArrayWithDetails"]),
     ...mapGetters("user", {
       UsersById: "byId",
-      usersByIdArray: "byIdArray"
+      usersByIdArray: "byIdArray",
+      usersbyIdArrayWithDetails: "byIdArrayWithDetails"
     }),
     ...mapGetters("label", {
       labelById: "byId"
     }),
     avatarsSorted() {
-      return this.plattformUsersbyIdArrayWithDetails(this.task.assigned_users, this.task.project);
+      return this.usersbyIdArrayWithDetails(this.task.assigned_users, this.task.project);
     },
     avatarsStackedLimited() {
       return this.avatarsSorted && this.avatarsSorted.length > 0
