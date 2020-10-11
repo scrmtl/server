@@ -27,12 +27,19 @@
             ...mapActions("board", {
             fetchBoards: "fetchList"
             }),
+            ...mapActions("lane", {
+            fetchLanes: "fetchList"
+            }),
+            ...mapActions("task", {
+            fetchTasks: "fetchList"
+            }),
             ...mapGetters("board", {
                 listBoards:"list"
             }),
             fetchData() {
                 this.fetchBoards({ customUrlFnArgs: this.id });
-                this.listBoards;
+                this.fetchLanes({ customUrlFnArgs: this.id });
+                this.fetchTasks({customUrlFnArgs: { projectId: this.id } })
             },
         },
         computed:{
@@ -40,7 +47,6 @@
         },
         created() {
             this.fetchData();
-            
         }
     }
 </script>

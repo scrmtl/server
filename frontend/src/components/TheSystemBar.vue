@@ -53,8 +53,6 @@
         </v-tabs>
       </v-row>
     </v-container>
-
-    
   </v-app-bar>
 </template>
 
