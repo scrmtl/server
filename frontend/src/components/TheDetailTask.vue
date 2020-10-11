@@ -100,8 +100,9 @@
                         <AssignedUserManagement
                           @close-dialog="assignedUserDialog = false"
                           :dialog="assignedUserDialog"
-                          :dialogName="'Assigned user'"
+                          :dialogName="'Assigned users'"
                           :assignedUsers="allAssignedUsers"
+                          :availableUsers="allAvaiblableUsers"
                         />
                       </v-card-title>
                       <v-card-text>
@@ -386,9 +387,8 @@ export default {
     ...mapState(["selectedTask"]),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
-      plattformUserById: "byId",
-      plattformUsersByIdArray: "byIdArray",
-      plattformUsersbyIdArrayWithDetails: "byIdArrayWithDetails"
+      plattformUsersbyIdArrayWithDetails: "byIdArrayWithDetails",
+      plattformUsersbyProjectId: "byProjectId"
     }),
     ...mapGetters("projectRole", {
       listProjectRoles: "list",
@@ -408,6 +408,10 @@ export default {
       //       this.localTask.assigned_users
       //     ).sort((a, b) => a.username.localeCompare(b.alt))
       //   : null;
+    },
+
+    allAvaiblableUsers(){
+      return this.plattformUsersbyProjectId(this.localTask.project);
     },
 
     visibleDrawer: {
