@@ -441,11 +441,12 @@ export default {
   },
   computed: {
     ...mapState(["selectedProject"]),
-    ...mapGetters(["projectUsersbyIdArrayWithDetails"]),
+    // ...mapGetters(["projectUsersbyIdArrayWithDetails"]),
     ...mapGetters("projectUser", {
       listProjectUsers: "list",
       projectUserById: "byId",
-      projectUsersByIdArray: "byIdArray"
+      projectUsersByIdArray: "byIdArray",
+      projectUsersbyIdArrayWithDetails: "byIdArrayWithDetails"
     }),
     ...mapGetters("projectRole", {
       listProjectRoles: "list",

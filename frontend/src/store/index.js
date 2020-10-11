@@ -197,56 +197,7 @@ export default new Vuex.Store({
       return state.Userinfo.status;
     },
 
-    projectUsersbyIdArrayWithDetails: state => {
-      return function(idArray){
-        let resultArray = [];
-        if(idArray !== undefined && state.projectRole.entities !== undefined && state.projectUser.entities !== undefined){
-          idArray.map(id => state.projectUser.entities[id.toString()]).forEach(projectUser => {
-            resultArray.push({
-              id: projectUser.id,
-              role: state.projectRole.entities[projectUser.role],
-              plattform_user: state.user.entities[projectUser.plattform_user],
-              project: projectUser.project,
-            })
-          });
-        }
-        console.log(resultArray);
-        return resultArray.sort((a, b) =>
-          a.plattform_user.username.localeCompare(b.plattform_user.alt)
-        );
-
-      }
-    },
-
-    plattformUsersbyIdArrayWithDetails: (state, rootGetters) => {
-      return function(idArray, projectId){
-        let resultArray = [];
-        if(idArray !== undefined && state.projectRole.entities !== undefined && state.projectUser.entities !== undefined && state.user.entities !== undefined){
-          idArray.map(id => state.user.entities[id]).forEach( user => {
-            var projectUsers = rootGetters["projectUser/list"];
-            
-            var projectUserArray = projectUsers.filter(projectUser => projectUser.plattform_user == user.id && projectUser.project == projectId);
-            var projectUser = null;
-            if (projectUserArray.length == 1) {
-              projectUser = projectUserArray.shift();
-            }
-            projectUser ? state.projectRole.entities[projectUser.role]: null;
-            resultArray.push({
-              id: user.id,
-              role: "",
-              plattform_user: user,
-              project: projectId,
-            })
-          })
-        }
-        console.log(resultArray);
-        return resultArray.sort((a, b) =>
-          a.plattform_user.username.localeCompare(b.plattform_user.alt)
-        );
-      }
-    }
-
-
+  
   },
   modules: {
     task,
