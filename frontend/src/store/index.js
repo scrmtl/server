@@ -82,7 +82,6 @@ export default new Vuex.Store({
           .then(resp => {
             const token = resp.data.access_token;
             const refreshToken = resp.data.refresh_token;
-            console.log(credentials);
             const user = credentials.username;
             localStorage.setItem('token', token);
             localStorage.setItem('refreshToken', refreshToken);
