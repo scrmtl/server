@@ -243,9 +243,11 @@
                     </v-btn>
                     <AssignedUserManagement 
                       @close-dialog="userManagementDialog = false"
-                      :assignedUsers="allAssignedUsers"
+                      @add-user="addProjectUser($event)"
+                      @remove-user="deleteProjectUser($event)"
+                      v-bind:assignedUsers="allAssignedUsers"
                       :availableUsers="listPlattfromUsers"
-                      :dialog="userManagementDialog"  
+                      v-bind:dialog="userManagementDialog"  
                       :dialogName="'Assigned project users'"
                       roleEditing
                       />
@@ -341,13 +343,14 @@ export default {
     ...mapActions("project", {
       updateProject: "update",
       destroyProject: "destroy",
-      createProject: "create"
+      createProject: "create",
+      fetchSingleProject: "fetchSingle"
     }),
 
     ...mapActions("projectUser", {
       fetchProjectUser: "fetchList",
       createProjectUser: "create",
-      destroyProjectUser: "delete"
+      destroyProjectUser: "destroy"
 
     }),
     ...mapActions("projectRole", {
@@ -367,7 +370,34 @@ export default {
       this.$store.commit("hideProjectDetail");
     },
 
-    
+    addProjectUser(projectUserId){
+      console.log(projectUserId)
+      this.createProjectUser({data:{
+        plattform_user: projectUserId,
+        // Standard role developer
+        role: 3,
+        project: this.localProject.id
+      }}
+      )
+      .then(value => 
+        {
+          this.fetchSingleProject({id: this.localProject.id}).then(res => {
+            this.$store.commit("setSelectedProjectDetail", res.data);
+            this.localProject = this.selectedProject.details;
+          }
+        )
+          return value;
+        }
+      )
+      .catch((error) => {
+        if(error.response.data.non_field_errors.length > 0){
+          this.$store.commit("showErrorView", error.response.data.non_field_errors[error.response.data.non_field_errors.length - 1]);
+        }
+
+        console.log(error.response.data.non_field_errors)
+      })
+    },
+
     addProject(){
       this.createProject({
         data: {
@@ -437,7 +467,21 @@ export default {
         id: this.localProject.id + "/"
       });
       this.close();
+    },
+
+    deleteProjectUser(projectUserId){
+      this.localProject.project_users
+      this.destroyProjectUser({id: projectUserId}).then(() => 
+        {
+          this.fetchSingleProject({id: this.localProject.id}).then(res => {
+            this.$store.commit("setSelectedProjectDetail", res.data);
+            this.localProject = this.selectedProject.details;
+          }
+        )}
+      )
     }
+
+
   },
   computed: {
     ...mapState(["selectedProject"]),
@@ -465,7 +509,11 @@ export default {
         return this.selectedProject.visableDetail;
       },
       set(newValue) {
-        this.selectedProject.visableDetail = newValue;
+        if (newValue) {
+          this.$store.commit("showProjectDetail");
+        } else {
+          this.$store.commit("hideProjectDetail");
+        }
       }
     }
   },

@@ -424,8 +424,6 @@ export default {
         } else {
           this.$store.commit("hideTaskDetail");
         }
-
-        //this.selectedTask.visableDetail = newValue;
       }
     }
   },

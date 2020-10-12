@@ -42,6 +42,10 @@ export default new Vuex.Store({
       token: localStorage.getItem('token') || '',
       refreshToken: localStorage.getItem('refreshToken') || '',
     },
+    errorMessage: {
+      visible: false,
+      message: ""
+    },
 
     selectedProject: {
       visableDetail: false,
@@ -116,6 +120,16 @@ export default new Vuex.Store({
 
     hideDetailView(state) {
       state.detailViewVisable = false;
+    },
+
+    showErrorView(state, message) {
+      state.errorMessage.visible = true;
+      state.errorMessage.message = message;
+    },
+
+    hideErrorView(state) {
+      state.errorMessage.visible = false;
+      state.errorMessage.message = "";
     },
 
     showTaskDetail(state, withCreate) {

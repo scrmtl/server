@@ -52,7 +52,7 @@ export default createCrudModule({
               let projectRoles = this.$store.getters["projectRole/list"];
               let users = this.$store.getters["user/list"];
               if(idArray !== undefined && projectRoles !== undefined && state.entities !== undefined){
-                idArray.map(id => state.entities[id.toString()]).forEach(projectUser => {
+                idArray.filter(x => Object.keys(state.entities).includes(x.toString())).map(id => state.entities[id.toString()]).forEach(projectUser => {
                     resultArray.push({
                     id: projectUser.id,
                     role: projectRoles.find(role => role.id === projectUser.role),

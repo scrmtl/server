@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="dialog"
+    v-model="visibleDialog"
     scrollable  
     persistent
     max-width="1200"
@@ -28,6 +28,7 @@
                   :items="availableUsers"
                   :filter="nameUsernameFilter"
                   item-text="username"
+                  item-value="id"
                   clearable
                   placeholder="Start typing to search user"
                 >
@@ -45,7 +46,7 @@
                   outlined 
                   color="link"
                   text
-                  
+                  @click="addAssignedUser(selectedUser)"
                 >
                   <v-icon left>mdi-plus-circle-outline</v-icon>Add User/s
                 </v-btn>
@@ -124,10 +125,12 @@ export default {
       this.$emit("close-dialog");
     },
     removeAssignedUser(user){
-      this.$emit("remove-user", user);
+      console.log(user);
+      this.$emit("remove-user", user.id);
     },
     addAssignedUser(user){
       this.$emit("add-user", user);
+      this.selectedUser = {};
     },
     updateRole(newRole, item) {
       this.updateProjectUser({
@@ -147,7 +150,16 @@ export default {
   computed:{
     ...mapGetters("projectRole",{
         byRoleName: "byName"
-    })
+    }),
+
+    visibleDialog: {
+      get() {
+        return this.dialog;
+      },
+      set(newValue) {
+        this.dialog = newValue
+      }
+    }
   }
 }
 </script>
