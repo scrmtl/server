@@ -100,8 +100,9 @@
                         <AssignedUserManagement
                           @close-dialog="assignedUserDialog = false"
                           :dialog="assignedUserDialog"
-                          :dialogName="'Assigned user'"
+                          :dialogName="'Assigned users'"
                           :assignedUsers="allAssignedUsers"
+                          :availableUsers="allAvaiblableUsers"
                         />
                       </v-card-title>
                       <v-card-text>
@@ -386,8 +387,8 @@ export default {
     ...mapState(["selectedTask"]),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
-      plattformUserById: "byId",
-      plattformUsersByIdArray: "byIdArray"
+      plattformUsersbyIdArrayWithDetails: "byIdArrayWithDetails",
+      plattformUsersbyProjectId: "byProjectId"
     }),
     ...mapGetters("projectRole", {
       listProjectRoles: "list",
@@ -398,12 +399,19 @@ export default {
     }),
 
     allAssignedUsers() {
-      return this.plattformUsersByIdArray(this.localTask.assigned_users) &&
-        this.plattformUsersByIdArray(this.localTask.assigned_users).length > 0
-        ? this.plattformUsersByIdArray(
-            this.localTask.assigned_users
-          ).sort((a, b) => a.username.localeCompare(b.alt))
-        : null;
+      return this.plattformUsersbyIdArrayWithDetails(this.localTask.assigned_users, this.localTask.project);
+      
+      
+      // return this.plattformUsersByIdArray(this.localTask.assigned_users) &&
+      //   this.plattformUsersByIdArray(this.localTask.assigned_users).length > 0
+      //   ? this.plattformUsersByIdArray(
+      //       this.localTask.assigned_users
+      //     ).sort((a, b) => a.username.localeCompare(b.alt))
+      //   : null;
+    },
+
+    allAvaiblableUsers(){
+      return this.plattformUsersbyProjectId(this.localTask.project);
     },
 
     visibleDrawer: {

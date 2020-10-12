@@ -42,7 +42,7 @@
                         <v-text-field
                           label="Project name"
                           required
-                          :rules="[rules.required, rules.maxCharacter]"
+                          :rules="[rules.required]"
                           :counter="50"
                           prepend-icon="mdi-information-outline"
                           v-model="localProject.name"
@@ -242,10 +242,12 @@
                         <v-icon color="link" >mdi-dots-horizontal</v-icon>
                     </v-btn>
                     <AssignedUserManagement 
-                      @close-dialog="userManagementDialog = false" 
-                      :dialog="userManagementDialog"  
-                      :dialogName="'Assigned project user'"
+                      @close-dialog="userManagementDialog = false"
                       :assignedUsers="allAssignedUsers"
+                      :availableUsers="listPlattfromUsers"
+                      :dialog="userManagementDialog"  
+                      :dialogName="'Assigned project users'"
+                      roleEditing
                       />
                   </v-card-title>
                   <v-card-text>
@@ -316,7 +318,7 @@ export default {
     calendar1menu: false,
     calendar2menu: false,
     deleteDialog: false,
-    userManagementDialog: false,  
+    userManagementDialog: false,
     isFormValid: null,
     completedSprints: 0,
     projectNamedStatus: "New",
@@ -442,7 +444,8 @@ export default {
     ...mapGetters("projectUser", {
       listProjectUsers: "list",
       projectUserById: "byId",
-      projectUsersByIdArray: "byIdArray"
+      projectUsersByIdArray: "byIdArray",
+      projectUsersbyIdArrayWithDetails: "byIdArrayWithDetails"
     }),
     ...mapGetters("projectRole", {
       listProjectRoles: "list",
@@ -454,24 +457,7 @@ export default {
     }),
     
     allAssignedUsers(){
-      
-      var projectUsers = this.projectUsersByIdArray(this.localProject.project_users);
-      var assignedUsers = [];
-      if (projectUsers && projectUsers.length > 0){
-        projectUsers.forEach(prjUser => {
-          var plattformUser = this.plattformUserById(prjUser.plattform_user);
-          assignedUsers.push(
-            {
-              id: plattformUser.id,
-              email: plattformUser.email,
-              name: plattformUser.name,
-              username: plattformUser.username,
-              role: this.projectRoleById(prjUser.role).role_name,
-            }
-          )
-        })
-      }
-      return assignedUsers;
+      return this.projectUsersbyIdArrayWithDetails(this.localProject.project_users);
     },
 
     visibleDrawer: {

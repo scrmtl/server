@@ -42,6 +42,31 @@ export default createCrudModule({
             }
         },
 
+        /** @description Add Custom getter 
+         * @param {Array} idArray Array with project User IDs
+         * @return {Array} Array of User Objects with Details to project context {id: <project user id>, role: <role object> , plattform_user: <plattform user object>, project: <id>}
+         */
+        byIdArrayWithDetails: (state) => {
+            return function(idArray){
+              let resultArray = [];
+              let projectRoles = this.$store.getters["projectRole/list"];
+              let users = this.$store.getters["user/list"];
+              if(idArray !== undefined && projectRoles !== undefined && state.entities !== undefined){
+                idArray.map(id => state.entities[id.toString()]).forEach(projectUser => {
+                    resultArray.push({
+                    id: projectUser.id,
+                    role: projectRoles.find(role => role.id === projectUser.role),
+                    plattform_user: users.find(user => user.id === projectUser.plattform_user),
+                    project: projectUser.project,
+                  })
+                });
+              }
+              return resultArray.sort((a, b) =>
+                a.plattform_user.username.localeCompare(b.plattform_user.alt)
+              );
+      
+            }
+        },
     }
 
 });

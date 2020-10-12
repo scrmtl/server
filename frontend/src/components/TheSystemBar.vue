@@ -126,7 +126,10 @@ export default {
   },
   mounted() {
     this.listSession;
-    console.log(this.$route.params.id)
+    
+  },
+  updated(){
+    
   }
 };
 </script>

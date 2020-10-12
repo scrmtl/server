@@ -15,7 +15,7 @@ export default createCrudModule({
     // byId(id))
 
     /** @description Custom function to get an array of boards
-     * @param {number} projectId If set all tasks in that lane are returned (exampleUrl: /api/projects/1/boards`)
+     * @param {number} projectId If set all boards in that project are returned 
      * @return {string} Url defined by the arguments
      */
     customUrlFn(id, type, projectId) {
@@ -28,6 +28,8 @@ export default createCrudModule({
         rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
         return rootUrl;
     },
+
+
     getters: {
         /** @description Add Custom getter 
          * @param {string} type Board Type (PB, SP, AB) 

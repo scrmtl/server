@@ -24,7 +24,19 @@
                   outlined
                   dense
                   label="Search User"
+                  v-model="selectedUser"
+                  :items="availableUsers"
+                  :filter="nameUsernameFilter"
+                  item-text="username"
+                  clearable
+                  placeholder="Start typing to search user"
                 >
+                  <template v-slot:item="data">
+                    <v-list-item-content>
+                      <v-list-item-title v-html="data.item.username"></v-list-item-title>
+                      <v-list-item-subtitle v-html="data.item.name"></v-list-item-subtitle>
+                    </v-list-item-content>
+                  </template>
                 </v-autocomplete>
               </v-col>
               
@@ -33,8 +45,9 @@
                   outlined 
                   color="link"
                   text
+                  
                 >
-                  <v-icon left>mdi-plus-circle-outline</v-icon>Add User
+                  <v-icon left>mdi-plus-circle-outline</v-icon>Add User/s
                 </v-btn>
               </v-col>
             </v-row>
@@ -45,6 +58,7 @@
             <v-select
               :items="availableRoles"
               :value="item.role.name"
+              :readonly="!roleEditing"
               @change="updateRole($event, item)"
             ></v-select>
           </template>
@@ -75,22 +89,26 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+
 export default {
   name: "AssignedUserManagement",
   props: {
     dialog: { type: Boolean, default: false },
     dialogName: { type: String, default: "Assigned user" },
     color: { type: String, default: ""},
-    assignedUsers: Array
+    roleEditing: { type: Boolean, default: false },
+    assignedUsers: {type: Array},
+    availableUsers: {type: Array},
   },
   data: () => ({
     headers: [
-      { text: "Benutzername", value: "username" },
-      { text: "Name", value: "name" },
-      { text: "Role", value: "role" },
+      { text: "Benutzername", value: "plattform_user.username" },
+      { text: "Name", value: "plattform_user.name" },
+      { text: "Role", value: "role.role_name" },
       { text: "Actions", value: "actions", sortable: false }
     ],
-    availableRoles: []
+    availableRoles: [],
+    selectedUser: {}
   }),
 
   methods:{
@@ -117,6 +135,14 @@ export default {
         data: { role: this.byRoleName(newRole) }
       });
     },
+    nameUsernameFilter (item, queryText) {
+        const textOne = item.name.toLowerCase()
+        const textTwo = item.username.toLowerCase()
+        const searchText = queryText.toLowerCase()
+        return textOne.indexOf(searchText) > -1 ||
+          textTwo.indexOf(searchText) > -1
+    },
+
   },
   computed:{
     ...mapGetters("projectRole",{
