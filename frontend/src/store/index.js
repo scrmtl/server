@@ -42,9 +42,10 @@ export default new Vuex.Store({
       token: localStorage.getItem('token') || '',
       refreshToken: localStorage.getItem('refreshToken') || '',
     },
-    errorMessage: {
+    systemAlert: {
       visible: false,
-      message: ""
+      message: "",
+      category: "info"
     },
 
     selectedProject: {
@@ -122,14 +123,17 @@ export default new Vuex.Store({
       state.detailViewVisable = false;
     },
 
-    showErrorView(state, message) {
-      state.errorMessage.visible = true;
-      state.errorMessage.message = message;
+    showSystemAlert(state, {message, category="info"}) {
+      state.systemAlert.visible = true;
+      state.systemAlert.message = message.slice(0,65) + "...";
+      console.log(category)
+      state.systemAlert.category = category;
     },
 
-    hideErrorView(state) {
-      state.errorMessage.visible = false;
-      state.errorMessage.message = "";
+    hideSystemAlert(state) {
+      state.systemAlert.visible = false;
+      state.systemAlert.message = "";
+      state.systemAlert.category = "info";
     },
 
     showTaskDetail(state, withCreate) {

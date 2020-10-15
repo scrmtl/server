@@ -337,7 +337,7 @@ export default {
   components: {
     ProfileAvatar,
     ProfileTooltip,
-    AssignedUserManagement
+    AssignedUserManagement,
   },
   methods: {
     ...mapActions("project", {
@@ -391,11 +391,10 @@ export default {
       )
       .catch((error) => {
         if(error.response.data.non_field_errors.length > 0){
-          this.$store.commit("showErrorView", error.response.data.non_field_errors[error.response.data.non_field_errors.length - 1]);
+          this.$store.commit("showSystemAlert", {message: error.response.data.non_field_errors[error.response.data.non_field_errors.length - 1], category: "error"});
+          console.log(error.response.data.non_field_errors)
         }
-
-        console.log(error.response.data.non_field_errors)
-      })
+      }) 
     },
 
     addProject(){
