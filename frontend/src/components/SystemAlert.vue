@@ -1,5 +1,4 @@
 <template>
-
   <v-alert
     :value="systemAlert.visible"  
     dismissible
@@ -8,7 +7,6 @@
   >
     {{systemAlert.message}}
   </v-alert>
-
 </template>
 
 <script>

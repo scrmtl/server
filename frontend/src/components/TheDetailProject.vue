@@ -465,6 +465,7 @@ export default {
       this.destroyProject({
         id: this.localProject.id + "/"
       });
+      this.$store.commit("showSystemAlert", {message: "Delete Project " + this.localProject.name, category: "info"});
       this.close();
     },
 
