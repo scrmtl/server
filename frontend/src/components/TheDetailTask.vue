@@ -100,10 +100,13 @@
                         </v-btn>
                         <AssignedUserManagement
                           @close-dialog="assignedUserDialog = false"
-                          :dialog="assignedUserDialog"
-                          :dialogName="'Assigned users'"
+                          @add-user="addAssignedUser($event)"
+                          @remove-user="deleteAssignedUser($event)"
                           :assignedUsers="allAssignedUsers"
                           :availableUsers="allAvaiblableUsers"
+                          :dialog="assignedUserDialog"
+                          :dialogName="'Assigned users'"
+                          
                         />
                       </v-card-title>
                       <v-card-text>
@@ -284,6 +287,9 @@ export default {
       this.saveTask();
       this.$store.commit("hideTaskDetail");
     },
+    addAssignedUser(userId){
+      console.log(userId)
+    },
 
     addTask() {
       this.createTask({
@@ -334,6 +340,22 @@ export default {
           }
         }.bind(this)
       );
+    },
+
+    deleteAssignedUser(userId){
+      console.log(userId);
+      console.log(this.localTask.assigned_users);
+      // this.updateTask({
+      //   id: this.localTask.id + "/",
+      //   data: {
+      //     assigned_users: this.localTask.assigned_users
+      //   }
+      // }).then(()=>{
+      //   this.fetchSingleTask({id: this.localTask.id}).then(res=>{
+      //     this.$store.commit("setSelectedTaskDetail", res.data);
+      //     this.localTask = this.selectedTask.details;
+      //   })
+      // })
     },
 
     deleteTaskFn() {

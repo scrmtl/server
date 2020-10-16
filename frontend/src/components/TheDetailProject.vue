@@ -245,9 +245,9 @@
                       @close-dialog="userManagementDialog = false"
                       @add-user="addProjectUser($event)"
                       @remove-user="deleteProjectUser($event)"
-                      v-bind:assignedUsers="allAssignedUsers"
+                      :assignedUsers="allAssignedUsers"
                       :availableUsers="listPlattfromUsers"
-                      v-bind:dialog="userManagementDialog"  
+                      :dialog="userManagementDialog"  
                       :dialogName="'Assigned project users'"
                       roleEditing
                       />
@@ -371,7 +371,6 @@ export default {
     },
 
     addProjectUser(projectUserId){
-      console.log(projectUserId)
       this.createProjectUser({data:{
         plattform_user: projectUserId,
         // Standard role developer
@@ -470,7 +469,6 @@ export default {
     },
 
     deleteProjectUser(projectUserId){
-      this.localProject.project_users
       this.destroyProjectUser({id: projectUserId}).then(() => 
         {
           this.fetchSingleProject({id: this.localProject.id}).then(res => {

@@ -139,8 +139,6 @@ export default {
       this.selectedUser = {};
     },
     updateRole(newRole, item) {
-      console.log(newRole)
-      console.log(this.byRoleName(newRole))
       this.updateProjectUser({
         id: item.id,
         data: { role: this.byRoleName(newRole) }

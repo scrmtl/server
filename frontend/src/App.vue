@@ -6,7 +6,6 @@
     <DetailTask v-if="this.$store.getters.isLoggedIn" />
     <!-- v-main is necessary. Do not use v-content -->
     <v-main class="tabbody">
-      
       <router-view />
     </v-main>
     <v-footer color="appbar" class="white--text" app>
