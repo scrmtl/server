@@ -21,7 +21,7 @@
         </v-btn>
         <PlattformUserManagement  @close-dialog="plattformManagementDialog = false" :dialog="plattformManagementDialog" v-if="plattformManagementDialog" />
         <v-spacer></v-spacer>
-        <SystemAlert class="mt-n2"/>
+        <SystemAlert/>
         <v-spacer></v-spacer>
         <v-btn
           class="mt-n1"
@@ -61,8 +61,8 @@
 
 <script>
 import PlattformUserManagement from "@/components/PlattformUserManagement.vue";
-import SystemAlert from "@/components/SystemAlert.vue";
 import { mapGetters, mapActions, mapState } from "vuex";
+import SystemAlert from "@/components/SystemAlert.vue";
 
 export default {
   data() {

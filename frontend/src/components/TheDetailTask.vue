@@ -5,6 +5,7 @@
       right
       app
       temporary
+      hide-overlay
       width="600"
       color="secondary"
       dark

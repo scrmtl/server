@@ -9,7 +9,6 @@
       
       <router-view />
     </v-main>
-
     <v-footer color="appbar" class="white--text" app>
       <span>dark, cool, easy</span>
       <v-spacer></v-spacer>
@@ -31,7 +30,7 @@ export default {
   components: {
     SystemBar,
     DetailProject,
-    DetailTask
+    DetailTask,
   },
 
   methods: {

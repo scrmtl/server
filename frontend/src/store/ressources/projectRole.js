@@ -21,7 +21,7 @@ export default createCrudModule({
         byName(state) {
             return roleName => {
                 for (const [key, value] of Object.entries(state.entities)) {
-                    if (value.name === roleName) {
+                    if (value.role_name === roleName) {
                         return parseInt(key)
                     }
                 }
