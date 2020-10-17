@@ -54,8 +54,6 @@
         </v-tabs>
       </v-row>
     </v-container>
-
-    
   </v-app-bar>
 </template>
 
@@ -70,15 +68,6 @@ export default {
       plattformManagementDialog: false,
       groupId: 0,
       activeTab: `/project/${this.$route.params.id}`,
-      tabs: [
-        { id: 1, name: "Dashboard", route: `/project/${this.$route.params.id}` },
-        { id: 2, name: "Product Backlog", route: `/project/${this.$route.params.id}/ProductBacklog` },
-        { id: 3, name: "Sprint Planing", route: `/project/${this.$route.params.id}/SprintPlaning` },
-        { id: 4, name: "Sprint Backlog", route: `/project/${this.$route.params.id}/SprintBacklog` },
-        { id: 5, name: "Archive", route: `/project/${this.$route.params.id}/Archive` },
-        { id: 6, name: "Statistic", route: `/project/${this.$route.params.id}/Statistic`},
-        
-      ]
     };
   },
   components: {
@@ -132,6 +121,18 @@ export default {
         this.fetchGroupId();
       }
       return this.groupId;
+    },
+
+    tabs(){
+      return [
+        { id: 1, name: "Dashboard", route: `/project/${this.$route.params.id}` },
+        { id: 2, name: "Product Backlog", route: `/project/${this.$route.params.id}/ProductBacklog` },
+        { id: 3, name: "Sprint Planing", route: `/project/${this.$route.params.id}/SprintPlaning` },
+        { id: 4, name: "Sprint Backlog", route: `/project/${this.$route.params.id}/SprintBacklog` },
+        { id: 5, name: "Archive", route: `/project/${this.$route.params.id}/Archive` },
+        { id: 6, name: "Statistic", route: `/project/${this.$route.params.id}/Statistic`},
+        
+      ]
     }
   },
   mounted() {
