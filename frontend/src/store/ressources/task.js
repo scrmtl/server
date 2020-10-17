@@ -23,11 +23,11 @@ export default createCrudModule({
 
         // id will only be available when doing request to single resource, otherwise null
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
-        var rootUrl = id ? `/api/tasks/${id}` : '/api/tasks/';
+        var rootUrl = '/api/tasks';
         if (laneId) {
             rootUrl = `/api/tasks/?lane=${laneId}`;
         } else if (projectId) {
-            rootUrl = `/api/tasks/?project=${projectId}`;
+            rootUrl = `/api/tasks/?projects=${projectId}`;
         } else if (byUser) {
             rootUrl = `/api/tasks/?byUser=${byUser}`;
         }

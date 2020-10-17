@@ -321,7 +321,7 @@ export default {
 
     saveTask() {
       this.updateTask({
-        id: this.localTask.id + "/",
+        id: this.localTask.id,
         data: {
           name: this.localTask.name,
           description: this.localTask.description,
