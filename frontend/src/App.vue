@@ -8,7 +8,6 @@
     <v-main class="tabbody">
       <router-view />
     </v-main>
-
     <v-footer color="appbar" class="white--text" app>
       <span>dark, cool, easy</span>
       <v-spacer></v-spacer>
@@ -30,18 +29,28 @@ export default {
   components: {
     SystemBar,
     DetailProject,
-    DetailTask
+    DetailTask,
   },
 
-  methods: {},
+  methods: {
+    
+  },
+
+  computed:{
+    
+  },
   created() {
-    Axios.interceptors.response.use(undefined, function(err) {
-      return new Promise(() => {
-        if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
+    Axios.interceptors.response.use(function(response) {
+      if (response.status === 401 && response.detail === "Anmeldedaten fehlen") {
           this.$store.dispatch("logout");
-        }
-        throw err;
-      });
+      }
+      // return new Promise(() => {
+      //   if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
+      //     this.$store.dispatch("logout");
+      //   }
+      //   throw err;
+      // });
+      return response;
     });
   }
 };

@@ -35,7 +35,7 @@ export default createCrudModule({
                 let projectUsers = this.$store.getters["projectUser/list"];
                 let projectRoles = this.$store.getters["projectRole/list"];
                 if(idArray !== undefined && projectRoles !== undefined && projectUsers !== undefined && state.entities !== undefined){
-                    idArray.map(id => state.entities[id.toString()]).forEach( user => {
+                    idArray.filter(x => Object.keys(state.entities).includes(x.toString())).map(id => state.entities[id.toString()]).forEach( user => {
                     let projectUser = projectUsers.find(projectUser => projectUser.plattform_user == user.id && projectUser.project == projectId);
                     resultArray.push({
                         id: user.id,

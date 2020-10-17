@@ -52,9 +52,9 @@ class EpicViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         if 'lane_pk' not in self.kwargs:
-            return self.queryset
+            return super().get_queryset()
         else:
-            return self.queryset.filter(lane=self.kwargs['lane_pk'])
+            return super().get_queryset().filter(lane=self.kwargs['lane_pk'])
     serializer_class = apiSerializers.EpicSerializer
 
 

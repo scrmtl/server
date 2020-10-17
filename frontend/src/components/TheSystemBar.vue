@@ -21,7 +21,8 @@
         </v-btn>
         <PlattformUserManagement  @close-dialog="plattformManagementDialog = false" :dialog="plattformManagementDialog" v-if="plattformManagementDialog" />
         <v-spacer></v-spacer>
-
+        <SystemAlert/>
+        <v-spacer></v-spacer>
         <v-btn
           class="mt-n1"
           dense
@@ -59,6 +60,7 @@
 <script>
 import PlattformUserManagement from "@/components/PlattformUserManagement.vue";
 import { mapGetters, mapActions, mapState } from "vuex";
+import SystemAlert from "@/components/SystemAlert.vue";
 
 export default {
   data() {
@@ -69,9 +71,14 @@ export default {
     };
   },
   components: {
-    PlattformUserManagement
+    PlattformUserManagement,
+    SystemAlert
   },
   methods: {
+    closeAlert() {
+      this.$store.commit("hideSystemAlert");
+    },
+
     logout() {
       this.$store.dispatch("logout").then(() => {
         this.$router.push("/login");
@@ -101,6 +108,7 @@ export default {
 
   computed: {
     ...mapState(["selectedProject"]),
+    ...mapState(["systemAlert"]),
     ...mapGetters("session", {
       listSession: "list"
     }),
@@ -128,11 +136,11 @@ export default {
     }
   },
   mounted() {
+    this.listSession;
     
   },
   updated(){
-    console.log(this.$route)
-    console.log(this.activeTab)
+    
   }
 };
 </script>

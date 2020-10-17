@@ -5,6 +5,7 @@
       right
       app
       temporary
+      hide-overlay
       width="600"
       color="secondary"
       dark
@@ -99,10 +100,13 @@
                         </v-btn>
                         <AssignedUserManagement
                           @close-dialog="assignedUserDialog = false"
-                          :dialog="assignedUserDialog"
-                          :dialogName="'Assigned users'"
+                          @add-user="addAssignedUser($event)"
+                          @remove-user="deleteAssignedUser($event)"
                           :assignedUsers="allAssignedUsers"
                           :availableUsers="allAvaiblableUsers"
+                          :dialog="assignedUserDialog"
+                          :dialogName="'Assigned users'"
+                          
                         />
                       </v-card-title>
                       <v-card-text>
@@ -283,6 +287,14 @@ export default {
       this.saveTask();
       this.$store.commit("hideTaskDetail");
     },
+    addAssignedUser(userId){
+      if(!this.localTask.assigned_users.includes(userId)){
+        this.localTask.assigned_users.push(userId);
+      }
+      else{
+        this.$store.commit("showSystemAlert", {message: "User " + this.plattformUserById(userId).username +" already assigned" , category: "error"});
+      }
+    },
 
     addTask() {
       this.createTask({
@@ -314,7 +326,7 @@ export default {
           name: this.localTask.name,
           description: this.localTask.description,
           storypoints: this.localTask.storypoints,
-
+          assigned_users: this.localTask.assigned_users,
           status: this.localTask.status,
           lane: this.localTask.lane,
           sprint: this.localTask.sprint,
@@ -333,6 +345,10 @@ export default {
           }
         }.bind(this)
       );
+    },
+
+    deleteAssignedUser(userId){
+      this.localTask.assigned_users.splice(this.localTask.assigned_users.findIndex(user => user === userId), 1)
     },
 
     deleteTaskFn() {
@@ -388,7 +404,8 @@ export default {
     ...mapGetters("user", {
       listPlattfromUsers: "list",
       plattformUsersbyIdArrayWithDetails: "byIdArrayWithDetails",
-      plattformUsersbyProjectId: "byProjectId"
+      plattformUsersbyProjectId: "byProjectId",
+      plattformUserById: "byId"
     }),
     ...mapGetters("projectRole", {
       listProjectRoles: "list",
@@ -400,14 +417,6 @@ export default {
 
     allAssignedUsers() {
       return this.plattformUsersbyIdArrayWithDetails(this.localTask.assigned_users, this.localTask.project);
-      
-      
-      // return this.plattformUsersByIdArray(this.localTask.assigned_users) &&
-      //   this.plattformUsersByIdArray(this.localTask.assigned_users).length > 0
-      //   ? this.plattformUsersByIdArray(
-      //       this.localTask.assigned_users
-      //     ).sort((a, b) => a.username.localeCompare(b.alt))
-      //   : null;
     },
 
     allAvaiblableUsers(){
@@ -424,8 +433,6 @@ export default {
         } else {
           this.$store.commit("hideTaskDetail");
         }
-
-        //this.selectedTask.visableDetail = newValue;
       }
     }
   },

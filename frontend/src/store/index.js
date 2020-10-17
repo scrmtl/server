@@ -42,6 +42,11 @@ export default new Vuex.Store({
       token: localStorage.getItem('token') || '',
       refreshToken: localStorage.getItem('refreshToken') || '',
     },
+    systemAlert: {
+      visible: false,
+      message: "",
+      category: "info"
+    },
 
     selectedProject: {
       visableDetail: false,
@@ -115,6 +120,23 @@ export default new Vuex.Store({
 
     hideDetailView(state) {
       state.detailViewVisable = false;
+    },
+
+    showSystemAlert(state, {message, category="info"}) {
+      state.systemAlert.visible = true;
+      if(message.length > 65){
+        state.systemAlert.message = message.slice(0,65) + "...";
+      }
+      else{
+        state.systemAlert.message = message;
+      }
+      state.systemAlert.category = category;
+    },
+
+    hideSystemAlert(state) {
+      state.systemAlert.visible = false;
+      state.systemAlert.message = "";
+      state.systemAlert.category = "info";
     },
 
     showTaskDetail(state, withCreate) {
