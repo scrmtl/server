@@ -288,7 +288,12 @@ export default {
       this.$store.commit("hideTaskDetail");
     },
     addAssignedUser(userId){
-      console.log(userId)
+      if(!this.localTask.assigned_users.includes(userId)){
+        this.localTask.assigned_users.push(userId);
+      }
+      else{
+        this.$store.commit("showSystemAlert", {message: "User " + this.plattformUserById(userId).username +" already assigned" , category: "error"});
+      }
     },
 
     addTask() {
@@ -321,7 +326,7 @@ export default {
           name: this.localTask.name,
           description: this.localTask.description,
           storypoints: this.localTask.storypoints,
-
+          assigned_users: this.localTask.assigned_users,
           status: this.localTask.status,
           lane: this.localTask.lane,
           sprint: this.localTask.sprint,
@@ -343,19 +348,7 @@ export default {
     },
 
     deleteAssignedUser(userId){
-      console.log(userId);
-      console.log(this.localTask.assigned_users);
-      // this.updateTask({
-      //   id: this.localTask.id + "/",
-      //   data: {
-      //     assigned_users: this.localTask.assigned_users
-      //   }
-      // }).then(()=>{
-      //   this.fetchSingleTask({id: this.localTask.id}).then(res=>{
-      //     this.$store.commit("setSelectedTaskDetail", res.data);
-      //     this.localTask = this.selectedTask.details;
-      //   })
-      // })
+      this.localTask.assigned_users.splice(this.localTask.assigned_users.findIndex(user => user === userId), 1)
     },
 
     deleteTaskFn() {
@@ -411,7 +404,8 @@ export default {
     ...mapGetters("user", {
       listPlattfromUsers: "list",
       plattformUsersbyIdArrayWithDetails: "byIdArrayWithDetails",
-      plattformUsersbyProjectId: "byProjectId"
+      plattformUsersbyProjectId: "byProjectId",
+      plattformUserById: "byId"
     }),
     ...mapGetters("projectRole", {
       listProjectRoles: "list",
@@ -423,14 +417,6 @@ export default {
 
     allAssignedUsers() {
       return this.plattformUsersbyIdArrayWithDetails(this.localTask.assigned_users, this.localTask.project);
-      
-      
-      // return this.plattformUsersByIdArray(this.localTask.assigned_users) &&
-      //   this.plattformUsersByIdArray(this.localTask.assigned_users).length > 0
-      //   ? this.plattformUsersByIdArray(
-      //       this.localTask.assigned_users
-      //     ).sort((a, b) => a.username.localeCompare(b.alt))
-      //   : null;
     },
 
     allAvaiblableUsers(){

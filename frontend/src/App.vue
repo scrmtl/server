@@ -40,13 +40,17 @@ export default {
     
   },
   created() {
-    Axios.interceptors.response.use(undefined, function(err) {
-      return new Promise(() => {
-        if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
+    Axios.interceptors.response.use(function(response) {
+      if (response.status === 401 && response.detail === "Anmeldedaten fehlen") {
           this.$store.dispatch("logout");
-        }
-        throw err;
-      });
+      }
+      // return new Promise(() => {
+      //   if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
+      //     this.$store.dispatch("logout");
+      //   }
+      //   throw err;
+      // });
+      return response;
     });
   }
 };

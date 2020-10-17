@@ -125,8 +125,12 @@ export default new Vuex.Store({
 
     showSystemAlert(state, {message, category="info"}) {
       state.systemAlert.visible = true;
-      state.systemAlert.message = message.slice(0,65) + "...";
-      console.log(category)
+      if(message.length > 65){
+        state.systemAlert.message = message.slice(0,65) + "...";
+      }
+      else{
+        state.systemAlert.message = message;
+      }
       state.systemAlert.category = category;
     },
 
