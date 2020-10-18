@@ -34,14 +34,13 @@ export default new Vuex.Store({
   plugins: [createPersistedState()],
   // States
   state: {
-    detailViewVisable: false,
-    detailTask: {},
     Userinfo: {
       status: "",
       username: "",
       token: localStorage.getItem('token') || '',
       refreshToken: localStorage.getItem('refreshToken') || '',
     },
+
     systemAlert: {
       visible: false,
       message: "",
@@ -53,11 +52,17 @@ export default new Vuex.Store({
       visableCreate: false,
       details: {},
     },
+    selectedSprint: {
+      visableDetail: false,
+      visableCreate: false,
+      details: {},
+    },
     selectedTask: {
       visableDetail: false,
       visableCreate: false,
       details: {},
     },
+    
     selectedBoard: {}
   },
   // call REST API (async)
@@ -114,13 +119,6 @@ export default new Vuex.Store({
   },
   //Update States (sync)
   mutations: {
-    showDetailView(state) {
-      state.detailViewVisable = true;
-    },
-
-    hideDetailView(state) {
-      state.detailViewVisable = false;
-    },
 
     showSystemAlert(state, {message, category="info"}) {
       state.systemAlert.visible = true;
@@ -132,11 +130,40 @@ export default new Vuex.Store({
       }
       state.systemAlert.category = category;
     },
-
     hideSystemAlert(state) {
       state.systemAlert.visible = false;
       state.systemAlert.message = "";
       state.systemAlert.category = "info";
+    },
+
+    showProjectDetail(state, withCreate = false) {
+      state.selectedProject.visableDetail = true;
+      if (withCreate) {
+        state.selectedProject.visableCreate = true;
+      }
+    },
+    hideProjectDetail(state) {
+      state.selectedProject.visableDetail = false;
+      state.selectedProject.visableCreate = false;
+      state.selectedProject.details = {};
+    },
+    setSelectedProjectDetail(state, project) {
+      state.selectedProject.details = project;
+    },
+
+    showSprintDetail(state, withCreate) {
+      state.selectedSprint.visableDetail = true;
+      if (!(withCreate === undefined)) {
+        state.selectedSprint.visableCreate = withCreate;
+      }
+    },
+    hideSprintDetail(state) {
+      state.selectedSprint.visableDetail = false;
+      state.selectedSprint.visableCreate = false;
+      state.selectedSprint.details = {};
+    },
+    setSelectedSprintDetail(state, sprint) {
+      state.selectedSprint.details = sprint;
     },
 
     showTaskDetail(state, withCreate) {
@@ -152,23 +179,6 @@ export default new Vuex.Store({
     },
     setSelectedTaskDetail(state, task) {
       state.selectedTask.details = task;
-    },
-
-    showProjectDetail(state, withCreate = false) {
-      state.selectedProject.visableDetail = true;
-      if (withCreate) {
-        state.selectedProject.visableCreate = true;
-      }
-    },
-
-    hideProjectDetail(state) {
-      state.selectedProject.visableDetail = false;
-      state.selectedProject.visableCreate = false;
-      state.selectedProject.details = {};
-    },
-
-    setSelectedProjectDetail(state, project) {
-      state.selectedProject.details = project;
     },
 
     // User login and logout
@@ -193,14 +203,14 @@ export default new Vuex.Store({
 
   },
   getters: {
-    getDetailStatus: state => {
-      return state.detailViewVisable;
+    getProjectDetails: state => {
+      return state.selectedProject.details;
     },
-    getProjectDetailStatus: state => {
-      return state.selectedProject.visableDetail;
+    getSprintDetails: state => {
+      return state.selectedSprint.details;
     },
-    getTaskDetailStatus: state => {
-      return state.selectedTask.visableDetail;
+    getTaskDetails: state => {
+      return state.selectedTask.details;
     },
 
     getToken: state => {
