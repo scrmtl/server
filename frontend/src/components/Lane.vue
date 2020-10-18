@@ -2,6 +2,7 @@
   <v-card min-width="385" max-width="420">
     <v-card-title class="navbar white--text">
       <div>
+        <v-icon v-if="planningMode" color="link" class="mb-1 mx-1">mdi-link</v-icon>
         {{ lane.name }}
       </div>
       <v-spacer></v-spacer>
@@ -53,7 +54,10 @@ export default {
   components: {
     Task
   },
-  props: ["lane"],
+  props: {
+    lane: {},
+    planningMode: { type: Boolean, default: false },
+  },
   methods: {
     ...mapActions("task", {
       fetchTask: "fetchList",
@@ -221,5 +225,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
+  @import "../main.css";
 </style>
