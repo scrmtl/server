@@ -25,9 +25,18 @@ class LaneViewSet(AutoPermissionViewSetMixin,
 
     def get_queryset(self):
         if 'board_pk' not in self.kwargs:
-            return super().get_queryset()
+            request = self.request
+            filterset = models.LaneFilterSet(
+                queryset=super().get_queryset(),
+                request=self.request,
+                data=self.request.query_params.dict())
+            filterset.is_valid()
+            filterset.filter_queryset(super().get_queryset())
+            queryset = filterset.qs
+            return queryset
         else:
-            return super().get_queryset().filter(board=self.kwargs['board_pk'])
+            return super().get_queryset().filter(
+                board=self.kwargs['board_pk'])
     serializer_class = serializers.LaneSerializer
 
     def retrieve(self, request, pk=None, *args, **kwargs):

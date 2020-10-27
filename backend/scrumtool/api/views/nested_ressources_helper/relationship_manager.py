@@ -12,6 +12,9 @@ from rest_framework.response import Response
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.core.exceptions import FieldError
+
+from api.models.lane import LaneFilterSet, Lane
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +106,6 @@ class NestedMtmMixin(mixins.UpdateModelMixin, mixins.DestroyModelMixin):
 
 class NestedComponentViewSet(viewsets.GenericViewSet):
     def get_queryset(self):
-
         queryset = super().get_queryset()
         model = self.get_serializer().Meta.model
         filter_params: Q = None
@@ -114,8 +116,11 @@ class NestedComponentViewSet(viewsets.GenericViewSet):
                     filter_params = filter_params & q
                 else:
                     filter_params = q
-        if filter_params:
-            queryset = queryset.filter(filter_params)
+        try:
+            if filter_params:
+                queryset = queryset.filter(filter_params)
+        except FieldError as err:
+            logger.info("Parameter is not an model attribute: ")
         return queryset
 
 

@@ -44,9 +44,7 @@ export default {
     ProjectCard,
     MyTasksLane
   },
-  beforeCreate() {
-
-  },
+  beforeCreate() {},
   created() {
     this.loadData();
     Axios.interceptors.request.use(config => {
@@ -77,7 +75,7 @@ export default {
 
     loadData() {
       // Load Projects
-      this.ProjectsFetch();
+      this.ProjectsFetch({ customUrlFnArgs: {} });
       //Load User Groups
       this.GroupsFetch();
       this.UsersFetch();

@@ -23,7 +23,7 @@ export default createCrudModule({
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
         var rootUrl = '/api/boards';
         if (projectId != null) {
-            rootUrl = `/api/boards/?projects=${projectId}`
+            rootUrl = `/api/boards/?project=${projectId}`
         }
         rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
         return rootUrl;

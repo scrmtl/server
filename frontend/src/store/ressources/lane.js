@@ -25,7 +25,7 @@ export default createCrudModule({
     // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
     var rootUrl = '/api/lanes';
     if (projectId != null) {
-        rootUrl = `/api/lanes/?projects=${projectId}`
+      rootUrl = `/api/lanes/?project=${projectId}`
     }
     rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
     return rootUrl;
@@ -39,7 +39,7 @@ export default createCrudModule({
     byName(state) {
       return laneName => {
         var lanes = null;
-        if(state.entities !== undefined){
+        if (state.entities !== undefined) {
           lanes = Object.values(state.entities).filter(lane => lane.name === laneName);
         }
         return lanes;
@@ -52,8 +52,8 @@ export default createCrudModule({
      */
     byIdArray(state) {
       return function (idArray) {
-          if (idArray === undefined) return undefined
-          return idArray.map(id => state.entities[id.toString()])
+        if (idArray === undefined) return undefined
+        return idArray.map(id => state.entities[id.toString()])
       }
     },
   }
