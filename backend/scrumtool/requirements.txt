@@ -79,3 +79,4 @@ django-allauth==0.42.0
 rules>=2.2
 drf-nested-routers
 django-simple-history
+requests_oauthlib
