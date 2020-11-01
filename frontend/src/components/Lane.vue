@@ -21,15 +21,20 @@
         </v-list>
       </v-menu>
     </v-card-title>
-        <v-card-text class="lane-body  flex-column" v-if="laneTasks" >
-
-            <v-row justify="center"  class="" v-for="task in laneTasks" :key="task.id">
+        <v-card-text 
+          class="lane-body  flex-column" 
+          v-if="laneTasks"
+          @drop="moveTask($event)"
+          @dragover.prevent
+          @dragenter.prevent
+        >
+          <v-row 
+            justify="center" 
+            v-for="task in laneTasks" :key="task.id"
             
-              <Task v-bind:task="task" />
-            
-            </v-row>
-         
-          
+          >
+            <Task v-bind:task="task" />
+          </v-row>        
         </v-card-text>
   </v-card>
 </template>
@@ -60,7 +65,8 @@ export default {
     ...mapActions("task", {
       fetchTask: "fetchList",
       fetchSingleTask: "fetchSingle",
-      createTask: "create"
+      createTask: "create",
+      updateTask: "update",
     }),
     ...mapActions("feature", {
       fetchFeature: "fetchList",
@@ -69,6 +75,9 @@ export default {
     ...mapActions("epic", {
       fetchEpic: "fetchList",
       createEpic: "create"
+    }),
+    ...mapActions("lane", {
+      fetchSingleLane: "fetchSingle"
     }),
     handle_function_call(function_name) {
       if (function_name === undefined) return;
@@ -187,7 +196,37 @@ export default {
       
       */
       this.createInProgress = false;
-    }
+    },
+    moveTask(e){
+      console.log(e)
+      const taskId = e.dataTransfer.getData("task-id");
+      const taskName = e.dataTransfer.getData("task-name");
+      const taskFeatureId = e.dataTransfer.getData("task-feature-id");
+      //const fromLane = e.dataTransfer.getData("from-lane")
+      const taskNumbering = e.dataTransfer.getData("task-numbering")
+      console.log(taskId)
+      this.updateTask({
+        id: taskId,
+        data: {
+          lane: this.lane.id,
+          name: taskName,
+          feature: taskFeatureId,
+          numbering: taskNumbering
+        },
+        customUrlFnArgs: {}
+      })
+      .then(() => {
+          this.fetchSingleLane({id: this.lane.id}).then(() => {
+            this.laneTasks = this.tasksByIdArray(this.lane.task_cards);
+          })
+      })
+      .catch((error) => {
+        console.log(error)
+        // if(error.response.data.non_field_errors.length > 0){
+        //   this.$store.commit("showSystemAlert", {message: error.response.data.non_field_errors[error.response.data.non_field_errors.length - 1], category: "error"});
+        // }
+      })
+    }    
   },
 
   watch: {
@@ -216,10 +255,15 @@ export default {
       epicsByIdArray: "byIdArray"
     })
   },
-  updated() {},
+
   created() {
     this.fetchData(this.lane);
-  }
+  },
+
+  updated() {
+
+  },
+  
 };
 </script>
 

@@ -40,9 +40,12 @@ export default {
     
   },
   created() {
-    Axios.interceptors.response.use(function(response) {
+    Axios.interceptors.response.use((response) => {
       if (response.status === 401 && response.detail === "Anmeldedaten fehlen") {
           this.$store.dispatch("logout");
+      }
+      else if(response.status === 403){
+        console.log(response);
       }
       // return new Promise(() => {
       //   if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
