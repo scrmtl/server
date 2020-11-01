@@ -14,11 +14,9 @@
         </template>
         <v-list>
           <v-list-item v-for="(item, i) in items" :key="i" link>
-            <v-list-tile @click="handle_function_call(item.action)">
-              <v-list-item-title>
-                {{ item.title }}
-              </v-list-item-title>
-            </v-list-tile>
+            <v-list-item-title @click="handle_function_call(item.action)">
+              {{ item.title }}
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
