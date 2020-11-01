@@ -30,8 +30,7 @@
         >
           <v-row 
             justify="center" 
-            v-for="task in laneTasks" :key="task.id"
-            
+            v-for="task in laneTasks" :key="task.id"   
           >
             <Task v-bind:task="task" />
           </v-row>        
