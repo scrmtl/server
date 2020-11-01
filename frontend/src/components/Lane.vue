@@ -201,7 +201,7 @@ export default {
       const taskId = e.dataTransfer.getData("task-id");
       const taskName = e.dataTransfer.getData("task-name");
       const taskFeatureId = e.dataTransfer.getData("task-feature-id");
-      //const fromLane = e.dataTransfer.getData("from-lane")
+      const fromLane = e.dataTransfer.getData("from-lane")
       const taskNumbering = e.dataTransfer.getData("task-numbering")
       console.log(taskId)
       this.updateTask({
@@ -215,9 +215,11 @@ export default {
         customUrlFnArgs: {}
       })
       .then(() => {
-          this.fetchSingleLane({id: this.lane.id}).then(() => {
-            this.laneTasks = this.tasksByIdArray(this.lane.task_cards);
-          })
+        this.fetchSingleLane({id: fromLane})
+        // TODO Update FromLane
+        this.fetchSingleLane({id: this.lane.id}).then(() => {
+          this.laneTasks = this.tasksByIdArray(this.lane.task_cards);
+        })
       })
       .catch((error) => {
         console.log(error)
