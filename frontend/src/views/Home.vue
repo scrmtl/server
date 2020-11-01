@@ -108,7 +108,7 @@ export default {
       projects.sort(function(a, b) {
         var keyA = a.status;
         var keyB = b.status;
-        // Compare the 2 dates‚
+        // Vergleiche ob AC oder AR 
         if (keyA < keyB) return -1;
         if (keyA > keyB) return 1;
         return 0;
