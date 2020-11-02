@@ -27,9 +27,14 @@
       </v-menu>
     </v-card-title>
     <v-card-subtitle class="navbar white--text">
-      {{ selectedSprintInfo }}
+      {{ selectedSprintDateInfo }}
     </v-card-subtitle>
-    <v-card-text class="lane-body  flex-column" >
+    <v-card-text 
+      class="lane-body  flex-column" 
+      @drop="moveTask($event)"
+      @dragover.prevent
+      @dragenter.prevent
+    >
       <v-row justify="center"  class="" v-for="task in sprintLaneTask" :key="task.id">
         <Task v-bind:task="task" />
       </v-row>
@@ -43,7 +48,8 @@ import { mapGetters } from 'vuex';
 export default {
   data: () => ({
     selectedSprintName: "No sprint selected",
-    selectedSprintInfo: "",
+    selectedSprintDateInfo: "",
+    selectedSprint: {},
     item: 1,
     menu: [
       { text: "Create new sprint", icon: 'mdi-plus-circle-outline', action: "createSprint" },
@@ -59,15 +65,47 @@ export default {
     },
     showSprintDetails(){
       console.log("show Sprint detail")
+    },
+    moveTask(e){
+      console.log(e)
+      const taskId = e.dataTransfer.getData("task-id");
+      const taskName = e.dataTransfer.getData("task-name");
+      const taskFeatureId = e.dataTransfer.getData("task-feature-id");
+      // TODO Set Sprint number with selected Sprint
+      // TODO Detect, if 
+      // - task from Sprint Lane to PB Lane (change Status and Sprint)
+      // - task from PB Lane to Sprint Lane (change Status and Sprint)
+      // How?
+      console.log(taskId)
+      this.updateTask({
+        id: taskId,
+        data: {
+          
+          name: taskName,
+          feature: taskFeatureId,
+          sprint: this.selectedSprint.number,
+          status: "PL"
+        },
+        customUrlFnArgs: {}
+      })
+      .then(() => {
+        // TODO Update Sprint
+      })
+      .catch((error) => {
+        console.log(error)
+        // TODO Error Handling
+      })
     }
 
   },
   computed:{
     ...mapGetters(
       {sprintDetails: "getSprintDetails"}),
-    
+    ...mapGetters("task", {
+      tasksByIdArray: "byIdArray"
+    }),
     sprintLaneTask(){
-      return [];
+      return this.tasksByIdArray(this.selectedSprint.task_cards);
     },
 
 
@@ -75,8 +113,9 @@ export default {
   watch:{
     sprintDetails(newSprint){
       console.log(newSprint)
+      this.selectedSprint = newSprint;
       this.selectedSprintName = "Sprint " + newSprint.number;
-      this.selectedSprintInfo = "(" + newSprint.start + " to " + newSprint.end + ")"
+      this.selectedSprintDateInfo = "(" + newSprint.start + " to " + newSprint.end + ")";
     }
   }
 
