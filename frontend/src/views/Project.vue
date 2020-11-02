@@ -1,14 +1,19 @@
 <template>
 <v-container fluid class="tabbody">
-    <v-row>
-        <AppBar v-bind:id="id"/>
-    </v-row>
+
     <v-row class="d-flex" dense>
         <v-col cols="12">
             <router-view></router-view>
         </v-col>
     </v-row>
-    
+    <v-overlay :value="boardsIsLoading || lanesIsLoading || tasksIsLoading || sprintsIsLoading">
+        <v-progress-circular
+            :size="70"
+            :width="7"
+            color="link"
+            indeterminate
+        ></v-progress-circular>
+    </v-overlay>
   </v-container>
 
 
@@ -18,31 +23,51 @@
 </template>
 
 <script>
-    import AppBar from "@/components/TheAppBar";
-    import { mapActions, mapGetters } from "vuex";
+
+    import { mapActions, mapState } from "vuex";
     export default {
         props: ["id"],
+        data: () => ({
+            loading: false
+        }),
         components: {
-            AppBar
+            
         },
         methods:{
             ...mapActions("board", {
             fetchBoards: "fetchList"
             }),
-            ...mapGetters("board", {
-                listBoards:"list"
+            ...mapActions("lane", {
+            fetchLanes: "fetchList"
             }),
+            ...mapActions("task", {
+            fetchTasks: "fetchList"
+            }),
+            ...mapActions("sprint", {
+            fetchSprints: "fetchList"
+            }),
+
             fetchData() {
                 this.fetchBoards({ customUrlFnArgs: this.id });
-                this.listBoards;
+                this.fetchLanes({ customUrlFnArgs: this.id });
+                this.fetchTasks({customUrlFnArgs: { projectId: this.id } })
+                this.fetchSprints({ customUrlFnArgs: this.id });
             },
         },
         computed:{
+            ...mapState("board", {
+                boardsIsLoading: "isFetchingList"}),
+            ...mapState("lane", {
+                lanesIsLoading: "isFetchingList"}),
+            ...mapState("task", {
+                tasksIsLoading: "isFetchingList"}),
+            ...mapState("sprint", {
+                sprintsIsLoading: "isFetchingList"}),
+
 
         },
         created() {
             this.fetchData();
-            
         }
     }
 </script>

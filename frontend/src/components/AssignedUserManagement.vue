@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="dialog"
+    v-model="visibleDialog"
     scrollable  
     persistent
     max-width="1200"
@@ -9,6 +9,7 @@
     <v-card color="tabbody" dark>
       <v-card-title> {{dialogName}} </v-card-title>
       <v-card-text>
+        <SystemAlert/>
         <v-data-table
           :headers="headers"
           :items="assignedUsers"
@@ -17,10 +18,50 @@
           class="tabbody"
           dark
         >
-          <template v-slot:[`item.group`]="{ item }">
+          <template v-slot:top>
+            <v-row >
+              <v-col>
+                <v-autocomplete
+                  outlined
+                  dense
+                  label="Search User"
+                  v-model="selectedUser"
+                  :items="availableUsers"
+                  :filter="nameUsernameFilter"
+                  item-text="username"
+                  item-value="id"
+                  clearable
+                  placeholder="Start typing to search user"
+                >
+                  <template v-slot:item="data">
+                    <v-list-item-content>
+                      <v-list-item-title v-html="data.item.username"></v-list-item-title>
+                      <v-list-item-subtitle v-html="data.item.name"></v-list-item-subtitle>
+                    </v-list-item-content>
+                  </template>
+                </v-autocomplete>
+              </v-col>
+              
+              <v-col>
+                <v-btn 
+                  outlined 
+                  color="link"
+                  text
+                  @click="addAssignedUser(selectedUser)"
+                  :disabled="typeof selectedUser !== 'number'"
+                >
+                  <v-icon left>mdi-plus-circle-outline</v-icon>Add User/s
+                </v-btn>
+              </v-col>
+            </v-row>
+            
+            
+          </template>
+          <template v-slot:[`item.role`]="{ item }">
             <v-select
               :items="availableRoles"
-              :value="item.role.name"
+              :value="item.role.role_name"
+              :readonly="!roleEditing"
               @change="updateRole($event, item)"
             ></v-select>
           </template>
@@ -46,28 +87,37 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    
   </v-dialog>
+
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import SystemAlert from "@/components/SystemAlert.vue";
 export default {
   name: "AssignedUserManagement",
   props: {
     dialog: { type: Boolean, default: false },
     dialogName: { type: String, default: "Assigned user" },
     color: { type: String, default: ""},
-    assignedUsers: Array
+    roleEditing: { type: Boolean, default: false },
+    assignedUsers: {type: Array},
+    availableUsers: {type: Array},
   },
   data: () => ({
     headers: [
-      { text: "Benutzername", value: "username" },
-      { text: "Name", value: "name" },
+      { text: "Benutzername", value: "plattform_user.username" },
+      { text: "Name", value: "plattform_user.name" },
       { text: "Role", value: "role" },
       { text: "Actions", value: "actions", sortable: false }
     ],
-    availableRoles: []
+    availableRoles: ["product owner", "developer", "scrum master"],
+    selectedUser: {}
   }),
+  components:{
+    SystemAlert
+  },
 
   methods:{
     ...mapActions("projectUser", {
@@ -82,10 +132,11 @@ export default {
       this.$emit("close-dialog");
     },
     removeAssignedUser(user){
-      this.$emit("remove-user", user);
+      this.$emit("remove-user", user.id);
     },
     addAssignedUser(user){
       this.$emit("add-user", user);
+      this.selectedUser = {};
     },
     updateRole(newRole, item) {
       this.updateProjectUser({
@@ -93,11 +144,31 @@ export default {
         data: { role: this.byRoleName(newRole) }
       });
     },
+    nameUsernameFilter (item, queryText) {
+        const textOne = item.name.toLowerCase()
+        const textTwo = item.username.toLowerCase()
+        const searchText = queryText.toLowerCase()
+        return textOne.indexOf(searchText) > -1 ||
+          textTwo.indexOf(searchText) > -1
+    },
+
   },
   computed:{
     ...mapGetters("projectRole",{
         byRoleName: "byName"
-    })
+    }),
+    visibleDialog: {
+      get() {
+        return this.dialog;
+      },
+      set(newValue) {
+        if (newValue) {
+          return this.dialog;
+        } else {
+          this.$emit("close-dialog");
+        }
+      }
+    }
   }
 }
 </script>

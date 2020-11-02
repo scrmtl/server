@@ -38,6 +38,7 @@ class ProjectSerializer(serializers.ModelSerializer):
                   'dod',
                   'numOfSprints',
                   'boards',
+                  'is_template',
                   )
         read_only_fields = ('numOfSprints',)
 

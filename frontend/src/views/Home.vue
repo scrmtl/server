@@ -12,7 +12,7 @@
     </v-row>
     <v-row align="start" justify="center">
       <v-col cols="8">
-        <div v-for="project in listProjects" :key="project.id">
+        <div v-for="project in orderedProjects(listProjects)" :key="project.id">
           <ProjectCard v-bind:project="project" />
         </div>
       </v-col>
@@ -44,16 +44,7 @@ export default {
     ProjectCard,
     MyTasksLane
   },
-  beforeCreate() {
-    // // safe home route
-    // if (!this.$store.getters.getToken) {
-    //   this.$router.push("/login");
-    // }
-    // else{
-    //   // set auth header
-    //   Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getToken}`;
-    // }
-  },
+  beforeCreate() {},
   created() {
     this.loadData();
     Axios.interceptors.request.use(config => {
@@ -111,6 +102,18 @@ export default {
         },
         customUrl: "/api/projects/"
       });
+    },
+
+    orderedProjects(projects) {
+      projects.sort(function(a, b) {
+        var keyA = a.status;
+        var keyB = b.status;
+        // Vergleiche ob AC oder AR 
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+      });
+      return projects;
     }
   },
   computed: {

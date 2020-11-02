@@ -9,21 +9,14 @@
     <v-card-title class="navbar white--text">
       My Tasks
     </v-card-title>
-      <v-layout column style="height: 75vh">
-        <v-flex style="overflow: auto">
-          <v-card-text
-          class="lane-body" 
-          v-if="allFetched" 
-          max-height="200"
-          >
-            <v-row v-for="task in listTasks" :key="task.id">
-              <v-col>
-                <Task v-bind:task="task" v-bind:task_index="task.id" />
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-flex>
-      </v-layout>
+      <v-card-text
+      class="lane-body  flex-column"
+      v-if="allFetched" 
+      >
+        <v-row justify="center" v-for="task in listTasks" :key="task.id">
+            <Task v-bind:task="task" v-bind:task_index="task.id" />
+        </v-row>
+      </v-card-text>
   </v-card>
 </template>
 

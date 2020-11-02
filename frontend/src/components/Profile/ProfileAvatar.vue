@@ -1,16 +1,16 @@
 <template>
-    <v-avatar :class="(customClass) ? customClass : ''" :color="(!avatar.img) ? GetColour(avatar.username) : null" :size="size">
+    <v-avatar :class="(customClass) ? customClass : ''" :color="(!avatar.img) ? GetColour(avatar.plattform_user.username) : null" :size="size">
       <slot></slot>
       <img
         v-if="avatar.img"
         :src="avatar.img"
-        :alt="avatar.username"
+        :alt="avatar.plattform_user.username"
       >
       <span
         v-else
         class="white--text"
       >
-        {{ GetInitials(avatar.username) }}
+        {{ GetInitials(avatar.plattform_user.username) }}
       </span>
     </v-avatar>
 </template>

@@ -2,7 +2,7 @@
 
     <v-row dense>
       <v-col dense class="d-flex flex-nowrap overflow-x-auto" >
-        <div class="ma-4" v-for="lane in listLanes" :key="lane.id">
+        <div class="ma-4" v-for="lane in listBoardLanes" :key="lane.numbering">
           <Lane v-bind:lane="lane"></Lane>
         </div>
       </v-col>
@@ -11,7 +11,7 @@
 
 <script>
 import Lane from "@/components/Lane.vue";
-import { mapGetters, mapActions} from "vuex";
+import { mapGetters } from "vuex";
 export default {
   data: () => ({
     selectedBoard: {}
@@ -20,28 +20,26 @@ export default {
     Lane
   },
   methods: {
-    ...mapActions("lane", {
-      fetchLanes: "fetchList"
-    }),
-
-    fetchData() {
-      this.fetchLanes({ customUrlFnArgs: this.boardByType("SP").id });
-    },
+    
   },
   computed: {
     ...mapGetters("lane", {
-      listLanes: "list"
+      listLanes: "list",
+      lanesByIdArray: "byIdArray"
     }),
     ...mapGetters("board", {
       listBoards: "list",
       boardByType: "byType"
     }),
+    listBoardLanes(){
+      return this.lanesByIdArray(this.boardByType("SP").lanes);
+    }
   },
   updated(){
 
   },
   created(){
-    this.fetchData();
+    
   },
 
   // mounted() {

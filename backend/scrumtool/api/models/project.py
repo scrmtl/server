@@ -115,10 +115,9 @@ class Project(RulesModel, IGetProject):
 
     def __str__(self):
         """Unicode representation of Project."""
-        return "{0} ID: {1} Description:{2}  ".format(self.name,
-                                                      self.pk,
-                                                      self.description,
-                                                      )
+        return "{0} ID: {1} ".format(self.name,
+                                     self.pk,
+                                     )
 
     def save(self, *args, **kwargs):
         if Project.objects.filter(pk=self.id).exists():

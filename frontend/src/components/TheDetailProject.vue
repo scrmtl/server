@@ -5,7 +5,7 @@
     right
     app
     temporary
-    
+    hide-overlay
     width="600" 
     color="navbar" 
     dark>
@@ -42,7 +42,7 @@
                         <v-text-field
                           label="Project name"
                           required
-                          :rules="[rules.required, rules.maxCharacter]"
+                          :rules="[rules.required]"
                           :counter="50"
                           prepend-icon="mdi-information-outline"
                           v-model="localProject.name"
@@ -242,10 +242,14 @@
                         <v-icon color="link" >mdi-dots-horizontal</v-icon>
                     </v-btn>
                     <AssignedUserManagement 
-                      @close-dialog="userManagementDialog = false" 
-                      :dialog="userManagementDialog"  
-                      :dialogName="'Assigned project user'"
+                      @close-dialog="userManagementDialog = false"
+                      @add-user="addProjectUser($event)"
+                      @remove-user="deleteProjectUser($event)"
                       :assignedUsers="allAssignedUsers"
+                      :availableUsers="listPlattfromUsers"
+                      :dialog="userManagementDialog"  
+                      :dialogName="'Assigned project users'"
+                      roleEditing
                       />
                   </v-card-title>
                   <v-card-text>
@@ -277,7 +281,7 @@
           <v-btn color="link" text @click="close()">Close</v-btn>
             <v-btn v-if="!this.selectedProject.visableCreate" color="link" text @click="confirm()">Save</v-btn>
             <v-btn v-if="this.selectedProject.visableCreate" color="link" :disabled="!isFormValid" text @click="addProject()">Create</v-btn>
-            <v-btn v-if="!this.selectedProject.visableCreate" color="error" text absolute right @click="deleteDialog = true">
+            <v-btn v-if="!this.selectedProject.visableCreate" color="error" text absolute right @click="deleteProjectDialog = true">
               <v-icon left>mdi-bucket-outline</v-icon>Delete
             </v-btn>
           </div>
@@ -285,7 +289,7 @@
     </v-navigation-drawer>
     <!-- Delete Dialog -->
     <v-dialog 
-    v-model="deleteDialog" 
+    v-model="deleteProjectDialog" 
     persistent 
     class="mx-auto"
     width="600"
@@ -297,7 +301,7 @@
         </v-card-text>
         <v-card-actions class="ml-10 pb-10 pt-10">
           <v-btn width="250" outlined color="error" @click="deleteProject()">Ja</v-btn>
-          <v-btn width="250" outlined color="primary" @click="deleteDialog = false">Nein</v-btn>
+          <v-btn width="250" outlined color="primary" @click="deleteProjectDialog = false">Nein</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -315,8 +319,8 @@ export default {
     tab: null,
     calendar1menu: false,
     calendar2menu: false,
-    deleteDialog: false,
-    userManagementDialog: false,  
+    deleteProjectDialog: false,
+    userManagementDialog: false,
     isFormValid: null,
     completedSprints: 0,
     projectNamedStatus: "New",
@@ -333,19 +337,20 @@ export default {
   components: {
     ProfileAvatar,
     ProfileTooltip,
-    AssignedUserManagement
+    AssignedUserManagement,
   },
   methods: {
     ...mapActions("project", {
       updateProject: "update",
       destroyProject: "destroy",
-      createProject: "create"
+      createProject: "create",
+      fetchSingleProject: "fetchSingle"
     }),
 
     ...mapActions("projectUser", {
       fetchProjectUser: "fetchList",
       createProjectUser: "create",
-      destroyProjectUser: "delete"
+      destroyProjectUser: "destroy"
 
     }),
     ...mapActions("projectRole", {
@@ -365,7 +370,31 @@ export default {
       this.$store.commit("hideProjectDetail");
     },
 
-    
+    addProjectUser(projectUserId){
+      this.createProjectUser({data:{
+        plattform_user: projectUserId,
+        // Standard role developer
+        role: 3,
+        project: this.localProject.id
+      }}
+      )
+      .then(value => 
+        {
+          this.fetchSingleProject({id: this.localProject.id}).then(res => {
+            this.$store.commit("setSelectedProjectDetail", res.data);
+            this.localProject = this.selectedProject.details;
+          }
+        )
+          return value;
+        }
+      )
+      .catch((error) => {
+        if(error.response.data.non_field_errors.length > 0){
+          this.$store.commit("showSystemAlert", {message: error.response.data.non_field_errors[error.response.data.non_field_errors.length - 1], category: "error"});
+        }
+      }) 
+    },
+
     addProject(){
       this.createProject({
         data: {
@@ -381,6 +410,7 @@ export default {
         }
       });
       this.$store.commit("hideProjectDetail");
+      this.$store.commit("showSystemAlert", {message: "Create " + this.localProject.name, category: "info"});
     },
 
     GetProjectStatus(namedStatus){
@@ -430,19 +460,34 @@ export default {
     },
 
     deleteProject() {
-      this.deleteDialog = false;
+      this.deleteProjectDialog = false;
       this.destroyProject({
         id: this.localProject.id + "/"
       });
+      this.$store.commit("showSystemAlert", {message: "Delete Project " + this.localProject.name, category: "info"});
       this.close();
+    },
+
+    deleteProjectUser(projectUserId){
+      this.destroyProjectUser({id: projectUserId}).then(() => 
+        {
+          this.fetchSingleProject({id: this.localProject.id}).then(res => {
+            this.$store.commit("setSelectedProjectDetail", res.data);
+            this.localProject = this.selectedProject.details;
+          }
+        )}
+      )
     }
+
+
   },
   computed: {
     ...mapState(["selectedProject"]),
     ...mapGetters("projectUser", {
       listProjectUsers: "list",
       projectUserById: "byId",
-      projectUsersByIdArray: "byIdArray"
+      projectUsersByIdArray: "byIdArray",
+      projectUsersbyIdArrayWithDetails: "byIdArrayWithDetails"
     }),
     ...mapGetters("projectRole", {
       listProjectRoles: "list",
@@ -454,24 +499,7 @@ export default {
     }),
     
     allAssignedUsers(){
-      
-      var projectUsers = this.projectUsersByIdArray(this.localProject.project_users);
-      var assignedUsers = [];
-      if (projectUsers && projectUsers.length > 0){
-        projectUsers.forEach(prjUser => {
-          var plattformUser = this.plattformUserById(prjUser.plattform_user);
-          assignedUsers.push(
-            {
-              id: plattformUser.id,
-              email: plattformUser.email,
-              name: plattformUser.name,
-              username: plattformUser.username,
-              role: this.projectRoleById(prjUser.role).role_name,
-            }
-          )
-        })
-      }
-      return assignedUsers;
+      return this.projectUsersbyIdArrayWithDetails(this.localProject.project_users);
     },
 
     visibleDrawer: {
@@ -479,7 +507,11 @@ export default {
         return this.selectedProject.visableDetail;
       },
       set(newValue) {
-        this.selectedProject.visableDetail = newValue;
+        if (newValue) {
+          this.$store.commit("showProjectDetail");
+        } else {
+          this.$store.commit("hideProjectDetail");
+        }
       }
     }
   },

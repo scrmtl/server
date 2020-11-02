@@ -2,7 +2,7 @@
   <v-hover>
     <template v-slot="{ hover }">
       <v-card
-        class="task"
+        class="task my-2 flex-nowrap"
         min-width="350"
         max-width="350"
         :elevation="hover ? 14 : 5"
@@ -139,9 +139,7 @@
             </div>
             <v-col align-self="center" v-if="task.assigned_users.length > 5">
               <v-avatar color="primary" size="32px">
-                <span 
-                  class="white--text"
-                >
+                <span class="white--text">
                   +{{ task.assigned_users.length - 5 }}
                 </span>
               </v-avatar>
@@ -174,7 +172,7 @@ import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
 
 export default {
   data: () => ({
-    dialog: null,
+    dialog: null
   }),
   props: ["task"],
   components: {
@@ -184,8 +182,8 @@ export default {
 
   methods: {
     showTaskDetail() {
-      this.$store.commit("showTaskDetail", false);
       this.$store.commit("setSelectedTaskDetail", this.task);
+      this.$store.commit("showTaskDetail", false);
     },
     GetUserInitial(id) {
       var inital = "AA";
@@ -197,18 +195,14 @@ export default {
   computed: {
     ...mapGetters("user", {
       UsersById: "byId",
-      usersByIdArray: "byIdArray"
+      usersByIdArray: "byIdArray",
+      usersbyIdArrayWithDetails: "byIdArrayWithDetails"
     }),
     ...mapGetters("label", {
       labelById: "byId"
     }),
     avatarsSorted() {
-      return this.usersByIdArray(this.task.assigned_users) &&
-        this.usersByIdArray(this.task.assigned_users).length > 0
-        ? this.usersByIdArray(this.task.assigned_users).sort((a, b) =>
-            a.username.localeCompare(b.alt)
-          )
-        : null;
+      return this.usersbyIdArrayWithDetails(this.task.assigned_users, this.task.project);
     },
     avatarsStackedLimited() {
       return this.avatarsSorted && this.avatarsSorted.length > 0

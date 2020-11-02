@@ -3,7 +3,7 @@
 import logging
 from rest_framework import serializers
 from api.models import Card, Task, Feature, Epic, Label, File, \
-    Steplist, PlatformUser, Lane
+    Steplist, PlatformUser, Lane, Project
 from .steplist_serializer import StepListSerializerForCards, \
     StepListSerializerCommon
 from .simple_history_serializers import HistoricalRecordField
@@ -67,7 +67,7 @@ class CardSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',
                   'description', 'numbering',
                   'storypoints', 'status',
-                  'lane', 'sprint'
+                  'lane', 'sprint',
                   )
 
     def update(self, instance, validated_data):
@@ -105,7 +105,7 @@ class FeatureSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Feature
-        fields = CardSerializer.Meta.fields + ('labels', 'steplists')
+        fields = CardSerializer.Meta.fields + ('labels', 'steplists', 'epic')
 
 
 class TaskSerializerFull(serializers.ModelSerializer):
@@ -350,12 +350,13 @@ class TaskSerializer(serializers.ModelSerializer):
     number_of_open_steps = serializers.SerializerMethodField()
     history = ChangesListSerializer(required=False,
                                     read_only=True)
+    project = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
         fields = CardSerializer.Meta.fields + \
             ('feature', 'assigned_users', 'labels', 'steplists',
-             'number_of_steps', 'number_of_open_steps', 'history',)
+             'number_of_steps', 'number_of_open_steps', 'history', 'project')
 
     def get_number_of_steps(self, obj):
         steps = 0
@@ -370,3 +371,6 @@ class TaskSerializer(serializers.ModelSerializer):
                 if not step.checked:
                     open_steps += 1
         return open_steps
+
+    def get_project(self, obj):
+        return obj.project.id
