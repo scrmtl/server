@@ -169,160 +169,77 @@
                       ></v-textarea>
                     </v-col>
                   </v-row>
-                  <!-- Definition of Ready -->
-                  <v-row align="center">
-                    <v-col>
-                      <v-textarea
-                        label="Definition of Ready"
-                        prepend-icon="mdi-information-outline"
-                        outlined
-                        min-height="70"
-                        class="ma-1"
-                        v-model="localProject.dor"
-                      ></v-textarea>
-                    </v-col>
-                  </v-row>
-                  <!-- Definition of Done -->
-                  <v-row align="center">
-                    <v-col>
-                      <v-textarea
-                        label="Definition of Done"
-                        prepend-icon="mdi-information-outline"
-                        outlined
-                        min-height="70"
-                        class="ma-0"
-                        v-model="localProject.dod"
-                      ></v-textarea>
-                    </v-col>
-                  </v-row>
-                  <!-- Template for creation -->
-                  <v-row
-                    align="center"
-                    v-if="this.selectedProject.visableCreate"
-                  >
-                    <v-col>
-                      <v-combobox
-                        :items="templateProjectItems"
-                        clearable
-                        placeholder="Start typing to Search"
-                        v-model="selectedProjectTemplate"
-                        item-text="name"
-                        item-value="id"
-                        label="Template Projects"
-                      ></v-combobox>
-                    </v-col>
-                  </v-row>
-                </v-form>
-              </v-card-text>
-            </v-card>
-            <!-- Project Sprint Infos -->
-            <v-card
-              v-if="!this.selectedProject.visableCreate"
-              flat
-              dark
-              color="navbar"
-              tile
-            >
-              <v-card-title>
-                <span class="subtitle-1">Sprint informations</span>
-              </v-card-title>
-              <v-card-text>
-                <v-row>
-                  <v-col>
-                    <v-progress-circular
-                      :rotate="-90"
-                      :size="100"
-                      :width="15"
-                      :value="completedSprints"
-                      color="link"
-                    ></v-progress-circular>
-                  </v-col>
-                  <v-col>
-                    <p>completed sprints: {{ completedSprints }}</p>
-                    <p>planned sprints: {{ localProject.numOfSprints }}</p>
-                    <p>
-                      Sprint duration in calendar days:
-                      {{ localProject.sprint_duration }}
-                    </p>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-          <!-- Settings Tab -->
-          <v-tab-item>
-            <v-card flat dark color="navbar" tile>
-              <v-card-text>
-                <v-row align="center">
-                  <v-col>
-                    <v-select
-                      :items="['Active', 'Archived']"
-                      label="Status"
-                      :readonly="this.selectedProject.visableCreate"
-                      prepend-icon="mdi-circle-edit-outline"
-                      v-model="this.projectNamedStatus"
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                <!-- Project as template -->
-                <v-row>
-                  <v-checkbox
-                    input-value="false"
-                    label="Use this project as template"
-                    v-model="localProject.is_template"
-                  ></v-checkbox>
-                </v-row>
-              </v-card-text>
-            </v-card>
-            <v-card
-              v-if="!this.selectedProject.visableCreate"
-              flat
-              dark
-              color="navbar"
-              tile
-            >
-              <v-card-title class="title">
-                <span class="headline">Assigned project users</span>
-                <v-btn icon @click="userManagementDialog = true">
-                  <v-icon color="link">mdi-dots-horizontal</v-icon>
-                </v-btn>
-                <AssignedUserManagement
-                  @close-dialog="userManagementDialog = false"
-                  @add-user="addProjectUser($event)"
-                  @remove-user="deleteProjectUser($event)"
-                  :assignedUsers="allAssignedUsers"
-                  :availableUsers="listPlattfromUsers"
-                  :dialog="userManagementDialog"
-                  :dialogName="'Assigned project users'"
-                  roleEditing
-                />
-              </v-card-title>
-              <v-card-text>
-                <v-row>
-                  <v-col
-                    v-for="avatar in allAssignedUsers"
-                    :key="`avatar-id-${avatar.id}`"
-                  >
-                    <v-menu
-                      open-delay="1500"
-                      open-on-hover
-                      :nudge-width="200"
-                      offset-y
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <div v-bind="attrs" v-on="on">
-                          <ProfileAvatar :avatar="avatar" />
-                        </div>
-                      </template>
-                      <ProfileTooltip :avatar="avatar" />
-                    </v-menu>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-        </v-tabs-items>
-        <div>
+                </v-card-text> 
+              </v-card>
+            </v-tab-item>
+            <!-- Settings Tab -->
+            <v-tab-item>
+                <v-card flat dark color="navbar" tile>
+                  <v-card-text>
+                    <v-row align="center">
+                      <v-col>
+                        <v-select
+                          :items="['Active', 'Archived']"
+                          label="Status"
+                          :readonly="this.selectedProject.visableCreate"
+                          prepend-icon="mdi-circle-edit-outline"
+                          v-model="this.projectNamedStatus"
+
+                        ></v-select>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>              
+                <v-card 
+                  v-if="!this.selectedProject.visableCreate" 
+                  flat 
+                  dark 
+                  color="navbar" 
+                  tile>
+                  <v-card-title class="title">
+                    <span class="headline">Assigned project users</span>
+                    <v-btn 
+                      icon
+                      @click="userManagementDialog = true">
+                        <v-icon color="link" >mdi-dots-horizontal</v-icon>
+                    </v-btn>
+                    <AssignedUserManagement 
+                      @close-dialog="userManagementDialog = false"
+                      @add-user="addProjectUser($event)"
+                      @remove-user="deleteProjectUser($event)"
+                      :assignedUsers="allAssignedUsers"
+                      :availableUsers="listPlattfromUsers"
+                      :dialog="userManagementDialog"  
+                      :dialogName="'Assigned project users'"
+                      roleEditing
+                    />
+                  </v-card-title>
+                  <v-card-text>
+                    <v-row> 
+                      <v-col
+                        v-for="avatar in allAssignedUsers"
+                        :key="`avatar-id-${avatar.id}`"
+                      >
+                        <v-menu
+                            open-delay="1500"
+                            open-on-hover
+                            :nudge-width="200"
+                            offset-y
+                          >
+                          <template v-slot:activator="{ on, attrs }">
+                            <div v-bind="attrs" v-on="on">
+                            <ProfileAvatar :avatar="avatar"/>
+                            </div>
+                          </template>
+                          <ProfileTooltip :avatar="avatar" />
+                        </v-menu>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
+            </v-tab-item>
+          </v-tabs-items>
+          <div>
           <v-btn color="link" text @click="close()">Close</v-btn>
           <v-btn
             v-if="!this.selectedProject.visableCreate"

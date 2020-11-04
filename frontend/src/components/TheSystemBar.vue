@@ -1,13 +1,22 @@
 <template>
-  
-  <v-app-bar color="appbar" app dark prominent dense :shrink-on-scroll="this.$route.params.id === undefined">
+  <v-app-bar
+    color="appbar"
+    app
+    dark
+    prominent
+    dense
+    :shrink-on-scroll="this.$route.params.id === undefined"
+  >
     <v-container fluid>
       <v-row>
-        <v-btn class="mt-n3" icon color="appbar" :to="{ name: 'Home' }">
-          <v-icon large color="link">mdi-home</v-icon>
-        </v-btn>
-        <span class="mt-n1 mx-2 ">Scrum Tool</span>
-        
+        <v-app-bar-nav-icon 
+          @click.stop="navDrawer = !navDrawer"
+        ></v-app-bar-nav-icon>
+        <TheNavigation
+          @close-navigation="navDrawer = false"
+          :drawer="navDrawer"
+        />
+        <v-toolbar-title>Scrum Tool</v-toolbar-title>      
         
         <v-btn
           color="link"
@@ -19,7 +28,11 @@
           v-if="getGroupId == 1"
           > Plattform User Management
         </v-btn>
-        <PlattformUserManagement  @close-dialog="plattformManagementDialog = false" :dialog="plattformManagementDialog" v-if="plattformManagementDialog" />
+        <PlattformUserManagement  
+          @close-dialog="plattformManagementDialog = false" 
+          :dialog="plattformManagementDialog" 
+          v-if="plattformManagementDialog"
+        />
         <v-spacer></v-spacer>
         <SystemAlert/>
         <v-spacer></v-spacer>
@@ -39,8 +52,7 @@
                 color="link"
                 v-bind="attrs"
                 v-on="on"
-                >mdi-logout</v-icon
-              >
+              >mdi-logout</v-icon>
             </template>
             <span>Logout</span>
           </v-tooltip>
@@ -61,18 +73,19 @@
 import PlattformUserManagement from "@/components/PlattformUserManagement.vue";
 import { mapGetters, mapActions, mapState } from "vuex";
 import SystemAlert from "@/components/SystemAlert.vue";
+import TheNavigation from "@/components/TheNavigation.vue";
 
 export default {
-  data() {
-    return {
+  data: () => ({
+      navDrawer: false,
       plattformManagementDialog: false,
       groupId: 0,
       activeTab: `/project/${this.$route.params.id}`,
-    };
-  },
+    }),
   components: {
     PlattformUserManagement,
-    SystemAlert
+    SystemAlert, 
+    TheNavigation
   },
   methods: {
     closeAlert() {
@@ -146,5 +159,5 @@ export default {
 </script>
 
 <style lang="css">
-@import "../main.css";
+  @import "../main.css";
 </style>
