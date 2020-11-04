@@ -2,9 +2,9 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col>
+      <v-col cols="12">
         <div class="projectBtn my-2">
-          <v-btn text color="link" large @click="showCreateProject()">
+          <v-btn text class="hidden-sm-and-down" color="link" large @click="showCreateProject()">
             <v-icon class="mr-1">mdi-folder-plus</v-icon>Create Project
           </v-btn>
         </div>
@@ -24,7 +24,7 @@
         </div>
       </v-col>
       <v-col cols="4">
-        <MyTasksLane />
+        <MyTasksLane class="hidden-sm-and-down"/>
       </v-col>
     </v-row>
   </v-container>

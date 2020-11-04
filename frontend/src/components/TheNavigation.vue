@@ -1,11 +1,11 @@
 <template>
   <v-navigation-drawer
     v-model="visibleDrawer"
-    clipped
     left
     app
     temporary
     dark
+    floating
   >
     <v-list-item>
       <v-list-item-content>
@@ -20,7 +20,7 @@
 
     <v-divider></v-divider>
 
-    <v-list dense nav>
+    <v-list nav>
       <v-list-item :to="{ name: 'Home' }" link >
         <v-list-item-icon>
           <v-icon>mdi-home</v-icon>
@@ -41,6 +41,7 @@
         link 
         @click="plattformManagementDialog = true" 
         :disabled="getGroupId != 1"
+        class="hidden-sm-and-down"
       >
         <v-list-item-icon>
           <v-icon>mdi-cog</v-icon>
@@ -68,11 +69,8 @@
 
 <script>
 import PlattformUserManagement from "@/components/PlattformUserManagement.vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 export default {
-  props: {
-    drawer: { type: Boolean, default: false }
-  },
   data: () => ({
     plattformManagementDialog: false,
     groupId: 0
@@ -86,6 +84,7 @@ export default {
         this.$router.push("/login");
       });
     },
+
     ...mapActions("session", {
       fetchSession: "fetchList"
     }),
@@ -110,16 +109,17 @@ export default {
   computed:{
     visibleDrawer: {
       get() {
-        return this.drawer;
+        return this.navigation.visable;
       },
       set(newValue) {
         if (newValue) {
-          return this.drawer;
+          this.$store.commit("showNavigation");
         } else {
-          this.$emit("close-navigation");
+          this.$store.commit("hideNavigation");
         }
       }
     },
+    ...mapState(["navigation"]),
     ...mapGetters("session", {
       listSession: "list"
     }),

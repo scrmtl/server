@@ -47,6 +47,9 @@ export default new Vuex.Store({
       message: "",
       category: "info"
     },
+    navigation:{
+      visable: false
+    },
 
     selectedProject: {
       visableDetail: false,
@@ -114,12 +117,12 @@ export default new Vuex.Store({
   },
   //Update States (sync)
   mutations: {
-    showDetailView(state) {
-      state.detailViewVisable = true;
+    showNavigation(state) {
+      state.navigation.visable = true;
     },
 
-    hideDetailView(state) {
-      state.detailViewVisable = false;
+    hideNavigation(state) {
+      state.navigation.visable = false;
     },
 
     showSystemAlert(state, {message, category="info"}) {

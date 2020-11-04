@@ -9,30 +9,10 @@
   >
     <v-container fluid>
       <v-row>
-        <v-app-bar-nav-icon 
-          @click.stop="navDrawer = !navDrawer"
+        <v-app-bar-nav-icon class="mt-n3"
+          @click="showNavigation()"
         ></v-app-bar-nav-icon>
-        <TheNavigation
-          @close-navigation="navDrawer = false"
-          :drawer="navDrawer"
-        />
-        <v-toolbar-title>Scrum Tool</v-toolbar-title>      
-        
-        <v-btn
-          color="link"
-          text
-          class="mt-1"
-          x-small
-          dark
-          @click="plattformManagementDialog = true"
-          v-if="getGroupId == 1"
-          > Plattform User Management
-        </v-btn>
-        <PlattformUserManagement  
-          @close-dialog="plattformManagementDialog = false" 
-          :dialog="plattformManagementDialog" 
-          v-if="plattformManagementDialog"
-        />
+        <v-toolbar-title class="mt-n3">Scrum Tool</v-toolbar-title>      
         <v-spacer></v-spacer>
         <SystemAlert/>
         <v-spacer></v-spacer>
@@ -59,7 +39,7 @@
         </v-btn>
         
       </v-row>
-      <v-row >
+      <v-row>
         <v-tabs v-if="this.$route.params.id !== undefined" background-color="transparent" slider-color="link"
         dark centered grow v-model="activeTab">
           <v-tab v-for="tab in tabs" :key="tab.id" :to="tab.route" exact>{{ tab.name }}</v-tab>     
@@ -70,26 +50,26 @@
 </template>
 
 <script>
-import PlattformUserManagement from "@/components/PlattformUserManagement.vue";
 import { mapGetters, mapActions, mapState } from "vuex";
 import SystemAlert from "@/components/SystemAlert.vue";
-import TheNavigation from "@/components/TheNavigation.vue";
+
 
 export default {
-  data: () => ({
-      navDrawer: false,
-      plattformManagementDialog: false,
-      groupId: 0,
-      activeTab: `/project/${this.$route.params.id}`,
-    }),
+  name: "TheSystemBar",
+  data() {
+    return {
+      activeTab: `/project/${this.$route.params.id}`
+    } 
+  },
   components: {
-    PlattformUserManagement,
-    SystemAlert, 
-    TheNavigation
+    SystemAlert
   },
   methods: {
     closeAlert() {
       this.$store.commit("hideSystemAlert");
+    },
+    showNavigation() {
+      this.$store.commit("showNavigation");
     },
 
     logout() {
@@ -100,23 +80,6 @@ export default {
     ...mapActions("session", {
       fetchSession: "fetchList"
     }),
-    fetchGroupId() {
-      this.groupId = -1;
-      this.fetchSession({
-        id: null,
-        customUrlFnArgs: { all: false }
-      })
-        .then(() => {
-          //get groupId
-          var session = Object.values(this.listSession)[0];
-          this.groupId = session.groups[0];
-        })
-        .catch(() => {
-          if (this.groupId <= 0) {
-            this.groupId = 0;
-          }
-        });
-    }
   },
 
   computed: {
@@ -125,16 +88,8 @@ export default {
     ...mapGetters("session", {
       listSession: "list"
     }),
-    ...mapGetters("group", {
-      groupById: "byId"
-    }),
     ...mapGetters({ userinfos: "getUserinfo" }),
-    getGroupId: function() {
-      if (this.groupId === 0) {
-        this.fetchGroupId();
-      }
-      return this.groupId;
-    },
+
 
     tabs(){
       return [
@@ -149,7 +104,6 @@ export default {
     }
   },
   mounted() {
-    this.listSession;
     
   },
   updated(){
