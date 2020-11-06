@@ -41,7 +41,7 @@
       </v-row>
       <v-row>
         <v-tabs v-if="this.$route.params.id !== undefined" background-color="transparent" slider-color="link"
-        dark centered grow v-model="activeTab">
+        dark centered grow show-arrows center-active v-model="activeTab">
           <v-tab v-for="tab in tabs" :key="tab.id" :to="tab.route" exact>{{ tab.name }}</v-tab>     
         </v-tabs>
       </v-row>

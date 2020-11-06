@@ -21,7 +21,7 @@
     <v-divider></v-divider>
 
     <v-list nav>
-      <v-list-item :to="{ name: 'Home' }" link >
+      <v-list-item @click="GoHome()" link >
         <v-list-item-icon>
           <v-icon>mdi-home</v-icon>
         </v-list-item-icon>
@@ -83,6 +83,9 @@ export default {
       this.$store.dispatch("logout").then(() => {
         this.$router.push("/login");
       });
+    },
+    GoHome(){
+      this.$router.push({ name: 'Home' })
     },
 
     ...mapActions("session", {
