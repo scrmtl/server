@@ -12,7 +12,14 @@
     </v-row>
     <v-row align="start" justify="center">
       <v-col cols="8">
-        <div v-for="project in orderedProjects(listProjects)" :key="project.id">
+        <div
+          v-for="project in orderedProjects(
+            listProjects,
+            this.groupId,
+            projectUsers(this.userId)
+          )"
+          :key="project.id"
+        >
           <ProjectCard v-bind:project="project" />
         </div>
       </v-col>
@@ -38,13 +45,17 @@ export default {
     calendar2menu: false,
     drawer: false,
     tab: null,
-    localProject: {}
+    localProject: {},
+    groupId: 0,
+    userId: {}
   }),
   components: {
     ProjectCard,
     MyTasksLane
   },
+
   beforeCreate() {},
+
   created() {
     this.loadData();
     Axios.interceptors.request.use(config => {
@@ -56,6 +67,8 @@ export default {
       }
       return config;
     });
+
+    this.fetchGroupId();
   },
 
   methods: {
@@ -104,20 +117,87 @@ export default {
       });
     },
 
-    orderedProjects(projects) {
+    orderedProjects(projects, groupId, projectUsers) {
+      //Wenn der User-Status 1 ist, dann ist der User Admin
+      if (groupId === 1) {
+        return this.orderProjects(projects);
+      }
+      //Bei -1 fetchen wir uns die ID nochmal... Kann vielleicht in Zukunft mal raus
+      else if (groupId === -1) {
+        this.fetchGroupId();
+        groupId = this.groupId;
+      } else {
+        //Filtert die Liste von Projekt_usern zu der einen User id (siehe HTML-Code)
+        //und packt dann die Projekte des Users in das Result array
+        var user_projects = [];
+        projectUsers.forEach(projectUser => {
+          projects.forEach(element => {
+            if (element.id === projectUser.project) {
+              user_projects.push(element);
+            }
+          });
+        });
+        return this.orderProjects(user_projects);
+      }
+    },
+
+    //Ordnet die Projekte nach dem Status (Ob Aktiv oder Archiv)
+    orderProjects(projects) {
       projects.sort(function(a, b) {
         var keyA = a.status;
         var keyB = b.status;
-        // Vergleiche ob AC oder AR 
+        // Vergleiche ob AC oder AR
         if (keyA < keyB) return -1;
         if (keyA > keyB) return 1;
         return 0;
       });
       return projects;
+    },
+
+    ...mapActions("session", {
+      fetchSession: "fetchList"
+    }),
+
+    fetchGroupId() {
+      this.groupId = -1;
+      this.userId = -1;
+      this.fetchSession({
+        id: null,
+        customUrlFnArgs: { all: false }
+      })
+        .then(() => {
+          //get groupId
+          var session = Object.values(this.listSession)[0];
+          this.groupId = session.groups[0];
+          this.userId = session.id;
+        })
+        .catch(() => {
+          if (this.groupId <= 0) {
+            this.groupId = 0;
+            this.userId = 0;
+          }
+        });
     }
   },
   computed: {
     ...mapGetters("project", { listProjects: "list" }),
+    ...mapGetters("session", {
+      listSession: "list"
+    }),
+    ...mapGetters("user", {
+      projectUsers: "byUserId"
+    }),
+
+    ...mapGetters("group", {
+      groupById: "byId"
+    }),
+    ...mapGetters({ userinfos: "getUserinfo" }),
+    getGroupId: function() {
+      if (this.groupId === 0) {
+        this.fetchGroupId();
+      }
+      return this.groupId;
+    },
 
     ...mapState({
       project: "detailProject"
