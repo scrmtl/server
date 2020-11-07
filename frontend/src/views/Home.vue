@@ -118,7 +118,6 @@ export default {
     },
 
     orderedProjects(projects, groupId, projectUsers) {
-      console.log(projectUsers);
       //Wenn der User-Status 1 ist, dann ist der User Admin
       if (groupId === 1) {
         return this.orderProjects(projects);
