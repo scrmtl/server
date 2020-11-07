@@ -86,7 +86,17 @@ class TaskViewSet(AutoPermissionViewSetMixin,
 
     def get_queryset(self):
         if 'lane_pk' not in self.kwargs:
-            return super().get_queryset()
+            queryset = super().get_queryset()
+            request = self.request
+            if "project" in request.query_params:
+                data = {
+                    "project__pk__exact": request.query_params.get('project')}
+                filterset = models.TaskCardFilterSet(
+                    queryset=queryset,
+                    request=self.request,
+                    data=data)
+                queryset = filterset.qs
+            return queryset
         else:
             return super().get_queryset().filter(lane=self.kwargs['lane_pk'])
     serializer_class = apiSerializers.TaskSerializer

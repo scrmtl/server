@@ -79,5 +79,5 @@ class LaneFilterSet(PropertyFilterSet):
         fields = ['name']
         model = Lane
         property_fields = [
-            ('project__id', PropertyNumberFilter, ['exact']),
+            ('project__pk', PropertyNumberFilter, ['exact']),
         ]

@@ -120,14 +120,15 @@ class TaskSerializerFull(serializers.ModelSerializer):
         queryset=PlatformUser.objects.all(), required=False, many=True)
     number_of_steps = serializers.SerializerMethodField()
     number_of_open_steps = serializers.SerializerMethodField()
-    history = HistoricalRecordField(read_only=True)
+    # history = HistoricalRecordField(read_only=True)
 
     class Meta:
         model = Task
         fields = CardSerializer.Meta.fields + \
             ('feature', 'assigned_users', 'labels', 'steplists',
              'number_of_steps', 'number_of_open_steps',
-             'history',)
+             # 'history',
+             )
 
     def get_number_of_steps(self, obj):
         steps = 0
@@ -348,15 +349,16 @@ class TaskSerializer(serializers.ModelSerializer):
         queryset=PlatformUser.objects.all(), required=False, many=True)
     number_of_steps = serializers.SerializerMethodField()
     number_of_open_steps = serializers.SerializerMethodField()
-    history = ChangesListSerializer(required=False,
-                                    read_only=True)
+    # history = ChangesListSerializer(required=False, read_only = True)
     project = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
-        fields = CardSerializer.Meta.fields + \
-            ('feature', 'assigned_users', 'labels', 'steplists',
-             'number_of_steps', 'number_of_open_steps', 'history', 'project')
+        fields = CardSerializer.Meta.fields + (
+            'feature', 'assigned_users', 'labels', 'steplists',
+            'number_of_steps', 'number_of_open_steps',
+            # 'history',
+            'project')
 
     def get_number_of_steps(self, obj):
         steps = 0

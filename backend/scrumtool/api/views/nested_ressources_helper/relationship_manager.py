@@ -11,7 +11,7 @@ from rest_framework.response import Response
 
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.core.exceptions import FieldError
 
 from api.models.lane import LaneFilterSet, Lane
@@ -105,7 +105,7 @@ class NestedMtmMixin(mixins.UpdateModelMixin, mixins.DestroyModelMixin):
 
 
 class NestedComponentViewSet(viewsets.GenericViewSet):
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         queryset = super().get_queryset()
         model = self.get_serializer().Meta.model
         filter_params: Q = None

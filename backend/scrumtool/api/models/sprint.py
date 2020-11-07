@@ -16,7 +16,6 @@ from api.rules_predicates import is_dev_in_project, \
 
 from api.models.model_interfaces import IGetProject
 from api.querysets import SprintQuerySet
-
 import api.models as customModels
 
 

@@ -24,14 +24,16 @@ class LaneViewSet(AutoPermissionViewSetMixin,
     queryset = models.Lane.objects.all()
 
     def get_queryset(self):
+        queryset = super().get_queryset()
         if 'board_pk' not in self.kwargs:
             request = self.request
-            filterset = models.LaneFilterSet(
-                queryset=super().get_queryset(),
-                request=self.request,
-                data=self.request.query_params.dict())
-            filterset.is_valid()
-            filterset.filter_queryset(super().get_queryset())
+            if "project" in self.request.query_params:
+                data = {
+                    "project__pk__exact": self.request.query_params.get('project')}
+                filterset = models.LaneFilterSet(
+                    queryset=queryset,
+                    request=self.request,
+                    data=data)
             queryset = filterset.qs
             return queryset
         else:
