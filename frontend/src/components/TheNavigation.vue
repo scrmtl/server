@@ -85,7 +85,9 @@ export default {
       });
     },
     GoHome(){
-      this.$router.push({ name: 'Home' })
+      if(this.$router.history.current.name !== "Home"){
+        this.$router.push({ name: 'Home' })
+      }
     },
 
     ...mapActions("session", {
