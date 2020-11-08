@@ -6,6 +6,7 @@
     temporary
     dark
     floating
+    color="tabbody"
   >
     <v-list-item>
       <v-list-item-content>
@@ -39,7 +40,7 @@
       </v-list-item>
       <v-list-item 
         link 
-        @click="plattformManagementDialog = true" 
+        @click="settingsDialog = true" 
         :disabled="getGroupId != 1"
         class="hidden-sm-and-down"
       >
@@ -50,10 +51,9 @@
           <v-list-item-title>Settings</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <PlattformUserManagement
-        @close-dialog="plattformManagementDialog = false" 
-        :dialog="plattformManagementDialog" 
-        v-if="plattformManagementDialog"
+      <Settings
+        @close-dialog="settingsDialog = false" 
+        :dialog="settingsDialog"
       />
     </v-list>
     <template v-slot:append>
@@ -68,15 +68,15 @@
 </template>
 
 <script>
-import PlattformUserManagement from "@/components/PlattformUserManagement.vue";
+import Settings from "@/components/settings/Settings.vue";
 import { mapGetters, mapActions, mapState } from "vuex";
 export default {
   data: () => ({
-    plattformManagementDialog: false,
+    settingsDialog: false,
     groupId: 0
   }),
   components: {
-    PlattformUserManagement
+    Settings
   },
   methods:{
     logout() {

@@ -1,0 +1,59 @@
+<template>
+  <v-row justify="center">
+    <v-dialog
+      v-model="dialog"
+      fullscreen
+      hide-overlay
+      scrollable
+      transition="dialog-bottom-transition"
+    >
+      <v-card>
+        <v-toolbar
+          dark
+          color="tabbody"
+        >
+          <v-btn
+            icon
+            dark
+            @click="close"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>Settings</v-toolbar-title>
+          <v-spacer></v-spacer>          
+        </v-toolbar>
+        
+        <!-- Setting components -->
+        <General/>
+        <v-divider></v-divider> 
+        <PlattformUserManagement/>
+        
+      </v-card>
+    </v-dialog>
+  </v-row>
+</template>
+
+<script>
+import PlattformUserManagement from "@/components/settings/PlattformUserManagement.vue";
+import General from "@/components/settings/General.vue";
+export default {
+  name: "Settings",
+  props: {
+    dialog: { type: Boolean, default: false },
+  },
+  components:{
+    PlattformUserManagement,
+    General
+  },
+  methods:{
+    close() {
+      this.$emit("close-dialog");
+    },
+  }
+}
+
+</script>
+
+<style lang="css">
+  @import "../../main.css";
+</style>

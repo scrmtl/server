@@ -1,11 +1,13 @@
 <template>
-  <v-dialog persistent scrollable v-model="dialog" max-width="1500">
-    <v-card color="tabbody" dark flat>
-      <v-card-title class="headline">Plattform user management</v-card-title>
-      <v-divider></v-divider>
-        <v-card-text>
-          
-        
+  <v-list
+    three-line
+    dark
+    subheader
+    color="tabbody"
+  >
+    <v-subheader>Plattform user management</v-subheader>
+    <v-list-item>
+      <v-list-item-content>               
         <v-data-table
           :headers="headers"
           :items="allUserInfo()"
@@ -22,7 +24,7 @@
           </template>
           <template v-slot:top>
             <v-toolbar flat color="tabbody">
-              <v-dialog v-model="createUser" persistent max-width="1200">
+              <v-dialog v-model="createUser" persistent >
                 <template v-slot:activator="{ on, attrs }">
                   <v-spacer></v-spacer>
                   <v-btn
@@ -117,25 +119,15 @@
             <v-btn color="link" @click="fetchAll">RESET</v-btn>
           </template>
         </v-data-table>
-      </v-card-text>
-      <v-divider></v-divider>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="link" class="mr-2" outlined small @click="close"
-          >CLOSE
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+      </v-list-item-content>
+    </v-list-item>
+  </v-list> 
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   name: "PlattformUserManagement",
-  props: {
-    dialog: { type: Boolean, default: false },
-  },
   created() {
     this.fetchAll();
   },
@@ -214,9 +206,6 @@ export default {
       setAll(this.editedItem, "");
       this.createUser = false;
     },
-    close() {
-      this.$emit("close-dialog");
-    },
     allUserInfo() {
       var data = [];
       var groupId;
@@ -255,6 +244,6 @@ export default {
 </script>
 
 <style lang="css">
-@import "../main.css";
+  @import "../../main.css";
 </style>
     
