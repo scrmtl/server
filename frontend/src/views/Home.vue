@@ -59,9 +59,11 @@ export default {
   created() {
     this.loadData();
     Axios.interceptors.request.use(config => {
+      console.log(config);
       if (
         (config.method === "post") | (config.method === "patch") &&
-        config.url[config.url.length - 1] !== "/"
+        config.url[config.url.length - 1] !== "/" &&
+        !config.url.includes("/?")
       ) {
         config.url += "/";
       }
