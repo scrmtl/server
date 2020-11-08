@@ -1,17 +1,17 @@
 /* eslint-disable */
 <template>
   <v-container fluid>
-    <v-row>
+    <v-row class="hidden-sm-and-down">
       <v-col cols="12">
         <div class="projectBtn my-2">
-          <v-btn text class="hidden-sm-and-down" color="link" large @click="showCreateProject()">
+          <v-btn text color="link" large @click="showCreateProject()">
             <v-icon class="mr-1">mdi-folder-plus</v-icon>Create Project
           </v-btn>
         </div>
       </v-col>
     </v-row>
     <v-row align="start" justify="center">
-      <v-col cols="8">
+      <v-col lg="8" md="7" sm="12">
         <div
           v-for="project in orderedProjects(
             listProjects,
@@ -23,7 +23,7 @@
           <ProjectCard v-bind:project="project" />
         </div>
       </v-col>
-      <v-col cols="4">
+      <v-col lg="4" md="5" class="hidden-sm-and-down">
         <MyTasksLane class="hidden-sm-and-down"/>
       </v-col>
     </v-row>
