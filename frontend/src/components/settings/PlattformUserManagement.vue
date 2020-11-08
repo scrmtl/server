@@ -142,7 +142,6 @@ export default {
       { text: "User name", value: "username" },
       { text: "E-Mail", value: "email" },
       { text: "Name", value: "name" },
-      { text: "Projects", value: "project" },
       { text: "Rights", value: "group", sortable: false }
     ],
     editedIndex: -1,
