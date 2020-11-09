@@ -280,18 +280,18 @@
     >
       <v-card color="tabbody" shaped>
         <v-card-text class="headline pt-10">
-          <span class="ml-12">Möchten Sie das Projekt wirklich löschen?</span>
+          <span class="ml-12">Do you want to remove the project?</span>
         </v-card-text>
         <v-card-actions class="ml-10 pb-10 pt-10">
           <v-btn width="250" outlined color="error" @click="deleteProject()"
-            >Ja</v-btn
+            >Yes</v-btn
           >
           <v-btn
             width="250"
             outlined
             color="primary"
             @click="deleteProjectDialog = false"
-            >Nein</v-btn
+            >No</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -461,7 +461,7 @@ export default {
     deleteProject() {
       this.deleteProjectDialog = false;
       this.destroyProject({
-        id: this.localProject.id + "/"
+        id: this.localProject.id
       });
       this.$store.commit("showSystemAlert", {
         message: "Delete Project " + this.localProject.name,

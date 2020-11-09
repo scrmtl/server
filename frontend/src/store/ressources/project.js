@@ -1,4 +1,4 @@
-import createCrudModule from 'vuex-crud';
+import createCrudModule from "vuex-crud";
 
 export default createCrudModule({
     resource: 'projects', // The name of your CRUD resource (mandatory)
