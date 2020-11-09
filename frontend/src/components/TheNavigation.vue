@@ -14,7 +14,7 @@
           Scrum Tool
         </v-list-item-title>
         <v-list-item-subtitle>
-          Dark, Easy, Cool
+          Dark, Cool, Easy
         </v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
