@@ -157,6 +157,7 @@
                       ></v-text-field>
                     </v-col>
                   </v-row>
+                </v-form>
                   <!-- Projectdiscription -->
                   <v-row align="center">
                     <v-col>
