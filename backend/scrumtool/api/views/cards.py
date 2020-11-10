@@ -56,10 +56,7 @@ class EpicViewSet(AutoPermissionViewSetMixin,
     queryset = models.Epic.objects.all()
 
     def get_queryset(self):
-        if 'lane' not in self.kwargs:
-            return super().get_queryset()
-        else:
-            return super().get_queryset().filter(lane=self.kwargs['lane'])
+        return super().get_queryset()
     serializer_class = apiSerializers.EpicSerializer
 
 
@@ -74,10 +71,7 @@ class FeatureViewSet(AutoPermissionViewSetMixin,
     queryset = models.Feature.objects.all()
 
     def get_queryset(self):
-        if 'lane' not in self.kwargs:
-            return super().get_queryset()
-        else:
-            return super().get_queryset().filter(lane=self.kwargs['lane'])
+        return super().get_queryset()
 
     serializer_class = apiSerializers.EpicSerializer
     serializer_class = apiSerializers.FeatureSerializer
@@ -95,20 +89,18 @@ class TaskViewSet(AutoPermissionViewSetMixin,
     queryset = models.Task.objects.all()
 
     def get_queryset(self):
-        if 'lane' not in self.kwargs:
-            queryset = super().get_queryset()
-            request = self.request
-            if "project" in request.query_params:
-                data = {
-                    "project__pk__exact": request.query_params.get('project')}
-                filterset = models.TaskCardFilterSet(
-                    queryset=queryset,
-                    request=self.request,
-                    data=data)
-                queryset = filterset.qs
-            return queryset
-        else:
-            return super().get_queryset().filter(lane=self.kwargs['lane'])
+        queryset = super().get_queryset()
+        request = self.request
+        if "project" in request.query_params:
+            data = {
+                "project__pk__exact": request.query_params.get('project')}
+            filterset = models.TaskCardFilterSet(
+                queryset=queryset,
+                request=self.request,
+                data=data)
+            queryset = filterset.qs
+        return queryset
+
     serializer_class = apiSerializers.TaskSerializer
 
     def retrieve(self, request: Request, *args, pk=None, **kwargs):
