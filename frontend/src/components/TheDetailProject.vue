@@ -170,6 +170,46 @@
                     ></v-textarea>
                   </v-col>
                 </v-row>
+                <!-- Definition of Ready -->
+                <v-row align="center">
+                  <v-col>
+                    <v-textarea
+                      label="Definition of Ready"
+                      prepend-icon="mdi-information-outline"
+                      outlined
+                      min-height="70"
+                      class="ma-1"
+                      v-model="localProject.dor"
+                    ></v-textarea>
+                  </v-col>
+                </v-row>
+                <!-- Definition of Done -->
+                <v-row align="center">
+                  <v-col>
+                    <v-textarea
+                      label="Definition of Done"
+                      prepend-icon="mdi-information-outline"
+                      outlined
+                      min-height="70"
+                      class="ma-0"
+                      v-model="localProject.dod"
+                    ></v-textarea>
+                  </v-col>
+                </v-row>
+                <!-- Template for creation -->
+                <v-row align="center" v-if="this.selectedProject.visableCreate">
+                  <v-col>
+                    <v-combobox
+                      :items="templateProjectItems"
+                      clearable
+                      placeholder="Start typing to Search"
+                      v-model="selectedProjectTemplate"
+                      item-text="name"
+                      item-value="id"
+                      label="Template Projects"
+                    ></v-combobox>
+                  </v-col>
+                </v-row>
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -187,6 +227,14 @@
                       v-model="this.projectNamedStatus"
                     ></v-select>
                   </v-col>
+                </v-row>
+                <!-- Project as template -->
+                <v-row>
+                  <v-checkbox
+                    input-value="false"
+                    label="Use this project as template"
+                    v-model="localProject.is_template"
+                  ></v-checkbox>
                 </v-row>
               </v-card-text>
             </v-card>
@@ -312,7 +360,7 @@ export default {
     userManagementDialog: false,
     isFormValid: null,
     templateProjectItems: [],
-    selectedProjectTemplate: { name: "Start typing here" },
+    selectedProjectTemplate: null,
     completedSprints: 0,
     projectNamedStatus: "New",
     localProject: {},
