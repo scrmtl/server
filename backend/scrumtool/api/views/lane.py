@@ -34,7 +34,7 @@ class LaneViewSet(AutoPermissionViewSetMixin,
                     queryset=queryset,
                     request=self.request,
                     data=data)
-            queryset = filterset.qs
+                queryset = filterset.qs
             return queryset
         else:
             return super().get_queryset().filter(
