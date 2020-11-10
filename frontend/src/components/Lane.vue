@@ -22,16 +22,11 @@
         </v-list>
       </v-menu>
     </v-card-title>
-        <v-card-text class="lane-body  flex-column" v-if="laneTasks" >
-
-            <v-row justify="center"  class="" v-for="task in laneTasks" :key="task.id">
-            
-              <Task v-bind:task="task" />
-            
-            </v-row>
-         
-          
-        </v-card-text>
+    <v-card-text class="lane-body  flex-column" v-if="laneTasks">
+      <v-row justify="center" class="" v-for="task in laneTasks" :key="task.id">
+        <Task v-bind:task="task" />
+      </v-row>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -40,14 +35,13 @@ import { mapActions, mapGetters } from "vuex";
 import Task from "@/components/Task.vue";
 export default {
   data: () => ({
-    items: [
-      { title: "+ New Task", action: "createEmptyTask" }
-    ],
+    items: [{ title: "+ New Task", action: "createEmptyTask" }],
     epicItem: [{ title: "+ New Feature" }, { title: "+ New Task" }],
     featureItem: [{ title: "+ New Task" }],
     laneTasks: [],
     laneEpics: [],
     laneFeature: [],
+    localLane: Object,
     createInProgress: false
   }),
   components: {
@@ -59,6 +53,9 @@ export default {
       fetchTask: "fetchList",
       fetchSingleTask: "fetchSingle",
       createTask: "create"
+    }),
+    ...mapActions("lane", {
+      fetchSingleLane: "fetchSingle"
     }),
     ...mapActions("feature", {
       fetchFeature: "fetchList",
@@ -72,7 +69,7 @@ export default {
       if (function_name === undefined) return;
       this[function_name]();
     },
-    fetchData(lane) {
+    fetchData(lane, isNewTaskCreate = false) {
       if (lane.id === undefined) return;
       this.laneTasks = this.tasksByIdArray(lane.task_cards);
       // this.fetchTask({ customUrlFnArgs: { laneId: lane.id } }).then(
@@ -80,14 +77,28 @@ export default {
       //     this.laneTasks = this.tasksByIdArray(lane.task_cards);
       //   }.bind(this)
       // );
-      this.fetchEpic({ customUrlFnArgs: { laneId: lane.id } }).then(
+      this.fetchSingleLane({ id: lane.id, customUrlFnArgs: {} }).then(
         function() {
-          this.laneEpics = this.epicsByIdArray(lane.epic_cards);
-        }.bind(this)
-      );
-      this.fetchFeature({ customUrlFnArgs: { laneId: lane.id } }).then(
-        function() {
-          this.laneFeature = this.featuresByIdArray(lane.feature_cards);
+          this.localLane = this.laneById(this.localLane.id);
+          this.fetchEpic({
+            customUrlFnArgs: { laneId: this.localLane.id }
+          }).then(
+            function() {
+              this.laneEpics = this.epicsByIdArray(this.localLane.epic_cards);
+            }.bind(this)
+          );
+          this.fetchFeature({
+            customUrlFnArgs: { laneId: this.localLane.id }
+          }).then(
+            function() {
+              this.laneFeature = this.featuresByIdArray(
+                this.localLane.feature_cards
+              );
+              if (isNewTaskCreate) {
+                this.createTaskHelper(this.localLane.id);
+              }
+            }.bind(this)
+          );
         }.bind(this)
       );
     },
@@ -96,7 +107,7 @@ export default {
     },
     helperFunctionGetFeatureId() {
       //If no Epics then create one
-      if (this.lane.id === undefined) return;
+      if (this.localLane.id === undefined) return;
       if (this.laneEpics.length <= 0) {
         this.createInProgress = true;
         this.createEpic({
@@ -106,7 +117,7 @@ export default {
             description: "",
             numbering: 0,
             status: "NS",
-            lane: this.lane.id
+            lane: this.localLane.id
           }
         }).then(
           function(value) {
@@ -117,12 +128,12 @@ export default {
                 description: "",
                 numbering: 0,
                 status: "NS",
-                lane: this.lane.id,
+                lane: this.localLane.id,
                 epic: value.data.id
               }
             }).then(
               function() {
-                this.fetchData(this.lane);
+                this.fetchData(this.localLane, true);
               }.bind(this)
             );
           }.bind(this)
@@ -136,16 +147,16 @@ export default {
             description: "",
             numbering: 0,
             status: "NS",
-            lane: this.lane.id,
+            lane: this.localLane.id,
             epic: this.laneEpics[0].id
           }
         }).then(
           function() {
-            this.fetchData(this.lane);
+            this.fetchData(this.localLane);
           }.bind(this)
         );
       } else {
-        this.createTaskHelper(this.lane.id);
+        this.createTaskHelper(this.localLane.id);
       }
     },
     createTaskHelper(laneId) {
@@ -192,6 +203,7 @@ export default {
     lane(currentLane, prevLane) {
       if ((currentLane === undefined) | (prevLane.id === currentLane.id))
         return;
+      this.localLane = currentLane;
       this.fetchData(currentLane);
     },
     laneFeature(currentLane, prevLane) {
@@ -212,11 +224,15 @@ export default {
     ...mapGetters("epic", {
       epicsById: "byId",
       epicsByIdArray: "byIdArray"
+    }),
+    ...mapGetters("lane", {
+      laneById: "byId"
     })
   },
   updated() {},
   created() {
     this.fetchData(this.lane);
+    this.localLane = this.lane;
   }
 };
 </script>

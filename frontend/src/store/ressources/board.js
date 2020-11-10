@@ -37,8 +37,10 @@ export default createCrudModule({
          * @return {Object} selected Board
          */
         byType(state) {
-            return type => {
-                return Object.values(state.entities).find(x => x.board_type === type);
+            return (type, projectId) => {
+                return Object.values(state.entities).find(x => (
+                    x.board_type === type &&
+                    x.project === projectId));
             }
         },
 

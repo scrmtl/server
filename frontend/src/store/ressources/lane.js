@@ -19,12 +19,12 @@ export default createCrudModule({
    * @param {number} projectId If set all lanes in that project are returned 
    * @return {string} Url defined by the arguments
    */
-  customUrlFn(id, type, projectId) {
+  customUrlFn(id, type, { projectId }) {
 
     // id will only be available when doing request to single resource, otherwise null
     // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
     var rootUrl = '/api/lanes';
-    if (projectId != null) {
+    if (projectId != undefined) {
       rootUrl = `/api/lanes/?project=${projectId}`
     }
     rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
