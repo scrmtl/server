@@ -26,7 +26,7 @@ export default createCrudModule({
         if (!(templateId === undefined)) {
             rootUrl = rootUrl + `?template=${templateId}`;
         }
-        rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
+        rootUrl = id ? `${rootUrl}${id}/` : rootUrl;
         return rootUrl;
     },
     getters: {
