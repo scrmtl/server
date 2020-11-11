@@ -22,11 +22,11 @@ export default createCrudModule({
 
         // id will only be available when doing request to single resource, otherwise null
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
-        var rootUrl = '/api/projects/';
+        var rootUrl = '/api/projects';
         if (!(templateId === undefined)) {
-            rootUrl = rootUrl + `?template=${templateId}`;
+            rootUrl = '/api/projects/?template=${templateId}';
         }
-        rootUrl = id ? `${rootUrl}${id}/` : rootUrl;
+        rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
         return rootUrl;
     },
     getters: {

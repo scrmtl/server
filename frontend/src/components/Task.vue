@@ -7,6 +7,8 @@
         max-width="350"
         :elevation="hover ? 14 : 5"
         @click="showTaskDetail()"
+        draggable
+        @dragstart="pickupTask($event, task.id, task.name, task.feature, task.numbering, task.lane)"
       >
         <v-card-title>
           <span class="tabbody--text">{{ task.name }}</span>
@@ -190,6 +192,15 @@ export default {
       var user = this.UsersById(id);
       inital = user.username.substring(0, 2);
       return inital;
+    },
+    pickupTask(e, taskId, taskName, taskFeatureId, taskNumbering, fromLane){
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.dropEffect = "move";
+      e.dataTransfer.setData("task-id", taskId);
+      e.dataTransfer.setData("task-name", taskName);
+      e.dataTransfer.setData("task-feature-id", taskFeatureId);
+      e.dataTransfer.setData("task-numbering", taskNumbering);
+      e.dataTransfer.setData("from-lane", fromLane);
     }
   },
   computed: {

@@ -1,50 +1,37 @@
 <template>
   <v-row>
     <v-col dense v-for="lane in neededPlanningLanes" :key="lane.numbering">
-      <Lane v-bind:lane="lane"></Lane>
+      <Lane v-bind:lane="lane" planningMode></Lane>
     </v-col>
     <v-col>
 
     </v-col>
     <v-col>
-      <v-card min-width="385" max-width="420">
-        <v-card-title class="navbar white--text"> {{ selectedSprintName }}</v-card-title>
-        <v-card-text class="lane-body  flex-column" v-if="sprintLaneTask" >
-          <v-row justify="center"  class="" v-for="task in sprintLaneTask" :key="task.id">
-            <Task v-bind:task="task" />
-          </v-row>
-        </v-card-text>
-      </v-card>
+      <SprintLane />
     </v-col>
     <v-col>
-      
       <v-timeline>
-        <v-timeline-item
-          small
-          fill-dot
-          color="tabbody"
-        >
-          <template v-slot:icon>
-            <v-btn fab small icon color="link" >
-              <v-icon>mdi-plus-circle-outline</v-icon>
-            </v-btn>
-          </template>
-        </v-timeline-item>
-        
         <v-timeline-item
           v-for="sprint in listSprints" :key="sprint.number"
           small
           fill-dot
-          
         >
           <template v-slot:icon>
-            <v-btn fab small color="link" class="white--text" >{{sprint.number}}</v-btn>
-            
+            <v-btn 
+              fab
+              small 
+              color="link"
+              class="white--text"
+              @click="showSprint(sprint)"
+            >
+              {{sprint.number}}
+            </v-btn>
           </template>
-
         </v-timeline-item>
-
       </v-timeline>
+    </v-col>
+    <v-col>
+
     </v-col>
   </v-row>
 </template>
@@ -52,15 +39,16 @@
 <script>
 import { mapGetters } from 'vuex';
 import Lane from "@/components/Lane.vue";
+import SprintLane from "@/components/SprintLane.vue";
 export default {
-  data: () => ({
-    selectedSprintName: "No sprint selected"
-  }),
   components: {
-    Lane
+    Lane,
+    SprintLane
   },
   methods:{
-    
+    showSprint(sprint) {
+      this.$store.commit("setSelectedSprintDetail", sprint);
+    },
 
   },
   computed:{
@@ -85,9 +73,7 @@ export default {
       return lanes;
     },
 
-    sprintLaneTask(){
-      return [];
-    }
+    
 
     
 
@@ -96,5 +82,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import "../main.css";
+  @import "../main.css";
 </style>
