@@ -77,24 +77,9 @@ export default {
       // - task from PB Lane to Sprint Lane (change Status and Sprint)
       // How?
       console.log(taskId)
-      this.updateTask({
-        id: taskId,
-        data: {
-          
-          name: taskName,
-          feature: taskFeatureId,
-          sprint: this.selectedSprint.number,
-          status: "PL"
-        },
-        customUrlFnArgs: {}
-      })
-      .then(() => {
-        // TODO Update Sprint
-      })
-      .catch((error) => {
-        console.log(error)
-        // TODO Error Handling
-      })
+      console.log(taskName)
+      console.log(taskFeatureId)
+      // TODO
     }
 
   },
@@ -105,17 +90,23 @@ export default {
       tasksByIdArray: "byIdArray"
     }),
     sprintLaneTask(){
-      return this.tasksByIdArray(this.selectedSprint.task_cards);
+      if(this.selectedSprint.task_cards === undefined){
+        return []
+      }
+      else{
+        return this.tasksByIdArray(this.selectedSprint.task_cards);
+      }
     },
 
 
   },
   watch:{
-    sprintDetails(newSprint){
-      console.log(newSprint)
-      this.selectedSprint = newSprint;
-      this.selectedSprintName = "Sprint " + newSprint.number;
-      this.selectedSprintDateInfo = "(" + newSprint.start + " to " + newSprint.end + ")";
+    sprintDetails(currentSprint, prevSprint){
+      if(currentSprint.id !== prevSprint.id){
+        this.selectedSprint = currentSprint;
+        this.selectedSprintName = "Sprint " + currentSprint.number;
+        this.selectedSprintDateInfo = "(" + currentSprint.start + " to " + currentSprint.end + ")";
+      }
     }
   }
 

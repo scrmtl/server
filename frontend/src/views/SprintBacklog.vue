@@ -32,7 +32,13 @@ export default {
       boardByType: "byType"
     }),
     listBoardLanes(){
-      return this.lanesByIdArray(this.boardByType("SP").lanes);
+      var board = this.boardByType("SP", this.$route.params.id);
+      if( board !== undefined){
+        return this.lanesByIdArray(board.lanes);
+      }
+      else{
+        return [];
+      }
     }
   },
   updated(){

@@ -34,13 +34,14 @@ export default createCrudModule({
     getters: {
         /** @description Add Custom getter 
          * @param {string} type Board Type (PB, SP, AB) 
+         * @param {string} projectId project Id  
          * @return {Object} selected Board
          */
         byType(state) {
             return (type, projectId) => {
                 return Object.values(state.entities).find(x => (
                     x.board_type === type &&
-                    x.project === projectId));
+                    x.project == projectId));
             }
         },
 

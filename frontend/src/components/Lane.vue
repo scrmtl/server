@@ -35,11 +35,6 @@
             <Task v-bind:task="task" />
           </v-row>        
         </v-card-text>
-    <v-card-text class="lane-body  flex-column" v-if="laneTasks">
-      <v-row justify="center" class="" v-for="task in laneTasks" :key="task.id">
-        <Task v-bind:task="task" />
-      </v-row>
-    </v-card-text>
   </v-card>
 </template>
 
@@ -92,11 +87,6 @@ export default {
     fetchData(lane, isNewTaskCreate = false) {
       if (lane.id === undefined) return;
       this.laneTasks = this.tasksByIdArray(lane.task_cards);
-      // this.fetchTask({ customUrlFnArgs: { laneId: lane.id } }).then(
-      //   function() {
-      //     this.laneTasks = this.tasksByIdArray(lane.task_cards);
-      //   }.bind(this)
-      // );
       this.fetchSingleLane({ id: lane.id, customUrlFnArgs: {} }).then(
         function() {
           this.localLane = this.laneById(this.localLane.id);
@@ -186,35 +176,6 @@ export default {
         feature: this.laneFeature[0].id
       };
       this.$store.commit("setSelectedTaskDetail", task);
-      /*
-      this.createTask({
-        data: {
-          name: "myTaskCard",
-          description: "",
-          numbering: 1,
-          storypoints: 0,
-          lane: laneId,
-          feature: this.laneFeature[0].id
-        },
-        customUrlFnArgs: {}
-      }).then(
-        function(value) {
-          if (!(value.data.id === undefined)) {
-            this.fetchSingleTask({
-              id: value.data.id,
-              customUrlFnArgs: {}
-            }).then(
-              function(value) {
-                if (!(value.data.id === undefined)) {
-                  this.laneTasks.push(this.tasksById(value.data.id));
-                }
-              }.bind(this)
-            );
-          }
-        }.bind(this)
-      );
-      
-      */
       this.createInProgress = false;
     },
     moveTask(e){
@@ -222,32 +183,14 @@ export default {
       const taskId = e.dataTransfer.getData("task-id");
       const taskName = e.dataTransfer.getData("task-name");
       const taskFeatureId = e.dataTransfer.getData("task-feature-id");
-      const fromLane = e.dataTransfer.getData("from-lane")
-      const taskNumbering = e.dataTransfer.getData("task-numbering")
+      const fromLane = e.dataTransfer.getData("from-lane");
+      const taskNumbering = e.dataTransfer.getData("task-numbering");
+      // TODO
       console.log(taskId)
-      this.updateTask({
-        id: taskId,
-        data: {
-          lane: this.lane.id,
-          name: taskName,
-          feature: taskFeatureId,
-          numbering: taskNumbering
-        },
-        customUrlFnArgs: {}
-      })
-      .then(() => {
-        this.fetchSingleLane({id: fromLane})
-        // TODO Update FromLane
-        this.fetchSingleLane({id: this.lane.id}).then(() => {
-          this.laneTasks = this.tasksByIdArray(this.lane.task_cards);
-        })
-      })
-      .catch((error) => {
-        console.log(error)
-        // if(error.response.data.non_field_errors.length > 0){
-        //   this.$store.commit("showSystemAlert", {message: error.response.data.non_field_errors[error.response.data.non_field_errors.length - 1], category: "error"});
-        // }
-      })
+      console.log(taskName)
+      console.log(taskFeatureId)
+      console.log(fromLane)
+      console.log(taskNumbering)
     }    
   },
 
