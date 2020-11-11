@@ -222,9 +222,8 @@
                     <v-select
                       :items="['Active', 'Archived']"
                       label="Status"
-                      :readonly="this.selectedProject.visableCreate"
                       prepend-icon="mdi-circle-edit-outline"
-                      v-model="this.projectNamedStatus"
+                      v-model="projectNamedStatus"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -362,7 +361,7 @@ export default {
     templateProjectItems: [],
     selectedProjectTemplate: null,
     completedSprints: 0,
-    projectNamedStatus: "New",
+    projectNamedStatus: "Active",
     localProject: {},
     rules: {
       required: value => !!value || "Required",
@@ -438,8 +437,6 @@ export default {
     },
 
     addProject() {
-      var myTemplate = this.selectedProjectTemplate;
-      console.log("myTemplate = " + myTemplate);
       this.createProject({
         data: {
           name: this.localProject.name,
@@ -453,7 +450,7 @@ export default {
           project_users: this.localProject.project_users,
           is_template: this.localProject.is_template
         },
-        customUrlFnArgs: { templateId: myTemplate.id }
+        customUrlFnArgs: { templateId: this.selectedProjectTemplate.id }
       });
       this.$store.commit("hideProjectDetail");
       this.$store.commit("showSystemAlert", {
@@ -491,7 +488,7 @@ export default {
 
     saveProject() {
       this.updateProject({
-        id: this.localProject.id + "/",
+        id: this.localProject.id,
         data: {
           id: this.localProject.id,
           name: this.localProject.name,
@@ -499,8 +496,10 @@ export default {
           status: this.GetProjectStatus(this.projectNamedStatus),
           dor: this.localProject.dor,
           dod: this.localProject.dod,
+          project_users: this.localProject.project_users,
           is_template: this.localProject.is_template
-        }
+        },
+        customUrlFnArgs: {}
       });
     },
 
@@ -570,23 +569,16 @@ export default {
       if (val === prev) return;
       var test = this.listTemplateProjects();
       this.templateProjectItems = test;
+      this.localProject = this.selectedProject.details;
+      this.projectNamedStatus = this.GetProjectNamedStatus(
+        this.localProject.status
+      );
     }
   },
 
   created() {
     this.fetchProjectUser();
     this.fetchProjectRoles();
-    this.localProject = this.selectedProject.details;
-    this.projectNamedStatus = this.GetProjectNamedStatus(
-      this.localProject.status
-    );
-  },
-
-  updated() {
-    this.localProject = this.selectedProject.details;
-    this.projectNamedStatus = this.GetProjectNamedStatus(
-      this.localProject.status
-    );
   }
 };
 </script>
