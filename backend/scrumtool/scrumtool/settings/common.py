@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     'rules.apps.AutodiscoverRulesConfig',
     'api',
     'simple_history',
+    'django_filters',
+    'django_property_filter',
 
 ]
 

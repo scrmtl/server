@@ -79,7 +79,9 @@ class ProjectViewSet(AutoPermissionViewSetMixin,
             new_project = models.Project.objects.get(pk=new_project_pk)
             new_project_serializer = serializers.ProjectSerializer(
                 new_project, data=request.data, partial=True)
-            new_project_serializer.is_valid()
+            if(new_project_serializer.is_valid()):
+                new_project_serializer.save()
+
             return Response(new_project_serializer.data)
         return super().create(request, *args, **kwargs)
 

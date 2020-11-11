@@ -27,7 +27,7 @@ export default createCrudModule({
         if (laneId) {
             rootUrl = `/api/tasks/?lane=${laneId}`;
         } else if (projectId) {
-            rootUrl = `/api/tasks/?projects=${projectId}`;
+            rootUrl = `/api/tasks/?project=${projectId}`;
         } else if (byUser) {
             rootUrl = `/api/tasks/?byUser=${byUser}`;
         }

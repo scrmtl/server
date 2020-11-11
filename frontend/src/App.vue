@@ -2,6 +2,7 @@
 <template>
   <v-app>
     <SystemBar v-if="this.$store.getters.isLoggedIn" />
+    <TheNavigation/>
     <DetailProject v-if="this.$store.getters.isLoggedIn" />
     <DetailTask v-if="this.$store.getters.isLoggedIn" />
     <!-- v-main is necessary. Do not use v-content -->
@@ -20,6 +21,7 @@
 import SystemBar from "@/components/TheSystemBar.vue";
 import DetailProject from "@/components/TheDetailProject.vue";
 import DetailTask from "@/components/TheDetailTask.vue";
+import TheNavigation from "@/components/TheNavigation.vue";
 import Axios from "axios";
 export default {
   name: "App",
@@ -29,7 +31,8 @@ export default {
   components: {
     SystemBar,
     DetailProject,
-    DetailTask,
+    DetailTask, 
+    TheNavigation
   },
 
   methods: {
@@ -54,6 +57,18 @@ export default {
       //   throw err;
       // });
       return response;
+    });
+
+    Axios.interceptors.request.use(config => {
+      // console.log(config);
+      if (
+        (config.method === "post") | (config.method === "patch") &&
+        config.url[config.url.length - 1] !== "/" &&
+        !config.url.includes("/?")
+      ) {
+        config.url += "/";
+      }
+      return config;
     });
   }
 };

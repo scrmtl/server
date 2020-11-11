@@ -38,6 +38,7 @@ class ProjectSerializer(serializers.ModelSerializer):
                   'dod',
                   'numOfSprints',
                   'boards',
+                  'is_template',
                   )
         read_only_fields = ('numOfSprints',)
 
@@ -72,6 +73,16 @@ class ProjectSerializerFull(serializers.ModelSerializer):
                   'boards',
                   )
         read_only_fields = ('numOfSprints',)
+
+
+class ProjectSerializerOnlyId(serializers.ModelSerializer):
+    """Serializer for Projects.
+    """
+    class Meta:
+        model = Project
+        fields = ('id',
+                  )
+        read_only_fields = ('id',)
 
 
 def date_validator(data):

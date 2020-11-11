@@ -52,9 +52,6 @@ export default {
     return {
       valueCard: "50/100",
       valueDetail: "30/100",
-      ex11: true,
-      drawer: null,
-      tab: null,
     };
   },
   
