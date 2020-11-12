@@ -71,15 +71,24 @@ export default {
       const taskId = e.dataTransfer.getData("task-id");
       const taskName = e.dataTransfer.getData("task-name");
       const taskFeatureId = e.dataTransfer.getData("task-feature-id");
+      const fromLane = e.dataTransfer.getData("from-lane");
+      const taskNumbering = e.dataTransfer.getData("task-numbering");
+      const taskSprintNumber = e.dataTransfer.getData("task-sprint-number");
       // TODO Set Sprint number with selected Sprint
       // TODO Detect, if 
-      // - task from Sprint Lane to PB Lane (change Status and Sprint)
       // - task from PB Lane to Sprint Lane (change Status and Sprint)
-      // How?
       console.log(taskId)
       console.log(taskName)
       console.log(taskFeatureId)
       // TODO
+      if(taskSprint !== this.selectedSprint.number){
+        // set sprint
+        // change status
+
+        // Accept changes (sprint and cards)
+        // Update
+
+      }
     }
 
   },

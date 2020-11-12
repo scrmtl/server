@@ -86,7 +86,17 @@ export default {
     },
     fetchData(lane, isNewTaskCreate = false) {
       if (lane.id === undefined) return;
-      this.laneTasks = this.tasksByIdArray(lane.task_cards);
+      // Lane in Planning Mode
+      if(planningMode){
+        // Filter cards in lane, if lane in planning mode
+        // Show cards, they not planned in Sprint
+        this.laneTasks = this.tasksByIdArray(lane.task_cards).filter(card => card.sprint === null)
+      }
+      else{
+        // Show all cards in lane
+        this.laneTasks = this.tasksByIdArray(lane.task_cards);
+      }
+      
       this.fetchSingleLane({ id: lane.id, customUrlFnArgs: {} }).then(
         function() {
           this.localLane = this.laneById(this.localLane.id);
@@ -185,12 +195,32 @@ export default {
       const taskFeatureId = e.dataTransfer.getData("task-feature-id");
       const fromLane = e.dataTransfer.getData("from-lane");
       const taskNumbering = e.dataTransfer.getData("task-numbering");
+      const taskSprintNumber = e.dataTransfer.getData("task-sprint-number");
       // TODO
       console.log(taskId)
       console.log(taskName)
       console.log(taskFeatureId)
       console.log(fromLane)
       console.log(taskNumbering)
+      // In planning mode
+      if(planningMode && taskSprintNumber !== null){
+        // task from Sprint Lane to PB Lane (change Status and Sprint)
+        // delete sprint in card (null)
+        // change lane
+        // change status
+
+        // Accept changes
+        // Update (Sprint & Lane & Task )
+      }
+      else{
+        // change lane
+
+        // change status (in certainly lanes)
+
+        // Accept changes
+        // Update
+      }
+
     }    
   },
 
