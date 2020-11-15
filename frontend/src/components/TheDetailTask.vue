@@ -275,6 +275,9 @@ export default {
       updateTask: "update",
       deleteTask: "destroy"
     }),
+    ...mapActions("lane", {
+      fetchSingleLane: "fetchSingle",
+    }),
     ...mapActions("user", {
       fetchPlattformUsers: "fetchList"
     }),
@@ -312,11 +315,16 @@ export default {
             this.fetchSingleTask({
               id: value.data.id,
               customUrlFnArgs: {}
-            });
+            })
+            this.fetchSingleLane({
+              id: this.localTask.lane, 
+              customUrlFnArgs: {}
+            }) 
           }
+          this.close();
         }.bind(this)
       );
-      this.close();
+      
     },
 
     saveTask() {
