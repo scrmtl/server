@@ -408,6 +408,7 @@ export default {
     },
 
     addProjectUser(projectUserId) {
+      console.log(projectUserId)
       this.createProjectUser({
         data: {
           plattform_user: projectUserId,
@@ -417,13 +418,17 @@ export default {
         }
       })
         .then(value => {
-          this.fetchSingleProject({ id: this.localProject.id }).then(res => {
+          console.log(value)
+          this.fetchSingleProject({ id: this.localProject.id,
+              customUrlFnArgs: {} }).then(res => {
+            console.log(res)
             this.$store.commit("setSelectedProjectDetail", res.data);
             this.localProject = this.selectedProject.details;
-          });
+          })
           return value;
         })
         .catch(error => {
+          console.log(error)
           if (error.response.data.non_field_errors.length > 0) {
             this.$store.commit("showSystemAlert", {
               message:
@@ -518,7 +523,7 @@ export default {
 
     deleteProjectUser(projectUserId) {
       this.destroyProjectUser({ id: projectUserId }).then(() => {
-        this.fetchSingleProject({ id: this.localProject.id }).then(res => {
+        this.fetchSingleProject({ id: this.localProject.id, customUrlFnArgs: {} }).then(res => {
           this.$store.commit("setSelectedProjectDetail", res.data);
           this.localProject = this.selectedProject.details;
         });

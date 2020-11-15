@@ -18,7 +18,7 @@ export default createCrudModule({
      * @param {number} projectId If set all boards in that project are returned 
      * @return {string} Url defined by the arguments
      */
-    customUrlFn(id, type, projectId) {
+    customUrlFn(id, type, {projectId}) {
         // id will only be available when doing request to single resource, otherwise null
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
         var rootUrl = '/api/boards';
@@ -34,13 +34,14 @@ export default createCrudModule({
     getters: {
         /** @description Add Custom getter 
          * @param {string} type Board Type (PB, SP, AB) 
+         * @param {string} projectId project Id  
          * @return {Object} selected Board
          */
         byType(state) {
             return (type, projectId) => {
                 return Object.values(state.entities).find(x => (
                     x.board_type === type &&
-                    x.project === projectId));
+                    x.project == projectId));
             }
         },
 

@@ -1,7 +1,7 @@
 <template>
   <v-row no-gutters>
     <v-col dense class="d-flex flex-nowrap overflow-x-auto">
-      <div class="ma-4" v-for="lane in boardLanes" :key="lane.numbering">
+      <div class="ma-4" v-for="lane in listBoardLanes" :key="lane.numbering">
         <Lane v-bind:lane="lane"></Lane>
       </div>
     </v-col>
@@ -13,17 +13,13 @@ import { mapGetters } from "vuex";
 import Lane from "@/components/Lane.vue";
 export default {
   data: () => ({
-    boardLanes: Array
+    // boardLanes: Array
   }),
   components: {
     Lane
   },
   methods: {
-    listBoardLanes() {
-      let projectId = this.listBoards.shift().project;
-      console.log(projectId);
-      return this.lanesByIdArray(this.boardByType("PB", projectId).lanes);
-    }
+
   },
   computed: {
     ...mapGetters("lane", {
@@ -33,12 +29,18 @@ export default {
     ...mapGetters("board", {
       listBoards: "list",
       boardByType: "byType"
-    })
+    }),
+    listBoardLanes(){
+      var board = this.boardByType("PB", this.$route.params.id);
+      if( board !== undefined){
+        return this.lanesByIdArray(board.lanes);
+      }
+      else{
+        return [];
+      }
+    }
   },
-  mounted() {
-    let projectId = this.listBoards.shift().project;
-    let laneIds = this.boardByType("PB", projectId).lanes;
-    this.boardLanes = this.lanesByIdArray(laneIds);
+  mounted() {  
   }
 };
 </script>

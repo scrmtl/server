@@ -43,10 +43,10 @@ export default {
     }),
 
     fetchData() {
-      this.fetchBoards({ customUrlFnArgs: this.id });
+      this.fetchBoards({ customUrlFnArgs: { projectId: this.id } });
       this.fetchLanes({ customUrlFnArgs: { projectId: this.id } });
       this.fetchTasks({ customUrlFnArgs: { projectId: this.id } });
-      this.fetchSprints({ customUrlFnArgs: this.id });
+      this.fetchSprints({ customUrlFnArgs: { projectId: this.id } });
     }
   },
   computed: {
