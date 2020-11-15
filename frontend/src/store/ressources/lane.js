@@ -37,10 +37,10 @@ export default createCrudModule({
      * @return {Array} Array of lane with the given name
      */
     byName(state) {
-      return laneName => {
+      return (laneName) => {
         var lanes = null;
         if (state.entities !== undefined) {
-          lanes = Object.values(state.entities).filter(lane => lane.name === laneName);
+          lanes = state.list.map(id => state.entities[id.toString()]).filter(lane => lane.name === laneName);
         }
         return lanes;
       }
