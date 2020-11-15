@@ -13,14 +13,24 @@
         </template>
         <v-list>
           <v-list-item 
-            v-for="(menuItem, i) in menu" :key="i" 
-            @click="menuItem.action"
+            @click="createSprint()"
           >
           <v-list-item-icon>
-            <v-icon v-text="menuItem.icon"></v-icon>
+            <v-icon>mdi-plus-circle-outline</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title v-text="menuItem.text"></v-list-item-title>
+            <v-list-item-title>Create new sprint</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item 
+            @click="showSprintDetails()"
+            :disabled="selectedSprintName==='No sprint selected'"
+          >
+          <v-list-item-icon>
+            <v-icon>mdi-information-outline</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Sprint details</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         </v-list>
@@ -44,22 +54,28 @@
 
 <script>
 import Task from "@/components/Task.vue";
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 export default {
   data: () => ({
     selectedSprintName: "No sprint selected",
     selectedSprintDateInfo: "",
     selectedSprint: {},
     item: 1,
-    menu: [
-      { text: "Create new sprint", icon: 'mdi-plus-circle-outline', action: "createSprint" },
-      { text: "Sprint details", icon: 'mdi-information-outline', action: "showSprintDetails" },
-    ],
   }),
   components: {
     Task
   },
   methods:{
+    ...mapActions("task", {
+      fetchSingleTask: "fetchSingle",
+      updateTask: "update",
+    }),
+    ...mapActions("lane", {
+      fetchSingleLane: "fetchSingle"
+    }),
+    ...mapActions("sprint", {
+      fetchSingleSprint: "fetchSingle"
+    }),
     createSprint(){
       console.log("Create Sprint")
     },
@@ -67,25 +83,52 @@ export default {
       console.log("show Sprint detail")
     },
     moveTask(e){
-      console.log(e)
       const taskId = e.dataTransfer.getData("task-id");
       const taskName = e.dataTransfer.getData("task-name");
       const taskFeatureId = e.dataTransfer.getData("task-feature-id");
-      // TODO Set Sprint number with selected Sprint
-      // TODO Detect, if 
-      // - task from Sprint Lane to PB Lane (change Status and Sprint)
-      // - task from PB Lane to Sprint Lane (change Status and Sprint)
-      // How?
-      console.log(taskId)
-      console.log(taskName)
-      console.log(taskFeatureId)
-      // TODO
+      const fromLane = e.dataTransfer.getData("from-lane");
+      // const taskNumbering = e.dataTransfer.getData("task-numbering");
+      const taskSprintId = e.dataTransfer.getData("task-sprint-id");
+      // task from PB Lane to Sprint Lane (change Status and Sprint)
+      if(this.selectedSprint.id !== undefined && taskSprintId !== this.selectedSprint.id){
+        // set sprint
+        // change status
+        this.updateTask({
+          id: taskId,
+          data: {
+            name: taskName,
+            feature: taskFeatureId,
+            lane: fromLane,
+            status: "PL",
+            sprint: this.selectedSprint.id
+          },
+          customUrlFnArgs: {}
+        })
+        .then(()=> {
+          // Update From
+          this.fetchSingleLane({id: fromLane, customUrlFnArgs: {}})
+          // Update Task
+          this.fetchSingleTask({id: taskId, customUrlFnArgs: {}})
+          // Update Sprint
+          if(this.selectedSprint.id != null){
+            this.fetchSingleSprint({id: this.selectedSprint.id, customUrlFnArgs: {}})
+            .then(()=>{
+              this.$store.commit("setSelectedSprintDetail", this.sprintById(this.selectedSprint.id));
+            })
+          }
+          
+        })
+      }
     }
 
   },
   computed:{
     ...mapGetters(
       {sprintDetails: "getSprintDetails"}),
+    ...mapGetters("sprint", {
+      sprintById: "byId",
+      listSprint: "list"
+    }),
     ...mapGetters("task", {
       tasksByIdArray: "byIdArray"
     }),
@@ -101,13 +144,14 @@ export default {
 
   },
   watch:{
-    sprintDetails(currentSprint, prevSprint){
-      if(currentSprint.id !== prevSprint.id){
-        this.selectedSprint = currentSprint;
-        this.selectedSprintName = "Sprint " + currentSprint.number;
-        this.selectedSprintDateInfo = "(" + currentSprint.start + " to " + currentSprint.end + ")";
-      }
-    }
+    sprintDetails(currentSprint){
+      this.selectedSprint = currentSprint;
+      this.selectedSprintName = "Sprint " + currentSprint.number;
+      this.selectedSprintDateInfo = "(" + currentSprint.start + " to " + currentSprint.end + ")";
+    },
+
+  },
+  created() {
   }
 
 }
