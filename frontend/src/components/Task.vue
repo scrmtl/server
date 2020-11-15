@@ -206,7 +206,6 @@ export default {
       
     },
     allowDrop(e, storypoints){
-      console.log(e)
       if(storypoints > 0 ){
         e.preventDefault();
       }

@@ -66,7 +66,7 @@
                       <v-autocomplete
                         v-model="this.taskNamedStatus"
                         :items="availableStatus"
-                        :readonly="this.selectedTask.visableCreate"
+                        :readonly="disableStatusChange"
                         outlined
                         dense
                         label="Status"
@@ -237,10 +237,10 @@ export default {
   data: () => ({
     tab: null,
     availableStatus: [
-      "New",
-      "Planned",
+      // "New",
+      // "Planned",
       "Not Started",
-      "In Progress",
+      // "In Progress",
       "Done",
       "Accepted"
     ],
@@ -306,7 +306,8 @@ export default {
           description: this.localTask.description,
           storypoints: this.localTask.storypoints,
           lane: this.localTask.lane,
-          feature: this.localTask.feature
+          feature: this.localTask.feature,
+          status: "NW"
         },
         customUrlFnArgs: {}
       }).then(
@@ -368,20 +369,6 @@ export default {
       this.close();
     },
 
-    GetTaskStatus(namedStatus) {
-      var status = "AC";
-      switch (namedStatus) {
-        case "New":
-        case "Active":
-          status = "AC";
-          break;
-        case "Archived":
-          status = "AR";
-          break;
-      }
-      return status;
-    },
-
     GetTaskNamedStatus(status) {
       var namedStatus = "New";
       switch (status) {
@@ -429,6 +416,17 @@ export default {
 
     allAvaiblableUsers(){
       return this.plattformUsersbyProjectId(this.localTask.project);
+    },
+    disableStatusChange(){
+      if(this.selectedTask.visableCreate){
+        return true;
+      }
+      else if(this.selectedTask.details.status === "DO" || this.selectedTask.details.status === "AC"){
+        return false;
+      }
+      else{
+        return true;
+      }
     },
 
     visibleDrawer: {
