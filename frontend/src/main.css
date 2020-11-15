@@ -72,6 +72,9 @@
     border-left-color: #6441A4;
     border-right-color: #6441A4;
   }
+  .link-color {
+    color: white;
+  }
 /* .lane-extended {
     background-color: #2E4057;
     border-style: solid;
