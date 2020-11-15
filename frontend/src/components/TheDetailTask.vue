@@ -239,7 +239,7 @@ export default {
     availableStatus: [
       // "New",
       // "Planned",
-      "Not Started",
+      // "Not Started",
       // "In Progress",
       "Done",
       "Accepted"
