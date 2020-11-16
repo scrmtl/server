@@ -197,14 +197,6 @@ export default {
     }
   },
 
-  watch:{
-    listProjects(curProjects, prevProjects){
-      if(curProjects.length !== prevProjects.length){
-        this.fetchProjects({ customUrlFnArgs: {} });
-      }
-    }
-  },
-
   mounted() {
     this.loadData();
     this.GetSessionIds();
