@@ -456,12 +456,19 @@ export default {
           is_template: this.localProject.is_template
         },
         customUrlFnArgs: { templateId: this.selectedProjectTemplate.id }
-      });
-      this.$store.commit("hideProjectDetail");
-      this.$store.commit("showSystemAlert", {
-        message: "Create " + this.localProject.name,
-        category: "info"
-      });
+      })
+      .then(
+        () => {
+          this.fetchProjects({ customUrlFnArgs: {} });
+          this.$store.commit("hideProjectDetail");
+          this.$store.commit("showSystemAlert", {
+            message: "Create " + this.localProject.name,
+            category: "info"
+          });
+        }
+      );
+
+      
     },
 
     GetProjectStatus(namedStatus) {
