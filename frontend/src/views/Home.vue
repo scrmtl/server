@@ -17,7 +17,7 @@
             v-model="showAllProjects"
           >
             <template v-slot:label>
-              <span class="link_color">Show all Projects</span>
+              <span class="link--text">Show all Projects</span>
             </template>
           </v-switch>
         </div>
