@@ -396,6 +396,8 @@ export default {
   },
   computed: {
     ...mapState(["selectedTask"]),
+    ...mapGetters(
+      {seletctedTaskDetails: "getTaskDetails"}),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
       plattformUsersbyIdArrayWithDetails: "byIdArrayWithDetails",
@@ -421,14 +423,13 @@ export default {
       if(this.selectedTask.visableCreate){
         return true;
       }
-      else if(this.selectedTask.details.status === "DO" || this.selectedTask.details.status === "AC"){
+      else if(this.seletctedTaskDetails.status === "DO" || this.seletctedTaskDetails.status === "AC"){
         return false;
       }
       else{
         return true;
       }
     },
-
     visibleDrawer: {
       get() {
         return this.selectedTask.visableDetail;
@@ -442,19 +443,32 @@ export default {
       }
     }
   },
+  watch:{
+    visibleDrawer(val, prev){
+      if(val === prev) return;
+      this.localTask = this.seletctedTaskDetails;
+      this.taskNamedStatus = this.GetTaskNamedStatus(this.localTask.status);
+    },
+    seletctedTaskDetails(val,prev){
+      if(val !== prev){
+        this.localTask = this.seletctedTaskDetails;
+        this.taskNamedStatus = this.GetTaskNamedStatus(this.localTask.status);
+      }
+    }
+  },
+
   created() {
     this.fetchLabel();
-    this.localTask = this.selectedTask.details;
+    this.localTask = this.seletctedTaskDetails;
     this.taskNamedStatus = this.GetTaskNamedStatus(this.localTask.status);
   },
 
   updated() {
-    this.localTask = this.selectedTask.details;
-    this.taskNamedStatus = this.GetTaskNamedStatus(this.localTask.status);
+    
   }
 };
 </script>
 <style lang="css" scoped>
-@import "../main.css";
-@import "./Profile/profile.css";
+  @import "../main.css";
+  @import "./Profile/profile.css";
 </style>

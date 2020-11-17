@@ -423,7 +423,7 @@ export default {
               customUrlFnArgs: {} }).then(res => {
             console.log(res)
             this.$store.commit("setSelectedProjectDetail", res.data);
-            this.localProject = this.selectedProject.details;
+            this.localProject = this.seletctedProjectDetails;
           })
           return value;
         })
@@ -532,13 +532,15 @@ export default {
       this.destroyProjectUser({ id: projectUserId }).then(() => {
         this.fetchSingleProject({ id: this.localProject.id, customUrlFnArgs: {} }).then(res => {
           this.$store.commit("setSelectedProjectDetail", res.data);
-          this.localProject = this.selectedProject.details;
+          this.localProject = this.seletctedProjectDetails;
         });
       });
     }
   },
   computed: {
     ...mapState(["selectedProject"]),
+    ...mapGetters(
+      {seletctedProjectDetails: "getProjectDetails"}),
     ...mapGetters("projectUser", {
       listProjectUsers: "list",
       projectUserById: "byId",
@@ -581,10 +583,16 @@ export default {
       if (val === prev) return;
       var test = this.listTemplateProjects();
       this.templateProjectItems = test;
-      this.localProject = this.selectedProject.details;
-      this.projectNamedStatus = this.GetProjectNamedStatus(
-        this.localProject.status
+      this.localProject = this.seletctedProjectDetails;
+      this.projectNamedStatus = this.GetProjectNamedStatus(this.localProject.status
       );
+    },
+    seletctedProjectDetails(val, prev){
+      if(val !== prev){
+        this.localProject = this.seletctedProjectDetails;
+        this.projectNamedStatus = this.GetProjectNamedStatus(this.localProject.status);
+      }
+      
     }
   },
 
@@ -596,6 +604,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import "../main.css";
-@import "./Profile/profile.css";
+  @import "../main.css";
+  @import "./Profile/profile.css";
 </style>
