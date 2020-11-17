@@ -136,9 +136,11 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         for task in task_queryset:
             if task.done_on in day_dates:
                 index = day_dates.index(task.done_on)
-                daily_sp_count[index] += sum_finished_tasks
+                daily_sp_count[index] += task.storypoints
 
-        # TODO Hier weitermachen
+        for i in range(0, (obj.project.sprint_duration)):
+            sum_finished_tasks += daily_sp_count[i]
+            daily_sp[i] -= sum_finished_tasks
 
         return {
             'x': days,
