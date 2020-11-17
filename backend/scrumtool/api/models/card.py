@@ -88,6 +88,11 @@ class Card(RulesModel, IGetBoard, IGetProject):
         help_text='Sprint this card is part of.')
     # to track changes in inheritetd models inherit=True
     history = HistoricalRecords(inherit=True)
+    done_on = models.DateField(
+        blank=True,
+        null=True,
+        help_text='Date of task status set to done'
+    )
 
     class Meta:
         """Meta definition for Card."""

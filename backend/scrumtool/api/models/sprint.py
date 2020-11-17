@@ -76,7 +76,8 @@ class Sprint(RulesModel, IGetProject):
         ]
     )
     number = models.IntegerField(
-        help_text='An ascending number counting the sprint in the project')
+        help_text='An ascending number counting the sprint in the project. \
+        Starting with 1')
 
     story = models.TextField(
         help_text='Story of the po that he wants to do in the sprint',
