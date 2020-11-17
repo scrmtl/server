@@ -8,7 +8,8 @@
         :elevation="hover ? 14 : 5"
         @click="showTaskDetail()"
         draggable
-        @dragstart="pickupTask($event, task.id, task.name, task.feature, task.numbering, task.lane)"
+        @dragstart="pickupTask($event, task.id, task.name, task.feature, task.numbering, task.lane, task.sprint)"
+        @dragover="allowDrop($event, task.storypoints)"
       >
         <v-card-title>
           <span class="tabbody--text">{{ task.name }}</span>
@@ -39,7 +40,7 @@
                   >mdi-notebook</v-icon
                 >
               </template>
-              <span>Status: not started</span>
+              <span>Status: Card in Sprint planned</span>
             </v-tooltip>
             <!-- Card Status: In Pogress -->
             <v-tooltip bottom v-else-if="task.status === 'IP'">
@@ -193,14 +194,23 @@ export default {
       inital = user.username.substring(0, 2);
       return inital;
     },
-    pickupTask(e, taskId, taskName, taskFeatureId, taskNumbering, fromLane){
+    pickupTask(e, taskId, taskName, taskFeatureId, taskNumbering, fromLane, sprint){
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.dropEffect = "move";
       e.dataTransfer.setData("task-id", taskId);
       e.dataTransfer.setData("task-name", taskName);
       e.dataTransfer.setData("task-feature-id", taskFeatureId);
       e.dataTransfer.setData("task-numbering", taskNumbering);
+      e.dataTransfer.setData("task-sprint-id", sprint);
       e.dataTransfer.setData("from-lane", fromLane);
+      
+    },
+    allowDrop(e, storypoints){
+      if(storypoints > 0 ){
+        e.preventDefault();
+      }
+
+      return false;
     }
   },
   computed: {

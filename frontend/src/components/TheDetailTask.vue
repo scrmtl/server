@@ -66,7 +66,7 @@
                       <v-autocomplete
                         v-model="this.taskNamedStatus"
                         :items="availableStatus"
-                        :readonly="this.selectedTask.visableCreate"
+                        :readonly="disableStatusChange"
                         outlined
                         dense
                         label="Status"
@@ -237,10 +237,10 @@ export default {
   data: () => ({
     tab: null,
     availableStatus: [
-      "New",
-      "Planned",
-      "Not Started",
-      "In Progress",
+      // "New",
+      // "Planned",
+      // "Not Started",
+      // "In Progress",
       "Done",
       "Accepted"
     ],
@@ -275,6 +275,9 @@ export default {
       updateTask: "update",
       deleteTask: "destroy"
     }),
+    ...mapActions("lane", {
+      fetchSingleLane: "fetchSingle",
+    }),
     ...mapActions("user", {
       fetchPlattformUsers: "fetchList"
     }),
@@ -303,7 +306,8 @@ export default {
           description: this.localTask.description,
           storypoints: this.localTask.storypoints,
           lane: this.localTask.lane,
-          feature: this.localTask.feature
+          feature: this.localTask.feature,
+          status: "NW"
         },
         customUrlFnArgs: {}
       }).then(
@@ -312,11 +316,16 @@ export default {
             this.fetchSingleTask({
               id: value.data.id,
               customUrlFnArgs: {}
-            });
+            })
+            this.fetchSingleLane({
+              id: this.localTask.lane, 
+              customUrlFnArgs: {}
+            }) 
           }
+          this.close();
         }.bind(this)
       );
-      this.close();
+      
     },
 
     saveTask() {
@@ -360,20 +369,6 @@ export default {
       this.close();
     },
 
-    GetTaskStatus(namedStatus) {
-      var status = "AC";
-      switch (namedStatus) {
-        case "New":
-        case "Active":
-          status = "AC";
-          break;
-        case "Archived":
-          status = "AR";
-          break;
-      }
-      return status;
-    },
-
     GetTaskNamedStatus(status) {
       var namedStatus = "New";
       switch (status) {
@@ -401,6 +396,8 @@ export default {
   },
   computed: {
     ...mapState(["selectedTask"]),
+    ...mapGetters(
+      {seletctedTaskDetails: "getTaskDetails"}),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
       plattformUsersbyIdArrayWithDetails: "byIdArrayWithDetails",
@@ -422,7 +419,17 @@ export default {
     allAvaiblableUsers(){
       return this.plattformUsersbyProjectId(this.localTask.project);
     },
-
+    disableStatusChange(){
+      if(this.selectedTask.visableCreate){
+        return true;
+      }
+      else if(this.seletctedTaskDetails.status === "DO" || this.seletctedTaskDetails.status === "AC"){
+        return false;
+      }
+      else{
+        return true;
+      }
+    },
     visibleDrawer: {
       get() {
         return this.selectedTask.visableDetail;
@@ -436,19 +443,32 @@ export default {
       }
     }
   },
+  watch:{
+    visibleDrawer(val, prev){
+      if(val === prev) return;
+      this.localTask = this.seletctedTaskDetails;
+      this.taskNamedStatus = this.GetTaskNamedStatus(this.localTask.status);
+    },
+    seletctedTaskDetails(val,prev){
+      if(val !== prev){
+        this.localTask = this.seletctedTaskDetails;
+        this.taskNamedStatus = this.GetTaskNamedStatus(this.localTask.status);
+      }
+    }
+  },
+
   created() {
     this.fetchLabel();
-    this.localTask = this.selectedTask.details;
+    this.localTask = this.seletctedTaskDetails;
     this.taskNamedStatus = this.GetTaskNamedStatus(this.localTask.status);
   },
 
   updated() {
-    this.localTask = this.selectedTask.details;
-    this.taskNamedStatus = this.GetTaskNamedStatus(this.localTask.status);
+    
   }
 };
 </script>
 <style lang="css" scoped>
-@import "../main.css";
-@import "./Profile/profile.css";
+  @import "../main.css";
+  @import "./Profile/profile.css";
 </style>
