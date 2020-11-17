@@ -3,7 +3,6 @@
 from datetime import date, timedelta
 from rest_framework import serializers
 from django.db.models import QuerySet
-import numpy as np
 import math
 
 from api.models import Sprint, Project, Epic, Feature, Task
