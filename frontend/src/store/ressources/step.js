@@ -26,7 +26,7 @@ export default createCrudModule({
         //rootUrl = `/api/steplists/${taskId}/step`;
         //rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
 
-        if (steplistId != null) {
+        if (steplistId != null && steplistId !== undefined) {
             rootUrl = `/api/steps/?steplist=${steplistId}`
         }
         rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
