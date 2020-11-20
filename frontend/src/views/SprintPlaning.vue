@@ -47,7 +47,7 @@ export default {
   },
   methods:{
     showSprint(sprint) {
-      this.$store.commit("setSelectedSprintDetail", sprint);
+      this.$store.commit("selected/setSprintDetail", sprint);
     },
 
   },

@@ -55,6 +55,7 @@
 <script>
 import Task from "@/components/Task.vue";
 import { mapGetters, mapActions } from 'vuex';
+import { mapFields } from "vuex-map-fields";
 export default {
   data: () => ({
     selectedSprintName: "No sprint selected",
@@ -123,8 +124,9 @@ export default {
 
   },
   computed:{
-    ...mapGetters(
-      {sprintDetails: "getSprintDetails"}),
+    ...mapFields("selected", [
+      "sprint.details",
+    ]),
     ...mapGetters("sprint", {
       sprintById: "byId",
       listSprint: "list"
@@ -142,9 +144,10 @@ export default {
     },
 
 
+
   },
   watch:{
-    sprintDetails(currentSprint){
+    details(currentSprint){
       this.selectedSprint = currentSprint;
       this.selectedSprintName = "Sprint " + currentSprint.number;
       this.selectedSprintDateInfo = "(" + currentSprint.start + " to " + currentSprint.end + ")";

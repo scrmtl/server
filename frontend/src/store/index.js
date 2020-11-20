@@ -54,25 +54,12 @@ export default new Vuex.Store({
     navigation:{
       visable: false
     },
-
-    selectedSprint: {
-      visableDetail: false,
-      visableCreate: false,
-      details: {},
-    },
-    
+   
     selectedBoard: {}
   },
   // call REST API (async)
   // Use from the components
   actions: {
-    // login({ commit }, { token, user }) {
-    //   commit("SET_TOKEN", token);
-    //   commit("SET_USERNAME", user);
-    //   // set auth header
-    //   Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$state.Userinfo.token}`;
-
-    // },
 
     login({ commit }, credentials) {
       return new Promise((resolve, reject) => {
@@ -143,21 +130,6 @@ export default new Vuex.Store({
       state.systemAlert.message = "";
       state.systemAlert.category = "info";
     },
-
-    // showSprintDetail(state, withCreate) {
-    //   state.selectedSprint.visableDetail = true;
-    //   if (!(withCreate === undefined)) {
-    //     state.selectedSprint.visableCreate = withCreate;
-    //   }
-    // },
-    // hideSprintDetail(state) {
-    //   state.selectedSprint.visableDetail = false;
-    //   state.selectedSprint.visableCreate = false;
-    //   state.selectedSprint.details = {};
-    // },
-    // setSelectedSprintDetail(state, sprint) {
-    //   state.selectedSprint.details = sprint;
-    // },
 
     // User login and logout
     AUTH_REQUEST(state) {
