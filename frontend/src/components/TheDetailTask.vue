@@ -83,7 +83,7 @@
                     </v-col>
                   </v-row>
                   <v-row v-if="!visableCreate" align="center">
-                    <Label v-bind:taskId="id" v-bind:labels="labels"></Label>
+                    <Label v-bind:task="details" ></Label>
                   </v-row>
                   <v-row align="center">
                     <v-card
