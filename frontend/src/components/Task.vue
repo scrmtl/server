@@ -185,8 +185,8 @@ export default {
 
   methods: {
     showTaskDetail() {
-      this.$store.commit("setSelectedTaskDetail", this.task);
-      this.$store.commit("showTaskDetail", false);
+      this.$store.commit("selected/setTaskDetail", this.task);
+      this.$store.commit("selected/showTaskDetail", false);
     },
     GetUserInitial(id) {
       var inital = "AA";

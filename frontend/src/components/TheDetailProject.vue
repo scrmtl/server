@@ -536,6 +536,26 @@ export default {
     }
   },
   computed: {
+    // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
+    // Implementation with https://github.com/maoberlehner/vuex-map-fields
+    // the string after the last dot (e.g. `id`) is used
+    // for defining the name of the computed property.
+    ...mapFields("selected", [
+      "project.details.id",
+      "project.details.status",
+      "project.details.name",
+      "project.details.dod",
+      "project.details.dor",
+      "project.details.start",
+      "project.details.end",
+      "project.details.description",
+      "project.details.sprint_duration",
+      "project.details.is_template",
+      "project.details.project_users",
+      "project.visableDetail",
+      "project.visableCreate",
+    ]),
+    
     ...mapGetters("projectUser", {
       listProjectUsers: "list",
       projectUserById: "byId",
@@ -572,26 +592,6 @@ export default {
         }
       }
     },
-
-    // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
-    // Implementation with https://github.com/maoberlehner/vuex-map-fields
-    ...mapFields("selected", [
-      "project.details.id",
-      "project.details.status",
-      "project.details.name",
-      "project.details.dod",
-      "project.details.dor",
-      "project.details.start",
-      "project.details.end",
-      "project.details.description",
-      "project.details.sprint_duration",
-      "project.details.is_template",
-      "project.details.project_users",
-      "project.visableDetail",
-      "project.visableCreate",
-    ])
-
-
   },
   watch: {
     visibleDrawer(val, prev) {
