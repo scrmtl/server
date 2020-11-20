@@ -62,9 +62,10 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { mapFields } from "vuex-map-fields";
 export default {
   props: {
-    task: Object
+
   },
   data: () => ({
     activator: null,
@@ -81,6 +82,17 @@ export default {
     search: null,
     y: 0
   }),
+
+  computed:{
+    ...mapFields("selected", [
+      "task.details.id",
+      "task.details.labels",
+    ]),
+    ...mapGetters("label", {
+      listLabels: "list",
+      labelById: "byId"
+    })
+  },
 
   watch: {
     model(val, prev) {
@@ -106,7 +118,7 @@ export default {
                 this.items.push(label);
                 this.model.push(label);
                 //add label ID to task labels
-                this.task.labels.push(value.data.id);
+                this.labels.push(value.data.id);
                 return value;
               }.bind(this)
             );
@@ -120,14 +132,14 @@ export default {
         });
       //if no new label is created override labels in task with updated list
       if (updateLabel) {
-        this.task.labels = val.map(label => label.id);
+        this.labels = val.map(label => label.id);
       }
     },
-    task(val, prev) {
-      if (val.id === prev.id) return;
+    id(val, prev) {
+      if (val === prev) return;
       this.items = [{ header: "Select an label or create one" }];
       this.model = [];
-      this.fetchAll(val);
+      this.fetchAll(val, this.labels);
     }
   },
 
@@ -169,8 +181,8 @@ export default {
           .indexOf(query.toString().toLowerCase()) > -1
       );
     },
-    fetchAll(task) {
-      if (task.id === undefined) return;
+    fetchAll(taskId, labels) {
+      if (labels === undefined) return;
       this.fetchLabels({ customUrlFnArgs: {} })
         .catch(error => {
           this.fetchErrors.push(error);
@@ -183,26 +195,20 @@ export default {
             label["text"] = label.title;
             this.items.push(label);
           });
-          this.fillTaskLabels(task);
+          this.fillTaskLabels(labels);
           return value;
         });
-      this.fetchTask({ id: task.id, customUrlFnArgs: {} });
+      this.fetchTask({ id: taskId, customUrlFnArgs: {} });
     },
-    fillTaskLabels(task) {
-      task.labels.forEach(labelId => {
+    fillTaskLabels(labels) {
+      labels.forEach(labelId => {
         this.model.push(this.labelById(labelId));
       });
       var labelIds = [];
-      task.labels.forEach(label => {
+      labels.forEach(label => {
         labelIds.push(label.id);
       });
     }
-  },
-  computed: {
-    ...mapGetters("label", {
-      listLabels: "list",
-      labelById: "byId"
-    })
   }
 };
 </script>

@@ -60,11 +60,6 @@ export default new Vuex.Store({
       visableCreate: false,
       details: {},
     },
-    selectedTask: {
-      visableDetail: false,
-      visableCreate: false,
-      details: {},
-    },
     
     selectedBoard: {}
   },
@@ -162,21 +157,6 @@ export default new Vuex.Store({
     // },
     // setSelectedSprintDetail(state, sprint) {
     //   state.selectedSprint.details = sprint;
-    // },
-
-    // showTaskDetail(state, withCreate) {
-    //   state.selectedTask.visableDetail = true;
-    //   if (!(withCreate === undefined)) {
-    //     state.selectedTask.visableCreate = withCreate;
-    //   }
-    // },
-    // hideTaskDetail(state) {
-    //   state.selectedTask.visableDetail = false;
-    //   state.selectedTask.visableCreate = false;
-    //   state.selectedTask.details = {};
-    // },
-    // setSelectedTaskDetail(state, task) {
-    //   state.selectedTask.details = task;
     // },
 
     // User login and logout

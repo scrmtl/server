@@ -113,7 +113,7 @@ export default {
           if(this.selectedSprint.id != null){
             this.fetchSingleSprint({id: this.selectedSprint.id, customUrlFnArgs: {}})
             .then(()=>{
-              this.$store.commit("setSelectedSprintDetail", this.sprintById(this.selectedSprint.id));
+              this.$store.commit("selected/setSprintDetail", this.sprintById(this.selectedSprint.id));
             })
           }
           

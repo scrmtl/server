@@ -83,7 +83,7 @@
                     </v-col>
                   </v-row>
                   <v-row v-if="!visableCreate" align="center">
-                    <Label v-bind:task="details" ></Label>
+                    <Label ></Label>
                   </v-row>
                   <v-row align="center">
                     <v-card
@@ -399,7 +399,6 @@ export default {
     // the string after the last dot (e.g. `id`) is used
     // for defining the name of the computed property.
     ...mapFields("selected", [
-      "task.details",
       "task.details.id",
       "task.details.lane",
       "task.details.feature",
