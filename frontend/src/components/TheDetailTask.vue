@@ -82,6 +82,26 @@
                       ></v-autocomplete>
                     </v-col>
                   </v-row>
+                  <v-row align="center">
+                    <v-col>
+                      <v-text-field
+                        v-model="this.plannedSprintNumber"
+                        readonly
+                        outlined
+                        dense
+                        label="Sprint No."
+                      ></v-text-field>
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        v-model="this.plannedSprintStart"
+                        readonly
+                        outlined
+                        dense
+                        label="Sprint Start Date"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
                   <v-row v-if="!visableCreate" align="center">
                     <Label ></Label>
                   </v-row>
@@ -238,10 +258,10 @@ export default {
   data: () => ({
     tab: null,
     availableStatus: [
-      // "New",
-      // "Planned",
-      // "Not Started",
-      // "In Progress",
+      "New",
+      "Planned",
+      "Not Started",
+      "In Progress",
       "Done",
       "Accepted"
     ],
@@ -424,9 +444,26 @@ export default {
       listProjectRoles: "list",
       projectRoleById: "byId"
     }),
-    ...mapGetters("steplist", {
-      steplistById: "byId"
+    ...mapGetters("sprint", {
+      sprintById: "byId"
     }),
+
+    plannedSprintNumber(){
+      if(this.sprint != null){
+        return this.sprintById(this.sprint).number
+      }
+      else{
+        return "Task not planned"
+      }      
+    },
+    plannedSprintStart(){ 
+      if(this.sprint != null){
+        return this.sprintById(this.sprint).start
+      }
+      else{
+        return "Task not planned"
+      }  
+    },
 
     allAssignedUsers() {
       return this.plattformUsersbyIdArrayWithDetails(this.assigned_users, this.project);
