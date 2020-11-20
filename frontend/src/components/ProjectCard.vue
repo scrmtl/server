@@ -45,7 +45,6 @@
 <script>
 
 import {  mapActions } from "vuex";
-
 export default {
   props: ["project"],
   data() {
@@ -65,8 +64,8 @@ export default {
     }),
 
     showProjectDetail() {
-      this.$store.commit("showProjectDetail", false);
-      this.$store.commit("setSelectedProjectDetail", this.project);
+      this.$store.commit("selected/showProjectDetail", false);
+      this.$store.commit("selected/setProjectDetail", this.project);
     },
   },
   computed:{

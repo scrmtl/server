@@ -28,7 +28,7 @@
           <v-tab-item>
             <v-card flat dark color="navbar" tile>
               <v-card-title>
-                <span class="headline">{{ localProject.name }}</span>
+                <span class="headline">{{ name }}</span>
               </v-card-title>
               <v-card-text>
                 <v-form ref="form" v-model="isFormValid" lazy-validation>
@@ -41,7 +41,7 @@
                         :rules="[rules.required]"
                         :counter="50"
                         prepend-icon="mdi-information-outline"
-                        v-model="localProject.name"
+                        v-model="name"
                       ></v-text-field>
                     </v-col>
                   </v-row>
@@ -58,7 +58,7 @@
                       >
                         <template v-slot:activator="{ on, attrs }">
                           <v-text-field
-                            v-model="localProject.start"
+                            v-model="start"
                             label="Project start"
                             hint="YYYY-MM-DD"
                             prepend-icon="mdi-calendar-range"
@@ -71,10 +71,10 @@
                           ></v-text-field>
                         </template>
                         <v-date-picker
-                          v-model="localProject.start"
+                          v-model="start"
                           no-title
                           scrollable
-                          :readonly="!this.selectedProject.visableCreate"
+                          :readonly="!this.visableCreate"
                         >
                           <v-spacer></v-spacer>
                           <v-btn
@@ -106,7 +106,7 @@
                       >
                         <template v-slot:activator="{ on, attrs }">
                           <v-text-field
-                            v-model="localProject.end"
+                            v-model="end"
                             label="Project end"
                             hint="YYYY-MM-DD"
                             prepend-icon="mdi-calendar-range"
@@ -119,10 +119,10 @@
                           ></v-text-field>
                         </template>
                         <v-date-picker
-                          v-model="localProject.end"
+                          v-model="end"
                           no-title
                           scrollable
-                          :readonly="!this.selectedProject.visableCreate"
+                          :readonly="!visableCreate"
                         >
                           <v-spacer></v-spacer>
                           <v-btn
@@ -149,11 +149,11 @@
                         required
                         :rules="[rules.required, rules.duration]"
                         :counter="3"
-                        :readonly="!this.selectedProject.visableCreate"
+                        :readonly="!visableCreate"
                         persistent-hint
                         hint="in calendar days (not workdays)"
                         prepend-icon="mdi-information-outline"
-                        v-model="localProject.sprint_duration"
+                        v-model="sprint_duration"
                       ></v-text-field>
                     </v-col>
                   </v-row>
@@ -166,7 +166,7 @@
                       prepend-icon="mdi-information-outline"
                       outlined
                       min-height="70"
-                      v-model="localProject.description"
+                      v-model="description"
                     ></v-textarea>
                   </v-col>
                 </v-row>
@@ -179,7 +179,7 @@
                       outlined
                       min-height="70"
                       class="ma-1"
-                      v-model="localProject.dor"
+                      v-model="dor"
                     ></v-textarea>
                   </v-col>
                 </v-row>
@@ -192,12 +192,12 @@
                       outlined
                       min-height="70"
                       class="ma-0"
-                      v-model="localProject.dod"
+                      v-model="dod"
                     ></v-textarea>
                   </v-col>
                 </v-row>
                 <!-- Template for creation -->
-                <v-row align="center" v-if="this.selectedProject.visableCreate">
+                <v-row align="center" v-if="visableCreate">
                   <v-col>
                     <v-combobox
                       :items="templateProjectItems"
@@ -232,13 +232,13 @@
                   <v-checkbox
                     input-value="false"
                     label="Use this project as template"
-                    v-model="localProject.is_template"
+                    v-model="is_template"
                   ></v-checkbox>
                 </v-row>
               </v-card-text>
             </v-card>
             <v-card
-              v-if="!this.selectedProject.visableCreate"
+              v-if="!visableCreate"
               flat
               dark
               color="navbar"
@@ -288,14 +288,14 @@
         <div>
           <v-btn color="link" text @click="close()">Close</v-btn>
           <v-btn
-            v-if="!this.selectedProject.visableCreate"
+            v-if="!visableCreate"
             color="link"
             text
             @click="confirm()"
             >Save</v-btn
           >
           <v-btn
-            v-if="this.selectedProject.visableCreate"
+            v-if="visableCreate"
             color="link"
             :disabled="!isFormValid"
             text
@@ -303,7 +303,7 @@
             >Create</v-btn
           >
           <v-btn
-            v-if="!this.selectedProject.visableCreate"
+            v-if="!visableCreate"
             color="error"
             text
             absolute
@@ -348,7 +348,8 @@
 import ProfileAvatar from "@/components/Profile/ProfileAvatar.vue";
 import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
 import AssignedUserManagement from "@/components/AssignedUserManagement.vue";
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import { mapFields } from "vuex-map-fields";
 export default {
   name: "TheDetailProject",
   data: () => ({
@@ -362,7 +363,7 @@ export default {
     selectedProjectTemplate: null,
     completedSprints: 0,
     projectNamedStatus: "Active",
-    localProject: {},
+    //localProject: {},
     rules: {
       required: value => !!value || "Required",
       maxCharacter: value => value.length <= 50 || "Max 50 characters",
@@ -399,12 +400,12 @@ export default {
     }),
 
     close() {
-      this.$store.commit("hideProjectDetail");
+      this.$store.commit("selected/hideProjectDetail");
     },
 
     confirm() {
       this.saveProject();
-      this.$store.commit("hideProjectDetail");
+      this.$store.commit("selected/hideProjectDetail");
     },
 
     addProjectUser(projectUserId) {
@@ -414,16 +415,14 @@ export default {
           plattform_user: projectUserId,
           // Standard role developer
           role: 3,
-          project: this.localProject.id
+          project: this.id
         }
       })
         .then(value => {
           console.log(value)
-          this.fetchSingleProject({ id: this.localProject.id,
+          this.fetchSingleProject({ id: this.id,
               customUrlFnArgs: {} }).then(res => {
-            console.log(res)
-            this.$store.commit("setSelectedProjectDetail", res.data);
-            this.localProject = this.seletctedProjectDetails;
+                this.$store.commit("selected/setProjectDetail", res.data);
           })
           return value;
         })
@@ -444,25 +443,25 @@ export default {
     addProject() {
       this.createProject({
         data: {
-          name: this.localProject.name,
-          description: this.localProject.description,
-          start: this.localProject.start,
-          end: this.localProject.end,
-          sprint_duration: this.localProject.sprint_duration,
-          dor: this.localProject.dor,
-          dod: this.localProject.dod,
+          name: this.name,
+          description: this.description,
+          start: this.start,
+          end: this.end,
+          sprint_duration: this.sprint_duration,
+          dor: this.dor,
+          dod: this.dod,
           status: this.GetProjectStatus(this.projectNamedStatus),
-          project_users: this.localProject.project_users,
-          is_template: this.localProject.is_template
+          project_users: this.project_users,
+          is_template: this.is_template
         },
         customUrlFnArgs: { templateId: this.selectedProjectTemplate.id }
       })
       .then(
         () => {
           this.fetchProjects({ customUrlFnArgs: {} });
-          this.$store.commit("hideProjectDetail");
+          this.$store.commit("selected/hideProjectDetail");
           this.$store.commit("showSystemAlert", {
-            message: "Create " + this.localProject.name,
+            message: "Create " + this.name,
             category: "info"
           });
         }
@@ -500,16 +499,16 @@ export default {
 
     saveProject() {
       this.updateProject({
-        id: this.localProject.id,
+        id: this.id,
         data: {
-          id: this.localProject.id,
-          name: this.localProject.name,
-          description: this.localProject.description,
+          id: this.id,
+          name: this.name,
+          description: this.description,
           status: this.GetProjectStatus(this.projectNamedStatus),
-          dor: this.localProject.dor,
-          dod: this.localProject.dod,
-          project_users: this.localProject.project_users,
-          is_template: this.localProject.is_template
+          dor: this.dor,
+          dod: this.dod,
+          project_users: this.project_users,
+          is_template: this.is_template
         },
         customUrlFnArgs: {}
       });
@@ -518,11 +517,11 @@ export default {
     deleteProject() {
       this.deleteProjectDialog = false;
       this.destroyProject({
-        id: this.localProject.id,
+        id: this.id,
         customUrlFnArgs: {}
       });
       this.$store.commit("showSystemAlert", {
-        message: "Delete Project " + this.localProject.name,
+        message: "Delete Project " + this.name,
         category: "info"
       });
       this.close();
@@ -530,17 +529,13 @@ export default {
 
     deleteProjectUser(projectUserId) {
       this.destroyProjectUser({ id: projectUserId }).then(() => {
-        this.fetchSingleProject({ id: this.localProject.id, customUrlFnArgs: {} }).then(res => {
-          this.$store.commit("setSelectedProjectDetail", res.data);
-          this.localProject = this.seletctedProjectDetails;
+        this.fetchSingleProject({ id: this.id, customUrlFnArgs: {} }).then(res => {
+          this.$store.commit("selected/setProjectDetail", res.data);
         });
       });
     }
   },
   computed: {
-    ...mapState(["selectedProject"]),
-    ...mapGetters(
-      {seletctedProjectDetails: "getProjectDetails"}),
     ...mapGetters("projectUser", {
       listProjectUsers: "list",
       projectUserById: "byId",
@@ -561,39 +556,49 @@ export default {
 
     allAssignedUsers() {
       return this.projectUsersbyIdArrayWithDetails(
-        this.localProject.project_users
+        this.project_users
       );
     },
 
     visibleDrawer: {
       get() {
-        return this.selectedProject.visableDetail;
+        return this.visableDetail;
       },
-      set(newValue) {
-        if (newValue) {
-          this.$store.commit("showProjectDetail");
+      set(value) {
+        if (value) {
+          this.$store.commit("selected/showProjectDetail");
         } else {
-          this.$store.commit("hideProjectDetail");
+          this.$store.commit("selected/hideProjectDetail");
         }
       }
-    }
+    },
+
+    // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
+    // Implementation with https://github.com/maoberlehner/vuex-map-fields
+    ...mapFields("selected", [
+      "project.details.id",
+      "project.details.status",
+      "project.details.name",
+      "project.details.dod",
+      "project.details.dor",
+      "project.details.start",
+      "project.details.end",
+      "project.details.description",
+      "project.details.sprint_duration",
+      "project.details.is_template",
+      "project.details.project_users",
+      "project.visableDetail",
+      "project.visableCreate",
+    ])
+
+
   },
   watch: {
     visibleDrawer(val, prev) {
       if (val === prev) return;
-      var test = this.listTemplateProjects();
-      this.templateProjectItems = test;
-      this.localProject = this.seletctedProjectDetails;
-      this.projectNamedStatus = this.GetProjectNamedStatus(this.localProject.status
-      );
+      this.templateProjectItems = this.listTemplateProjects();
+      this.projectNamedStatus = this.GetProjectNamedStatus(this.status);
     },
-    seletctedProjectDetails(val, prev){
-      if(val !== prev){
-        this.localProject = this.seletctedProjectDetails;
-        this.projectNamedStatus = this.GetProjectNamedStatus(this.localProject.status);
-      }
-      
-    }
   },
 
   created() {
