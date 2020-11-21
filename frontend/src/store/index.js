@@ -3,6 +3,9 @@ import Vuex from "vuex";
 import Axios from "axios";
 import createPersistedState from "vuex-persistedstate";
 
+// mutation function from the `vuex-map-fields` module.
+import { getField, updateField } from "vuex-map-fields";
+
 import board from '@/store/ressources/board';
 import epic from '@/store/ressources/epic';
 import feature from '@/store/ressources/feature';
@@ -19,6 +22,7 @@ import session from '@/store/ressources/session';
 import projectRole from '@/store/ressources/projectRole';
 import registration from '@/store/ressources/registration';
 import group from '@/store/ressources/group';
+import selected from '@/store/ressources/selected';
 
 Vue.use(Vuex, Axios);
 
@@ -46,38 +50,16 @@ export default new Vuex.Store({
       message: "",
       category: "info"
     },
+
     navigation:{
       visable: false
     },
-
-    selectedProject: {
-      visableDetail: false,
-      visableCreate: false,
-      details: {},
-    },
-    selectedSprint: {
-      visableDetail: false,
-      visableCreate: false,
-      details: {},
-    },
-    selectedTask: {
-      visableDetail: false,
-      visableCreate: false,
-      details: {},
-    },
-    
+   
     selectedBoard: {}
   },
   // call REST API (async)
   // Use from the components
   actions: {
-    // login({ commit }, { token, user }) {
-    //   commit("SET_TOKEN", token);
-    //   commit("SET_USERNAME", user);
-    //   // set auth header
-    //   Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$state.Userinfo.token}`;
-
-    // },
 
     login({ commit }, credentials) {
       return new Promise((resolve, reject) => {
@@ -122,6 +104,9 @@ export default new Vuex.Store({
   },
   //Update States (sync)
   mutations: {
+    
+    updateField,
+    
     showNavigation(state) {
       state.navigation.visable = true;
     },
@@ -146,51 +131,6 @@ export default new Vuex.Store({
       state.systemAlert.category = "info";
     },
 
-    showProjectDetail(state, withCreate = false) {
-      state.selectedProject.visableDetail = true;
-      if (withCreate) {
-        state.selectedProject.visableCreate = true;
-      }
-    },
-    hideProjectDetail(state) {
-      state.selectedProject.visableDetail = false;
-      state.selectedProject.visableCreate = false;
-      state.selectedProject.details = {};
-    },
-    setSelectedProjectDetail(state, project) {
-      state.selectedProject.details = project;
-    },
-
-    showSprintDetail(state, withCreate) {
-      state.selectedSprint.visableDetail = true;
-      if (!(withCreate === undefined)) {
-        state.selectedSprint.visableCreate = withCreate;
-      }
-    },
-    hideSprintDetail(state) {
-      state.selectedSprint.visableDetail = false;
-      state.selectedSprint.visableCreate = false;
-      state.selectedSprint.details = {};
-    },
-    setSelectedSprintDetail(state, sprint) {
-      state.selectedSprint.details = sprint;
-    },
-
-    showTaskDetail(state, withCreate) {
-      state.selectedTask.visableDetail = true;
-      if (!(withCreate === undefined)) {
-        state.selectedTask.visableCreate = withCreate;
-      }
-    },
-    hideTaskDetail(state) {
-      state.selectedTask.visableDetail = false;
-      state.selectedTask.visableCreate = false;
-      state.selectedTask.details = {};
-    },
-    setSelectedTaskDetail(state, task) {
-      state.selectedTask.details = task;
-    },
-
     // User login and logout
     AUTH_REQUEST(state) {
       state.Userinfo.status = "loading";
@@ -213,6 +153,8 @@ export default new Vuex.Store({
 
   },
   getters: {
+    getField,
+    
     getProjectDetails: state => {
       return state.selectedProject.details;
     },
@@ -257,6 +199,7 @@ export default new Vuex.Store({
     registration,
     group,
     step,
+    selected
   }
 });
 

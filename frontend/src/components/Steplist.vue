@@ -1,82 +1,109 @@
 <template>
-  <div>
-    <v-list>
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>
+  <v-layout row wrap>
+    <v-flex text-xs-center>
+      <v-card>
+        <v-list class="pa-0">
+          <v-list-item>
+            <v-list-item-action>
+              <v-checkbox
+                :input-value="allChecked"
+                @change="toggleAll(!allChecked)"
+                color="primary"
+                v-if="steps.length > 0"
+              ></v-checkbox>
+              <v-icon color="primary" v-else>mdi-playlist-check</v-icon>
+            </v-list-item-action>
             <v-text-field
-              v-model="newStep"
-              id="newStep"
-              name="newStep"
-              label="Type your task"
-              @keyup.enter="addStep"
+              :label="'New step input'"
+              @keydown.enter="addTodo"
+              autofocus
+              autocomplete="off"
+              clearable
+              color="primary"
+              text
+              hide-details
+              maxlength="1023"
+              placeholder="What needs to be checked?"
+              solo
+              v-model="newTodo"
+            ></v-text-field>
+          </v-list-item>
+        </v-list>
+      </v-card>
+      <!-- main -->
+      <v-card class="mt-3" v-show="steps.length">
+        <v-progress-linear class="my-0" v-model="progressPercentage" />
+        <v-card-actions class="px-3" v-show="steps.length">
+          <span class="primary--text">
+            {{ remaining }} {{ remaining | pluralize("item") }} left
+          </span>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+        <v-list class="pa-0">
+          <template v-for="step in steps">
+            <v-divider :key="`${step.numbering}-divider`"></v-divider>
+            <Step
+              :key="step.numbering"
+              :step="step"
+              @fetch-steplist="fetchMyData()"
+              @fetch-step="fetchStep($event)"
             />
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-    <v-list-item-group>
-      <v-list-item
-        v-for="(step, index) in getStepArray()"
-        :key="step.numbering"
+          </template>
+        </v-list>
+      </v-card>
+      <v-btn
+        @click="clearCompleted"
+        block
+        class="mt-3"
+        color="primary"
+        depressed
+        rounded
+        v-show="steps.length > remaining"
       >
-        <template #default="{ active, toggle }">
-          <v-list-item-action>
-            <v-checkbox
-              v-model="step.checked"
-              @click="
-                toggle;
-                updateStepFn(step, index);
-              "
-            ></v-checkbox>
-          </v-list-item-action>
-
-          <v-list-item-content>
-            <v-list-item-title :class="{ done: step.checked }">{{
-              step.text
-            }}</v-list-item-title>
-            <v-list-item-subtitle></v-list-item-subtitle>
-          </v-list-item-content>
-          <v-btn
-            fab
-            ripple
-            icon
-            small
-            color="red"
-            v-if="active"
-            @click="removeStep(step.id)"
-          >
-            <v-icon>mdi-close-circle</v-icon>
-          </v-btn>
-        </template>
-      </v-list-item>
-    </v-list-item-group>
-  </div>
+        Clear completed
+      </v-btn>
+    </v-flex>
+  </v-layout>
 </template>
+
 <script>
 import { mapActions, mapGetters } from "vuex";
+import Step from "@/components/Step.vue";
 export default {
+  props: ["steplistId"],
+  components: {
+    Step,
+  },
   data() {
     return {
-      newStep: ""
+      newTodo: "",
+      steps: [],
     };
   },
-  props: ["steplistId"],
+  computed: {
+    todos() {
+      return this.$store.state.todos;
+    },
+    allChecked() {
+      return this.steps.every((step) => step.checked);
+    },
+    remaining() {
+      return this.steps.filter((step) => !step.checked).length;
+    },
+    progressPercentage() {
+      const len = this.steps.length;
+      return ((len - this.remaining) * 100) / len;
+    },
+    ...mapGetters("step", {
+      stepById: "byId",
+      stepByIdArray: "byIdArray",
+    }),
+    ...mapGetters("steplist", {
+      steplistById: "byId",
+    }),
+  },
   methods: {
-    ...mapActions("steplist", {
-      fetchSteplistList: "fetchList",
-      fetchSteplist: "fetchSingle",
-      createSteplist: "create",
-      updateSteplist: "update",
-      deleteSteplist: "destroy"
-    }),
-    ...mapActions("step", {
-      fetchSteps: "fetchList",
-      createStep: "create",
-      updateStep: "update",
-      deleteStep: "destroy"
-    }),
-    getStepArray() {
+    getSteps() {
       var steplist;
       var steplistitems = [];
       steplist = this.steplistById(this.steplistId);
@@ -87,56 +114,81 @@ export default {
       }
       return steplistitems;
     },
-    removeStep(id) {
-      this.deleteStep({
-        id: id,
-        customUrlFnArgs: { steplistId: null }
-      }).then(() => this.fetchMyData());
+    toggleAll(value) {
+      this.steps.forEach((step) => {
+        this.updateStep({
+          id: step.id,
+          data: {
+            checked: value,
+          },
+          customUrlFnArgs: {},
+        }).then(() => this.fetchMyData());
+      });
     },
-    addStep() {
-      var value = this.newStep && this.newStep.trim();
-      if (!value) {
-        return;
-      }
+    clearCompleted() {
+      this.steps.forEach((step) => {
+        if (step.checked) {
+          this.deleteStep({
+            id: step.id,
+            customUrlFnArgs: { steplistId: null },
+          }).then(() => this.fetchMyData());
+        }
+      });
+    },
+    addTodo() {
+      const text = this.newTodo.trim();
       this.createStep({
         data: {
-          text: value,
+          text: text,
           checked: false,
           steplist: this.steplistId,
-          numbering: this.getStepArray().length
+          numbering: this.steps.length,
         },
-        customUrlFnArgs: { steplistId: null }
+        customUrlFnArgs: {},
       }).then(() => this.fetchMyData());
 
       //prepare for new step
-      this.newStep = "";
-    },
-    updateStepFn(step, index) {
-      this.updateStep({
-        id: step.id,
-        data: {
-          checked: step.checked,
-          numbering: index
-        },
-        customUrlFnArgs: {}
-      });
+      this.newTodo = "";
     },
     fetchMyData() {
-      this.fetchSteplist({ id: this.steplistId });
-      this.fetchSteps({ customUrlFnArgs: { steplistId: this.steplistId } });
-    }
-  },
-  computed: {
-    ...mapGetters("steplist", {
-      steplistById: "byId"
+      this.fetchSteplist({ id: this.steplistId }).then(() => {
+        this.steps = this.getSteps();
+      });
+      this.fetchSteps({
+        customUrlFnArgs: { steplistId: this.steplistId },
+      }).then(() => {
+        this.steps = this.getSteps();
+      });
+    },
+    fetchStep(stepId) {
+      this.fetchStep({
+        id: stepId,
+        customUrlFnArgs: { steplistId: null },
+      }).then(() => {
+        this.steps = this.getSteps();
+      });
+    },
+    ...mapActions("steplist", {
+      fetchSteplistList: "fetchList",
+      fetchSteplist: "fetchSingle",
+      createSteplist: "create",
+      updateSteplist: "update",
+      deleteSteplist: "destroy",
     }),
-    ...mapGetters("step", {
-      stepById: "byId",
-      stepByIdArray: "byIdArray"
-    })
+    ...mapActions("step", {
+      fetchStep: "fetchSingle",
+      fetchSteps: "fetchList",
+      createStep: "create",
+      updateStep: "update",
+      deleteStep: "destroy",
+    }),
   },
-  created() {
+  filters: {
+    pluralize: (n, w) => (n === 1 ? w : w + "s"),
+    capitalize: (s) => s.charAt(0).toUpperCase() + s.slice(1),
+  },
+  mounted() {
     this.fetchMyData();
-  }
+  },
 };
 </script>

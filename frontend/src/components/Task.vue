@@ -73,19 +73,23 @@
         </v-card-title>
         <v-card-text class="">
           <v-row dense>
-            <v-col>
+            <v-col >
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-icon color="tabbody" v-bind="attrs" v-on="on"
+                  <v-icon 
+                    v-if="plannedSprintStart !== ''"
+                    color="tabbody" 
+                    v-bind="attrs" 
+                    v-on="on"
                     >mdi-calendar-range</v-icon
                   >
                 </template>
                 <span>Planned implementation</span>
               </v-tooltip>
-              <span>DD/MM/JJJJ</span>
+              <span>{{plannedSprintStart}}</span>
             </v-col>
             <v-col cols="auto"></v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
@@ -185,8 +189,8 @@ export default {
 
   methods: {
     showTaskDetail() {
-      this.$store.commit("setSelectedTaskDetail", this.task);
-      this.$store.commit("showTaskDetail", false);
+      this.$store.commit("selected/setTaskDetail", this.task);
+      this.$store.commit("selected/showTaskDetail", false);
     },
     GetUserInitial(id) {
       var inital = "AA";
@@ -222,6 +226,19 @@ export default {
     ...mapGetters("label", {
       labelById: "byId"
     }),
+    ...mapGetters("sprint", {
+      sprintById: "byId"
+    }),
+
+    plannedSprintStart(){ 
+      if(this.task.sprint != null){
+        return this.sprintById(this.task.sprint).start
+      }
+      else{
+        return ""
+      }  
+    },
+
     avatarsSorted() {
       return this.usersbyIdArrayWithDetails(this.task.assigned_users, this.task.project);
     },

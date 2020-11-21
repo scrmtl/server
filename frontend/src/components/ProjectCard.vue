@@ -22,9 +22,9 @@
                 :rotate="-90"
                 :size="100"
                 :width="15"
-                :value="valueCard"
+                :value="completedSprintsInPercent"
                 color="link"
-              >{{ valueCard }}</v-progress-circular>
+              >{{ completedSprints }} / {{totalSprints}}</v-progress-circular>
             </v-list-item-avatar>
           </v-list-item>
           </router-link>
@@ -44,14 +44,12 @@
 
 <script>
 
-import {  mapActions } from "vuex";
-
+import {  mapActions, mapGetters } from "vuex";
 export default {
   props: ["project"],
   data() {
     return {
-      valueCard: "50/100",
-      valueDetail: "30/100",
+
     };
   },
   
@@ -63,14 +61,39 @@ export default {
     ...mapActions("projectUser", {
       fetchProjectUsers: "fetchList"
     }),
-
     showProjectDetail() {
-      this.$store.commit("showProjectDetail", false);
-      this.$store.commit("setSelectedProjectDetail", this.project);
+      this.$store.commit("selected/showProjectDetail", false);
+      this.$store.commit("selected/setProjectDetail", this.project);
     },
   },
   computed:{
+    ...mapGetters("sprint",{
+      sprintsByProjectId: "byProjectId"
+    }),
 
+
+    completedSprints(){
+      if (this.project.numOfSprints != null) {
+        var sprints = this.sprintsByProjectId(this.project.id);
+        if( sprints !== null){
+          return sprints.filter(sprint => sprint.status === "DO" || sprint.status === "AC").length
+        }
+        return 0
+      } else {
+        return 0
+      }
+    },
+    completedSprintsInPercent(){
+      return Math.round((this.completedSprints/this.project.numOfSprints)*100)
+    },
+
+    totalSprints(){
+      if (this.project.numOfSprints != null) {
+        return this.project.numOfSprints
+      } else {
+        return 0
+      }
+    }
   },
   created(){
     

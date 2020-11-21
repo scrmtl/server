@@ -8,23 +8,32 @@
             <v-icon class="mr-1">mdi-folder-plus</v-icon>Create Project
           </v-btn>
         </div>
+        <div class="projectBtn my-n1">
+          <v-switch
+            v-if="this.groupId !== 1"
+            color="link"
+            inset
+            dark
+            v-model="showAllProjects"
+          >
+            <template v-slot:label>
+              <span class="link--text">Show all Projects</span>
+            </template>
+          </v-switch>
+        </div>
       </v-col>
     </v-row>
     <v-row align="start" justify="center">
       <v-col lg="8" md="7" sm="12">
         <div
-          v-for="project in orderedProjects(
-            listProjects,
-            this.groupId,
-            projectUsers(this.userId)
-          )"
+          v-for="project in sortedProjects"
           :key="project.id"
         >
           <ProjectCard v-bind:project="project" />
         </div>
       </v-col>
       <v-col lg="4" md="5" class="hidden-sm-and-down">
-        <MyTasksLane class="hidden-sm-and-down"/>
+        <MyTasksLane class="hidden-sm-and-down" />
       </v-col>
     </v-row>
   </v-container>
@@ -46,44 +55,65 @@ export default {
     tab: null,
     localProject: {},
     groupId: 0,
-    userId: {}
+    userId: {},
+    showAllProjects: false,
   }),
   components: {
     ProjectCard,
-    MyTasksLane
+    MyTasksLane,
   },
 
-  beforeCreate() {},
-
-  created() {
-    this.loadData();
-    
-    this.fetchGroupId();
-  },
+  
 
   methods: {
     ...mapActions("project", {
-      ProjectsFetch: "fetchList",
-      createProject: "create"
+      fetchProjects: "fetchList",
+      createProject: "create",
     }),
     ...mapActions("user", {
-      UsersFetch: "fetchList"
+      fetchUsers: "fetchList",
     }),
     ...mapActions("group", {
-      GroupsFetch: "fetchList"
+      fetchGroups: "fetchList",
     }),
     ...mapActions("session", {
-      SessionFetch: "fetchList"
+      fetchSession: "fetchList",
+    }),
+    ...mapActions("sprint", {
+      fetchSprints: "fetchList",
     }),
 
     loadData() {
       // Load Projects
-      this.ProjectsFetch({ customUrlFnArgs: {} });
+      this.fetchProjects({ customUrlFnArgs: {} });
       //Load User Groups
-      this.GroupsFetch();
-      this.UsersFetch();
-      this.SessionFetch({ customUrlFnArgs: { all: false } });
+      this.fetchGroups();
+      this.fetchUsers();
+      this.fetchSession({ customUrlFnArgs: { all: false } });
+      this.fetchSprints({ customUrlFnArgs: {} })
     },
+
+    GetSessionIds() {
+      this.groupId = -1;
+      this.userId = -1;
+      this.fetchSession({
+        id: null,
+        customUrlFnArgs: { all: false },
+      })
+        .then(() => {
+          //get groupId
+          var session = Object.values(this.listSession)[0];
+          this.groupId = session.groups[0];
+          this.userId = session.id;
+        })
+        .catch(() => {
+          if (this.groupId <= 0) {
+            this.groupId = 0;
+            this.userId = 0;
+          }
+        });
+    },
+
     showCreateProject() {
       this.$store.commit("showProjectDetail", true);
     },
@@ -101,39 +131,15 @@ export default {
           dod: this.localProject.dod,
           numOfSprints: this.localProject.numOfSprints,
           status: this.localProject.status,
-          project_users: this.localProject.project_users
+          project_users: this.localProject.project_users,
         },
-        customUrl: "/api/projects/"
+        customUrl: "/api/projects/",
       });
-    },
-
-    orderedProjects(projects, groupId, projectUsers) {
-      //Wenn der User-Status 1 ist, dann ist der User Admin
-      if (groupId === 1) {
-        return this.orderProjects(projects);
-      }
-      //Bei -1 fetchen wir uns die ID nochmal... Kann vielleicht in Zukunft mal raus
-      else if (groupId === -1) {
-        this.fetchGroupId();
-        groupId = this.groupId;
-      } else {
-        //Filtert die Liste von Projekt_usern zu der einen User id (siehe HTML-Code)
-        //und packt dann die Projekte des Users in das Result array
-        var user_projects = [];
-        projectUsers.forEach(projectUser => {
-          projects.forEach(element => {
-            if (element.id === projectUser.project) {
-              user_projects.push(element);
-            }
-          });
-        });
-        return this.orderProjects(user_projects);
-      }
     },
 
     //Ordnet die Projekte nach dem Status (Ob Aktiv oder Archiv)
     orderProjects(projects) {
-      projects.sort(function(a, b) {
+       projects.sort(function (a, b) {
         var keyA = a.status;
         var keyB = b.status;
         // Vergleiche ob AC oder AR
@@ -141,67 +147,69 @@ export default {
         if (keyA > keyB) return 1;
         return 0;
       });
-      return projects;
+      return projects
     },
 
-    ...mapActions("session", {
-      fetchSession: "fetchList"
-    }),
+    
 
-    fetchGroupId() {
-      this.groupId = -1;
-      this.userId = -1;
-      this.fetchSession({
-        id: null,
-        customUrlFnArgs: { all: false }
-      })
-        .then(() => {
-          //get groupId
-          var session = Object.values(this.listSession)[0];
-          this.groupId = session.groups[0];
-          this.userId = session.id;
-        })
-        .catch(() => {
-          if (this.groupId <= 0) {
-            this.groupId = 0;
-            this.userId = 0;
-          }
-        });
-    }
+    
   },
   computed: {
-    ...mapGetters("project", { listProjects: "list" }),
+    ...mapState({
+      project: "detailProject",
+    }),
+    ...mapGetters("project", {
+      listProjects: "list" }),
     ...mapGetters("session", {
-      listSession: "list"
+      listSession: "list",
     }),
     ...mapGetters("user", {
-      projectUsers: "byUserId"
+      projectUsersByUserId: "byUserId",
     }),
-
     ...mapGetters("group", {
-      groupById: "byId"
+      groupById: "byId",
     }),
     ...mapGetters({ userinfos: "getUserinfo" }),
-    getGroupId: function() {
+
+    getGroupId: function () {
       if (this.groupId === 0) {
-        this.fetchGroupId();
+        this.GetSessionIds();
       }
       return this.groupId;
     },
 
-    ...mapState({
-      project: "detailProject"
-    })
+    
+
+    sortedProjects(){
+      // show all project if you admin or you set it via switch
+      if(this.showAllProjects || this.groupId === 1){
+        return this.orderProjects(this.listProjects);
+      }
+      // show only your own projects
+      else{
+        var userProjects = [];
+        this.projectUsersByUserId(this.userId).forEach((projectUser) => {
+          this.listProjects.forEach((project) => {
+            if (project.id === projectUser.project) {
+              userProjects.push(project);
+            }
+          });
+        });
+        return this.orderProjects(userProjects);
+      }
+    }
   },
+
   mounted() {
     this.loadData();
-    // setInterval(
-    //   function() {
-    //     this.loadData();
-    //   }.bind(this),
-    //   15000
-    // );
-  }
+    this.GetSessionIds();
+  },
+
+  created() {
+    this.loadData();
+    this.GetSessionIds();
+  },
+
 };
 </script>
 
