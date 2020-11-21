@@ -79,6 +79,9 @@ export default {
     ...mapActions("session", {
       fetchSession: "fetchList",
     }),
+    ...mapActions("sprint", {
+      fetchSprints: "fetchList",
+    }),
 
     loadData() {
       // Load Projects
@@ -87,6 +90,7 @@ export default {
       this.fetchGroups();
       this.fetchUsers();
       this.fetchSession({ customUrlFnArgs: { all: false } });
+      this.fetchSprints({ customUrlFnArgs: {} })
     },
 
     GetSessionIds() {
@@ -179,7 +183,6 @@ export default {
     sortedProjects(){
       // show all project if you admin or you set it via switch
       if(this.showAllProjects || this.groupId === 1){
-        console.log(this.listProjects)
         return this.orderProjects(this.listProjects);
       }
       // show only your own projects
