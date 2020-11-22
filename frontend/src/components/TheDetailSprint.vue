@@ -31,7 +31,7 @@
         >
           <v-card flat dark color="navbar" tile>
             <v-card-title>
-                <span class="headline">{{ sprintName }}</span>
+                <span class="headline">{{ header }}</span>
             </v-card-title>
             <v-card-text>
               <v-row align="center">
@@ -46,7 +46,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="status"
+                    v-model="namedStatus"
                     outlined
                     dense
                     readonly
@@ -185,8 +185,15 @@ export default {
   name: "TheDetailSprint",
   data: () => ({
     tab: null,
-    sprintName: "Create new sprint",
+    header: "Create new sprint",
     value: 0, //placeholder
+    namedStatus: "in Planning",
+    rules: {
+      versionNaming: value => {
+        const pattern = /^V\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,2}$/;
+        return pattern.test(value) || "Invalid Duration";
+      }
+    }
   }),
   components: {
 
@@ -211,7 +218,7 @@ export default {
       this.createSprint({
         data:{
           
-          status: "NW"
+          status: "IL"
         },
         customUrlFnArgs: {}
       })
@@ -249,7 +256,13 @@ export default {
       }
       return namedStatus;
     },
-
+    GetHeader(){
+      if (this.visableDetail && !this.visableCreate) {
+        return "Sprint " + this.number;
+      } else {
+        return "Create new sprint"
+      }
+    }
 
   },
   computed: {
@@ -288,15 +301,13 @@ export default {
       // Nothing to update
       if (val === prev) return;
       // Update props
-      if (this.visableDetail && !this.visableCreate) {
-        this.sprintName = "Sprint " + this.number;
-      } else {
-        this.sprintName = "Create new sprint"
-      }
+      this.header = this.GetHeader();
+      this.namedStatus = this.GetNamedStatus(this.status);
     },
   },
   created() {
-
+    this.header = this.GetHeader();
+    this.namedStatus = this.GetNamedStatus(this.status);
   }
 }
 </script>

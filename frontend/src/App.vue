@@ -5,6 +5,7 @@
     <TheNavigation/>
     <DetailProject v-if="this.$store.getters.isLoggedIn" />
     <DetailTask v-if="this.$store.getters.isLoggedIn" />
+    <DetailSprint v-if="this.$store.getters.isLoggedIn" />
     <!-- v-main is necessary. Do not use v-content -->
     <v-main class="tabbody">
       <router-view />
@@ -21,6 +22,7 @@
 import SystemBar from "@/components/TheSystemBar.vue";
 import DetailProject from "@/components/TheDetailProject.vue";
 import DetailTask from "@/components/TheDetailTask.vue";
+import DetailSprint from "@/components/TheDetailSprint.vue";
 import TheNavigation from "@/components/TheNavigation.vue";
 import Axios from "axios";
 export default {
@@ -31,7 +33,8 @@ export default {
   components: {
     SystemBar,
     DetailProject,
-    DetailTask, 
+    DetailTask,
+    DetailSprint,
     TheNavigation
   },
 

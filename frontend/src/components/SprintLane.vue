@@ -79,9 +79,11 @@ export default {
     }),
     createSprint(){
       console.log("Create Sprint")
+      this.$store.commit("selected/showSprintDetail", true);
     },
     showSprintDetails(){
       console.log("show Sprint detail")
+      this.$store.commit("selected/showSprintDetail", false);
     },
     moveTask(e){
       const taskId = e.dataTransfer.getData("task-id");
