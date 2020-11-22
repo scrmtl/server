@@ -169,12 +169,12 @@ export default {
       }
     },
     createTaskHelper(laneId) {
-      this.$store.commit("showTaskDetail", true);
+      this.$store.commit("selected/showTaskDetail", true);
       var task = {
         lane: laneId,
         feature: this.laneFeature[0].id
       };
-      this.$store.commit("setSelectedTaskDetail", task);
+      this.$store.commit("selected/setTaskDetail", task);
       this.createInProgress = false;
     },
     moveTask(e){
@@ -213,7 +213,7 @@ export default {
             this.fetchSingleSprint({id: taskSprintId, customUrlFnArgs: {}})
             .then((res)=>{
               if(res.status === 200){
-                this.$store.commit("setSelectedSprintDetail", res.data);
+                this.$store.commit("selected/setSprintDetail", res.data);
               }
             })
           }
