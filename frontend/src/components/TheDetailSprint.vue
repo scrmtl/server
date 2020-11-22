@@ -20,15 +20,12 @@
         tile
       >
         <v-tab>Details</v-tab>
-        <v-tab v-if="!visableCreate">Summary</v-tab>
+        <v-tab :disabled="visableCreate">Summary</v-tab>
       </v-tabs>
-      <v-tabs-items>
+
+      <v-tabs-items v-model="tab" background-color="navbar" color="navbar">
         <!-- Details -->
-        <v-tab-item
-          v-model="tab"
-          background-color="navbar"
-          color="navbar"
-        >
+        <v-tab-item >
           <v-card flat dark color="navbar" tile>
             <v-card-title>
                 <span class="headline">{{ header }}</span>
@@ -75,11 +72,12 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="value"
+                    v-model="placeHolderValue"
                     outlined
                     dense
                     readonly
-                    label="Duration (in d)"
+                    suffix="days"
+                    label="Duration"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -89,6 +87,7 @@
                     v-model="version"
                     outlined
                     dense
+                    placeholder="V00.00.00.00"
                     label="Product Version"
                   ></v-text-field>
                 </v-col>
@@ -107,12 +106,7 @@
           </v-card> 
         </v-tab-item>
         <!-- Summary -->
-        <v-tab-item
-          v-model="tab"
-          background-color="navbar"
-          color="navbar"
-          v-if="!visableCreate"
-        >
+        <v-tab-item :disabled="visableCreate">
           <v-card flat dark color="navbar" tile>
             <v-card-text>
               <v-row align="center">
@@ -121,6 +115,7 @@
                     v-model="placeHolderValue"
                     outlined
                     dense
+                    readonly
                     label="Planned card number"
                   ></v-text-field>
                 </v-col>
@@ -129,6 +124,7 @@
                     v-model="placeHolderValue"
                     outlined
                     dense
+                    readonly
                     label="Finished card number"
                   ></v-text-field>
                 </v-col>
@@ -139,6 +135,7 @@
                     v-model="placeHolderValue"
                     outlined
                     dense
+                    readonly
                     label="Planned Story Points"
                   ></v-text-field>
                 </v-col>
@@ -147,6 +144,7 @@
                     v-model="placeHolderValue"
                     outlined
                     dense
+                    readonly
                     label="Finished Story Points"
                   ></v-text-field>
                 </v-col>
@@ -157,6 +155,8 @@
                     v-model="placeHolderValue"
                     outlined
                     dense
+                    readonly
+                    suffix="days"
                     label="Duration"
                   ></v-text-field>
                 </v-col>
@@ -165,6 +165,8 @@
                     v-model="placeHolderValue"
                     outlined
                     dense
+                    readonly
+                    suffix="days"
                     label="remaining duration"
                   ></v-text-field>
                 </v-col>
@@ -176,13 +178,13 @@
       <div>
         <v-btn color="link" text @click="close()">Close</v-btn>
         <v-btn
-            v-if="visableCreate"
-            color="link"
-            disabled
-            text
-            @click="addSprint()"
-            >Create</v-btn
-          >
+          v-if="visableCreate"
+          color="link"
+          disabled
+          text
+          @click="addSprint()"
+          >Create</v-btn
+        >
       </div>
     </v-container>
   </v-navigation-drawer>
@@ -198,15 +200,14 @@ export default {
     header: "Create new sprint",
     placeHolderValue: 0, //placeholder
     namedStatus: "in Planning",
-    rules: {
+  	rules: {
       versionNaming: value => {
         const pattern = /^V\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,2}$/;
-        return pattern.test(value) || "Invalid Duration";
+        return pattern.test(value) || "Invaild Versioning";
       }
     }
   }),
   components: {
-
   },
   methods: {
     ...mapActions("sprint", {
@@ -227,13 +228,12 @@ export default {
     addSprint() {
       this.createSprint({
         data:{
-          
           status: "IL"
         },
         customUrlFnArgs: {}
       })
       .then(() => {
-        this.fetchSprints({customUrlFnArgs: {}});
+        this.fetchSprints({customUrlFnArgs: {} });
         this.$store.commit("selected/hideSprintDetail");
         this.$store.commit("showSystemAlert", {
           message: "Create new Sprint",
@@ -245,6 +245,7 @@ export default {
     saveSprint() {
 
     },
+
     GetNamedStatus(status) {
       var namedStatus = "in Planning";
       switch (status) {
@@ -275,6 +276,7 @@ export default {
     }
 
   },
+
   computed: {
     // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
     // Implementation with https://github.com/maoberlehner/vuex-map-fields
@@ -289,7 +291,7 @@ export default {
       "sprint.details.end",
       "sprint.details.story",
       "sprint.visableDetail",
-      "sprint.visableCreate",
+      "sprint.visableCreate"
     ]),
 
     visibleDrawer: {
@@ -319,7 +321,7 @@ export default {
     this.header = this.GetHeader();
     this.namedStatus = this.GetNamedStatus(this.status);
   }
-}
+};
 </script>
 
 <style lang="css" scoped>
