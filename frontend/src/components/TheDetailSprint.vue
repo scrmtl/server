@@ -20,7 +20,7 @@
         tile
       >
         <v-tab>Details</v-tab>
-        <v-tab>Summary</v-tab>
+        <v-tab v-if="!visableCreate">Summary</v-tab>
       </v-tabs>
       <v-tabs-items>
         <!-- Details -->

@@ -78,5 +78,5 @@ export default {
 </script>
 
 <style lang="css" >
-@import "/main.css";
+  @import "/main.css";
 </style>
