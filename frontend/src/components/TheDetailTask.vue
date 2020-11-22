@@ -254,7 +254,7 @@ import AssignedUserManagement from "@/components/AssignedUserManagement.vue";
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
 export default {
-  name: "DetailTask",
+  name: "TheDetailTask",
   data: () => ({
     tab: null,
     availableStatus: [
