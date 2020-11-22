@@ -285,6 +285,7 @@
             </v-card>
           </v-tab-item>
         </v-tabs-items>
+        <!-- actions -->
         <div>
           <v-btn color="link" text @click="close()">Close</v-btn>
           <v-btn

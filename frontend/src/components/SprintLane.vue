@@ -78,10 +78,19 @@ export default {
       fetchSingleSprint: "fetchSingle"
     }),
     createSprint(){
-      console.log("Create Sprint")
+      this.$store.commit("selected/showSprintDetail", true);
     },
     showSprintDetails(){
-      console.log("show Sprint detail")
+      this.$store.commit("selected/showSprintDetail", false);
+    },
+    GetHeader(number, start, end){
+      if (number !== undefined) {
+        this.selectedSprintName = "Sprint " + number;
+        this.selectedSprintDateInfo = "(" + start + " to " + end + ")";
+      } else {
+        this.selectedSprintName = "No sprint selected";
+        this.selectedSprintDateInfo = "";
+      }
     },
     moveTask(e){
       const taskId = e.dataTransfer.getData("task-id");
@@ -149,8 +158,7 @@ export default {
   watch:{
     details(currentSprint){
       this.selectedSprint = currentSprint;
-      this.selectedSprintName = "Sprint " + currentSprint.number;
-      this.selectedSprintDateInfo = "(" + currentSprint.start + " to " + currentSprint.end + ")";
+      this.GetHeader(currentSprint.number, currentSprint.start, currentSprint.end);
     },
 
   },

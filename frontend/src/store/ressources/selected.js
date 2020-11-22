@@ -40,6 +40,7 @@ const mutations = {
     state.sprint.visableDetail = true;
     if (withCreate) {
       state.sprint.visableCreate = withCreate;
+      state.sprint.details = {};
     }
   },
   hideSprintDetail(state) {
@@ -54,7 +55,7 @@ const mutations = {
   showTaskDetail(state, withCreate = false) {
     state.task.visableDetail = true;
     if (withCreate) {
-      state.selectedTask.visableCreate = withCreate;
+      state.task.visableCreate = withCreate;
     }
   },
   hideTaskDetail(state) {

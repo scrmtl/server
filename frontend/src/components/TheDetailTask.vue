@@ -21,7 +21,7 @@
           tile
         >
           <v-tab>Details</v-tab>
-          <v-tab v-if="!visableCreate">Steps</v-tab>
+          <v-tab :disabled="visableCreate">Steps</v-tab>
         </v-tabs>
         <!-- Details Tab -->
         <v-tabs-items
@@ -158,7 +158,7 @@
             </v-card>
           </v-tab-item>
           <!-- Step Tab -->
-          <v-tab-item v-if="!visableCreate">
+          <v-tab-item :disabled="visableCreate">
             <v-card flat dark color="secondary" tile>
               <v-card-text>
                 <v-row align="center">
@@ -254,7 +254,7 @@ import AssignedUserManagement from "@/components/AssignedUserManagement.vue";
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
 export default {
-  name: "DetailTask",
+  name: "TheDetailTask",
   data: () => ({
     tab: null,
     availableStatus: [
