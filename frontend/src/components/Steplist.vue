@@ -43,8 +43,8 @@
           <template v-for="step in steps">
             <v-divider :key="`${step.numbering}-divider`"></v-divider>
             <Step
-              :key="step.numbering"
-              :step="step"
+              :key="`${step.numbering}-step`"
+              v-bind:step="step"
               @fetch-steplist="fetchMyData()"
               @fetch-step="fetchStep($event)"
             />
@@ -114,6 +114,19 @@ export default {
       }
       return steplistitems;
     },
+    compare(a, b) {
+      // Use toUpperCase() to ignore character casing
+      const numA = a.numbering;
+      const numB = b.numbering;
+
+      let comparison = 0;
+      if (numA > numB) {
+        comparison = 1;
+      } else if (numA < numB) {
+        comparison = -1;
+      }
+      return comparison;
+    },
     toggleAll(value) {
       this.steps.forEach((step) => {
         this.updateStep({
@@ -152,12 +165,12 @@ export default {
     },
     fetchMyData() {
       this.fetchSteplist({ id: this.steplistId }).then(() => {
-        this.steps = this.getSteps();
+        this.steps = this.getSteps().sort(this.compare);
       });
       this.fetchSteps({
         customUrlFnArgs: { steplistId: this.steplistId },
       }).then(() => {
-        this.steps = this.getSteps();
+        this.steps = this.getSteps().sort(this.compare);
       });
     },
     fetchStep(stepId) {
