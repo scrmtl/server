@@ -103,7 +103,6 @@
                   ></v-textarea>
                 </v-col>
               </v-row>
-              
             </v-card-text>
           </v-card> 
         </v-tab-item>
@@ -112,13 +111,14 @@
           v-model="tab"
           background-color="navbar"
           color="navbar"
+          v-if="!visableCreate"
         >
           <v-card flat dark color="navbar" tile>
             <v-card-text>
               <v-row align="center">
                 <v-col>
                   <v-text-field
-                    v-model="value"
+                    v-model="placeHolderValue"
                     outlined
                     dense
                     label="Planned card number"
@@ -126,7 +126,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="value"
+                    v-model="placeHolderValue"
                     outlined
                     dense
                     label="Finished card number"
@@ -136,7 +136,7 @@
               <v-row align="center">
                 <v-col>
                   <v-text-field
-                    v-model="value"
+                    v-model="placeHolderValue"
                     outlined
                     dense
                     label="Planned Story Points"
@@ -144,7 +144,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="value"
+                    v-model="placeHolderValue"
                     outlined
                     dense
                     label="Finished Story Points"
@@ -154,7 +154,7 @@
               <v-row align="center">
                 <v-col>
                   <v-text-field
-                    v-model="value"
+                    v-model="placeHolderValue"
                     outlined
                     dense
                     label="Duration"
@@ -162,7 +162,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="value"
+                    v-model="placeHolderValue"
                     outlined
                     dense
                     label="remaining duration"
@@ -173,7 +173,17 @@
           </v-card> 
         </v-tab-item>
       </v-tabs-items>
-
+      <div>
+        <v-btn color="link" text @click="close()">Close</v-btn>
+        <v-btn
+            v-if="visableCreate"
+            color="link"
+            disabled
+            text
+            @click="addSprint()"
+            >Create</v-btn
+          >
+      </div>
     </v-container>
   </v-navigation-drawer>
 </template>
@@ -186,7 +196,7 @@ export default {
   data: () => ({
     tab: null,
     header: "Create new sprint",
-    value: 0, //placeholder
+    placeHolderValue: 0, //placeholder
     namedStatus: "in Planning",
     rules: {
       versionNaming: value => {
