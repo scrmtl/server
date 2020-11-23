@@ -171,6 +171,8 @@ export default {
     createTaskHelper(laneId) {
       this.$store.commit("selected/showTaskDetail", true);
       var task = {
+        name: "",
+        storypoints: 0,
         lane: laneId,
         feature: this.laneFeature[0].id
       };
