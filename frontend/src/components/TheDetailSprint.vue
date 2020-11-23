@@ -1,4 +1,5 @@
 <template>
+<div>
   <v-navigation-drawer
     v-model="visibleDrawer"
     right
@@ -72,7 +73,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.total_duration"
                     outlined
                     dense
                     readonly
@@ -83,13 +84,17 @@
               </v-row>
               <v-row align="center">
                 <v-col>
+                  <v-form ref="form" v-model="isFormValid" lazy-validation>
                   <v-text-field
                     v-model="version"
                     outlined
                     dense
+                    required
+                    :rules="[rules.versionNaming]"
                     placeholder="V00.00.00.00"
                     label="Product Version"
                   ></v-text-field>
+                  </v-form>
                 </v-col>
               </v-row>
               <v-row align="center">
@@ -103,6 +108,31 @@
                 </v-col>
               </v-row>
             </v-card-text>
+            <v-card-actions>
+              <v-btn color="link" text @click="close()">Close</v-btn>
+              <v-btn
+                v-if="!visableCreate"
+                color="link"
+                text
+                @click="confirm()"
+              >Save</v-btn>
+              <v-btn
+                v-if="visableCreate"
+                color="link"
+                text
+                :disabled="!isFormValid"
+                @click="addSprint()"
+                >Create</v-btn>
+              <v-btn
+                v-if="!visableCreate"
+                color="link"
+                text
+                absolute
+                right
+                :disabled="!SprintReleaseValidation"
+                @click="sprintReleaseDialog = true"
+              >Release</v-btn>
+            </v-card-actions>
           </v-card> 
         </v-tab-item>
         <!-- Summary -->
@@ -112,7 +142,7 @@
               <v-row align="center">
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.sum_of_tasks"
                     outlined
                     dense
                     readonly
@@ -121,7 +151,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.sum_of_done_tasks"
                     outlined
                     dense
                     readonly
@@ -132,7 +162,7 @@
               <v-row align="center">
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.sum_of_sp"
                     outlined
                     dense
                     readonly
@@ -141,7 +171,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.sum_of_done_sp"
                     outlined
                     dense
                     readonly
@@ -152,7 +182,7 @@
               <v-row align="center">
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.total_duration"
                     outlined
                     dense
                     readonly
@@ -162,7 +192,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.remaining_duration"
                     outlined
                     dense
                     readonly
@@ -172,35 +202,57 @@
                 </v-col>
               </v-row>
             </v-card-text>
+            <v-card-actions>
+              <v-btn color="link" text @click="close()">Close</v-btn>
+            </v-card-actions>
           </v-card> 
         </v-tab-item>
       </v-tabs-items>
-      <div>
-        <v-btn color="link" text @click="close()">Close</v-btn>
-        <v-btn
-          v-if="visableCreate"
-          color="link"
-          disabled
-          text
-          @click="addSprint()"
-          >Create</v-btn
-        >
-      </div>
     </v-container>
   </v-navigation-drawer>
+  <!-- Sprint Release Dialog -->
+  <v-dialog
+    v-model="sprintReleaseDialog"
+    persistent
+    class="mx-auto"
+    width="600"
+    dark
+  >
+    <v-card color="tabbody" shaped>
+      <v-card-text class="headline pt-10">
+        <span class="ml-12">Do you want to release sprint {{number}}?</span>
+      </v-card-text>
+      <v-card-actions class="ml-10 pb-10 pt-10">
+        <v-btn width="250" outlined  @click="releaseSprint()"
+          >Yes</v-btn
+        >
+        <v-btn
+          width="250"
+          outlined
+          @click="sprintReleaseDialog = false"
+          >No</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
 export default {
   name: "TheDetailSprint",
   data: () => ({
     tab: null,
+    statistic: {},
+    sprintReleaseDialog: false,
     header: "Create new sprint",
     placeHolderValue: 0, //placeholder
     namedStatus: "in Planning",
+    isFormValid: null,
   	rules: {
+      required: value => !!value || "Required",
       versionNaming: value => {
         const pattern = /^V\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,2}$/;
         return pattern.test(value) || "Invaild Versioning";
@@ -216,6 +268,10 @@ export default {
       fetchSprints: "fetchList",
       fetchSingleSprint: "fetchSingle"
     }),
+
+    ...mapActions("sprintStatistics", {
+      fetchSprintStatistics: "fetchList"
+    }),
     
     close() {
       this.$store.commit("selected/hideSprintDetail");
@@ -228,22 +284,72 @@ export default {
     addSprint() {
       this.createSprint({
         data:{
-          status: "IL"
+          project: this.$route.params.id,
+          status: "IL",
+          version: this.version,
+          story: this.story
         },
         customUrlFnArgs: {}
       })
       .then(() => {
-        this.fetchSprints({customUrlFnArgs: {} });
+        this.fetchSprints({customUrlFnArgs: {projectId: this.$route.params.id } });
+        this.fetchSprintStatistics();
         this.$store.commit("selected/hideSprintDetail");
         this.$store.commit("showSystemAlert", {
           message: "Create new Sprint",
-          category: "info"
+          category: "success"
         });
       })
     },
     
     saveSprint() {
+      this.updateSprint({
+        id: this.id,
+        data: {
+          version: this.version,
+          story: this.story
+        },
+        customUrlFnArgs: {}
+      })
+      .then(
+        function(value) {
+          if(value.data.id !== undefined){
+            this.fetchSingleSprint({
+              id: this.id,
+              customUrlFnArgs: {}
+            });
+          }
+          this.close();
+        }.bind(this)
+      );
+    },
 
+    releaseSprint() {
+      this.sprintReleaseDialog = false;
+      this.updateSprint({
+        id: this.id,
+        data: {
+          status: "PL",
+          version: this.version,
+          story: this.story
+        },
+        customUrlFnArgs: {}
+      })
+      .then(
+        function(value) {
+          if(value.data.id !== undefined){
+            this.fetchSingleSprint({
+              id: this.id,
+              customUrlFnArgs: {}
+            });
+          }
+          this.close();
+          this.$store.commit("showSystemAlert", {
+          message: "Release Sprint " + this.number,
+          category: "success"
+        });
+        }.bind(this)
+      );
     },
 
     GetNamedStatus(status) {
@@ -267,11 +373,19 @@ export default {
       }
       return namedStatus;
     },
-    GetHeader(){
+    GetHeader() {
       if (this.visableDetail && !this.visableCreate) {
         return "Sprint " + this.number;
       } else {
         return "Create new sprint"
+      }
+    },
+    GetStatitic() {
+      if(this.visableDetail && !this.visableCreate){
+        return this.sprintStatisticsById(this.id);
+      }
+      else{
+        return {}
       }
     }
 
@@ -290,9 +404,22 @@ export default {
       "sprint.details.start",
       "sprint.details.end",
       "sprint.details.story",
+      "sprint.details.task_cards",
       "sprint.visableDetail",
       "sprint.visableCreate"
     ]),
+    ...mapGetters("sprintStatistics", {
+      sprintStatisticsById: "byId"
+    }),
+
+    SprintReleaseValidation() {
+      if(this.status === "IL" && !this.visableCreate && this.task_cards.length > 0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    },
 
     visibleDrawer: {
       get() {
@@ -315,6 +442,7 @@ export default {
       // Update props
       this.header = this.GetHeader();
       this.namedStatus = this.GetNamedStatus(this.status);
+      this.statistic = this.GetStatitic()
     },
   },
   created() {

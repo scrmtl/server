@@ -8,8 +8,8 @@
         :elevation="hover ? 14 : 5"
         @click="showTaskDetail()"
         draggable
-        @dragstart="pickupTask($event, task.id, task.name, task.feature, task.numbering, task.lane, task.sprint)"
-        @dragover="allowDrop($event, task.storypoints)"
+        @dragstart="pickupTask($event, task.id, task.name, task.feature, task.numbering, task.lane, task.sprint, plannedSprint.status, task.storypoints)"
+        
       >
         <v-card-title>
           <span class="tabbody--text">{{ task.name }}</span>
@@ -77,7 +77,7 @@
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon 
-                    v-if="plannedSprintStart !== ''"
+                    v-if="plannedSprint.start !== ''"
                     color="tabbody" 
                     v-bind="attrs" 
                     v-on="on"
@@ -86,7 +86,7 @@
                 </template>
                 <span>Planned implementation</span>
               </v-tooltip>
-              <span>{{plannedSprintStart}}</span>
+              <span>{{plannedSprint.start}}</span>
             </v-col>
             <v-col cols="auto"></v-col>
             <v-col cols="3">
@@ -198,7 +198,7 @@ export default {
       inital = user.username.substring(0, 2);
       return inital;
     },
-    pickupTask(e, taskId, taskName, taskFeatureId, taskNumbering, fromLane, sprint){
+    pickupTask(e, taskId, taskName, taskFeatureId, taskNumbering, fromLane, sprint, sprintStatus, storypoints){
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.dropEffect = "move";
       e.dataTransfer.setData("task-id", taskId);
@@ -206,16 +206,11 @@ export default {
       e.dataTransfer.setData("task-feature-id", taskFeatureId);
       e.dataTransfer.setData("task-numbering", taskNumbering);
       e.dataTransfer.setData("task-sprint-id", sprint);
+      e.dataTransfer.setData("task-sprint-status", sprintStatus);
+      e.dataTransfer.setData("task-storypoints", storypoints);
       e.dataTransfer.setData("from-lane", fromLane);
       
     },
-    allowDrop(e, storypoints){
-      if(storypoints > 0 ){
-        e.preventDefault();
-      }
-
-      return false;
-    }
   },
   computed: {
     ...mapGetters("user", {
@@ -230,12 +225,20 @@ export default {
       sprintById: "byId"
     }),
 
-    plannedSprintStart(){ 
+    plannedSprint(){ 
+      var sprintInfo = {
+        start: "",
+        end: "",
+        status: "",
+      }
       if(this.task.sprint != null){
-        return this.sprintById(this.task.sprint).start
+        sprintInfo.start = this.sprintById(this.task.sprint).start;
+        sprintInfo.end = this.sprintById(this.task.sprint).end;
+        sprintInfo.status = this.sprintById(this.task.sprint).status;
+        return sprintInfo
       }
       else{
-        return ""
+        return sprintInfo
       }  
     },
 

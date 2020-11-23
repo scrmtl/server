@@ -25,6 +25,12 @@ const mutations = {
     state.project.visableDetail = true;
     if (withCreate) {
       state.project.visableCreate = true;
+      state.project.details = {
+        name: "",
+        start:"",
+        end: "",
+        sprint_duration: 0
+      }
     }
   },
   hideProjectDetail(state) {
@@ -40,13 +46,17 @@ const mutations = {
     state.sprint.visableDetail = true;
     if (withCreate) {
       state.sprint.visableCreate = withCreate;
-      state.sprint.details = {};
+      state.sprint.details = {
+        version: "",
+        project: 0,
+        story: ""
+      };
     }
   },
   hideSprintDetail(state) {
     state.sprint.visableDetail = false;
     state.sprint.visableCreate = false;
-    state.sprint.details = {};
+    // state.sprint.details = {};
   },
   setSprintDetail(state, sprint) {
     state.sprint.details = sprint;

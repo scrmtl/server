@@ -335,7 +335,6 @@
           <v-btn
             width="250"
             outlined
-            color="primary"
             @click="deleteProjectDialog = false"
             >No</v-btn
           >
@@ -457,16 +456,21 @@ export default {
         },
         customUrlFnArgs: { templateId: this.selectedProjectTemplate.id }
       })
-      .then(
-        () => {
-          this.fetchProjects({ customUrlFnArgs: {} });
-          this.$store.commit("selected/hideProjectDetail");
+        .then( value => {
+            this.fetchProjects({ customUrlFnArgs: {} });
+            this.$store.commit("selected/hideProjectDetail");
+            this.$store.commit("showSystemAlert", {
+              message: "Create Project",
+              category: "success"
+            });
+            return value;
+          })
+        .catch( error => {
           this.$store.commit("showSystemAlert", {
-            message: "Create " + this.name,
-            category: "info"
-          });
-        }
-      );
+              message: error.detail,
+              category: "error"
+            });
+        })
 
       
     },
@@ -512,7 +516,7 @@ export default {
           is_template: this.is_template
         },
         customUrlFnArgs: {}
-      });
+      })
     },
 
     deleteProject() {

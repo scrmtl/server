@@ -12,7 +12,7 @@
     <v-col>
       <v-timeline>
         <v-timeline-item
-          v-for="sprint in listSprints" :key="sprint.number"
+          v-for="sprint in listSprints" :key="`${sprint.number}-sprint`"
           small
           fill-dot
         >

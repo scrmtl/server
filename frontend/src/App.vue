@@ -10,6 +10,8 @@
     <v-main class="tabbody">
       <router-view />
     </v-main>
+    <SystemAlert/>
+
     <v-footer color="appbar" class="white--text" app>
       <span>dark, cool, easy</span>
       <v-spacer></v-spacer>
@@ -24,6 +26,7 @@ import DetailProject from "@/components/TheDetailProject.vue";
 import DetailTask from "@/components/TheDetailTask.vue";
 import DetailSprint from "@/components/TheDetailSprint.vue";
 import TheNavigation from "@/components/TheNavigation.vue";
+import SystemAlert from "@/components/SystemAlert.vue";
 import Axios from "axios";
 export default {
   name: "App",
@@ -35,7 +38,8 @@ export default {
     DetailProject,
     DetailTask,
     DetailSprint,
-    TheNavigation
+    TheNavigation,
+    SystemAlert
   },
 
   methods: {
@@ -51,7 +55,12 @@ export default {
           this.$store.dispatch("logout");
       }
       else if(response.status === 403){
+        console.log("Error from interceptor");
         console.log(response);
+        this.$store.commit("showSystemAlert", {
+              message: "Permission denied",
+              category: "error"
+            });
       }
       // return new Promise(() => {
       //   if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {

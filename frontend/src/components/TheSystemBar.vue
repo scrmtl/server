@@ -14,7 +14,7 @@
         ></v-app-bar-nav-icon>
         <v-toolbar-title class="mt-n3">Scrum Tool</v-toolbar-title>      
         <v-spacer></v-spacer>
-        <SystemAlert/>
+        
         <v-spacer></v-spacer>
         <v-btn
           class="mt-n1"
@@ -51,7 +51,7 @@
 
 <script>
 import { mapGetters, mapActions, mapState } from "vuex";
-import SystemAlert from "@/components/SystemAlert.vue";
+
 
 
 export default {
@@ -62,7 +62,6 @@ export default {
     } 
   },
   components: {
-    SystemAlert
   },
   methods: {
     closeAlert() {
