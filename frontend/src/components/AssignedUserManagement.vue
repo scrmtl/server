@@ -9,7 +9,6 @@
     <v-card color="tabbody" dark>
       <v-card-title> {{dialogName}} </v-card-title>
       <v-card-text>
-        <SystemAlert/>
         <v-data-table
           :headers="headers"
           :items="assignedUsers"
@@ -94,7 +93,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import SystemAlert from "@/components/SystemAlert.vue";
 export default {
   name: "AssignedUserManagement",
   props: {
@@ -116,7 +114,6 @@ export default {
     selectedUser: {}
   }),
   components:{
-    SystemAlert
   },
 
   methods:{
