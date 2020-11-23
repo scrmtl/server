@@ -16,7 +16,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
     sum_of_done_sp = serializers.SerializerMethodField()
     sum_of_accepted_sp = serializers.SerializerMethodField()
     sum_of_sp = serializers.SerializerMethodField()
-    sum_of_planned_tasks = serializers.SerializerMethodField()
+    sum_of_tasks = serializers.SerializerMethodField()
     sum_of_done_tasks = serializers.SerializerMethodField()
     sum_of_accepted_tasks = serializers.SerializerMethodField()
 
@@ -35,7 +35,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
                   'sum_of_done_sp',
                   'sum_of_accepted_sp',
                   'sum_of_sp',
-                  'sum_of_planned_tasks',
+                  'sum_of_tasks',
                   'sum_of_done_tasks',
                   'sum_of_accepted_tasks',
                   'planned_sp_timeline',
@@ -83,13 +83,12 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
             sp += task.storypoints
         return sp
 
-    def get_sum_of_planned_tasks(self, obj: Sprint):
+    def get_sum_of_tasks(self, obj: Sprint):
         task_queryset: QuerySet = obj.task_cards.all()
         task: Task
         planned_tasks = 0
         for task in task_queryset:
-            if task.status == Task.Status.PLANNED:
-                planned_tasks += 1
+            planned_tasks += 1
         return planned_tasks
 
     def get_sum_of_done_tasks(self, obj: Sprint):

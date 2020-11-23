@@ -14,7 +14,7 @@
         ></v-app-bar-nav-icon>
         <v-toolbar-title class="mt-n3">Scrum Tool</v-toolbar-title>      
         <v-spacer></v-spacer>
-        
+        <span class="hidden-sm-and-down text-subtitle-1" v-if="this.$route.params.id !== undefined">{{RoutedProjectName}}</span>
         <v-spacer></v-spacer>
         <v-btn
           class="mt-n1"
@@ -88,8 +88,24 @@ export default {
       listSession: "list"
     }),
     ...mapGetters({ userinfos: "getUserinfo" }),
+    ...mapGetters("project",{
+      projectById: "byId"
+    }),
 
-
+    RoutedProjectName (){
+      if(this.$route.params.id !== undefined){
+        var project = this.projectById(this.$route.params.id)
+        if( project !== undefined){
+          return project.name.slice(0, 15);
+        }
+        else{
+          return "";
+        }
+      }
+      else{
+        return "";
+      }
+    },
     tabs(){
       return [
         { id: 1, name: "Dashboard", route: `/project/${this.$route.params.id}` },
