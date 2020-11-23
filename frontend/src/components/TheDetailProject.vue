@@ -335,7 +335,6 @@
           <v-btn
             width="250"
             outlined
-            color="primary"
             @click="deleteProjectDialog = false"
             >No</v-btn
           >

@@ -236,7 +236,6 @@
           <v-btn
             width="250"
             outlined
-            color="primary"
             @click="deleteDialog = false"
             >Nein</v-btn
           >
