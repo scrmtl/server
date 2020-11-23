@@ -14,6 +14,7 @@
         <v-list>
           <v-list-item 
             @click="createSprint()"
+            :disabled="!SprintCreateValidation"
           >
           <v-list-item-icon>
             <v-icon>mdi-plus-circle-outline</v-icon>
@@ -42,7 +43,7 @@
     <v-card-text 
       class="lane-body  flex-column" 
       @drop="moveTask($event)"
-      @dragover.prevent
+      @dragover="allowDrop($event)"
       @dragenter.prevent
     >
       <v-row justify="center"  class="" v-for="task in sprintLaneTask" :key="task.id">
@@ -92,6 +93,15 @@ export default {
         this.selectedSprintDateInfo = "";
       }
     },
+    allowDrop(e){
+      const storypoints = e.dataTransfer.getData("task-storypoints");
+      if(storypoints > 0 && this.selectedSprint.status === "IL"){
+        e.preventDefault();
+        return true;
+      }
+      return false;
+    },
+
     moveTask(e){
       const taskId = e.dataTransfer.getData("task-id");
       const taskName = e.dataTransfer.getData("task-name");
@@ -143,6 +153,25 @@ export default {
     ...mapGetters("task", {
       tasksByIdArray: "byIdArray"
     }),
+    ...mapGetters("project", {
+      projectById: "byId"
+    }),
+
+    SprintCreateValidation() {
+      var project = this.projectById(this.$route.params.id);
+      if(project !== undefined){
+        if( this.listSprint.length < project.numOfSprints){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      else{
+        return false;
+      }
+    },
+
     sprintLaneTask(){
       if(this.selectedSprint.task_cards === undefined){
         return []

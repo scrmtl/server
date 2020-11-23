@@ -25,7 +25,7 @@
           class="lane-body  flex-column" 
           v-if="laneTasks"
           @drop="moveTask($event)"
-          @dragover.prevent
+          @dragover="allowDrop($event)"
           @dragenter.prevent
         >
           <v-row 
@@ -179,6 +179,19 @@ export default {
       this.$store.commit("selected/setTaskDetail", task);
       this.createInProgress = false;
     },
+
+    allowDrop(e){
+      const sprintStatus = e.dataTransfer.getData("task-sprint-status");
+      if(this.planningMode && sprintStatus !== "IL"){
+        return false;
+      }
+      else{
+        e.preventDefault();
+        return true;
+      }
+
+    },
+
     moveTask(e){
       const taskId = e.dataTransfer.getData("task-id");
       const taskName = e.dataTransfer.getData("task-name");
