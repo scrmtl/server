@@ -246,7 +246,7 @@
             >
               <v-card-title class="title">
                 <span class="headline">Assigned project users</span>
-                <v-btn icon @click="userManagementDialog = true">
+                <v-btn class="hidden-sm-and-down" icon @click="userManagementDialog = true">
                   <v-icon color="link">mdi-dots-horizontal</v-icon>
                 </v-btn>
                 <AssignedUserManagement
@@ -304,6 +304,7 @@
             >Create</v-btn
           >
           <v-btn
+            class="hidden-sm-and-down" 
             v-if="!visableCreate"
             color="error"
             text
