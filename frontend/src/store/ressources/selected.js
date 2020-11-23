@@ -25,6 +25,12 @@ const mutations = {
     state.project.visableDetail = true;
     if (withCreate) {
       state.project.visableCreate = true;
+      state.project.details = {
+        name: "",
+        start:"",
+        end: "",
+        sprint_duration: 0
+      }
     }
   },
   hideProjectDetail(state) {

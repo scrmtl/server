@@ -115,7 +115,7 @@ export default {
     },
 
     showCreateProject() {
-      this.$store.commit("showProjectDetail", true);
+      this.$store.commit("selected/showProjectDetail", true);
     },
 
     saveProject() {
