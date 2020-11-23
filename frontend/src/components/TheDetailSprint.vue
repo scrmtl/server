@@ -72,7 +72,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.total_duration"
                     outlined
                     dense
                     readonly
@@ -103,6 +103,29 @@
                 </v-col>
               </v-row>
             </v-card-text>
+            <v-card-actions>
+              <v-btn color="link" text @click="close()">Close</v-btn>
+              <v-btn
+                v-if="!visableCreate"
+                color="link"
+                text
+                @click="confirm()"
+              >Save</v-btn>
+              <v-btn
+                v-if="visableCreate"
+                color="link"
+                text
+                @click="addSprint()"
+                >Create</v-btn>
+              <v-btn
+                v-if="!visableCreate"
+                color="link"
+                text
+                absolute
+                right
+                @click="releaseDialog = true"
+              >Release</v-btn>
+            </v-card-actions>
           </v-card> 
         </v-tab-item>
         <!-- Summary -->
@@ -112,7 +135,7 @@
               <v-row align="center">
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.sum_of_tasks"
                     outlined
                     dense
                     readonly
@@ -121,7 +144,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.sum_of_done_tasks"
                     outlined
                     dense
                     readonly
@@ -132,7 +155,7 @@
               <v-row align="center">
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.sum_of_sp"
                     outlined
                     dense
                     readonly
@@ -141,7 +164,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.sum_of_done_sp"
                     outlined
                     dense
                     readonly
@@ -152,7 +175,7 @@
               <v-row align="center">
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.total_duration"
                     outlined
                     dense
                     readonly
@@ -162,7 +185,7 @@
                 </v-col>
                 <v-col>
                   <v-text-field
-                    v-model="placeHolderValue"
+                    :value="statistic.remaining_duration"
                     outlined
                     dense
                     readonly
@@ -172,31 +195,24 @@
                 </v-col>
               </v-row>
             </v-card-text>
+            <v-card-actions>
+              <v-btn color="link" text @click="close()">Close</v-btn>
+            </v-card-actions>
           </v-card> 
         </v-tab-item>
       </v-tabs-items>
-      <div>
-        <v-btn color="link" text @click="close()">Close</v-btn>
-        <v-btn
-          v-if="visableCreate"
-          color="link"
-          disabled
-          text
-          @click="addSprint()"
-          >Create</v-btn
-        >
-      </div>
     </v-container>
   </v-navigation-drawer>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
 export default {
   name: "TheDetailSprint",
   data: () => ({
     tab: null,
+    statistic: {},
     header: "Create new sprint",
     placeHolderValue: 0, //placeholder
     namedStatus: "in Planning",
@@ -267,11 +283,19 @@ export default {
       }
       return namedStatus;
     },
-    GetHeader(){
+    GetHeader() {
       if (this.visableDetail && !this.visableCreate) {
         return "Sprint " + this.number;
       } else {
         return "Create new sprint"
+      }
+    },
+    GetStatitic() {
+      if(this.visableDetail){
+        return this.sprintStatisticsById(this.id);
+      }
+      else{
+        return {}
       }
     }
 
@@ -293,6 +317,9 @@ export default {
       "sprint.visableDetail",
       "sprint.visableCreate"
     ]),
+    ...mapGetters("sprintStatistics", {
+      sprintStatisticsById: "byId"
+    }),
 
     visibleDrawer: {
       get() {
@@ -315,10 +342,13 @@ export default {
       // Update props
       this.header = this.GetHeader();
       this.namedStatus = this.GetNamedStatus(this.status);
+      this.statistic = this.GetStatitic()
+      console.log(this.statistic)
     },
   },
   created() {
     this.header = this.GetHeader();
+    
     this.namedStatus = this.GetNamedStatus(this.status);
   }
 };
