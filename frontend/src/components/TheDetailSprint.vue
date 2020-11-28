@@ -132,6 +132,14 @@
                 :disabled="!SprintReleaseValidation"
                 @click="sprintReleaseDialog = true"
               >Release</v-btn>
+              <v-btn
+                v-if="SprintUnReleaseValidation"
+                color="link"
+                text
+                absolute
+                right
+                @click="unreleaseSprint()"
+              >Un-Release</v-btn>
             </v-card-actions>
           </v-card> 
         </v-tab-item>
@@ -351,6 +359,32 @@ export default {
         }.bind(this)
       );
     },
+    unreleaseSprint(){
+      this.updateSprint({
+        id: this.id,
+        data: {
+          status: "IL",
+          version: this.version,
+          story: this.story
+        },
+        customUrlFnArgs: {}
+      })
+      .then(
+        function(value) {
+          if(value.data.id !== undefined){
+            this.fetchSingleSprint({
+              id: this.id,
+              customUrlFnArgs: {}
+            });
+          }
+          this.close();
+          this.$store.commit("showSystemAlert", {
+          message: " Unrelease Sprint " + this.number,
+          category: "info"
+        });
+        }.bind(this)
+      );
+    },
 
     GetNamedStatus(status) {
       var namedStatus = "in Planning";
@@ -414,6 +448,15 @@ export default {
 
     SprintReleaseValidation() {
       if(this.status === "IL" && !this.visableCreate && this.task_cards.length > 0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    },
+
+    SprintUnReleaseValidation() {
+      if(this.status === "PL" && !this.visableCreate && this.task_cards.length > 0){
         return true;
       }
       else{
