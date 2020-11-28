@@ -98,9 +98,20 @@
                         readonly
                         outlined
                         dense
-                        label="Sprint Start Date"
+                        label="Sprint start Date"
                       ></v-text-field>
                     </v-col>
+                    <v-col>
+                      <v-text-field
+                        v-model="this.plannedSprintEnd"
+                        readonly
+                        outlined
+                        dense
+                        label="Sprint due date"
+                      ></v-text-field>
+                    </v-col>          
+                  </v-row>
+                  <v-row align="start">
                     <v-col>
                       <v-text-field
                         v-model="this.plannedSprintVersion"
@@ -476,6 +487,15 @@ export default {
     plannedSprintVersion(){
       if(this.sprint != null){
         return this.sprintById(this.sprint).version
+      }
+      else{
+        return "Task not planned"
+      }
+    },
+
+    plannedSprintEnd(){
+      if(this.sprint != null){
+        return this.sprintById(this.sprint).end
       }
       else{
         return "Task not planned"
