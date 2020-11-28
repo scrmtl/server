@@ -349,6 +349,8 @@ export default {
             this.fetchSingleSprint({
               id: this.id,
               customUrlFnArgs: {}
+            }).then((res) => {
+              this.$store.commit("selected/setSprintDetail", res.data);
             });
           }
           this.close();
@@ -375,6 +377,8 @@ export default {
             this.fetchSingleSprint({
               id: this.id,
               customUrlFnArgs: {}
+            }).then((res) => {
+              this.$store.commit("selected/setSprintDetail", res.data);
             });
           }
           this.close();
