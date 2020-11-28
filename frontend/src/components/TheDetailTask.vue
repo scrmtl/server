@@ -101,6 +101,15 @@
                         label="Sprint Start Date"
                       ></v-text-field>
                     </v-col>
+                    <v-col>
+                      <v-text-field
+                        v-model="this.plannedSprintVersion"
+                        readonly
+                        outlined
+                        dense
+                        label="Planned product version"
+                      ></v-text-field>
+                    </v-col>
                   </v-row>
                   <v-row v-if="!visableCreate" align="center">
                     <Label ></Label>
@@ -462,6 +471,15 @@ export default {
       else{
         return "Task not planned"
       }  
+    },
+
+    plannedSprintVersion(){
+      if(this.sprint != null){
+        return this.sprintById(this.sprint).version
+      }
+      else{
+        return "Task not planned"
+      }
     },
 
     allAssignedUsers() {
