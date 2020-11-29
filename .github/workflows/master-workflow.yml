@@ -68,7 +68,7 @@ jobs:
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: tools/deployment/task-definition.json
+        task-definition: tools/deployment/aws-task-def.json
         container-name: scrmtl-backend
         image: ${{ steps.build-image.outputs.image }}
 
