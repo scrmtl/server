@@ -1,6 +1,6 @@
 {
   "name": "scrmtl",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -18,9 +18,10 @@
     "vue": "^2.6.12",
     "vue-responsive": "^1.1.0",
     "vue-router": "^3.4.5",
-    "vuetify": "^2.3.12",
+    "vuetify": "^2.3.18",
     "vuex": "^3.5.1",
     "vuex-crud": "^0.3.2",
+    "vuex-map-fields": "^1.4.1",
     "vuex-persistedstate": "^3.1.0"
   },
   "devDependencies": {

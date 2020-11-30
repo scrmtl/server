@@ -2,12 +2,16 @@
 <template>
   <v-app>
     <SystemBar v-if="this.$store.getters.isLoggedIn" />
+    <TheNavigation/>
     <DetailProject v-if="this.$store.getters.isLoggedIn" />
     <DetailTask v-if="this.$store.getters.isLoggedIn" />
+    <DetailSprint v-if="this.$store.getters.isLoggedIn" />
     <!-- v-main is necessary. Do not use v-content -->
     <v-main class="tabbody">
       <router-view />
     </v-main>
+    <SystemAlert/>
+
     <v-footer color="appbar" class="white--text" app>
       <span>dark, cool, easy</span>
       <v-spacer></v-spacer>
@@ -20,6 +24,9 @@
 import SystemBar from "@/components/TheSystemBar.vue";
 import DetailProject from "@/components/TheDetailProject.vue";
 import DetailTask from "@/components/TheDetailTask.vue";
+import DetailSprint from "@/components/TheDetailSprint.vue";
+import TheNavigation from "@/components/TheNavigation.vue";
+import SystemAlert from "@/components/SystemAlert.vue";
 import Axios from "axios";
 export default {
   name: "App",
@@ -30,6 +37,9 @@ export default {
     SystemBar,
     DetailProject,
     DetailTask,
+    DetailSprint,
+    TheNavigation,
+    SystemAlert
   },
 
   methods: {
@@ -40,9 +50,17 @@ export default {
     
   },
   created() {
-    Axios.interceptors.response.use(function(response) {
+    Axios.interceptors.response.use((response) => {
       if (response.status === 401 && response.detail === "Anmeldedaten fehlen") {
           this.$store.dispatch("logout");
+      }
+      else if(response.status === 403){
+        console.log("Error from interceptor");
+        console.log(response);
+        this.$store.commit("showSystemAlert", {
+              message: "Permission denied",
+              category: "error"
+            });
       }
       // return new Promise(() => {
       //   if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
@@ -52,10 +70,22 @@ export default {
       // });
       return response;
     });
+
+    Axios.interceptors.request.use(config => {
+      // console.log(config);
+      if (
+        (config.method === "post" || config.method === "patch") &&
+        config.url[config.url.length - 1] !== "/" &&
+        !config.url.includes("/?")
+      ) {
+        config.url += "/";
+      }
+      return config;
+    });
   }
 };
 </script>
 
 <style lang="css" >
-@import "/main.css";
+  @import "/main.css";
 </style>

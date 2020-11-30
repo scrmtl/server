@@ -7,6 +7,9 @@
         max-width="350"
         :elevation="hover ? 14 : 5"
         @click="showTaskDetail()"
+        draggable
+        @dragstart="pickupTask($event, task.id, task.name, task.feature, task.numbering, task.lane, task.sprint, plannedSprint.status, task.storypoints)"
+        
       >
         <v-card-title>
           <span class="tabbody--text">{{ task.name }}</span>
@@ -37,7 +40,7 @@
                   >mdi-notebook</v-icon
                 >
               </template>
-              <span>Status: not started</span>
+              <span>Status: Card in Sprint planned</span>
             </v-tooltip>
             <!-- Card Status: In Pogress -->
             <v-tooltip bottom v-else-if="task.status === 'IP'">
@@ -70,19 +73,23 @@
         </v-card-title>
         <v-card-text class="">
           <v-row dense>
-            <v-col>
+            <v-col >
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-icon color="tabbody" v-bind="attrs" v-on="on"
+                  <v-icon 
+                    v-if="plannedSprint.start !== ''"
+                    color="tabbody" 
+                    v-bind="attrs" 
+                    v-on="on"
                     >mdi-calendar-range</v-icon
                   >
                 </template>
                 <span>Planned implementation</span>
               </v-tooltip>
-              <span>DD/MM/JJJJ</span>
+              <span>{{plannedSprint.start}}</span>
             </v-col>
             <v-col cols="auto"></v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
@@ -182,15 +189,28 @@ export default {
 
   methods: {
     showTaskDetail() {
-      this.$store.commit("setSelectedTaskDetail", this.task);
-      this.$store.commit("showTaskDetail", false);
+      this.$store.commit("selected/setTaskDetail", this.task);
+      this.$store.commit("selected/showTaskDetail", false);
     },
     GetUserInitial(id) {
       var inital = "AA";
       var user = this.UsersById(id);
       inital = user.username.substring(0, 2);
       return inital;
-    }
+    },
+    pickupTask(e, taskId, taskName, taskFeatureId, taskNumbering, fromLane, sprint, sprintStatus, storypoints){
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.dropEffect = "move";
+      e.dataTransfer.setData("task-id", taskId);
+      e.dataTransfer.setData("task-name", taskName);
+      e.dataTransfer.setData("task-feature-id", taskFeatureId);
+      e.dataTransfer.setData("task-numbering", taskNumbering);
+      e.dataTransfer.setData("task-sprint-id", sprint);
+      e.dataTransfer.setData("task-sprint-status", sprintStatus);
+      e.dataTransfer.setData("task-storypoints", storypoints);
+      e.dataTransfer.setData("from-lane", fromLane);
+      
+    },
   },
   computed: {
     ...mapGetters("user", {
@@ -201,6 +221,27 @@ export default {
     ...mapGetters("label", {
       labelById: "byId"
     }),
+    ...mapGetters("sprint", {
+      sprintById: "byId"
+    }),
+
+    plannedSprint(){ 
+      var sprintInfo = {
+        start: "",
+        end: "",
+        status: "",
+      }
+      if(this.task.sprint != null){
+        sprintInfo.start = this.sprintById(this.task.sprint).start;
+        sprintInfo.end = this.sprintById(this.task.sprint).end;
+        sprintInfo.status = this.sprintById(this.task.sprint).status;
+        return sprintInfo
+      }
+      else{
+        return sprintInfo
+      }  
+    },
+
     avatarsSorted() {
       return this.usersbyIdArrayWithDetails(this.task.assigned_users, this.task.project);
     },

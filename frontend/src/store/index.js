@@ -3,6 +3,9 @@ import Vuex from "vuex";
 import Axios from "axios";
 import createPersistedState from "vuex-persistedstate";
 
+// mutation function from the `vuex-map-fields` module.
+import { getField, updateField } from "vuex-map-fields";
+
 import board from '@/store/ressources/board';
 import epic from '@/store/ressources/epic';
 import feature from '@/store/ressources/feature';
@@ -19,6 +22,8 @@ import session from '@/store/ressources/session';
 import projectRole from '@/store/ressources/projectRole';
 import registration from '@/store/ressources/registration';
 import group from '@/store/ressources/group';
+import selected from '@/store/ressources/selected';
+import sprintStatistics from '@/store/ressources/sprintStatistics';
 
 Vue.use(Vuex, Axios);
 
@@ -34,42 +39,28 @@ export default new Vuex.Store({
   plugins: [createPersistedState()],
   // States
   state: {
-    detailViewVisable: false,
-    detailTask: {},
     Userinfo: {
       status: "",
       username: "",
       token: localStorage.getItem('token') || '',
       refreshToken: localStorage.getItem('refreshToken') || '',
     },
+
     systemAlert: {
       visible: false,
       message: "",
       category: "info"
     },
 
-    selectedProject: {
-      visableDetail: false,
-      visableCreate: false,
-      details: {},
+    navigation:{
+      visable: false
     },
-    selectedTask: {
-      visableDetail: false,
-      visableCreate: false,
-      details: {},
-    },
+   
     selectedBoard: {}
   },
   // call REST API (async)
   // Use from the components
   actions: {
-    // login({ commit }, { token, user }) {
-    //   commit("SET_TOKEN", token);
-    //   commit("SET_USERNAME", user);
-    //   // set auth header
-    //   Axios.defaults.headers.common["Authorization"] = `Bearer ${this.$state.Userinfo.token}`;
-
-    // },
 
     login({ commit }, credentials) {
       return new Promise((resolve, reject) => {
@@ -114,12 +105,15 @@ export default new Vuex.Store({
   },
   //Update States (sync)
   mutations: {
-    showDetailView(state) {
-      state.detailViewVisable = true;
+    
+    updateField,
+    
+    showNavigation(state) {
+      state.navigation.visable = true;
     },
 
-    hideDetailView(state) {
-      state.detailViewVisable = false;
+    hideNavigation(state) {
+      state.navigation.visable = false;
     },
 
     showSystemAlert(state, {message, category="info"}) {
@@ -132,43 +126,10 @@ export default new Vuex.Store({
       }
       state.systemAlert.category = category;
     },
-
     hideSystemAlert(state) {
       state.systemAlert.visible = false;
       state.systemAlert.message = "";
       state.systemAlert.category = "info";
-    },
-
-    showTaskDetail(state, withCreate) {
-      state.selectedTask.visableDetail = true;
-      if (!(withCreate === undefined)) {
-        state.selectedTask.visableCreate = withCreate;
-      }
-    },
-    hideTaskDetail(state) {
-      state.selectedTask.visableDetail = false;
-      state.selectedTask.visableCreate = false;
-      state.selectedTask.details = {};
-    },
-    setSelectedTaskDetail(state, task) {
-      state.selectedTask.details = task;
-    },
-
-    showProjectDetail(state, withCreate = false) {
-      state.selectedProject.visableDetail = true;
-      if (withCreate) {
-        state.selectedProject.visableCreate = true;
-      }
-    },
-
-    hideProjectDetail(state) {
-      state.selectedProject.visableDetail = false;
-      state.selectedProject.visableCreate = false;
-      state.selectedProject.details = {};
-    },
-
-    setSelectedProjectDetail(state, project) {
-      state.selectedProject.details = project;
     },
 
     // User login and logout
@@ -193,14 +154,16 @@ export default new Vuex.Store({
 
   },
   getters: {
-    getDetailStatus: state => {
-      return state.detailViewVisable;
+    getField,
+    
+    getProjectDetails: state => {
+      return state.selectedProject.details;
     },
-    getProjectDetailStatus: state => {
-      return state.selectedProject.visableDetail;
+    getSprintDetails: state => {
+      return state.selectedSprint.details;
     },
-    getTaskDetailStatus: state => {
-      return state.selectedTask.visableDetail;
+    getTaskDetails: state => {
+      return state.selectedTask.details;
     },
 
     getToken: state => {
@@ -237,6 +200,8 @@ export default new Vuex.Store({
     registration,
     group,
     step,
+    selected,
+    sprintStatistics
   }
 });
 

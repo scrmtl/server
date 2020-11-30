@@ -1,27 +1,20 @@
 <template>
-  
-  <v-app-bar color="appbar" app dark prominent dense :shrink-on-scroll="this.$route.params.id === undefined">
+  <v-app-bar
+    color="appbar"
+    app
+    dark
+    prominent
+    dense
+    :shrink-on-scroll="this.$route.params.id === undefined"
+  >
     <v-container fluid>
       <v-row>
-        <v-btn class="mt-n3" icon color="appbar" :to="{ name: 'Home' }">
-          <v-icon large color="link">mdi-home</v-icon>
-        </v-btn>
-        <span class="mt-n1 mx-2 ">Scrum Tool</span>
-        
-        
-        <v-btn
-          color="link"
-          text
-          class="mt-1"
-          x-small
-          dark
-          @click="plattformManagementDialog = true"
-          v-if="getGroupId == 1"
-          > Plattform User Management
-        </v-btn>
-        <PlattformUserManagement  @close-dialog="plattformManagementDialog = false" :dialog="plattformManagementDialog" v-if="plattformManagementDialog" />
+        <v-app-bar-nav-icon class="mt-n3"
+          @click="showNavigation()"
+        ></v-app-bar-nav-icon>
+        <v-toolbar-title class="mt-n3">Scrum Tool</v-toolbar-title>      
         <v-spacer></v-spacer>
-        <SystemAlert/>
+        <span class="hidden-sm-and-down text-subtitle-1" v-if="this.$route.params.id !== undefined">{{RoutedProjectName}}</span>
         <v-spacer></v-spacer>
         <v-btn
           class="mt-n1"
@@ -39,17 +32,16 @@
                 color="link"
                 v-bind="attrs"
                 v-on="on"
-                >mdi-logout</v-icon
-              >
+              >mdi-logout</v-icon>
             </template>
             <span>Logout</span>
           </v-tooltip>
         </v-btn>
         
       </v-row>
-      <v-row >
+      <v-row>
         <v-tabs v-if="this.$route.params.id !== undefined" background-color="transparent" slider-color="link"
-        dark centered grow v-model="activeTab">
+        dark centered grow show-arrows center-active v-model="activeTab">
           <v-tab v-for="tab in tabs" :key="tab.id" :to="tab.route" exact>{{ tab.name }}</v-tab>     
         </v-tabs>
       </v-row>
@@ -58,25 +50,25 @@
 </template>
 
 <script>
-import PlattformUserManagement from "@/components/PlattformUserManagement.vue";
 import { mapGetters, mapActions, mapState } from "vuex";
-import SystemAlert from "@/components/SystemAlert.vue";
+
+
 
 export default {
+  name: "TheSystemBar",
   data() {
     return {
-      plattformManagementDialog: false,
-      groupId: 0,
-      activeTab: `/project/${this.$route.params.id}`,
-    };
+      activeTab: `/project/${this.$route.params.id}`
+    } 
   },
   components: {
-    PlattformUserManagement,
-    SystemAlert
   },
   methods: {
     closeAlert() {
       this.$store.commit("hideSystemAlert");
+    },
+    showNavigation() {
+      this.$store.commit("showNavigation");
     },
 
     logout() {
@@ -87,23 +79,6 @@ export default {
     ...mapActions("session", {
       fetchSession: "fetchList"
     }),
-    fetchGroupId() {
-      this.groupId = -1;
-      this.fetchSession({
-        id: null,
-        customUrlFnArgs: { all: false }
-      })
-        .then(() => {
-          //get groupId
-          var session = Object.values(this.listSession)[0];
-          this.groupId = session.groups[0];
-        })
-        .catch(() => {
-          if (this.groupId <= 0) {
-            this.groupId = 0;
-          }
-        });
-    }
   },
 
   computed: {
@@ -112,17 +87,25 @@ export default {
     ...mapGetters("session", {
       listSession: "list"
     }),
-    ...mapGetters("group", {
-      groupById: "byId"
-    }),
     ...mapGetters({ userinfos: "getUserinfo" }),
-    getGroupId: function() {
-      if (this.groupId === 0) {
-        this.fetchGroupId();
-      }
-      return this.groupId;
-    },
+    ...mapGetters("project",{
+      projectById: "byId"
+    }),
 
+    RoutedProjectName (){
+      if(this.$route.params.id !== undefined){
+        var project = this.projectById(this.$route.params.id)
+        if( project !== undefined){
+          return project.name.slice(0, 15);
+        }
+        else{
+          return "";
+        }
+      }
+      else{
+        return "";
+      }
+    },
     tabs(){
       return [
         { id: 1, name: "Dashboard", route: `/project/${this.$route.params.id}` },
@@ -136,7 +119,6 @@ export default {
     }
   },
   mounted() {
-    this.listSession;
     
   },
   updated(){
@@ -146,5 +128,5 @@ export default {
 </script>
 
 <style lang="css">
-@import "../main.css";
+  @import "../main.css";
 </style>

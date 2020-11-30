@@ -72,14 +72,7 @@ class ProjectViewSet(AutoPermissionViewSetMixin,
         queryset = self.get_queryset()
 
         if queryset.filter(id=template).exists():
-            template_project = queryset.get(
-                id=template)
-            template_project.is_template = False
-            new_project_pk = self.deep_copy_model(model=template_project)
-            new_project = models.Project.objects.get(pk=new_project_pk)
-            new_project_serializer = serializers.ProjectSerializer(
-                new_project, data=request.data, partial=True)
-            new_project_serializer.is_valid()
+            new_project_serializer = self.copy_project(template)
             return Response(new_project_serializer.data)
         return super().create(request, *args, **kwargs)
 
@@ -106,6 +99,32 @@ class ProjectViewSet(AutoPermissionViewSetMixin,
 
         serializer = self.serializer_class(_queryset, many=True)
         return Response(serializer.data)
+
+    def copy_project(self, project_id):
+        """
+        docstring
+        """
+        template_project = self.get_queryset().get(
+            id=project_id)
+        template_project.is_template = False
+        new_project_pk = self.deep_copy_model(model=template_project)
+        new_project = models.Project.objects.get(pk=new_project_pk)
+        new_project_serializer = serializers.ProjectSerializer(
+            new_project, data=self.request.data, partial=True)
+        if(new_project_serializer.is_valid()):
+            new_project_serializer.save()
+            self.create_project_user(new_project_pk)
+        return new_project_serializer
+
+    def create_project_user(self, project_id):
+        plattform_user = self.request.user.id
+        role = models.ProjectRole.PO
+
+        return models.ProjectUser.objects.create(
+            plattform_user=models.PlatformUser.objects.get(
+                id=plattform_user),
+            project=models.Project.objects.get(id=project_id),
+            role=models.ProjectRole.objects.get(id=role))
 
     def deep_copy_model(self, model, updated_fk=None, related_field=None,
                         depth: int = 3):

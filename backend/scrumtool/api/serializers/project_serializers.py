@@ -75,6 +75,16 @@ class ProjectSerializerFull(serializers.ModelSerializer):
         read_only_fields = ('numOfSprints',)
 
 
+class ProjectSerializerOnlyId(serializers.ModelSerializer):
+    """Serializer for Projects.
+    """
+    class Meta:
+        model = Project
+        fields = ('id',
+                  )
+        read_only_fields = ('id',)
+
+
 def date_validator(data):
     """
     Check that start is before end.

@@ -22,6 +22,8 @@ from api.rules_predicates import is_dev_in_project, \
     is_po_in_project, is_sm_in_project, is_project_team_member, is_admin, \
     is_default_user
 
+from django_property_filter import PropertyFilterSet, PropertyNumberFilter
+
 
 class Card(RulesModel, IGetBoard, IGetProject):
     """A Card contains all information concerning a task.
@@ -86,6 +88,11 @@ class Card(RulesModel, IGetBoard, IGetProject):
         help_text='Sprint this card is part of.')
     # to track changes in inheritetd models inherit=True
     history = HistoricalRecords(inherit=True)
+    done_on = models.DateField(
+        blank=True,
+        null=True,
+        help_text='Date of task status set to done'
+    )
 
     class Meta:
         """Meta definition for Card."""
@@ -261,3 +268,13 @@ class Task(Card):
             "change": can_change_board,
             "delete": is_admin
         }
+
+
+class TaskCardFilterSet(PropertyFilterSet):
+
+    class Meta:
+        fields = ['name']
+        model = Task
+        property_fields = [
+            ('project__pk', PropertyNumberFilter, ['exact']),
+        ]

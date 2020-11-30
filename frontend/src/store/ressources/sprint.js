@@ -18,14 +18,26 @@ export default createCrudModule({
      * @param {number} projectId If set all tasks in that lane are returned (exampleUrl: /api/projects/1/sprints`)
      * @return {string} Url defined by the arguments
      */
-    customUrlFn(id, type, projectId) {
+    customUrlFn(id, type, {projectId=null}) {
         // id will only be available when doing request to single resource, otherwise null
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
-        var rootUrl = '/api/sprints';
+        var rootUrl = '/api/sprints/';
         if (projectId != null) {
             rootUrl = `/api/sprints/?project=${projectId}`
         }
-        rootUrl = id ? `${rootUrl}/${id}/` : rootUrl;
+        rootUrl = id ? `${rootUrl}${id}/` : `${rootUrl}`;
         return rootUrl;
     },
+
+    getters: {
+        byProjectId: (state) => {
+            return function(projectId){
+                var sprints = null;
+                if(state.entities !== undefined){
+                    sprints = state.list.map(id => state.entities[id.toString()]).filter(sprint => sprint.project === projectId);
+                }
+                return sprints;
+            }
+        }
+    }
 });

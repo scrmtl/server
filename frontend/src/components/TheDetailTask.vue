@@ -21,7 +21,7 @@
           tile
         >
           <v-tab>Details</v-tab>
-          <v-tab v-if="!selectedTask.visableCreate">Steps</v-tab>
+          <v-tab :disabled="visableCreate">Steps</v-tab>
         </v-tabs>
         <!-- Details Tab -->
         <v-tabs-items
@@ -32,7 +32,7 @@
           <v-tab-item>
             <v-card flat dark color="secondary" tile>
               <v-card-title>
-                <span class="headline ma-0 pa-1">{{ localTask.name }}</span>
+                <span class="headline ma-0 pa-1">{{ name }}</span>
               </v-card-title>
               <v-card-text>
                 <v-container grid-list-md>
@@ -47,7 +47,7 @@
                           :counter="50"
                           prepend-icon="mdi-information-outline"
                           class="ma-1"
-                          v-model="localTask.name"
+                          v-model="name"
                         ></v-text-field>
                         <!-- Task description -->
                         <v-textarea
@@ -56,7 +56,7 @@
                           required
                           outlined
                           class="ma-1"
-                          v-model="localTask.description"
+                          v-model="description"
                         ></v-textarea>
                       </v-form>
                     </v-col>
@@ -66,7 +66,7 @@
                       <v-autocomplete
                         v-model="this.taskNamedStatus"
                         :items="availableStatus"
-                        :readonly="this.selectedTask.visableCreate"
+                        :readonly="disableStatusChange"
                         outlined
                         dense
                         label="Status"
@@ -74,7 +74,7 @@
                     </v-col>
                     <v-col>
                       <v-autocomplete
-                        v-model="localTask.storypoints"
+                        v-model="storypoints"
                         :items="availableStorypoints"
                         outlined
                         dense
@@ -82,12 +82,52 @@
                       ></v-autocomplete>
                     </v-col>
                   </v-row>
-                  <v-row v-if="!selectedTask.visableCreate" align="center">
-                    <Label v-bind:task="localTask"></Label>
+                  <v-row align="center">
+                    <v-col>
+                      <v-text-field
+                        v-model="this.plannedSprintNumber"
+                        readonly
+                        outlined
+                        dense
+                        label="Sprint No."
+                      ></v-text-field>
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        v-model="this.plannedSprintStart"
+                        readonly
+                        outlined
+                        dense
+                        label="Sprint start Date"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        v-model="this.plannedSprintEnd"
+                        readonly
+                        outlined
+                        dense
+                        label="Sprint due date"
+                      ></v-text-field>
+                    </v-col>          
+                  </v-row>
+                  <v-row align="start">
+                    <v-col>
+                      <v-text-field
+                        v-model="this.plannedSprintVersion"
+                        readonly
+                        outlined
+                        dense
+                        label="Planned product version"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row v-if="!visableCreate" align="center">
+                    <Label ></Label>
                   </v-row>
                   <v-row align="center">
                     <v-card
-                      v-if="!this.selectedTask.visableCreate"
+                      v-if="!visableCreate"
                       flat
                       dark
                       color="secondary"
@@ -138,7 +178,7 @@
             </v-card>
           </v-tab-item>
           <!-- Step Tab -->
-          <v-tab-item v-if="!selectedTask.visableCreate">
+          <v-tab-item :disabled="visableCreate">
             <v-card flat dark color="secondary" tile>
               <v-card-text>
                 <v-row align="center">
@@ -146,7 +186,7 @@
                     <v-list>
                       <v-list-group
                         value="true"
-                        v-for="steplist in selectedTask.details.steplists"
+                        v-for="steplist in steplists"
                         :key="steplist"
                       >
                         <template v-slot:activator>
@@ -169,14 +209,14 @@
         <div>
           <v-btn color="link" text @click="close()">Close</v-btn>
           <v-btn
-            v-if="!this.selectedTask.visableCreate"
+            v-if="!visableCreate"
             color="link"
             text
             @click="confirm()"
             >Save</v-btn
           >
           <v-btn
-            v-if="this.selectedTask.visableCreate"
+            v-if="visableCreate"
             color="link"
             :disabled="!isFormValid"
             text
@@ -184,7 +224,7 @@
             >Create</v-btn
           >
           <v-btn
-            v-if="!this.selectedTask.visableCreate"
+            v-if="!visableCreate"
             color="error"
             text
             absolute
@@ -216,7 +256,6 @@
           <v-btn
             width="250"
             outlined
-            color="primary"
             @click="deleteDialog = false"
             >Nein</v-btn
           >
@@ -231,9 +270,10 @@ import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
 import Steplist from "@/components/Steplist.vue";
 import Label from "@/components/Label.vue";
 import AssignedUserManagement from "@/components/AssignedUserManagement.vue";
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import { mapFields } from "vuex-map-fields";
 export default {
-  name: "DetailTask",
+  name: "TheDetailTask",
   data: () => ({
     tab: null,
     availableStatus: [
@@ -248,7 +288,6 @@ export default {
     deleteDialog: false,
     assignedUserDialog: false,
     taskNamedStatus: "New",
-    localTask: {},
     isFormValid: null,
     taskNameRules: [
       v => !!v || "Name is required",
@@ -275,21 +314,24 @@ export default {
       updateTask: "update",
       deleteTask: "destroy"
     }),
+    ...mapActions("lane", {
+      fetchSingleLane: "fetchSingle",
+    }),
     ...mapActions("user", {
       fetchPlattformUsers: "fetchList"
     }),
 
     close() {
-      this.$store.commit("hideTaskDetail");
+      this.$store.commit("selected/hideTaskDetail");
     },
 
     confirm() {
       this.saveTask();
-      this.$store.commit("hideTaskDetail");
+      this.$store.commit("selected/hideTaskDetail");
     },
     addAssignedUser(userId){
-      if(!this.localTask.assigned_users.includes(userId)){
-        this.localTask.assigned_users.push(userId);
+      if(!this.assigned_users.includes(userId)){
+        this.assigned_users.push(userId);
       }
       else{
         this.$store.commit("showSystemAlert", {message: "User " + this.plattformUserById(userId).username +" already assigned" , category: "error"});
@@ -299,11 +341,12 @@ export default {
     addTask() {
       this.createTask({
         data: {
-          name: this.localTask.name,
-          description: this.localTask.description,
-          storypoints: this.localTask.storypoints,
-          lane: this.localTask.lane,
-          feature: this.localTask.feature
+          name: this.name,
+          description: this.description,
+          storypoints: this.storypoints,
+          lane: this.lane,
+          feature: this.feature,
+          status: "NW"
         },
         customUrlFnArgs: {}
       }).then(
@@ -312,27 +355,31 @@ export default {
             this.fetchSingleTask({
               id: value.data.id,
               customUrlFnArgs: {}
-            });
+            })
+            this.fetchSingleLane({
+              id: this.lane, 
+              customUrlFnArgs: {}
+            }) 
           }
+          this.close();
         }.bind(this)
       );
-      this.close();
+      
     },
 
     saveTask() {
       this.updateTask({
-        id: this.localTask.id,
+        id: this.id,
         data: {
-          name: this.localTask.name,
-          description: this.localTask.description,
-          storypoints: this.localTask.storypoints,
-          assigned_users: this.localTask.assigned_users,
-          status: this.localTask.status,
-          lane: this.localTask.lane,
-          sprint: this.localTask.sprint,
-          feature: this.localTask.feature,
-          labels: this.localTask.labels
-          // steplists: this.localTask.steplists
+          name: this.name,
+          description: this.description,
+          storypoints: this.storypoints,
+          assigned_users: this.assigned_users,
+          status: this.status,
+          lane: this.lane,
+          sprint: this.sprint,
+          feature: this.feature,
+          labels: this.labels
         },
         customUrlFnArgs: {}
       }).then(
@@ -348,30 +395,16 @@ export default {
     },
 
     deleteAssignedUser(userId){
-      this.localTask.assigned_users.splice(this.localTask.assigned_users.findIndex(user => user === userId), 1)
+      this.assigned_users.splice(this.assigned_users.findIndex(user => user === userId), 1)
     },
 
     deleteTaskFn() {
       this.deleteDialog = false;
       this.deleteTask({
-        id: this.localTask.id + "/",
+        id: this.id + "/",
         customUrlFnArgs: {}
       });
       this.close();
-    },
-
-    GetTaskStatus(namedStatus) {
-      var status = "AC";
-      switch (namedStatus) {
-        case "New":
-        case "Active":
-          status = "AC";
-          break;
-        case "Archived":
-          status = "AR";
-          break;
-      }
-      return status;
     },
 
     GetTaskNamedStatus(status) {
@@ -400,7 +433,26 @@ export default {
     }
   },
   computed: {
-    ...mapState(["selectedTask"]),
+    // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
+    // Implementation with https://github.com/maoberlehner/vuex-map-fields
+    // the string after the last dot (e.g. `id`) is used
+    // for defining the name of the computed property.
+    ...mapFields("selected", [
+      "task.details.id",
+      "task.details.lane",
+      "task.details.feature",
+      "task.details.status",
+      "task.details.name",
+      "task.details.storypoints",
+      "task.details.steplists",
+      "task.details.labels",
+      "task.details.sprint",
+      "task.details.project",
+      "task.details.description",
+      "task.details.assigned_users",
+      "task.visableDetail",
+      "task.visableCreate",
+    ]),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
       plattformUsersbyIdArrayWithDetails: "byIdArrayWithDetails",
@@ -411,44 +463,94 @@ export default {
       listProjectRoles: "list",
       projectRoleById: "byId"
     }),
-    ...mapGetters("steplist", {
-      steplistById: "byId"
+    ...mapGetters("sprint", {
+      sprintById: "byId"
     }),
 
+    plannedSprintNumber(){
+      if(this.sprint != null){
+        return this.sprintById(this.sprint).number
+      }
+      else{
+        return "Task not planned"
+      }      
+    },
+    plannedSprintStart(){ 
+      if(this.sprint != null){
+        return this.sprintById(this.sprint).start
+      }
+      else{
+        return "Task not planned"
+      }  
+    },
+
+    plannedSprintVersion(){
+      if(this.sprint != null){
+        return this.sprintById(this.sprint).version
+      }
+      else{
+        return "Task not planned"
+      }
+    },
+
+    plannedSprintEnd(){
+      if(this.sprint != null){
+        return this.sprintById(this.sprint).end
+      }
+      else{
+        return "Task not planned"
+      }
+    },
+
     allAssignedUsers() {
-      return this.plattformUsersbyIdArrayWithDetails(this.localTask.assigned_users, this.localTask.project);
+      return this.plattformUsersbyIdArrayWithDetails(this.assigned_users, this.project);
     },
 
     allAvaiblableUsers(){
-      return this.plattformUsersbyProjectId(this.localTask.project);
+      return this.plattformUsersbyProjectId(this.project);
     },
-
+    disableStatusChange(){
+      if(this.visableCreate){
+        return true;
+      }
+      else if(this.status === "DO" || this.status === "AC"){
+        return false;
+      }
+      else{
+        return true;
+      }
+    },
     visibleDrawer: {
       get() {
-        return this.selectedTask.visableDetail;
+        return this.visableDetail;
       },
       set(newValue) {
         if (newValue) {
-          this.$store.commit("showTaskDetail");
+          this.$store.commit("selected/showTaskDetail");
         } else {
-          this.$store.commit("hideTaskDetail");
+          this.$store.commit("selected/hideTaskDetail");
         }
       }
     }
   },
+  watch:{
+    visibleDrawer(val, prev){
+      if(val === prev) return;
+      this.taskNamedStatus = this.GetTaskNamedStatus(this.status);
+    },
+  },
+
   created() {
     this.fetchLabel();
-    this.localTask = this.selectedTask.details;
-    this.taskNamedStatus = this.GetTaskNamedStatus(this.localTask.status);
+    this.taskNamedStatus = this.GetTaskNamedStatus(this.status);
   },
 
   updated() {
-    this.localTask = this.selectedTask.details;
-    this.taskNamedStatus = this.GetTaskNamedStatus(this.localTask.status);
+    
   }
 };
 </script>
 <style lang="css" scoped>
-@import "../main.css";
-@import "./Profile/profile.css";
+  @import "../main.css";
+  @import "./Profile/profile.css";
 </style>

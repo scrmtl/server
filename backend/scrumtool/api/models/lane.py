@@ -13,6 +13,8 @@ from api.rules_predicates import is_dev_in_project, \
     is_po_in_project, is_sm_in_project, is_project_team_member, \
     can_change_board, is_admin
 
+from django_property_filter import PropertyFilterSet, PropertyNumberFilter
+
 
 class Lane(RulesModel, IGetProject, IGetBoard):
     """Model definition for Lane. """
@@ -29,6 +31,17 @@ class Lane(RulesModel, IGetProject, IGetBoard):
     numbering = models.IntegerField(
         default=0,
         help_text='Describes the order of the lanes')
+
+    @property
+    def project(self):
+        """Getter for the parent project
+
+        Returns
+        -------
+        Project
+            The parent Project
+        """
+        return self.board.project
 
     class Meta:
         """Meta definition for Lane."""
@@ -49,17 +62,6 @@ class Lane(RulesModel, IGetProject, IGetBoard):
                                                       self.id,
                                                       )
 
-    @property
-    def project(self):
-        """Getter for the parent project
-
-        Returns
-        -------
-        Project
-            The parent Project
-        """
-        return self.board.project
-
     def save(self, *args, **kwargs):
         # if Project.objects.filter(pk=self.id).exists():
         #    old_proj = Project.objects.get(pk=self.id)
@@ -69,3 +71,13 @@ class Lane(RulesModel, IGetProject, IGetBoard):
                 'Can\'t modify because board has {0} status'.format(
                     self.project.status))
         super(Lane, self).save(*args, **kwargs)
+
+
+class LaneFilterSet(PropertyFilterSet):
+
+    class Meta:
+        fields = ['name']
+        model = Lane
+        property_fields = [
+            ('project__pk', PropertyNumberFilter, ['exact']),
+        ]

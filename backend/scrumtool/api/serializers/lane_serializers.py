@@ -1,7 +1,7 @@
 """Serializers for Lanes
 """
 from rest_framework import serializers
-from ..models import Lane, Task, Feature, Epic
+from ..models import Lane, Task, Feature, Epic, Project
 from ..serializers import card_serializers
 
 
@@ -35,6 +35,9 @@ class LaneSerializerFull(serializers.ModelSerializer):
     epic_cards = card_serializers.EpicSerializer(many=True)
     feature_cards = card_serializers.FeatureSerializer(many=True)
     task_cards = card_serializers.TaskSerializerFull(many=True)
+    project = serializers.PrimaryKeyRelatedField(
+        required=False, many=False,
+        read_only=True)
 
     class Meta:
         model = Lane
@@ -44,4 +47,5 @@ class LaneSerializerFull(serializers.ModelSerializer):
                   'epic_cards',
                   'feature_cards',
                   'task_cards',
+                  'project'
                   )

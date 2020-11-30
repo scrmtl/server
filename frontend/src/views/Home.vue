@@ -1,23 +1,39 @@
 /* eslint-disable */
 <template>
   <v-container fluid>
-    <v-row>
-      <v-col>
+    <v-row class="hidden-sm-and-down">
+      <v-col cols="12">
         <div class="projectBtn my-2">
           <v-btn text color="link" large @click="showCreateProject()">
             <v-icon class="mr-1">mdi-folder-plus</v-icon>Create Project
           </v-btn>
         </div>
+        <div class="projectBtn my-n1">
+          <v-switch
+            v-if="this.groupId !== 1"
+            color="link"
+            inset
+            dark
+            v-model="showAllProjects"
+          >
+            <template v-slot:label>
+              <span class="link--text">Show all Projects</span>
+            </template>
+          </v-switch>
+        </div>
       </v-col>
     </v-row>
     <v-row align="start" justify="center">
-      <v-col cols="8">
-        <div v-for="project in orderedProjects(listProjects)" :key="project.id">
+      <v-col lg="8" md="7" sm="12">
+        <div
+          v-for="project in sortedProjects"
+          :key="project.id"
+        >
           <ProjectCard v-bind:project="project" />
         </div>
       </v-col>
-      <v-col cols="4">
-        <MyTasksLane />
+      <v-col lg="4" md="5" class="hidden-sm-and-down">
+        <MyTasksLane class="hidden-sm-and-down" />
       </v-col>
     </v-row>
   </v-container>
@@ -26,7 +42,6 @@
 <script>
 import ProjectCard from "@/components/ProjectCard.vue";
 import MyTasksLane from "@/components/MyTasksLane.vue";
-import Axios from "axios";
 
 import { mapGetters, mapActions, mapState } from "vuex";
 //import scrmtlServices from '@/services/scrmtlServices.js'
@@ -38,51 +53,69 @@ export default {
     calendar2menu: false,
     drawer: false,
     tab: null,
-    localProject: {}
+    localProject: {},
+    groupId: 0,
+    userId: {},
+    showAllProjects: false,
   }),
   components: {
     ProjectCard,
-    MyTasksLane
+    MyTasksLane,
   },
-  beforeCreate() {},
-  created() {
-    this.loadData();
-    Axios.interceptors.request.use(config => {
-      if (
-        (config.method === "post") | (config.method === "patch") &&
-        config.url[config.url.length - 1] !== "/"
-      ) {
-        config.url += "/";
-      }
-      return config;
-    });
-  },
+
+  
 
   methods: {
     ...mapActions("project", {
-      ProjectsFetch: "fetchList",
-      createProject: "create"
+      fetchProjects: "fetchList",
+      createProject: "create",
     }),
     ...mapActions("user", {
-      UsersFetch: "fetchList"
+      fetchUsers: "fetchList",
     }),
     ...mapActions("group", {
-      GroupsFetch: "fetchList"
+      fetchGroups: "fetchList",
     }),
     ...mapActions("session", {
-      SessionFetch: "fetchList"
+      fetchSession: "fetchList",
+    }),
+    ...mapActions("sprint", {
+      fetchSprints: "fetchList",
     }),
 
     loadData() {
       // Load Projects
-      this.ProjectsFetch();
+      this.fetchProjects({ customUrlFnArgs: {} });
       //Load User Groups
-      this.GroupsFetch();
-      this.UsersFetch();
-      this.SessionFetch({ customUrlFnArgs: { all: false } });
+      this.fetchGroups();
+      this.fetchUsers();
+      this.fetchSession({ customUrlFnArgs: { all: false } });
+      this.fetchSprints({ customUrlFnArgs: {} })
     },
+
+    GetSessionIds() {
+      this.groupId = -1;
+      this.userId = -1;
+      this.fetchSession({
+        id: null,
+        customUrlFnArgs: { all: false },
+      })
+        .then(() => {
+          //get groupId
+          var session = Object.values(this.listSession)[0];
+          this.groupId = session.groups[0];
+          this.userId = session.id;
+        })
+        .catch(() => {
+          if (this.groupId <= 0) {
+            this.groupId = 0;
+            this.userId = 0;
+          }
+        });
+    },
+
     showCreateProject() {
-      this.$store.commit("showProjectDetail", true);
+      this.$store.commit("selected/showProjectDetail", true);
     },
 
     saveProject() {
@@ -98,40 +131,85 @@ export default {
           dod: this.localProject.dod,
           numOfSprints: this.localProject.numOfSprints,
           status: this.localProject.status,
-          project_users: this.localProject.project_users
+          project_users: this.localProject.project_users,
         },
-        customUrl: "/api/projects/"
+        customUrl: "/api/projects/",
       });
     },
 
-    orderedProjects(projects) {
-      projects.sort(function(a, b) {
+    //Ordnet die Projekte nach dem Status (Ob Aktiv oder Archiv)
+    orderProjects(projects) {
+       projects.sort(function (a, b) {
         var keyA = a.status;
         var keyB = b.status;
-        // Vergleiche ob AC oder AR 
+        // Vergleiche ob AC oder AR
         if (keyA < keyB) return -1;
         if (keyA > keyB) return 1;
         return 0;
       });
-      return projects;
-    }
+      return projects
+    },
+
+    
+
+    
   },
   computed: {
-    ...mapGetters("project", { listProjects: "list" }),
-
     ...mapState({
-      project: "detailProject"
-    })
+      project: "detailProject",
+    }),
+    ...mapGetters("project", {
+      listProjects: "list" }),
+    ...mapGetters("session", {
+      listSession: "list",
+    }),
+    ...mapGetters("user", {
+      projectUsersByUserId: "byUserId",
+    }),
+    ...mapGetters("group", {
+      groupById: "byId",
+    }),
+    ...mapGetters({ userinfos: "getUserinfo" }),
+
+    getGroupId: function () {
+      if (this.groupId === 0) {
+        this.GetSessionIds();
+      }
+      return this.groupId;
+    },
+
+    
+
+    sortedProjects(){
+      // show all project if you admin or you set it via switch
+      if(this.showAllProjects || this.groupId === 1){
+        return this.orderProjects(this.listProjects);
+      }
+      // show only your own projects
+      else{
+        var userProjects = [];
+        this.projectUsersByUserId(this.userId).forEach((projectUser) => {
+          this.listProjects.forEach((project) => {
+            if (project.id === projectUser.project) {
+              userProjects.push(project);
+            }
+          });
+        });
+        return this.orderProjects(userProjects);
+      }
+    }
   },
+
   mounted() {
     this.loadData();
-    // setInterval(
-    //   function() {
-    //     this.loadData();
-    //   }.bind(this),
-    //   15000
-    // );
-  }
+    this.GetSessionIds();
+  },
+
+  created() {
+    this.loadData();
+    this.GetSessionIds();
+  },
+
 };
 </script>
 
