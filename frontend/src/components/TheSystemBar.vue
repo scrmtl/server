@@ -96,7 +96,13 @@ export default {
       if(this.$route.params.id !== undefined){
         var project = this.projectById(this.$route.params.id)
         if( project !== undefined){
-          return project.name.slice(0, 15);
+          if(project.name.length > 30){
+            return project.name.slice(0, 30) +"..." ;
+          }
+          else{
+            return project.name
+          }
+          
         }
         else{
           return "";
