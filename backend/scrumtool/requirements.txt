@@ -80,3 +80,5 @@ django-property-filter
 rules>=2.2
 drf-nested-routers
 django-simple-history
+numpy
+django-apscheduler
