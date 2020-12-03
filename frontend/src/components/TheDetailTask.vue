@@ -135,7 +135,7 @@
                     >
                       <v-card-title class="title">
                         <span class="headline">Assigned users</span>
-                        <v-btn icon @click="assignedUserDialog = true">
+                        <v-btn icon @click="assignedUserDialog = true" class="hidden-sm-and-down">
                           <v-icon color="link">mdi-dots-horizontal</v-icon>
                         </v-btn>
                         <AssignedUserManagement
