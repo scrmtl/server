@@ -32,9 +32,9 @@
     </v-col>
     <v-col>
       <!-- Hier kommt dann das weitere... /-->
-      <v-text>
+      <span>
         Hier kommt der Graph
-      </v-text> 
+      </span> 
     </v-col>
     <v-col>
       Hier die 4 Statisik-Werte
