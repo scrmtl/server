@@ -1,15 +1,15 @@
 <template>
-  <v-row>
-    <v-col dense v-for="lane in neededPlanningLanes" :key="lane.numbering">
+  <v-row justify="center">
+    <v-col lg="3" md="3" sm="3" dense v-for="lane in neededPlanningLanes" :key="lane.numbering">
       <Lane v-bind:lane="lane" planningMode></Lane>
     </v-col>
-    <v-col>
-
+    <v-col lg="2" md="1" sm="1" alignSelf="center">
+      <v-btn color="primary" >Start Planning Poker</v-btn>
     </v-col>
-    <v-col>
+    <v-col lg="3" md="3" sm="3">
       <SprintLane />
     </v-col>
-    <v-col>
+    <v-col lg="1" md="1" sm="1">
       <v-timeline>
         <v-timeline-item
           v-for="sprint in listSprints" :key="`${sprint.number}-sprint`"
@@ -29,9 +29,6 @@
           </template>
         </v-timeline-item>
       </v-timeline>
-    </v-col>
-    <v-col>
-
     </v-col>
   </v-row>
 </template>
