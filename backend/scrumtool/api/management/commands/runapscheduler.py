@@ -11,7 +11,8 @@ from django_apscheduler.models import DjangoJobExecution
 
 from api.models.sprint import Sprint
 from api.models.card import Task
-
+from api.models import Lane
+from api.models.board import Board
 
 logger = logging.getLogger(__name__)
 
@@ -53,14 +54,21 @@ def set_sprint_accepted_handler(sprints_today):
 def move_cards_handler(sprints_today):
     sprint: Sprint
     for sprint in sprints_today:
-        # get lane of PB
 
-        #
         if sprint.status == Sprint.SprintStatus.IN_PROGRESS:
-            sprint.project.boards
+            # get lane of PB
+            pb_board: Board = sprint.project.boards.get(
+                board_type=Board.BoardType.PB)
+            sb_board: Board = sprint.project.boards.get(
+                board_type=Board.BoardType.SB)
+            growing_lane: Lane = pb_board.lanes.get(name__icontains='Growning')
+            next_lane: Lane = sb_board.lanes.get(name__icontains='Next')
+            # get tasks of PB
+            tasks = Task.objects.filter(lane=growing_lane.id)
             task: Task
-            for task in sprint.task_cards.all():
-                pass
+            for task in tasks.all():
+                task.lane = next_lane
+                task.save()
 
 
 def midnight_job():
@@ -101,7 +109,7 @@ class Command(BaseCommand):
         scheduler.add_job(
             delete_old_job_executions,
             trigger=CronTrigger(
-                day_of_week="mon", hour="00", minute="00"
+                day_of_week="mon", hour="10", minute="00"
             ),  # Midnight on Monday, before start of the next work week.
             id="delete_old_job_executions",
             max_instances=1,
