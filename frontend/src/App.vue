@@ -2,7 +2,7 @@
 <template>
   <v-app>
     <SystemBar v-if="this.$store.getters.isLoggedIn" />
-    <TheNavigation/>
+    <TheNavigation v-if="this.$store.getters.isLoggedIn"/>
     <DetailProject v-if="this.$store.getters.isLoggedIn" />
     <DetailTask v-if="this.$store.getters.isLoggedIn" />
     <DetailSprint v-if="this.$store.getters.isLoggedIn" />
@@ -50,29 +50,33 @@ export default {
     
   },
   created() {
-    Axios.interceptors.response.use((response) => {
-      if (response.status === 401 && response.detail === "Anmeldedaten fehlen") {
-          this.$store.dispatch("logout");
-      }
-      else if(response.status === 403){
-        console.log("Error from interceptor");
-        console.log(response);
-        this.$store.commit("showSystemAlert", {
-              message: "Permission denied",
-              category: "error"
-            });
-      }
-      // return new Promise(() => {
-      //   if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
-      //     this.$store.dispatch("logout");
-      //   }
-      //   throw err;
-      // });
-      return response;
-    });
+    Axios.interceptors.response.use(function (response){
+        return response;
+      },
+      function (error) {
+        console.log(error);
+        if (error.status === 401 && error.detail === "Anmeldedaten fehlen.") {
+             this.$store.dispatch("logout");
+        }
+        // return Promise.reject(error);
+        // else if(response.status === 403){
+        //   console.log("Error from interceptor");
+        //   console.log(response);
+        //   this.$store.commit("showSystemAlert", {
+        //         message: "Permission denied",
+        //         category: "error"
+        //       });
+        // }
+        // return new Promise(() => {
+        //   if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
+        //     this.$store.dispatch("logout");
+        //   }
+        //   throw err;
+        // });
+        // return response;
+      });
 
     Axios.interceptors.request.use(config => {
-      // console.log(config);
       if (
         (config.method === "post" || config.method === "patch") &&
         config.url[config.url.length - 1] !== "/" &&
