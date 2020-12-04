@@ -1,13 +1,23 @@
 <template>
   <v-card min-width="385" max-width="420">
-    <v-card-title class="navbar white--text">
+    <v-card-title class="blue-grey darken-2 white--text">
       {{sprintName}}
+      <v-spacer></v-spacer>
+      <v-btn 
+        dark 
+        icon
+        class="icon" 
+        height="32"
+        @click="showSprintDetails()"
+      >
+        <v-icon>mdi-information-outline</v-icon>
+      </v-btn>
     </v-card-title>
-    <v-card-subtitle class="navbar white--text">
-      {{ sprintMetaData }}
+    <v-card-subtitle class="blue-grey darken-2 white--text">
+        {{ sprintMetaData }}
     </v-card-subtitle>
     <v-card-text 
-      class="lane-body  flex-column" 
+      class="blue-grey darken-2 flex-column" 
     >
       <v-row justify="center"  class="" v-for="task in laneTask" :key="task.id">
         <Task v-bind:task="task" />
@@ -43,6 +53,12 @@ export default {
       return this.tasksByIdArray(this.sprint.task_cards);
     }
 
+  },
+  methods:{
+    showSprintDetails(){
+      this.$store.commit("selected/setSprintDetail", this.sprint);
+      this.$store.commit("selected/showSprintDetailWithReadOnly");
+    },
   }
 }
 </script>

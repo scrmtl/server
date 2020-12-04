@@ -47,6 +47,7 @@
                           :counter="50"
                           prepend-icon="mdi-information-outline"
                           class="ma-1"
+                          :disabled="status === 'DO' || status === 'AC'"
                           v-model="name"
                         ></v-text-field>
                         <!-- Task description -->
@@ -55,6 +56,7 @@
                           prepend-icon="mdi-information-outline"
                           required
                           outlined
+                          :disabled="status === 'DO' || status === 'AC'"
                           class="ma-1"
                           v-model="description"
                         ></v-textarea>
@@ -67,6 +69,7 @@
                         v-model="this.taskNamedStatus"
                         :items="availableStatus"
                         :readonly="disableStatusChange"
+                        :disabled="disableStatusChange"
                         outlined
                         dense
                         label="Status"
@@ -76,6 +79,7 @@
                       <v-autocomplete
                         v-model="storypoints"
                         :items="availableStorypoints"
+                        :disabled="status === 'DO' || status === 'AC'"
                         outlined
                         dense
                         label="Story points"
@@ -86,6 +90,7 @@
                     <v-col>
                       <v-text-field
                         v-model="this.plannedSprintNumber"
+                        disabled
                         readonly
                         outlined
                         dense
@@ -95,6 +100,7 @@
                     <v-col>
                       <v-text-field
                         v-model="this.plannedSprintStart"
+                        disabled
                         readonly
                         outlined
                         dense
@@ -104,6 +110,7 @@
                     <v-col>
                       <v-text-field
                         v-model="this.plannedSprintEnd"
+                        disabled
                         readonly
                         outlined
                         dense
@@ -115,6 +122,7 @@
                     <v-col>
                       <v-text-field
                         v-model="this.plannedSprintVersion"
+                        disabled
                         readonly
                         outlined
                         dense
@@ -135,7 +143,12 @@
                     >
                       <v-card-title class="title">
                         <span class="headline">Assigned users</span>
-                        <v-btn icon @click="assignedUserDialog = true" class="hidden-sm-and-down">
+                        <v-btn 
+                          :disabled="status === 'DO' || status === 'AC'" 
+                          icon 
+                          @click="assignedUserDialog = true" 
+                          class="hidden-sm-and-down"
+                        >
                           <v-icon color="link">mdi-dots-horizontal</v-icon>
                         </v-btn>
                         <AssignedUserManagement
@@ -183,7 +196,7 @@
               <v-card-text>
                 <v-row align="center">
                   <v-col>
-                    <v-list>
+                    <v-list :disabled="status === 'DO' || status === 'AC'" >
                       <v-list-group
                         value="true"
                         v-for="steplist in steplists"

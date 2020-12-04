@@ -11,6 +11,7 @@
       multiple
       chips
       outlined
+      :disabled="status === 'DO' || status === 'AC'"
     >
       <template v-slot:no-data>
         <v-list-item>
@@ -87,6 +88,7 @@ export default {
     ...mapFields("selected", [
       "task.details.id",
       "task.details.labels",
+      "task.details.status",
     ]),
     ...mapGetters("label", {
       listLabels: "list",

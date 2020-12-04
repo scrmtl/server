@@ -9,6 +9,7 @@ const state = () => ({
   sprint: {
     visableDetail: false,
     visableCreate: false,
+    readOnly: false,
     details: {},
   },
   task: {
@@ -45,7 +46,7 @@ const mutations = {
   showSprintDetail(state, withCreate = false) {
     state.sprint.visableDetail = true;
     if (withCreate) {
-      state.sprint.visableCreate = withCreate;
+      state.sprint.visableCreate = true;
       state.sprint.details = {
         version: "",
         project: 0,
@@ -53,9 +54,16 @@ const mutations = {
       };
     }
   },
+
+  showSprintDetailWithReadOnly(state){
+    state.sprint.visableDetail = true;
+    state.sprint.readOnly = true;
+  },
+
   hideSprintDetail(state) {
     state.sprint.visableDetail = false;
     state.sprint.visableCreate = false;
+    state.sprint.readOnly = false;
     // state.sprint.details = {};
   },
   setSprintDetail(state, sprint) {
