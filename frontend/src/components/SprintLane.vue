@@ -84,10 +84,32 @@ export default {
     showSprintDetails(){
       this.$store.commit("selected/showSprintDetail", false);
     },
-    GetHeader(number, start, end){
+    GetNamedStatus(status) {
+      var namedStatus = "in Planning";
+      switch (status) {
+        case "IL":
+          namedStatus = "In Planning";
+          break;
+        case "PL":
+          namedStatus = "Planned";
+          break;
+        case "IR":
+          namedStatus = "In Progress";
+          break;
+        case "DO":
+          namedStatus = "Done";
+          break;
+        case "AC":
+          namedStatus = "Accepted";
+          break;
+      }
+      return namedStatus;
+    },
+
+    GetHeader(status, number, start, end){
       if (number !== undefined) {
         this.selectedSprintName = "Sprint " + number;
-        this.selectedSprintDateInfo = "(" + start + " to " + end + ")";
+        this.selectedSprintDateInfo = "Status: " + this.GetNamedStatus(status) + " - (" + start + " to " + end + ")";
       } else {
         this.selectedSprintName = "No sprint selected";
         this.selectedSprintDateInfo = "";
@@ -187,7 +209,7 @@ export default {
   watch:{
     details(currentSprint){
       this.selectedSprint = currentSprint;
-      this.GetHeader(currentSprint.number, currentSprint.start, currentSprint.end);
+      this.GetHeader(currentSprint.status, currentSprint.number, currentSprint.start, currentSprint.end);
     },
 
   },
