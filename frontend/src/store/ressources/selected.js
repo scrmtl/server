@@ -15,6 +15,7 @@ const state = () => ({
   task: {
     visableDetail: false,
     visableCreate: false,
+    readOnly: false,
     details: {},
   },
 });
@@ -76,9 +77,16 @@ const mutations = {
       state.task.visableCreate = withCreate;
     }
   },
+
+  showTaskDetailWithReadOnly(state){
+    state.task.visableDetail = true;
+    state.task.readOnly = true;
+  },
+
   hideTaskDetail(state) {
     state.task.visableDetail = false;
     state.task.visableCreate = false;
+    state.task.readOnly = false;
     state.task.details = {};
   },
   setTaskDetail(state, task) {

@@ -47,7 +47,7 @@
                           :counter="50"
                           prepend-icon="mdi-information-outline"
                           class="ma-1"
-                          :disabled="status === 'DO' || status === 'AC'"
+                          :readonly="status === 'DO' || status === 'AC' || readOnly"
                           v-model="name"
                         ></v-text-field>
                         <!-- Task description -->
@@ -56,7 +56,7 @@
                           prepend-icon="mdi-information-outline"
                           required
                           outlined
-                          :disabled="status === 'DO' || status === 'AC'"
+                          :readonly="status === 'DO' || status === 'AC' || readOnly"
                           class="ma-1"
                           v-model="description"
                         ></v-textarea>
@@ -66,7 +66,7 @@
                   <v-row align="center">
                     <v-col>
                       <v-autocomplete
-                        v-model="this.taskNamedStatus"
+                        v-model="taskNamedStatus"
                         :items="availableStatus"
                         :readonly="disableStatusChange"
                         :disabled="disableStatusChange"
@@ -79,7 +79,7 @@
                       <v-autocomplete
                         v-model="storypoints"
                         :items="availableStorypoints"
-                        :disabled="status === 'DO' || status === 'AC'"
+                        :disabled="status === 'DO' || status === 'AC' || readOnly"
                         outlined
                         dense
                         label="Story points"
@@ -144,7 +144,7 @@
                       <v-card-title class="title">
                         <span class="headline">Assigned users</span>
                         <v-btn 
-                          :disabled="status === 'DO' || status === 'AC'" 
+                          :disabled="readOnly" 
                           icon 
                           @click="assignedUserDialog = true" 
                           class="hidden-sm-and-down"
@@ -196,7 +196,7 @@
               <v-card-text>
                 <v-row align="center">
                   <v-col>
-                    <v-list :disabled="status === 'DO' || status === 'AC'" >
+                    <v-list :disabled="readOnly" >
                       <v-list-group
                         value="true"
                         v-for="steplist in steplists"
@@ -220,14 +220,17 @@
         </v-tabs-items>
         <!-- actions -->
         <div>
-          <v-btn color="link" text @click="close()">Close</v-btn>
           <v-btn
-            v-if="!visableCreate"
+            color="link" 
+            text 
+            @click="close()"
+          >Close</v-btn>
+          <v-btn
+            v-if="!visableCreate && !readOnly"
             color="link"
             text
             @click="confirm()"
-            >Save</v-btn
-          >
+            >Save</v-btn>
           <v-btn
             v-if="visableCreate"
             color="link"
@@ -237,7 +240,7 @@
             >Create</v-btn
           >
           <v-btn
-            v-if="!visableCreate"
+            v-if="!visableCreate && this.sprint == null"
             color="error"
             text
             absolute
@@ -289,18 +292,9 @@ export default {
   name: "TheDetailTask",
   data: () => ({
     tab: null,
-    availableStatus: [
-      "New",
-      "Planned",
-      "Not Started",
-      "In Progress",
-      "Done",
-      "Accepted"
-    ],
     availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
     deleteDialog: false,
     assignedUserDialog: false,
-    taskNamedStatus: "New",
     isFormValid: null,
     taskNameRules: [
       v => !!v || "Name is required",
@@ -381,19 +375,35 @@ export default {
     },
 
     saveTask() {
+      
+      var data = {
+        name: this.name,
+        feature: this.feature,
+      }
+      // Declined Workflow
+      // If the task declined from PO, is a workflow nessesary
+      if(this.status === "DE"){
+        var lanes = this.laneByName("Ready (for next Sprints)");
+        if(lanes.length > 0){
+          data.status = "NW"
+          data.lane = lanes.shift().id
+          data.sprint = null
+        }
+      }
+      // normal save
+      else{
+        data.description = this.description;
+        data.storypoints = this.storypoints;
+        data.assigned_users = this.assigned_users;
+        data.status = this.status;
+        data.lane = this.lane;
+        data.sprint = this.sprint;
+        data.labels = this.labels;
+      }
+
       this.updateTask({
         id: this.id,
-        data: {
-          name: this.name,
-          description: this.description,
-          storypoints: this.storypoints,
-          assigned_users: this.assigned_users,
-          status: this.status,
-          lane: this.lane,
-          sprint: this.sprint,
-          feature: this.feature,
-          labels: this.labels
-        },
+        data,
         customUrlFnArgs: {}
       }).then(
         function(value) {
@@ -420,30 +430,7 @@ export default {
       this.close();
     },
 
-    GetTaskNamedStatus(status) {
-      var namedStatus = "New";
-      switch (status) {
-        case "NW":
-          namedStatus = "New";
-          break;
-        case "PL":
-          namedStatus = "Planned";
-          break;
-        case "NS":
-          namedStatus = "Not Started";
-          break;
-        case "DO":
-          namedStatus = "Done";
-          break;
-        case "IP":
-          namedStatus = "In Progress";
-          break;
-        case "AC":
-          namedStatus = "Accepted";
-          break;
-      }
-      return namedStatus;
-    }
+    
   },
   computed: {
     // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
@@ -465,6 +452,7 @@ export default {
       "task.details.assigned_users",
       "task.visableDetail",
       "task.visableCreate",
+      "task.readOnly",
     ]),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
@@ -478,6 +466,9 @@ export default {
     }),
     ...mapGetters("sprint", {
       sprintById: "byId"
+    }),
+    ...mapGetters("lane", {
+      laneByName: "byName"
     }),
 
     plannedSprintNumber(){
@@ -526,13 +517,97 @@ export default {
       if(this.visableCreate){
         return true;
       }
-      else if(this.status === "DO" || this.status === "AC"){
+      else if(this.readOnly){
+        return true;
+      }
+      else if(this.status === "DO" || this.status === "AC" || this.status === "DE"){
         return false;
       }
       else{
         return true;
       }
     },
+    availableStatus(){
+      if(this.status === "DO" || this.status === "AC" || this.status === "DE"){
+        return [
+          "Done",
+          "Accepted",
+          "Declined"
+        ]
+      }
+      else{
+        return [
+          "New",
+          "Planned",
+          "Not Started",
+          "In Progress",
+          "Done",
+          "Accepted",
+          "Declined"
+        ]
+ 
+      }
+    },
+
+    taskNamedStatus: {
+      get() {
+        var namedStatus = "New";
+        switch (this.status) {
+          case "NW":
+            namedStatus = "New";
+            break;
+          case "PL":
+            namedStatus = "Planned";
+            break;
+          case "NS":
+            namedStatus = "Not Started";
+            break;
+          case "DO":
+            namedStatus = "Done";
+            break;
+          case "IP":
+            namedStatus = "In Progress";
+            break;
+          case "AC":
+            namedStatus = "Accepted";
+            break;
+          case "DE":
+            // If the task declined from PO, is a workflow nessesary
+            namedStatus = "Declined";
+            break;
+        }
+        return namedStatus;
+      },
+      set(value) {
+        var status = "NW";
+        switch (value) {
+          case "NW":
+            status = "NW";
+            break;
+          case "Planned":
+            status = "PL";
+            break;
+          case "Not Started":
+            status = "NS";
+            break;
+          case "Done":
+            status = "DO";
+            break;
+          case "In Progress":
+            status = "IP";
+            break;
+          case "Accepted":
+            status = "AC";
+            break;
+          case "Declined":
+            // If the task declined from PO, is a workflow nessesary
+            status = "DE";
+            break;
+        }
+        this.status = status;
+      }
+    },
+
     visibleDrawer: {
       get() {
         return this.visableDetail;
@@ -549,13 +624,11 @@ export default {
   watch:{
     visibleDrawer(val, prev){
       if(val === prev) return;
-      this.taskNamedStatus = this.GetTaskNamedStatus(this.status);
     },
   },
 
   created() {
     this.fetchLabel();
-    this.taskNamedStatus = this.GetTaskNamedStatus(this.status);
   },
 
   updated() {
