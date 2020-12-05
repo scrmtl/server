@@ -6,7 +6,7 @@
         {{ lane.name }}
       </div>
       <v-spacer></v-spacer>
-      <v-menu offset-y close-on-click>
+      <v-menu offset-y close-on-click v-if="allowedAdd">
         <template v-slot:activator="{ on }">
           <v-btn dark icon v-on="on" class="icon" height="32">
             <v-icon>mdi-dots-vertical</v-icon>
@@ -56,7 +56,8 @@ export default {
   },
   props: {
     lane: {},
-    planningMode: { type: Boolean, default: false },
+    allowedAdd: { type: Boolean, default: false },
+    planningMode: { type: Boolean, default: false }
   },
   methods: {
     ...mapActions("task", {

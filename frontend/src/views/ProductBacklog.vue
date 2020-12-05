@@ -2,7 +2,7 @@
   <v-row no-gutters>
     <v-col dense class="d-flex flex-nowrap overflow-x-auto">
       <div class="ma-4" v-for="lane in listBoardLanes" :key="lane.numbering">
-        <Lane v-bind:lane="lane"></Lane>
+        <Lane v-bind:lane="lane" allowedAdd></Lane>
       </div>
     </v-col>
   </v-row>

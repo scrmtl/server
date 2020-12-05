@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <v-col lg="3" md="3" sm="3" dense v-for="lane in neededPlanningLanes" :key="lane.numbering">
-      <Lane v-bind:lane="lane" planningMode></Lane>
+      <Lane v-bind:lane="lane" planningMode allowedAdd></Lane>
     </v-col>
     <v-col lg="2" md="1" sm="1" alignSelf="center">
       <v-btn color="primary" >Start Planning Poker</v-btn>

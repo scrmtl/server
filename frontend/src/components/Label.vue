@@ -11,6 +11,7 @@
       multiple
       chips
       outlined
+      :disabled="status === 'DO' || status === 'AC'|| readOnly"
     >
       <template v-slot:no-data>
         <v-list-item>
@@ -43,6 +44,8 @@
           background-color="transparent"
           hide-details
           outlined
+          :readonly="readOnly"
+          :disabled="readOnly"
           @keyup.enter="edit(index, item)"
         ></v-text-field>
         <v-chip v-else :color="`${item.color}`" label small>
@@ -87,6 +90,8 @@ export default {
     ...mapFields("selected", [
       "task.details.id",
       "task.details.labels",
+      "task.details.status",
+      "task.readOnly",
     ]),
     ...mapGetters("label", {
       listLabels: "list",

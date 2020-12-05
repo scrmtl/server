@@ -190,7 +190,12 @@ export default {
   methods: {
     showTaskDetail() {
       this.$store.commit("selected/setTaskDetail", this.task);
-      this.$store.commit("selected/showTaskDetail", false);
+      if(this.$route.path.endsWith("Archive")){
+        this.$store.commit("selected/showTaskDetailWithReadOnly", false);
+      }
+      else{
+        this.$store.commit("selected/showTaskDetail", false);
+      }
     },
     GetUserInitial(id) {
       var inital = "AA";
