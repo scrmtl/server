@@ -16,7 +16,7 @@ from api.models.board import Board
 
 logger = logging.getLogger(__name__)
 
-
+'''
 def my_job():
     logger.info("---------------------Executing my_job-----------------------")
     logger.info(
@@ -27,6 +27,7 @@ def my_job():
     set_sprint_accepted_handler(Sprint.objects.filter(end=date.today()).all())
     move_cards_handler(
         Sprint.objects.filter(start=date.today()).all())
+'''
 
 
 def set_sprint_in_progress_handler(sprints_today):
@@ -104,10 +105,18 @@ def move_cards_handler(sprints_today):
                     task.save()
 
 
-def midnight_job():
+def hourly_job():
     # This job actually starts at 10 o'clock because the server aka
     # the old laptop is only online from 8:00-22:00
-    pass
+    logger.info("---------------------Executing my_job-----------------------")
+    logger.info(
+        f"Sprints today: {Sprint.objects.filter(start=date.today()).all()}")
+    set_sprint_in_progress_handler(
+        Sprint.objects.filter(start=date.today()).all())
+    set_sprint_done_handler(Sprint.objects.filter(end=date.today()).all())
+    set_sprint_accepted_handler(Sprint.objects.filter(end=date.today()).all())
+    move_cards_handler(
+        Sprint.objects.filter(start=date.today()).all())
 
 
 def delete_old_job_executions(max_age=604_800):
@@ -121,7 +130,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         scheduler = BlockingScheduler(timezone=settings.TIME_ZONE)
         scheduler.add_jobstore(DjangoJobStore(), "default")
-
+        '''
         scheduler.add_job(
             my_job,
             trigger=CronTrigger(second="*/59"),  # Every 10 seconds
@@ -130,10 +139,11 @@ class Command(BaseCommand):
             replace_existing=True,
         )
         logger.info("Added job 'my_job'.")
-
+        '''
         scheduler.add_job(
-            midnight_job,
-            trigger=CronTrigger(day="*", hour="0"),  # Every 10 seconds
+            hourly_job,
+            # Every 10 seconds
+            trigger=CronTrigger(day="*", hour="*", minute="0"),
             id="midnight_job",  # The `id` assigned to each job MUST be unique
             max_instances=1,
             replace_existing=True,
