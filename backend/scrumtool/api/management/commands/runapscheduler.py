@@ -1,5 +1,6 @@
 # runapscheduler.py
 import logging
+import os
 from datetime import date
 from django.conf import settings
 
@@ -14,6 +15,8 @@ from api.models.card import Task
 from api.models import Lane
 from api.models.board import Board
 
+LOGLEVEL = os.getenv('LOGLEVEL', 'INFO').upper()
+logging.basicConfig(level=LOGLEVEL)
 logger = logging.getLogger(__name__)
 
 '''
@@ -108,7 +111,8 @@ def move_cards_handler(sprints_today):
 def hourly_job():
     # This job actually starts at 10 o'clock because the server aka
     # the old laptop is only online from 8:00-22:00
-    logger.info("---------------------Executing my_job-----------------------")
+    logger.info(
+        "---------------------Executing hourly_job-----------------------")
     logger.info(
         f"Sprints today: {Sprint.objects.filter(start=date.today()).all()}")
     set_sprint_in_progress_handler(
