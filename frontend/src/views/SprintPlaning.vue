@@ -1,10 +1,10 @@
 <template>
-  <v-row justify="center">
+  <v-row justify="center"  >
     <v-col lg="3" md="3" sm="3" dense v-for="lane in neededPlanningLanes" :key="lane.numbering">
       <Lane v-bind:lane="lane" planningMode allowedAdd></Lane>
     </v-col>
-    <v-col lg="2" md="1" sm="1" alignSelf="center">
-      <v-btn color="primary" >Start Planning Poker</v-btn>
+    <v-col lg="2" md="1" sm="1" alignSelf="start">
+      <PokerLane />
     </v-col>
     <v-col lg="3" md="3" sm="3">
       <SprintLane />
@@ -36,11 +36,13 @@
 <script>
 import { mapGetters } from 'vuex';
 import Lane from "@/components/Lane.vue";
-import SprintLane from "@/components/SprintLane.vue";
+import SprintLane from "@/components/Sprint/SprintLane.vue";
+import PokerLane from "@/components/Sprint/PokerLane.vue";
 export default {
   components: {
     Lane,
-    SprintLane
+    SprintLane,
+    PokerLane
   },
   methods:{
     showSprint(sprint) {
