@@ -291,7 +291,8 @@ export default {
     }),
 
     ...mapActions("sprintStatistics", {
-      fetchSprintStatistics: "fetchList"
+      fetchSprintStatistics: "fetchList",
+      fetchSingleSprintStatistics: "fetchSingle"
     }),
     
     close() {
@@ -339,6 +340,7 @@ export default {
               id: this.id,
               customUrlFnArgs: {}
             });
+            this.fetchSingleSprintStatistics({ id: this.id})
           }
           this.close();
         }.bind(this)
@@ -365,6 +367,7 @@ export default {
             }).then((res) => {
               this.$store.commit("selected/setSprintDetail", res.data);
             });
+            this.fetchSingleSprintStatistics({ id: this.id})
           }
           this.close();
           this.$store.commit("showSystemAlert", {
