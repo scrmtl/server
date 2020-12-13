@@ -49,29 +49,29 @@
           <v-card-title class="navbar white--text">{{ infoTitle }}</v-card-title>
           <v-card-text class=" navbar white--text">
             <v-list class="transparent">
-              <v-subheader class="white--text text-decoration-underline text-subtitle-1">STORYPOINTS</v-subheader>
-              <v-list-item>
+              <v-subheader class="white--text ">STORYPOINTS</v-subheader>
+              <v-list-item dense>
                 <v-list-item-title class="white--text">Total amount</v-list-item-title>
                 <v-list-item-subtitle class="white--text text-right">{{ sum_of_planned_sp }}</v-list-item-subtitle>
               </v-list-item>
-              <v-list-item>
+              <v-list-item dense>
                 <v-list-item-title class="white--text">Finished</v-list-item-title>
                 <v-list-item-subtitle class="white--text text-right">{{ sum_of_done_sp }}</v-list-item-subtitle>
               </v-list-item>
-              <v-list-item>
+              <v-list-item dense>
                 <v-list-item-title class="white--text">Not finished</v-list-item-title>
                 <v-list-item-subtitle class="white--text text-right">{{ sum_of_not_done_sp }}</v-list-item-subtitle>
               </v-list-item>
-              <v-subheader class="white--text text-decoration-underline text-subtitle-1">TASKS</v-subheader>
-              <v-list-item>
+              <v-subheader class="white--text">TASKS</v-subheader>
+              <v-list-item dense>
                 <v-list-item-title class="white--text">Total amount</v-list-item-title>
                 <v-list-item-subtitle class="white--text text-right">{{ sum_of_planned_tasks }}</v-list-item-subtitle>
               </v-list-item>
-              <v-list-item>
+              <v-list-item dense>
                 <v-list-item-title class="white--text">Finished</v-list-item-title>
                 <v-list-item-subtitle class="white--text text-right">{{ sum_of_done_tasks }}</v-list-item-subtitle>
               </v-list-item>
-              <v-list-item>
+              <v-list-item dense>
                 <v-list-item-title class="white--text">Not finished</v-list-item-title>
                 <v-list-item-subtitle class="white--text text-right">{{ sum_of_not_done_tasks }}</v-list-item-subtitle>
               </v-list-item>
