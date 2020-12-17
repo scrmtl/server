@@ -1,73 +1,51 @@
 <template>
-  <v-container fluid class="tabbody">
-    <v-row>
-      <v-col>
-        <Plotly
-          :data="plotData"
-          :layout="plotLayout"
-          :options="{
-            modeBarButtonsToRemove: [
-              'sendDataToCloud',
-              'toImage',
-              'autoScale2d',
-              'hoverClosestCartesian',
-              'hoverCompareCartesian',
-              'lasso2d',
-              'select2d',
-            ],
-            displaylogo: false,
-            showTips: false,
-            staticPlot: true,
-            displayModeBar: false,
-          }"
-        />
-      </v-col>
-      <v-col>
-        <v-card class="lane" height="100vh-50" max-width="400">
-          <v-card-title class="navbar white--text">Statistic</v-card-title>
-          <v-card-text class="tabbody--text">
-            Storypoints in project: {{ sp_in_project }} <br />
-            Done storypoints: {{ done_sp_in_project }} <br />
-            Accepted storypoints: {{ accepted_sp_in_project }} <br />
-            Tasks in project: {{ tasks_in_project }} <br />
-            Next Tasks: {{ sum_of_next_tasks }} <br />
-            Done Tasks: {{ sum_of_done_tasks }} <br />
-            Accepted Tasks: {{ sum_of_accepted_tasks }} <br /><br />
-
-            Average accepted Tasks per sprint: {{ average_tasks_in_sprint }}
-            <br />
-            Averarge storypoints per sprint: {{ average_sp_in_sprint }}
-            <br /><br />
-
-            Three worst spirnts per storypoints: {{ worst_sprints_per_sp }}
-            <br />
-            Three worst sprints per tasks: {{ worst_sprints_per_task }} <br />
-          </v-card-text> </v-card
-      ></v-col>
-    </v-row>
-  </v-container>
+<v-container fluid>
+  <v-row>
+    <v-col cols="4">
+      <ProjectInformation/>
+    </v-col>
+    <v-col cols="8">
+      <ProjectCalendar/>
+    </v-col>
+  </v-row>
+  <v-row>
+    <v-col cols="8">
+      <Plotly
+        :data="plotData"
+        :layout="plotLayout"
+        :options="{
+          modeBarButtonsToRemove: [
+            'sendDataToCloud',
+            'toImage',
+            'autoScale2d',
+            'hoverClosestCartesian',
+            'hoverCompareCartesian',
+            'lasso2d',
+            'select2d',
+          ],
+          displaylogo: false,
+          showTips: false,
+          staticPlot: true,
+          displayModeBar: false,
+        }"
+      />
+    </v-col>
+    <v-col cols="4">
+      <ProjectSummary/>
+    </v-col>
+  </v-row>
+</v-container>
 </template>
 
 <script>
 //import { mapGetters } from "vuex";
 import Plotly from "@/components/Plotly.vue";
+import ProjectInformation from "@/components/Dashboard/ProjectInformation.vue";
+import ProjectSummary from "@/components/Dashboard/ProjectSummary.vue";
+import ProjectCalendar from "@/components/Dashboard/ProjectCalendar.vue";
 export default {
   data: () => ({
     plotTitle: "Project burndown",
-
-    //Statisik Werte:
-    sp_in_project: "0",
-    done_sp_in_project: "1",
-    accepted_sp_in_project: "2",
-    tasks_in_project: "3",
-    sum_of_next_tasks: "4",
-    sum_of_done_tasks: "5",
-    sum_of_accepted_tasks: "6",
-    average_tasks_in_sprint: "7",
-    average_sp_in_sprint: "8",
-    worst_sprints_per_sp: "9",
-    worst_sprints_per_task: "10",
-
     //Werte für den Plotly
     plotly_data: {
       overall_sp: {
@@ -87,6 +65,9 @@ export default {
 
   components: {
     Plotly,
+    ProjectInformation,
+    ProjectSummary,
+    ProjectCalendar
   },
 
   methods: {},

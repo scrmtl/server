@@ -51,6 +51,7 @@ export default {
       this.fetchTasks({ customUrlFnArgs: { projectId: this.id } });
       this.fetchSprints({ customUrlFnArgs: { projectId: this.id } });
       this.fetchSprintStatistics();
+      // TODO fetch Project Statistics
     }
   },
   computed: {
