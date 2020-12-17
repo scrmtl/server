@@ -123,7 +123,7 @@ plotLayout() {
       return {
         autosize: true,
         width: 1100,
-        height: 600,
+        height: 700,
         argin: { t: 25, l: 45, r: 10, b: 30 },
         title: this.plotTitle,
         font: {

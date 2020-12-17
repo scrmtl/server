@@ -1,5 +1,5 @@
 <template>
-<v-card>
+<v-card tile flat height="700" class="navbar">
   <v-card-title class="navbar white--text">Project summary</v-card-title>
   <v-card-text class="navbar white--text">
     <v-list class="transparent">

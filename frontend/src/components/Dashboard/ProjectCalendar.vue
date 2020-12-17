@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card tile flat>
   <v-card-title class="navbar white--text">Project Calendar</v-card-title>
   <v-card-text class="navbar white--text">
     <v-sheet
