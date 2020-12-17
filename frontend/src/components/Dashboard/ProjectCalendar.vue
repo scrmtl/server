@@ -5,12 +5,13 @@
     <v-sheet
       tile
       height="64"
+      class="navbar"
     >
-      <v-toolbar flat>
+      <v-toolbar class="navbar" flat>
         <v-btn
           outlined
           class="mr-4"
-          color="grey darken-2"
+          color="link"
           @click="setToday"
         >
           Today
@@ -19,7 +20,7 @@
           fab
           text
           small
-          color="grey darken-2"
+          color="link"
           @click="prev"
         >
           <v-icon small>
@@ -30,26 +31,28 @@
           fab
           text
           small
-          color="grey darken-2"
+          color="link"
           @click="next"
         >
           <v-icon small>
             mdi-chevron-right
           </v-icon>
         </v-btn>
-        <v-toolbar-title v-if="$refs.calendar">
+        <v-toolbar-title class="white--text" v-if="$refs.calendar">
           {{ $refs.calendar.title }}
         </v-toolbar-title>
         <v-spacer></v-spacer>
       </v-toolbar>
     </v-sheet>
-    <v-sheet height="600">
+    <v-sheet class="navbar" height="875">
     <v-calendar
       ref="calendar"
       v-model="focus"
-      weekdays="[1, 2, 3, 4, 5, 6, 0]"
       type="month"
+      color="link"
+      dark
       :events="projectEvents"
+      :event-color="getEventColor"
     ></v-calendar>
     </v-sheet>
   </v-card-text>
@@ -62,10 +65,6 @@ export default {
   name: "ProjectCalendar",
   data: () =>({
     focus: '',
-    events: [],
-    // Test
-    colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-    names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
   }),
   computed:{
     ...mapGetters("project", {
@@ -82,15 +81,53 @@ export default {
       events.push({
           name: "Project start",
           start: project.start,
-          color: "green",
-          duration: 1
+          color: "grey",
+          category: "project",
+          timed: false,
       });
       events.push({
           name: "Project end",
           start: project.end,
-          color: "green",
-          duration: 1
+          color: "grey",
+          category: "project",
+          timed: false,
       });
+      this.listSprints.forEach(sprint => {
+        // Sprint Duration
+        events.push({
+          name: `Sprint ${sprint.number} (${sprint.version})`,
+          start: sprint.start,
+          end: sprint.end,
+          color: "blue",
+          category: "sprint",
+          timed: false,
+        });
+        // Release Date
+        events.push({
+          name: `Release ${sprint.version}`,
+          start: sprint.end,
+          color: "orange",
+          category: "Release",
+          timed: false,
+        });
+        // Sprint planning date
+        events.push({
+          name: `Sprint planning for Sprint ${sprint.number}`,
+          start: sprint.start,
+          color: "green",
+          category: "sprint",
+          timed: false,
+        });
+        // Sprint planning date
+        events.push({
+          name: `Sprint review for Sprint ${sprint.number}`,
+          start: sprint.end,
+          color: "green",
+          category: "sprint",
+          timed: false,
+        });
+      })
+
       console.log(events)
       return events;
     }
@@ -105,52 +142,13 @@ export default {
     next () {
       this.$refs.calendar.next()
     },
-
-    getProjectEvents(){
-      const events = [];
-      var project = this.projectById(this.$route.params.id);
-
-      events.push({
-          name: "Project start",
-          start: project.start,
-          color: "blue",
-      });
-      this.events = events;
-      console.log(events);
+    getEventColor (event) {
+      return event.color
     },
-    
-    getEvents ({ start, end }) {
-      const events = [];
+  },
+  mounted() {
 
-      const min = new Date(`${start.date}T00:00:00`);
-      const max = new Date(`${end.date}T23:59:59`);
-      const days = (max.getTime() - min.getTime()) / 86400000;
-      const eventCount = this.rnd(days, days + 20);
-
-      for (let i = 0; i < eventCount; i++) {
-        const allDay = this.rnd(0, 3) === 0;
-        const firstTimestamp = this.rnd(min.getTime(), max.getTime());
-        const first = new Date(firstTimestamp - (firstTimestamp % 900000));
-        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
-        const second = new Date(first.getTime() + secondTimestamp);
-
-        events.push({
-          name: this.names[this.rnd(0, this.names.length - 1)],
-          start: first,
-          end: second,
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay,
-        });
-      }
-
-      this.events = events;
-      console.log(events)
-    },
-    //Test
-    rnd (a, b) {
-        return Math.floor((b - a + 1) * Math.random()) + a
-      },
-  }
+  },
 }
 </script>
 
