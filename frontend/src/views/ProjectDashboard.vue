@@ -80,38 +80,79 @@ export default {
         name: "Planed storypoints",
         type: "scatter",
         mode: "lines",
+          line: {
+          color: "#FFFFFF",
+          width: 2,
+        },
+        connectgaps: true,
       };
       let todo_sp = {
         x: this.plotly_data.todo_sp.x_data,
         y: this.plotly_data.todo_sp.y_data,
-        name: "ToDo storypoints",
+        name: "ToDo Story Points",
         type: "scatter",
-        mode: "lines",
+        mode: "lines+markers",
+        marker: {
+          size: 10,
+        },
+        line: {
+          color: "#31AA96",
+          width: 4,
+        },
+        connectgaps: true,
       };
       let todo_tasks = {
         x: this.plotly_data.todo_tasks.x_data,
         y: this.plotly_data.todo_tasks.y_data,
-        name: "ToDo tasks",
+        name: "ToDo Tasks",
         type: "scatter",
-        mode: "lines",
+        mode: "lines+markers",
+        marker: {
+          size: 10,
+        },
+        line: {
+          color: "orange",
+          width: 4,
+        },
+        connectgaps: true,
       };
       return [overall_sp, todo_sp, todo_tasks];
     },
 
-    plotLayout() {
+plotLayout() {
       return {
         autosize: true,
         width: 1100,
         height: 600,
         argin: { t: 25, l: 45, r: 10, b: 30 },
         title: this.plotTitle,
-        //font: this.config.font,
+        font: {
+          family: "sans-serif",
+          size: 15,
+          color: "#FFFFFF",
+        },
         xaxis: {
           title: "Days",
+          dtick: 5,
+          gridcolor: "#636363",
+          gridwidth: 2,
+          zerolinecolor: "#636363",
+          zerolinewidth: 4,
         },
         yaxis: {
           title: "Story Points / Tasks",
+          dtick: 1,
+          gridcolor: "#636363",
+          gridwidth: 2,
+          zerolinecolor: "#636363",
+          zerolinewidth: 4,
         },
+        legend: {
+          x: 0,
+          y: 50,
+        },
+        paper_bgcolor: "#6441A4",
+        plot_bgcolor: "#6441A4",
         //bargap: 0,
         //showlegend: this.legend
       };
