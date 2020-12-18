@@ -55,8 +55,6 @@ export default new Vuex.Store({
     navigation:{
       visable: false
     },
-   
-    selectedBoard: {}
   },
   // call REST API (async)
   // Use from the components

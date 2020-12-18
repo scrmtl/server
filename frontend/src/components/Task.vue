@@ -193,6 +193,13 @@ export default {
       if(this.$route.path.endsWith("Archive")){
         this.$store.commit("selected/showTaskDetailWithReadOnly", false);
       }
+      else if(this.$route.path.endsWith("ProductBacklog") && !this.allowedChanges){
+        this.$store.commit("showSystemAlert", {
+          message: "You are not a PO. Read only access in Product backlog",
+          category: "warning"
+        });
+        this.$store.commit("selected/showTaskDetailWithReadOnly", false);
+      }
       else{
         this.$store.commit("selected/showTaskDetail", false);
       }
@@ -229,6 +236,26 @@ export default {
     ...mapGetters("sprint", {
       sprintById: "byId"
     }),
+     ...mapGetters("session", {
+      listSession: "list"
+    }),
+    ...mapGetters("projectUser",{
+      listProjectUser: "list"
+    }),
+    allowedChanges(){
+      var allowed = false;
+      // role id 1 is always product owner
+      var productOwnersInProject = this.listProjectUser.filter(projectUser => projectUser.role === 1 && projectUser.project == this.task.project);
+      if(this.listSession !== undefined && productOwnersInProject !== undefined){
+        if (productOwnersInProject.find(po => po.plattform_user === this.listSession[0].id) !== undefined){
+          allowed = true;
+        }
+        else{
+          allowed = false;
+        }
+      }
+      return allowed;
+    },
 
     plannedSprint(){ 
       var sprintInfo = {
