@@ -19,7 +19,11 @@ export default {
     Lane
   },
   methods: {
-
+    checkWritePermisson(){
+      //only POs can change PB
+      console.log(this.listSession)
+      console.log(this.projectUserByRole("product owner"))
+    }
   },
   computed: {
     ...mapGetters("lane", {
@@ -29,6 +33,12 @@ export default {
     ...mapGetters("board", {
       listBoards: "list",
       boardByType: "byType"
+    }),
+    ...mapGetters("session", {
+      listSession: "list",
+    }),
+    ...mapGetters("projectUser", {
+      projectUserByRole: "byRole",
     }),
     listBoardLanes(){
       var board = this.boardByType("PB", this.$route.params.id);
@@ -40,7 +50,8 @@ export default {
       }
     }
   },
-  mounted() {  
+  mounted() { 
+    this.checkWritePermisson();
   }
 };
 </script>

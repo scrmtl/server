@@ -67,6 +67,22 @@ export default createCrudModule({
       
             }
         },
+
+        /** @description Add Custom getter 
+         * @param {string} roleName searching role by name
+         * @return {Array} Array of project User Objects with the searching role 
+         */
+        byRole: (state) => {
+          return function(roleName){
+            let userByRole = null;
+            let projectRoles = this.$store.getters["projectRole/list"];
+            if(roleName !== undefined && state.entities !== undefined){
+              let roleId = projectRoles[roleName.toString()].id;
+              userByRole = state.list.map(id => state.entities[id.toString()]).filter(puser => puser.role === roleId);
+            }
+            return userByRole;
+          }
+        }
     }
 
 });
