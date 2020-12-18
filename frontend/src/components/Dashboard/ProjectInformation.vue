@@ -109,7 +109,6 @@ export default {
 
     projectInformation(){
       var project = this.projectById(this.$route.params.id);
-      console.log(project);
       return project;
     }
   }

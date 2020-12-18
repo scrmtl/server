@@ -77,7 +77,7 @@ export default {
     projectEvents(){
       const events = [];
       var project = this.projectById(this.$route.params.id);
-      console.log(project)
+
       events.push({
           name: "Project start",
           start: project.start,
@@ -127,8 +127,6 @@ export default {
           timed: false,
         });
       })
-
-      console.log(events)
       return events;
     }
   }, 
