@@ -42,18 +42,7 @@ export default {
   },
 
   methods: {
-    logout() {
-      console.log("Error 401 detected")
-      this.$store.dispatch("logout").then(() => {
-        this.$router.push("/login");
-      });
-    },
-    createSystemAlert(message, category){
-      this.$store.commit("showSystemAlert", {
-        message: message,
-        category: category
-      });
-    }
+    
   },
 
   computed:{
