@@ -11,6 +11,7 @@ import Statistic from "../views/Statistic.vue";
 import Archive from "../views/Archive.vue";
 import Project from "../views/Project.vue";
 import ProjectDashboard from "../views/ProjectDashboard";
+import PlanningPoker from "../views/PlanningPoker";
 
 import Lane from "@/components/Lane.vue";
 import Epic from "@/components/Epic.vue";
@@ -73,6 +74,11 @@ const routes = [
         component: Archive
       },
     ]
+  },
+  {
+    path: "/poker",
+    name: "PlanningPoker",
+    component: PlanningPoker
   },
   {
     path: "/Lane",
