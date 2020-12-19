@@ -20,7 +20,13 @@ export default {
       sprintsbyProjectId: "byProjectId",
       listSprints: "list"
     }),
+    ...mapGetters("board", {
+      listBoards: "list",
+      boardByType: "byType"
+    }),
     listArchivedSprintLanes(){
+      var board = this.boardByType("AB", this.$route.params.id);
+      console.log(board);
       var sprints = this.listSprints;
       if( sprints !== undefined){
         return sprints.filter(sprint => sprint.status === "DO");
