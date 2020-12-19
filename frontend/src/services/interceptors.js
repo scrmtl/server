@@ -1,5 +1,6 @@
 import Axios from "axios";
 import store from "../store";
+import router from "../router";
 
 export default function setup() {
   const token = localStorage.getItem('token');
@@ -23,7 +24,7 @@ export default function setup() {
               category: "error"
               });
             store.dispatch("logout").then(() => {
-              this.$router.push("/login");
+              router.push("/login");
             });
             break;        
           case 403:
