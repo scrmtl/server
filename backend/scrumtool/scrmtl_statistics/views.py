@@ -35,3 +35,13 @@ class SprintStatisticViewSet(mixins.ListModelMixin,
             Instead of id a username can be used
             """
     #    pass
+
+
+class ProjectStatisticViewSet(mixins.ListModelMixin,
+                              mixins.RetrieveModelMixin,
+                              viewsets.GenericViewSet):
+    """
+    A viewset that provides information about the requested Sprint
+    """
+    serializer_class = serializers.ProjectStatisticSerializer
+    queryset = models.Project.objects.all()
