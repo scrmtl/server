@@ -122,16 +122,27 @@ export default {
     sum_of_planned_sp: "No sprint selected",
     sum_of_done_sp: "No sprint selected",
     sum_of_not_done_sp: "No sprint selected",
+    
 
     plotly_data: {
       planed: {
+        //x_data: [1, 2, 3, 4, 5],
         x_data: [1, 2, 3, 4, 5],
-        y_data: [10, 0, 10, 0, 10],
+        //y_data: [10, 0, 10, 0, 10],
+        y_data: [0, 0, 0, 0, 0],
       },
       done: {
+        //x_data: [1, 2, 3, 4, 5],
         x_data: [1, 2, 3, 4, 5],
-        y_data: [5, 5, 5, 5, 5],
+        //y_data: [5, 5, 5, 5, 5],
+        y_data: [0, 0, 0, 0, 0],
       },
+      done_tasks: {
+        //x_data: [1, 2, 3, 4, 5],
+        x_data: [1, 2, 3, 4, 5],
+        //y_data: [10, 10, 10, 10, 10],
+        y_data: [0, 0, 0, 0, 0],
+      }
     },
   }),
   components: {
@@ -155,6 +166,8 @@ export default {
       this.plotly_data.planed.y_data = stats.planned_sp_timeline.y;
       this.plotly_data.done.x_data = stats.finished_sp_timeline.x;
       this.plotly_data.done.y_data = stats.finished_sp_timeline.y;
+      this.plotly_data.done_tasks.x_data = stats.finished_tasks_timeline.x;
+      this.plotly_data.done_tasks.y_data = stats.finished_tasks_timeline.y;
     },
   },
   computed: {
@@ -194,8 +207,17 @@ export default {
         },
         connectgaps: true,
       };
+      let done_tasks = {
+        x: this.plotly_data.done_tasks.x_data,
+        y: this.plotly_data.done_tasks.y_data,
+        name: "Done Tasks",
+        type: "bar",
+        marker: {
+          color: "orange",
+        },
+      };
 
-      return [planed, done];
+      return [planed, done, done_tasks];
     },
 
     plotLayout() {
@@ -218,7 +240,7 @@ export default {
           zerolinewidth: 4,
         },
         yaxis: {
-          title: "Story Points",
+          title: "Story Points / Tasks",
           dtick: 5,
           gridcolor: "#636363",
           gridwidth: 2,
@@ -231,8 +253,6 @@ export default {
         },
         paper_bgcolor: "#6441A4",
         plot_bgcolor: "#6441A4",
-        //bargap: 0,
-        //showlegend: this.legend
       };
     },
 
