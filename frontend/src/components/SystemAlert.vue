@@ -4,6 +4,7 @@
     :value="systemAlert.visible"  
     :timeout="3000"
     left
+    multi-line
     :color="StatusColor"
     @input="closeAlert"
   >

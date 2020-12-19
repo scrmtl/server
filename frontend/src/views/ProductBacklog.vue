@@ -2,7 +2,7 @@
   <v-row no-gutters>
     <v-col dense class="d-flex flex-nowrap overflow-x-auto">
       <div class="ma-4" v-for="lane in listBoardLanes" :key="lane.numbering">
-        <Lane v-bind:lane="lane" allowedAdd></Lane>
+        <Lane v-bind:lane="lane" :allowedAdd="allowedChanges"></Lane>
       </div>
     </v-col>
   </v-row>
@@ -19,7 +19,6 @@ export default {
     Lane
   },
   methods: {
-
   },
   computed: {
     ...mapGetters("lane", {
@@ -30,6 +29,27 @@ export default {
       listBoards: "list",
       boardByType: "byType"
     }),
+    ...mapGetters("session", {
+      listSession: "list"
+    }),
+    ...mapGetters("projectUser",{
+      listProjectUser: "list"
+    }),
+    allowedChanges(){
+      var allowed = false;
+      // role id 1 is always product owner
+      var productOwnersInProject = this.listProjectUser.filter(projectUser => projectUser.role === 1 && projectUser.project == this.$route.params.id);
+      if(this.listSession !== undefined && productOwnersInProject !== undefined){
+        if (productOwnersInProject.find(po => po.plattform_user === this.listSession[0].id) !== undefined){
+          allowed = true;
+        }
+        else{
+          allowed = false;
+        }
+      }
+      return allowed;
+    },
+
     listBoardLanes(){
       var board = this.boardByType("PB", this.$route.params.id);
       if( board !== undefined){
@@ -40,7 +60,13 @@ export default {
       }
     }
   },
-  mounted() {  
+  mounted() { 
+    if(!this.allowedChanges){
+      this.$store.commit("showSystemAlert", {
+        message: "You are not a PO. Read only access in Product backlog",
+        category: "warning"
+      });
+    }
   }
 };
 </script>

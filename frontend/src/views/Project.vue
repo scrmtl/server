@@ -44,13 +44,18 @@ export default {
     ...mapActions("sprintStatistics", {
       fetchSprintStatistics: "fetchList"
     }),
+    ...mapActions("session", {
+      fetchSession: "fetchList",
+    }),
 
     fetchData() {
       this.fetchBoards({ customUrlFnArgs: { projectId: this.id } });
       this.fetchLanes({ customUrlFnArgs: { projectId: this.id } });
       this.fetchTasks({ customUrlFnArgs: { projectId: this.id } });
       this.fetchSprints({ customUrlFnArgs: { projectId: this.id } });
+      this.fetchSession({ customUrlFnArgs: { all: false } });
       this.fetchSprintStatistics();
+      // TODO fetch Project Statistics
     }
   },
   computed: {

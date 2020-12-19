@@ -410,17 +410,16 @@ export default {
     },
 
     addProjectUser(projectUserId) {
-      console.log(projectUserId)
       this.createProjectUser({
         data: {
           plattform_user: projectUserId,
           // Standard role developer
           role: 3,
           project: this.id
-        }
+        },
+        customUrlFnArgs: {}
       })
         .then(value => {
-          console.log(value)
           this.fetchSingleProject({ id: this.id,
               customUrlFnArgs: {} }).then(res => {
                 this.$store.commit("selected/setProjectDetail", res.data);
@@ -428,7 +427,6 @@ export default {
           return value;
         })
         .catch(error => {
-          console.log(error)
           if (error.response.data.non_field_errors.length > 0) {
             this.$store.commit("showSystemAlert", {
               message:
@@ -459,6 +457,7 @@ export default {
       })
         .then( value => {
             this.fetchProjects({ customUrlFnArgs: {} });
+            this.fetchProjectUser({ customUrlFnArgs: {} });
             this.$store.commit("selected/hideProjectDetail");
             this.$store.commit("showSystemAlert", {
               message: "Create Project",
@@ -608,7 +607,7 @@ export default {
   },
 
   created() {
-    this.fetchProjectUser();
+    this.fetchProjectUser({ customUrlFnArgs: {} });
     this.fetchProjectRoles();
   }
 };

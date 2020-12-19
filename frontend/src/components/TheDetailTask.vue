@@ -241,6 +241,7 @@
           >
           <v-btn
             v-if="!visableCreate && this.sprint == null"
+            :disabled="readOnly"
             color="error"
             text
             absolute

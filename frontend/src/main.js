@@ -4,18 +4,16 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
-import Axios from "axios";
+import interceptorsSetup from "./services/interceptors";
 
 Vue.config.productionTip = false;
 
 // set auth header
 // Axios.defaults.headers.common['Authorization'] = `Bearer ${store.state.token}`;
 // Vue.prototype.$http = Axios;
-const token = localStorage.getItem('token');
-if (token) {
-  Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-}
 
+
+interceptorsSetup();
 
 new Vue({
   router,
@@ -23,3 +21,4 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount("#app");
+

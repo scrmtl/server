@@ -27,7 +27,6 @@ import DetailTask from "@/components/TheDetailTask.vue";
 import DetailSprint from "@/components/Sprint/TheDetailSprint.vue";
 import TheNavigation from "@/components/TheNavigation.vue";
 import SystemAlert from "@/components/SystemAlert.vue";
-import Axios from "axios";
 export default {
   name: "App",
   data: () => ({
@@ -49,43 +48,8 @@ export default {
   computed:{
     
   },
-  created() {
-    Axios.interceptors.response.use(function (response){
-        return response;
-      },
-      function (error) {
-        console.log(error);
-        if (error.status === 401 && error.detail === "Anmeldedaten fehlen.") {
-             this.$store.dispatch("logout");
-        }
-        // return Promise.reject(error);
-        // else if(response.status === 403){
-        //   console.log("Error from interceptor");
-        //   console.log(response);
-        //   this.$store.commit("showSystemAlert", {
-        //         message: "Permission denied",
-        //         category: "error"
-        //       });
-        // }
-        // return new Promise(() => {
-        //   if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
-        //     this.$store.dispatch("logout");
-        //   }
-        //   throw err;
-        // });
-        // return response;
-      });
-
-    Axios.interceptors.request.use(config => {
-      if (
-        (config.method === "post" || config.method === "patch") &&
-        config.url[config.url.length - 1] !== "/" &&
-        !config.url.includes("/?")
-      ) {
-        config.url += "/";
-      }
-      return config;
-    });
+  mounted() {
+   
   }
 };
 </script>
