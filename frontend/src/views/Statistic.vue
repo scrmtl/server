@@ -3,7 +3,7 @@
     <v-col cols="1">
       <v-timeline>
         <v-timeline-item
-          v-for="sprint in listSprints"
+          v-for="sprint in sortedSprintList"
           :key="`${sprint.number}-sprint`"
           small
           fill-dot
@@ -234,6 +234,19 @@ export default {
         //bargap: 0,
         //showlegend: this.legend
       };
+    },
+
+    sortedSprintList() {
+      var list = this.listSprints;
+      var sorted = list.sort(function (a, b) {
+        var keyA = a.number;
+        var keyB = b.number;
+        // Vergleiche ob AC oder AR
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+      });
+      return sorted;
     },
   },
 };
