@@ -11,6 +11,7 @@
   <v-row>
     <v-col cols="8">
       <Plotly
+        autoResize
         :data="plotData"
         :layout="plotLayout"
         :options="{
@@ -122,7 +123,6 @@ export default {
 plotLayout() {
       return {
         autosize: true,
-        width: 1100,
         height: 700,
         argin: { t: 25, l: 45, r: 10, b: 30 },
         title: this.plotTitle,

@@ -25,6 +25,7 @@
     <v-col cols="8">
       <!-- Hier kommt dann das weitere... /-->
       <Plotly
+        autoResize
         :data="plotData"
         :layout="plotLayout"
         :options="{
@@ -45,7 +46,7 @@
       />
     </v-col>
     <v-col cols="3">
-      <v-card class="lane" height="100vh-50">
+      <v-card class="lane primary" height="700">
         <v-card-title class="navbar white--text">{{ infoTitle }}</v-card-title>
         <v-card-text class="navbar white--text">
           <v-list class="transparent">
@@ -200,8 +201,7 @@ export default {
     plotLayout() {
       return {
         autosize: true,
-        width: 1100,
-        height: 600,
+        height: 700,
         argin: { t: 25, l: 45, r: 10, b: 30 },
         title: this.plotTitle,
         font: {
