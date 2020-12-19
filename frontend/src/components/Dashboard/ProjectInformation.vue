@@ -1,5 +1,5 @@
 <template>
-  <v-card tile height="875">
+  <v-card tile flat>
     <v-card-title class="navbar white--text">Project Information</v-card-title>
     <v-card-text class="navbar">
       <v-row align="center">
