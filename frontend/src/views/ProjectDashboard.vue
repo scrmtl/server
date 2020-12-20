@@ -32,14 +32,13 @@
         />
       </v-col>
       <v-col cols="4">
-        <ProjectSummary v-bind:statistics="statistics" />
+        <ProjectSummary />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-//import { mapGetters } from "vuex";
 import Plotly from "@/components/Plotly.vue";
 import ProjectInformation from "@/components/Dashboard/ProjectInformation.vue";
 import ProjectSummary from "@/components/Dashboard/ProjectSummary.vue";
@@ -47,41 +46,7 @@ import ProjectCalendar from "@/components/Dashboard/ProjectCalendar.vue";
 import { mapGetters } from "vuex";
 export default {
   data: () => ({
-    //Werte für die Statistik
-    statistics: {
-      sum_of_done_sp: 0,
-      sum_of_accepted_sp: 0,
-      sum_of_sp: 0,
-      sum_of_tasks: 0,
-      sum_tasks_rated_not_finished: 0,
-      sum_of_done_tasks: 0,
-      sum_of_accepted_tasks: 0,
-      avg_tasks_in_sprint: 0,
-      avg_sp_in_sprint: 0,
-      worst_sprints_sp: "0, 0, 0",
-      worst_sprints_tasks: "0, 0, 0",
-    },
 
-    //Werte für den Plotly
-    plotTitle: "Project burndown",
-    plotly_data: {
-      avg_finished_tasks_timeline: {
-        x_data: [1, 2, 3, 4, 5],
-        y_data: [0, 0, 0, 0, 0],
-      },
-      avg_finished_sp_timeline: {
-        x_data: [1, 2, 3, 4, 5],
-        y_data: [0, 0, 0, 0, 0],
-      },
-      finished_sp_timeline: {
-        x_data: [1, 2, 3, 4, 5],
-        y_data: [0, 0, 0, 0, 0],
-      },
-      finished_tasks_timeline: {
-        x_data: [1, 2, 3, 4, 5],
-        y_data: [0, 0, 0, 0, 0],
-      },
-    },
   }),
 
   components: {
@@ -92,58 +57,48 @@ export default {
   },
 
   methods: {
-    //Daten aus dem Backend holen und den Variablen zuweisen...
-    getProjectStatistic() {
-      let stats = this.projectStatistic(this.$route.params.id);
-      if (stats != undefined) {
-        //Plotly-Data
-        this.plotly_data.avg_finished_tasks_timeline.x_data =
-          stats.avg_finished_tasks_timeline.x;
-        this.plotly_data.avg_finished_tasks_timeline.y_data =
-          stats.avg_finished_tasks_timeline.y;
-
-        this.plotly_data.avg_finished_sp_timeline.y_data =
-          stats.avg_finished_sp_timeline.x;
-        this.plotly_data.avg_finished_sp_timeline.y_data =
-          stats.avg_finished_sp_timeline.y;
-
-        this.plotly_data.finished_sp_timeline.y_data =
-          stats.finished_sp_timeline.x;
-        this.plotly_data.finished_sp_timeline.y_data =
-          stats.finished_sp_timeline.y;
-
-        this.plotly_data.finished_tasks_timeline.y_data =
-          stats.finished_tasks_timeline.x;
-        this.plotly_data.finished_tasks_timeline.y_data =
-          stats.finished_tasks_timeline.y;
-
-        //Weitere Statisik-Werte
-        this.statistics.sum_of_done_sp = stats.sum_of_done_sp;
-        this.statistics.sum_of_accepted_sp = stats.sum_of_accepted_sp;
-        this.statistics.sum_of_sp = stats.sum_of_sp;
-        this.statistics.sum_of_tasks = stats.sum_of_tasks;
-        this.statistics.sum_tasks_rated_not_finished =
-          stats.sum_tasks_rated_not_finished;
-        this.statistics.sum_of_done_tasks = stats.sum_of_done_tasks;
-        this.statistics.sum_of_accepted_tasks = stats.sum_of_accepted_tasks;
-        this.statistics.avg_tasks_in_sprint = stats.avg_tasks_in_sprint;
-        this.statistics.avg_sp_in_sprint = stats.avg_sp_in_sprint;
-        this.statistics.worst_sprints_sp = stats.worst_sprints_sp;
-        this.statistics.worst_sprints_tasks = stats.worst_sprints_tasks;
-      }
-    },
+    
   },
 
   computed: {
     ...mapGetters("projectStatistics", {
-      projectStatistic: "byProjectId",
+      projectStatisticById: "byProjectId",
     }),
 
-    //Daten für den Plotly
+    projectStatistic(){
+      var stat = this.projectStatisticById(this.$route.params.id);
+      if(stat !== undefined){
+        return stat;
+      }
+      else{
+        var defaultData = {
+          avg_finished_tasks_timeline: {
+            x: [1, 2, 3, 4, 5],
+            y: [0, 0, 0, 0, 0],
+          },
+          avg_finished_sp_timeline: {
+            x: [1, 2, 3, 4, 5],
+            y: [0, 0, 0, 0, 0],
+          },
+          finished_sp_timeline: {
+            x: [1, 2, 3, 4, 5],
+            y: [0, 0, 0, 0, 0],
+          },
+          finished_tasks_timeline: {
+            x: [1, 2, 3, 4, 5],
+            y: [0, 0, 0, 0, 0],
+          },
+        }
+        return defaultData;
+      }
+      
+    },
+
+    //Data for Plotly projetc diagramm
     plotData() {
       let avg_finished_tasks = {
-        x: this.plotly_data.avg_finished_tasks_timeline.x_data,
-        y: this.plotly_data.avg_finished_tasks_timeline.y_data,
+        x: this.projectStatistic.avg_finished_tasks_timeline.x,
+        y: this.projectStatistic.avg_finished_tasks_timeline.y,
         name: "Average of finished Tasks",
         type: "scatter",
         mode: "lines",
@@ -154,8 +109,8 @@ export default {
         connectgaps: true,
       };
       let avg_finished_sp = {
-        x: this.plotly_data.avg_finished_sp_timeline.x_data,
-        y: this.plotly_data.avg_finished_sp_timeline.y_data,
+        x: this.projectStatistic.avg_finished_sp_timeline.x,
+        y: this.projectStatistic.avg_finished_sp_timeline.y,
         name: "Average of finished Story Points",
         type: "scatter",
         mode: "lines+markers",
@@ -169,8 +124,8 @@ export default {
         connectgaps: true,
       };
       let finished_tasks = {
-        x: this.plotly_data.finished_tasks_timeline.x_data,
-        y: this.plotly_data.finished_tasks_timeline.y_data,
+        x: this.projectStatistic.finished_tasks_timeline.x,
+        y: this.projectStatistic.finished_tasks_timeline.y,
         name: "Finished Tasks",
         type: "scatter",
         mode: "lines+markers",
@@ -185,8 +140,8 @@ export default {
       };
 
       let finished_sp = {
-        x: this.plotly_data.finished_sp_timeline.x_data,
-        y: this.plotly_data.finished_sp_timeline.y_data,
+        x: this.projectStatistic.finished_sp_timeline.x,
+        y: this.projectStatistic.finished_sp_timeline.y,
         name: "Finished Story Points",
         type: "scatter",
         mode: "lines+markers",
@@ -208,7 +163,7 @@ export default {
         autosize: true,
         height: 700,
         argin: { t: 25, l: 45, r: 10, b: 30 },
-        title: this.plotTitle,
+        title: "Project analysis",
         font: {
           family: "sans-serif",
           size: 15,
@@ -240,9 +195,8 @@ export default {
     },
   },
 
-  //Wenn die View gemounted wird, werden die Statistiken geladen
   mounted() {
-    this.getProjectStatistic();
+
   },
 };
 </script>
