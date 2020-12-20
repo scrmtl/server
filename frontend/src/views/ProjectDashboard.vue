@@ -103,8 +103,9 @@ export default {
         type: "scatter",
         mode: "lines",
         line: {
-          color: "#FFFFFF",
-          width: 2,
+          color: "#448AFF",
+          width: 4,
+          dash: 'dash'
         },
         connectgaps: true,
       };
@@ -113,13 +114,11 @@ export default {
         y: this.projectStatistic.avg_finished_sp_timeline.y,
         name: "Average of finished Story Points",
         type: "scatter",
-        mode: "lines+markers",
-        marker: {
-          size: 10,
-        },
+        mode: "lines",
         line: {
-          color: "#31AA96",
+          color: "#FF5252",
           width: 4,
+          dash: 'dash'
         },
         connectgaps: true,
       };
@@ -127,15 +126,12 @@ export default {
         x: this.projectStatistic.finished_tasks_timeline.x,
         y: this.projectStatistic.finished_tasks_timeline.y,
         name: "Finished Tasks",
-        type: "scatter",
-        mode: "lines+markers",
+        type: "bar",
         marker: {
-          size: 10,
-        },
-        line: {
           color: "orange",
-          width: 4,
+          size: 5,
         },
+
         connectgaps: true,
       };
 
@@ -143,15 +139,12 @@ export default {
         x: this.projectStatistic.finished_sp_timeline.x,
         y: this.projectStatistic.finished_sp_timeline.y,
         name: "Finished Story Points",
-        type: "scatter",
-        mode: "lines+markers",
+        type: "bar",
         marker: {
-          size: 10,
+          color: "#009688",
+          size: 5,
         },
-        line: {
-          color: "pink",
-          width: 4,
-        },
+
         connectgaps: true,
       };
       return [avg_finished_tasks, avg_finished_sp, finished_tasks, finished_sp];
@@ -178,8 +171,8 @@ export default {
           zerolinewidth: 4,
         },
         yaxis: {
-          title: "Story Points / Tasks",
-          dtick: 5,
+          title: "Tasks / Story points",
+          dtick: 4,
           gridcolor: "#636363",
           gridwidth: 2,
           zerolinecolor: "#636363",
@@ -191,6 +184,7 @@ export default {
         },
         paper_bgcolor: "#6441A4",
         plot_bgcolor: "#6441A4",
+        bargap: 0.5,
       };
     },
   },
