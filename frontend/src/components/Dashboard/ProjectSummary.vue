@@ -6,49 +6,49 @@
       <v-subheader class="white--text ">STORYPOINTS</v-subheader>
       <v-list-item dense>
         <v-list-item-title class="white--text">Total amount</v-list-item-title>
-        <v-list-item-subtitle class="white--text text-right">{{ projectSummary.sumSp }}</v-list-item-subtitle>
+        <v-list-item-subtitle class="white--text text-right">{{ statistics.sum_of_sp }}</v-list-item-subtitle>
       </v-list-item>
       <v-list-item dense>
         <v-list-item-title class="white--text">Done</v-list-item-title>
-        <v-list-item-subtitle class="white--text text-right">{{ projectSummary.sumDoneSp }}</v-list-item-subtitle>
+        <v-list-item-subtitle class="white--text text-right">{{ statistics.sum_of_done_sp }}</v-list-item-subtitle>
       </v-list-item>
       <v-list-item dense>
         <v-list-item-title class="white--text">Accepted</v-list-item-title>
-        <v-list-item-subtitle class="white--text text-right">{{ projectSummary.sumAcceptedSp}}</v-list-item-subtitle>
+        <v-list-item-subtitle class="white--text text-right">{{ statistics.sum_of_accepted_sp}}</v-list-item-subtitle>
       </v-list-item>
       <v-subheader class="white--text">TASKS</v-subheader>
       <v-list-item dense>
         <v-list-item-title class="white--text">Total amount</v-list-item-title>
-        <v-list-item-subtitle class="white--text text-right">{{ projectSummary.sumTasks }}</v-list-item-subtitle>
+        <v-list-item-subtitle class="white--text text-right">{{ statistics.sum_of_tasks }}</v-list-item-subtitle>
       </v-list-item>
       <v-list-item dense>
         <v-list-item-title class="white--text">Planned</v-list-item-title>
-        <v-list-item-subtitle class="white--text text-right">{{ projectSummary.sumPlannedTasks }}</v-list-item-subtitle>
+        <v-list-item-subtitle class="white--text text-right">{{ statistics.sum_tasks_rated_not_finished }}</v-list-item-subtitle>
       </v-list-item>
       <v-list-item dense>
         <v-list-item-title class="white--text">Done</v-list-item-title>
-        <v-list-item-subtitle class="white--text text-right">{{ projectSummary.sumDoneTasks }}</v-list-item-subtitle>
+        <v-list-item-subtitle class="white--text text-right">{{ statistics.sum_of_done_tasks }}</v-list-item-subtitle>
       </v-list-item>
       <v-list-item dense>
         <v-list-item-title class="white--text">Accepted</v-list-item-title>
-        <v-list-item-subtitle class="white--text text-right">{{ projectSummary.sumAcceptedTasks }}</v-list-item-subtitle>
+        <v-list-item-subtitle class="white--text text-right">{{ statistics.sum_of_accepted_tasks }}</v-list-item-subtitle>
       </v-list-item>
       <v-subheader class="white--text">SPRINTS</v-subheader>
       <v-list-item dense>
-        <v-list-item-title class="white--text">Average accepted Tasks</v-list-item-title>
-        <v-list-item-subtitle class="white--text text-right">{{ projectSummary.avgAcceptedSp }}</v-list-item-subtitle>
+        <v-list-item-title class="white--text">Average accepted Story Points</v-list-item-title>
+        <v-list-item-subtitle class="white--text text-right">{{ statistics.avg_sp_in_sprint }}</v-list-item-subtitle>
       </v-list-item>
       <v-list-item dense>
-        <v-list-item-title class="white--text">Average accepted Stortypoints</v-list-item-title>
-        <v-list-item-subtitle class="white--text text-right">{{ projectSummary.avgAcceptedTasks }}</v-list-item-subtitle>
+        <v-list-item-title class="white--text">Average accepted Tasks</v-list-item-title>
+        <v-list-item-subtitle class="white--text text-right">{{ statistics.avg_tasks_in_sprint }}</v-list-item-subtitle>
       </v-list-item>
       <v-list-item dense>
         <v-list-item-title class="white--text">The 3 worst sprints (related Tasks)</v-list-item-title>
-        <v-list-item-subtitle class="white--text text-right">{{ projectSummary.rank3WorstSprintTasks }}</v-list-item-subtitle>
+        <v-list-item-subtitle class="white--text text-right">{{ statistics.worst_sprints_tasks }}</v-list-item-subtitle>
       </v-list-item>
       <v-list-item dense>
         <v-list-item-title class="white--text">The 3 worst sprints (related SP)</v-list-item-title>
-        <v-list-item-subtitle class="white--text text-right">{{ projectSummary.rank3WorstSprintSp }}</v-list-item-subtitle>
+        <v-list-item-subtitle class="white--text text-right">{{ statistics.worst_sprints_sp }}</v-list-item-subtitle>
       </v-list-item>
     </v-list>
   </v-card-text>
@@ -57,29 +57,27 @@
 
 <script>
 export default {
+  props: ["statistics"],
   name: "ProjectSummary",
   data: () =>({
 
   }),
-  computed: {
-    projectSummary(){
-      // TODO Call Project statistic api
-      var summary = {
-        sumSp: "10",
-        sumDoneSp: "1",
-        sumAcceptedSp: "1",
-        sumTasks: "5",
-        sumPlannedTasks: "5",
-        sumDoneTasks: "1",
-        sumAcceptedTasks: "1",
-        avgAcceptedSp: "1",
-        avgAcceptedTasks: "1",
-        rank3WorstSprintSp: "1, 2, 3",
-        rank3WorstSprintTasks: "4, 5, 8"
-      } 
-      return summary;
-    }
-  }
+    /*
+      Das wird als property übergeben!
+      statistics: {
+        sum_of_done_sp: 0,
+        sum_of_accepted_sp: 0,
+        sum_of_sp: 0,
+        sum_of_tasks: 0,
+        sum_tasks_rated_not_finished: 0,
+        sum_of_done_tasks: 0,
+        sum_of_accepted_tasks: 0,
+        avg_tasks_in_sprint: 0,
+        avg_sp_in_sprint: 0,
+        worst_sprints_sp: "0, 0, 0",
+        worst_sprints_tasks: "0, 0, 0"
+      },
+    }*/
 }
 </script>
 
