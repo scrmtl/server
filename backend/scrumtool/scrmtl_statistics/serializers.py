@@ -382,18 +382,22 @@ class ProjectStatisticSerializer(serializers.ModelSerializer):
     def get_avg_finished_tasks_timeline(self, obj: Project):
         number_sprints = len(self.get_accepted_sprint_ids(obj))
         avg_tasks = self.get_avg_tasks_in_sprint(obj)
+        tasks = [avg_tasks] * number_sprints
+        sprints = list(range(1, number_sprints+1))
         return{
-            'x': [1, number_sprints],
-            'y': [avg_tasks, avg_tasks]
+            'x': sprints,
+            'y': tasks
         }
 
     def get_avg_finished_sp_timeline(self, obj: Project):
 
         number_sprints = len(self.get_accepted_sprint_ids(obj))
         avg_storypoints = self.get_avg_sp_in_sprint(obj)
+        storypoints = [avg_storypoints] * number_sprints
+        sprints = list(range(1, number_sprints+1))
         return{
-            'x': [1, number_sprints],
-            'y': [avg_storypoints, avg_storypoints]
+            'x': sprints,
+            'y': storypoints
         }
 
     def get_finished_sp_timeline(self, obj: Project):
