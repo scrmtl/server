@@ -55,7 +55,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         if (end is None) or (end < start):
             return 0
         remaining_duration = end - start
-        if remaining_duration > obj.project.sprint_duration:
+        if remaining_duration.days > obj.project.sprint_duration:
             return obj.project.sprint_duration
         return remaining_duration.days
 
@@ -116,13 +116,13 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         # get number of days
         sum_sp = self.get_sum_of_sp(obj)
         daily_sp = math.floor((sum_sp / obj.project.sprint_duration))
-        sps = [None] * daily_sp
+        sps = [None] * obj.project.sprint_duration
         if daily_sp > 0:
             sps = [daily_sp * day for day in
                    reversed(range(1, (obj.project.sprint_duration + 1)))]
         else:
             sps[0] = sum_sp
-            sps[obj.project.sprint_duration] = 0
+            sps[obj.project.sprint_duration-1] = 0
         days = [day for day in range(1, (obj.project.sprint_duration + 1))]
 
         return {
