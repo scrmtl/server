@@ -1,41 +1,41 @@
 <template>
-<v-container fluid>
-  <v-row>
-    <v-col cols="4">
-      <ProjectInformation/>
-    </v-col>
-    <v-col cols="8">
-      <ProjectCalendar/>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col cols="8">
-      <Plotly
-        autoResize
-        :data="plotData"
-        :layout="plotLayout"
-        :options="{
-          modeBarButtonsToRemove: [
-            'sendDataToCloud',
-            'toImage',
-            'autoScale2d',
-            'hoverClosestCartesian',
-            'hoverCompareCartesian',
-            'lasso2d',
-            'select2d',
-          ],
-          displaylogo: false,
-          showTips: false,
-          staticPlot: true,
-          displayModeBar: false,
-        }"
-      />
-    </v-col>
-    <v-col cols="4">
-      <ProjectSummary/>
-    </v-col>
-  </v-row>
-</v-container>
+  <v-container fluid>
+    <v-row>
+      <v-col cols="4">
+        <ProjectInformation />
+      </v-col>
+      <v-col cols="8">
+        <ProjectCalendar />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="8">
+        <Plotly
+          autoResize
+          :data="plotData"
+          :layout="plotLayout"
+          :options="{
+            modeBarButtonsToRemove: [
+              'sendDataToCloud',
+              'toImage',
+              'autoScale2d',
+              'hoverClosestCartesian',
+              'hoverCompareCartesian',
+              'lasso2d',
+              'select2d',
+            ],
+            displaylogo: false,
+            showTips: false,
+            staticPlot: true,
+            displayModeBar: false,
+          }"
+        />
+      </v-col>
+      <v-col cols="4">
+        <ProjectSummary v-bind:statistics="statistics" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -44,23 +44,43 @@ import Plotly from "@/components/Plotly.vue";
 import ProjectInformation from "@/components/Dashboard/ProjectInformation.vue";
 import ProjectSummary from "@/components/Dashboard/ProjectSummary.vue";
 import ProjectCalendar from "@/components/Dashboard/ProjectCalendar.vue";
+import { mapGetters } from "vuex";
 export default {
   data: () => ({
-    plotTitle: "Project burndown",
+    //Werte für die Statistik
+    statistics: {
+      sum_of_done_sp: 0,
+      sum_of_accepted_sp: 0,
+      sum_of_sp: 0,
+      sum_of_tasks: 0,
+      sum_tasks_rated_not_finished: 0,
+      sum_of_done_tasks: 0,
+      sum_of_accepted_tasks: 0,
+      avg_tasks_in_sprint: 0,
+      avg_sp_in_sprint: 0,
+      worst_sprints_sp: "0, 0, 0",
+      worst_sprints_tasks: "0, 0, 0",
+    },
+
     //Werte für den Plotly
+    plotTitle: "Project burndown",
     plotly_data: {
-      overall_sp: {
+      avg_finished_tasks_timeline: {
         x_data: [1, 2, 3, 4, 5],
-        y_data: [5, 4, 3, 2, 1],
+        y_data: [0, 0, 0, 0, 0],
       },
-      todo_sp: {
+      avg_finished_sp_timeline: {
         x_data: [1, 2, 3, 4, 5],
-        y_data: [5, 5, 5, 5, 0],
+        y_data: [0, 0, 0, 0, 0],
       },
-      todo_tasks: {
+      finished_sp_timeline: {
         x_data: [1, 2, 3, 4, 5],
-        y_data: [4, 4, 4, 4, 3],
-      }
+        y_data: [0, 0, 0, 0, 0],
+      },
+      finished_tasks_timeline: {
+        x_data: [1, 2, 3, 4, 5],
+        y_data: [0, 0, 0, 0, 0],
+      },
     },
   }),
 
@@ -68,29 +88,75 @@ export default {
     Plotly,
     ProjectInformation,
     ProjectSummary,
-    ProjectCalendar
+    ProjectCalendar,
   },
 
-  methods: {},
+  methods: {
+    //Daten aus dem Backend holen und den Variablen zuweisen...
+    getProjectStatistic() {
+      let stats = this.projectStatistic(this.$route.params.id);
+      if (stats != undefined) {
+        //Plotly-Data
+        this.plotly_data.avg_finished_tasks_timeline.x_data =
+          stats.avg_finished_tasks_timeline.x;
+        this.plotly_data.avg_finished_tasks_timeline.y_data =
+          stats.avg_finished_tasks_timeline.y;
+
+        this.plotly_data.avg_finished_sp_timeline.y_data =
+          stats.avg_finished_sp_timeline.x;
+        this.plotly_data.avg_finished_sp_timeline.y_data =
+          stats.avg_finished_sp_timeline.y;
+
+        this.plotly_data.finished_sp_timeline.y_data =
+          stats.finished_sp_timeline.x;
+        this.plotly_data.finished_sp_timeline.y_data =
+          stats.finished_sp_timeline.y;
+
+        this.plotly_data.finished_tasks_timeline.y_data =
+          stats.finished_tasks_timeline.x;
+        this.plotly_data.finished_tasks_timeline.y_data =
+          stats.finished_tasks_timeline.y;
+
+        //Weitere Statisik-Werte
+        this.statistics.sum_of_done_sp = stats.sum_of_done_sp;
+        this.statistics.sum_of_accepted_sp = stats.sum_of_accepted_sp;
+        this.statistics.sum_of_sp = stats.sum_of_sp;
+        this.statistics.sum_of_tasks = stats.sum_of_tasks;
+        this.statistics.sum_tasks_rated_not_finished =
+          stats.sum_tasks_rated_not_finished;
+        this.statistics.sum_of_done_tasks = stats.sum_of_done_tasks;
+        this.statistics.sum_of_accepted_tasks = stats.sum_of_accepted_tasks;
+        this.statistics.avg_tasks_in_sprint = stats.avg_tasks_in_sprint;
+        this.statistics.avg_sp_in_sprint = stats.avg_sp_in_sprint;
+        this.statistics.worst_sprints_sp = stats.worst_sprints_sp;
+        this.statistics.worst_sprints_tasks = stats.worst_sprints_tasks;
+      }
+    },
+  },
 
   computed: {
+    ...mapGetters("projectStatistics", {
+      projectStatistic: "byProjectId",
+    }),
+
+    //Daten für den Plotly
     plotData() {
-      let overall_sp = {
-        x: this.plotly_data.overall_sp.x_data,
-        y: this.plotly_data.overall_sp.y_data,
-        name: "Planed storypoints",
+      let avg_finished_tasks = {
+        x: this.plotly_data.avg_finished_tasks_timeline.x_data,
+        y: this.plotly_data.avg_finished_tasks_timeline.y_data,
+        name: "Avarage of finished Tasks",
         type: "scatter",
         mode: "lines",
-          line: {
+        line: {
           color: "#FFFFFF",
           width: 2,
         },
         connectgaps: true,
       };
-      let todo_sp = {
-        x: this.plotly_data.todo_sp.x_data,
-        y: this.plotly_data.todo_sp.y_data,
-        name: "ToDo Story Points",
+      let avg_finished_sp = {
+        x: this.plotly_data.avg_finished_sp_timeline.x_data,
+        y: this.plotly_data.avg_finished_sp_timeline.y_data,
+        name: "Avarage of finished Story Points",
         type: "scatter",
         mode: "lines+markers",
         marker: {
@@ -102,10 +168,10 @@ export default {
         },
         connectgaps: true,
       };
-      let todo_tasks = {
-        x: this.plotly_data.todo_tasks.x_data,
-        y: this.plotly_data.todo_tasks.y_data,
-        name: "ToDo Tasks",
+      let finished_tasks = {
+        x: this.plotly_data.finished_tasks_timeline.x_data,
+        y: this.plotly_data.finished_tasks_timeline.y_data,
+        name: "Finished Story Points",
         type: "scatter",
         mode: "lines+markers",
         marker: {
@@ -117,10 +183,27 @@ export default {
         },
         connectgaps: true,
       };
-      return [overall_sp, todo_sp, todo_tasks];
+
+      let finished_sp = {
+        x: this.plotly_data.finished_sp_timeline.x_data,
+        y: this.plotly_data.finished_sp_timeline.y_data,
+        name: "Finished Story Points",
+        type: "scatter",
+        mode: "lines+markers",
+        marker: {
+          size: 10,
+        },
+        line: {
+          color: "pink",
+          width: 4,
+        },
+        connectgaps: true,
+      };
+      return [avg_finished_tasks, avg_finished_sp, finished_tasks, finished_sp];
     },
 
-plotLayout() {
+    //Layout optionen von dem Plotly
+    plotLayout() {
       return {
         autosize: true,
         height: 700,
@@ -153,10 +236,13 @@ plotLayout() {
         },
         paper_bgcolor: "#6441A4",
         plot_bgcolor: "#6441A4",
-        //bargap: 0,
-        //showlegend: this.legend
       };
     },
+  },
+
+  //Wenn die View gemounted wird, werden die Statistiken geladen
+  mounted() {
+    this.getProjectStatistic();
   },
 };
 </script>

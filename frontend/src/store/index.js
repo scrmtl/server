@@ -24,6 +24,7 @@ import registration from '@/store/ressources/registration';
 import group from '@/store/ressources/group';
 import selected from '@/store/ressources/selected';
 import sprintStatistics from '@/store/ressources/sprintStatistics';
+import projectStatistics from '@/store/ressources/projectStatistics';
 
 Vue.use(Vuex, Axios);
 
@@ -199,7 +200,8 @@ export default new Vuex.Store({
     group,
     step,
     selected,
-    sprintStatistics
+    sprintStatistics,
+    projectStatistics,
   }
 });
 
