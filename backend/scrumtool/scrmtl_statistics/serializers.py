@@ -238,7 +238,8 @@ class ProjectStatisticSerializer(serializers.ModelSerializer):
             sprint = Sprint.objects.get(id=sprint_id)
             storypoints = 0
             for task in sprint.task_cards.all():
-                storypoints += task.storypoints
+                if (task.status == Task.Status.ACCEPTED):
+                    storypoints += task.storypoints
             sprints_with_sp[sprint.number] = storypoints
         sorted_sprints_with_sp = dict(
             sorted(sprints_with_sp.items(), key=lambda item: item[0]))
