@@ -153,8 +153,8 @@ export default {
       let stats = this.sprintStatistic(sprint.id);
       if (stats != undefined) {
         //Setzten des Graph-Titels
-        this.plotTitle = "Burndownchart Sprint " + sprint.number;
-        this.infoTitle = "Statistic Sprint " + sprint.number;
+        this.plotTitle = "Burn-Down chart Sprint " + sprint.number;
+        this.infoTitle = "Summary Sprint " + sprint.number;
         //Zuweisen der einzelnen Werte zu den Anzeigevariablen
         this.sum_of_planned_sp = stats.sum_of_sp;
         this.sum_of_done_sp = stats.sum_of_done_sp;
