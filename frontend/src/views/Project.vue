@@ -44,6 +44,9 @@ export default {
     ...mapActions("sprintStatistics", {
       fetchSprintStatistics: "fetchList"
     }),
+    ...mapActions("projectStatistics", {
+      fetchProjectStatistics: "fetchList"
+    }),
     ...mapActions("session", {
       fetchSession: "fetchList",
     }),
@@ -55,7 +58,7 @@ export default {
       this.fetchSprints({ customUrlFnArgs: { projectId: this.id } });
       this.fetchSession({ customUrlFnArgs: { all: false } });
       this.fetchSprintStatistics();
-      // TODO fetch Project Statistics
+      this.fetchProjectStatistics();
     }
   },
   computed: {
