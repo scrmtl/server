@@ -144,7 +144,7 @@ export default {
       let avg_finished_tasks = {
         x: this.plotly_data.avg_finished_tasks_timeline.x_data,
         y: this.plotly_data.avg_finished_tasks_timeline.y_data,
-        name: "Avarage of finished Tasks",
+        name: "Average of finished Tasks",
         type: "scatter",
         mode: "lines",
         line: {
@@ -156,7 +156,7 @@ export default {
       let avg_finished_sp = {
         x: this.plotly_data.avg_finished_sp_timeline.x_data,
         y: this.plotly_data.avg_finished_sp_timeline.y_data,
-        name: "Avarage of finished Story Points",
+        name: "Average of finished Story Points",
         type: "scatter",
         mode: "lines+markers",
         marker: {
@@ -171,7 +171,7 @@ export default {
       let finished_tasks = {
         x: this.plotly_data.finished_tasks_timeline.x_data,
         y: this.plotly_data.finished_tasks_timeline.y_data,
-        name: "Finished Story Points",
+        name: "Finished Tasks",
         type: "scatter",
         mode: "lines+markers",
         marker: {
@@ -215,8 +215,8 @@ export default {
           color: "#FFFFFF",
         },
         xaxis: {
-          title: "Days",
-          dtick: 5,
+          title: "Sprints",
+          dtick: 1,
           gridcolor: "#636363",
           gridwidth: 2,
           zerolinecolor: "#636363",
@@ -224,7 +224,7 @@ export default {
         },
         yaxis: {
           title: "Story Points / Tasks",
-          dtick: 1,
+          dtick: 5,
           gridcolor: "#636363",
           gridwidth: 2,
           zerolinecolor: "#636363",
