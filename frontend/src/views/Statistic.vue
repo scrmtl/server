@@ -214,6 +214,7 @@ export default {
         y: this.plotly_data.done_tasks.y_data,
         name: "Done Tasks",
         type: "bar",
+        yaxis: "y2",
         marker: {
           color: "orange",
         },
@@ -242,12 +243,22 @@ export default {
           zerolinewidth: 4,
         },
         yaxis: {
-          title: "Story Points / Tasks",
+          title: "Story Points",
           dtick: 5,
           gridcolor: "#636363",
           gridwidth: 2,
           zerolinecolor: "#636363",
           zerolinewidth: 4,
+        },
+        yaxis2: {
+          title: "Tasks",
+          dtick: 1,
+          //gridcolor: "#636363",
+          //gridwidth: 2,
+          //zerolinecolor: "#636363",
+          //zerolinewidth: 4,
+          overlaying: "y",
+          side: "right",
         },
         legend: {
           x: 0,

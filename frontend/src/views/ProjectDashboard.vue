@@ -45,9 +45,7 @@ import ProjectSummary from "@/components/Dashboard/ProjectSummary.vue";
 import ProjectCalendar from "@/components/Dashboard/ProjectCalendar.vue";
 import { mapGetters } from "vuex";
 export default {
-  data: () => ({
-
-  }),
+  data: () => ({}),
 
   components: {
     Plotly,
@@ -57,7 +55,18 @@ export default {
   },
 
   methods: {
-    
+    //Funktion um die Width der Bars beim Plotly einzustellen
+    makeWidthArray(x_array) {
+      var width = 0.1;
+      var length = x_array.length;
+      var data = [];
+
+      for (var i = 0; i < length; i++) {
+        data.push(width);
+      }
+
+      return data;
+    },
   },
 
   computed: {
@@ -65,12 +74,11 @@ export default {
       projectStatisticById: "byProjectId",
     }),
 
-    projectStatistic(){
+    projectStatistic() {
       var stat = this.projectStatisticById(this.$route.params.id);
-      if(stat !== undefined){
+      if (stat !== undefined) {
         return stat;
-      }
-      else{
+      } else {
         var defaultData = {
           avg_finished_tasks_timeline: {
             x: [1, 2, 3, 4, 5],
@@ -88,10 +96,9 @@ export default {
             x: [1, 2, 3, 4, 5],
             y: [0, 0, 0, 0, 0],
           },
-        }
+        };
         return defaultData;
       }
-      
     },
 
     //Data for Plotly projetc diagramm
@@ -102,10 +109,11 @@ export default {
         name: "Average of finished Tasks",
         type: "scatter",
         mode: "lines",
+        yaxis: "y2",
         line: {
           color: "#448AFF",
           width: 4,
-          dash: 'dash'
+          dash: "dash",
         },
         connectgaps: true,
       };
@@ -118,20 +126,25 @@ export default {
         line: {
           color: "#FF5252",
           width: 4,
-          dash: 'dash'
+          dash: "dash",
         },
         connectgaps: true,
       };
       let finished_tasks = {
         x: this.projectStatistic.finished_tasks_timeline.x,
         y: this.projectStatistic.finished_tasks_timeline.y,
+        width: this.makeWidthArray(
+          this.projectStatistic.finished_tasks_timeline.x
+        ),
         name: "Finished Tasks",
         type: "bar",
+        yaxis: "y2",
         marker: {
           color: "orange",
           size: 5,
+          opacity: 0.6,
         },
-
+        alignmentgroup: '1',
         connectgaps: true,
       };
 
@@ -139,12 +152,11 @@ export default {
         x: this.projectStatistic.finished_sp_timeline.x,
         y: this.projectStatistic.finished_sp_timeline.y,
         name: "Finished Story Points",
-        type: "bar",
+        type: "scatter",
         marker: {
           color: "#009688",
           size: 5,
         },
-
         connectgaps: true,
       };
       return [avg_finished_tasks, avg_finished_sp, finished_tasks, finished_sp];
@@ -171,12 +183,22 @@ export default {
           zerolinewidth: 4,
         },
         yaxis: {
-          title: "Tasks / Story points",
+          title: "Story points",
           dtick: 4,
           gridcolor: "#636363",
           gridwidth: 2,
           zerolinecolor: "#636363",
           zerolinewidth: 4,
+        },
+        yaxis2: {
+          title: "Tasks",
+          dtick: 1,
+          //gridcolor: "#636363",
+          //gridwidth: 2,
+          //zerolinecolor: "#636363",
+          //zerolinewidth: 4,
+          overlaying: "y",
+          side: "right",
         },
         legend: {
           x: 0,
@@ -185,13 +207,12 @@ export default {
         paper_bgcolor: "#6441A4",
         plot_bgcolor: "#6441A4",
         bargap: 0.5,
+        barmode: 'group',
       };
     },
   },
 
-  mounted() {
-
-  },
+  mounted() {},
 };
 </script>
 
