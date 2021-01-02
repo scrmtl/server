@@ -68,9 +68,12 @@ export default {
   },
   methods: {
     allowDrop(e){
-      const sprintStatus = e.dataTransfer.getData("task-status");
-      // poker is only in new or planned task status allowed
-      if(sprintStatus === "NW" || sprintStatus === "PL"){
+      const taskStatus = e.dataTransfer.getData("task-status");
+      const sprintStatus = e.dataTransfer.getData("task-sprint-status");
+      
+      // poker is only in new or planned task status allowed 
+      // if a task in a sprint, there is sprint status have to in planning
+      if((sprintStatus === "IL" || sprintStatus === "") && (taskStatus === "NW" || taskStatus === "PL")){
         e.preventDefault();
         return true; 
       }
