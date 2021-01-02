@@ -1,12 +1,12 @@
 import { getField, updateField } from 'vuex-map-fields';
 
 const state = () => ({
-  toVote: [
-    {name: "Redesgin App Baar", id: "10", storypoints: "0"},
-    {name: "Upload Filter", id: "12", storypoints: "0"},
-    {name: "Animation Snake", id: "14", storypoints: "0"}
+  voteCards: [
+    {name: "Jingle schreiben", id: "110", storypoints: "0"},
+    {name: "Neue Leute kennenlernen", id: "106", storypoints: "0"},
+    {name: "Schafkopf lernen, wie ein Meisterschüler", id: "161", storypoints: "0"},
   ],
-  voted: [
+  votedCards: [
     {name: "New Logo", id: "15", storypoints: "0"},
     {name: "Websocket", id: "16", storypoints: "0"}
   ],
@@ -20,7 +20,15 @@ const state = () => ({
 });
 
 const mutations = {
-  updateField
+  updateField,
+
+  addCardToVote(state, {cardName, cardId, cardStorypoints}){
+    state.voteCards.push({name: cardName, id: cardId, storypoints: cardStorypoints})
+  },
+
+  removeCardToVote(state, cardId){
+    state.voteCards = state.voteCards.filter(item => item.id !== cardId);
+  }
 };
 
 const getters = {

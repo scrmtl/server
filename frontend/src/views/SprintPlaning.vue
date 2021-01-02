@@ -1,42 +1,38 @@
 <template>
-  <v-row justify="center">
-    <v-col
-      lg="3"
-      md="3"
-      sm="3"
-      dense
-      v-for="lane in neededPlanningLanes"
-      :key="lane.numbering"
-    >
-      <Lane v-bind:lane="lane" planningMode allowedAdd></Lane>
-    </v-col>
-    <v-col lg="2" md="1" sm="1" alignSelf="start">
-      <PokerLane />
-    </v-col>
-    <v-col lg="3" md="3" sm="3">
-      <SprintLane />
-    </v-col>
-    <v-col lg="1" md="1" sm="1">
-      <v-timeline>
-        <v-timeline-item
-          v-for="sprint in sortedSprintList"
-          :key="`${sprint.number}-sprint`"
-          small
-          fill-dot
-        >
-          <template v-slot:icon>
-            <v-btn
-              fab
-              small
-              color="link"
-              class="white--text"
-              @click="showSprint(sprint)"
-            >
-              {{ sprint.number }}
-            </v-btn>
-          </template>
-        </v-timeline-item>
-      </v-timeline>
+  <v-row justify="center" >
+    <v-col class="d-flex flex-nowrap overflow-x-auto">
+      <div class="ma-4" v-for="lane in neededPlanningLanes" :key="lane.numbering">
+        <Lane v-bind:lane="lane" planningMode allowedAdd></Lane>
+      </div>
+      <div class="ma-4">
+        <PokerLane />
+        
+      </div>
+      <div class="ma-4">
+        <SprintLane />
+      </div>
+      <div class="my-4 ">
+        <v-timeline>
+          <v-timeline-item
+            v-for="sprint in sortedSprintList"
+            :key="`${sprint.number}-sprint`"
+            small
+            fill-dot
+          >
+            <template v-slot:icon>
+              <v-btn
+                fab
+                small
+                color="link"
+                class="white--text"
+                @click="showSprint(sprint)"
+              >
+                {{ sprint.number }}
+              </v-btn>
+            </template>
+          </v-timeline-item>
+        </v-timeline>
+      </div>
     </v-col>
   </v-row>
 </template>
@@ -47,6 +43,7 @@ import Lane from "@/components/Lane.vue";
 import SprintLane from "@/components/Sprint/SprintLane.vue";
 import PokerLane from "@/components/Sprint/PokerLane.vue";
 export default {
+  name:"SprintPlanningView",
   components: {
     Lane,
     SprintLane,
