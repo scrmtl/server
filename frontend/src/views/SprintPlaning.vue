@@ -23,8 +23,8 @@
               <v-btn
                 fab
                 small
-                color="link"
-                class="white--text"
+                :color="formatSprintList(sprint).color"
+                :class="`${formatSprintList(sprint).text}--text`"
                 @click="showSprint(sprint)"
               >
                 {{ sprint.number }}
@@ -52,6 +52,41 @@ export default {
   methods: {
     showSprint(sprint) {
       this.$store.commit("selected/setSprintDetail", sprint);
+    },
+
+    formatSprintList(sprint) {
+      var format = {
+        color: "link",
+        text: "white"
+      }
+      switch (sprint.status) {
+        // In Planning
+        case "IL":
+          format.color = "link";
+          format.text = "white";
+          break;
+        // Planned
+        case "PL":
+          format.color = "primary";
+          format.text = "white";
+          break;
+        // In Progress
+        case "IR":
+          format.color = "primary";
+          format.text = "link";
+          break;
+        // Done
+        case "DO":
+          format.color = "secondary";
+          format.text = "white";
+          break;
+        // Accepted
+        case "AC":
+          format.color = "secondary";
+          format.text = "white";
+          break;
+      }
+      return format;
     },
   },
   computed: {
