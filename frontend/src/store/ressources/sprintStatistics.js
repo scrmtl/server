@@ -9,9 +9,20 @@ export default createCrudModule({
     // Follow getters are generated:
     // list 
     // byId(id)
-    only: [
+    /*only: [
       "FETCH_LIST",
       "FETCH_SINGLE",
-    ]
+    ],*/
+    getters: {
+      bySprintId(state) {
+        return function(sprintId){
+            var statistic = null;
+            if(state.entities !== undefined && sprintId !== undefined){
+                statistic = state.list.map(id => state.entities[id.toString()]).find(statistic => statistic.id == sprintId);
+            }
+            return statistic;
+        }
+    }
+    }
 
 });

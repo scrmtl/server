@@ -42,7 +42,6 @@
 <script>
 import ProjectCard from "@/components/ProjectCard.vue";
 import MyTasksLane from "@/components/MyTasksLane.vue";
-
 import { mapGetters, mapActions, mapState } from "vuex";
 //import scrmtlServices from '@/services/scrmtlServices.js'
 
@@ -149,10 +148,6 @@ export default {
       });
       return projects
     },
-
-    
-
-    
   },
   computed: {
     ...mapState({

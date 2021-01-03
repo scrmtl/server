@@ -8,7 +8,7 @@
         :elevation="hover ? 14 : 5"
         @click="showTaskDetail()"
         draggable
-        @dragstart="pickupTask($event, task.id, task.name, task.feature, task.numbering, task.lane, task.sprint, plannedSprint.status, task.storypoints)"
+        @dragstart="pickupTask($event, task.id, task.name, task.feature, task.numbering, task.lane, task.sprint, plannedSprint.status, task.storypoints, task.status)"
         
       >
         <v-card-title>
@@ -190,7 +190,19 @@ export default {
   methods: {
     showTaskDetail() {
       this.$store.commit("selected/setTaskDetail", this.task);
-      this.$store.commit("selected/showTaskDetail", false);
+      if(this.$route.path.endsWith("Archive")){
+        this.$store.commit("selected/showTaskDetailWithReadOnly", false);
+      }
+      else if(this.$route.path.endsWith("ProductBacklog") && !this.allowedChanges){
+        this.$store.commit("showSystemAlert", {
+          message: "You are not a PO. Read only access in Product backlog",
+          category: "warning"
+        });
+        this.$store.commit("selected/showTaskDetailWithReadOnly", false);
+      }
+      else{
+        this.$store.commit("selected/showTaskDetail", false);
+      }
     },
     GetUserInitial(id) {
       var inital = "AA";
@@ -198,11 +210,12 @@ export default {
       inital = user.username.substring(0, 2);
       return inital;
     },
-    pickupTask(e, taskId, taskName, taskFeatureId, taskNumbering, fromLane, sprint, sprintStatus, storypoints){
+    pickupTask(e, taskId, taskName, taskFeatureId, taskNumbering, fromLane, sprint, sprintStatus, storypoints, taskStatus){
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.dropEffect = "move";
       e.dataTransfer.setData("task-id", taskId);
       e.dataTransfer.setData("task-name", taskName);
+      e.dataTransfer.setData("task-status", taskStatus);
       e.dataTransfer.setData("task-feature-id", taskFeatureId);
       e.dataTransfer.setData("task-numbering", taskNumbering);
       e.dataTransfer.setData("task-sprint-id", sprint);
@@ -224,6 +237,26 @@ export default {
     ...mapGetters("sprint", {
       sprintById: "byId"
     }),
+     ...mapGetters("session", {
+      listSession: "list"
+    }),
+    ...mapGetters("projectUser",{
+      listProjectUser: "list"
+    }),
+    allowedChanges(){
+      var allowed = false;
+      // role id 1 is always product owner
+      var productOwnersInProject = this.listProjectUser.filter(projectUser => projectUser.role === 1 && projectUser.project == this.task.project);
+      if(this.listSession !== undefined && productOwnersInProject !== undefined){
+        if (productOwnersInProject.find(po => po.plattform_user === this.listSession[0].id) !== undefined){
+          allowed = true;
+        }
+        else{
+          allowed = false;
+        }
+      }
+      return allowed;
+    },
 
     plannedSprint(){ 
       var sprintInfo = {

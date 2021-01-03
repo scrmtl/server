@@ -30,7 +30,7 @@
           <v-list-item-title>Home</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item disabled link >
+      <v-list-item @click="GoPoker()" link >
         <v-list-item-icon>
           <v-icon>mdi-cards</v-icon>
         </v-list-item-icon>
@@ -87,6 +87,11 @@ export default {
     GoHome(){
       if(this.$router.history.current.name !== "Home"){
         this.$router.push({ name: 'Home' })
+      }
+    },
+    GoPoker(){
+      if(this.$router.history.current.name !== "PlanningPoker"){
+        this.$router.push({ name: 'PlanningPoker' })
       }
     },
 

@@ -138,7 +138,8 @@ export default {
     updateRole(newRole, item) {
       this.updateProjectUser({
         id: item.id,
-        data: { role: this.byRoleName(newRole) }
+        data: { role: this.byRoleName(newRole) },
+        customUrlFnArgs: {}
       });
     },
     nameUsernameFilter (item, queryText) {

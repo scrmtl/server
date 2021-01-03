@@ -102,10 +102,11 @@ class Card(RulesModel, IGetBoard, IGetProject):
         abstract = True
 
     def __str__(self):
-        return "{0} ({1}) {2}".format(
+        return "id: {3},{0} ({1}) {2}".format(
             self.name,
             self.description,
-            self.storypoints)
+            self.storypoints,
+            self.id)
 
     @property
     def project(self):

@@ -8,6 +8,7 @@ from django.db import models
 # https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import PermissionDenied
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from api.rules_predicates import is_dev_in_project, \
     is_po_in_project, is_sm_in_project, is_project_team_member
@@ -43,9 +44,9 @@ class Project(RulesModel, IGetProject):
         help_text='End of the project'
     )
     sprint_duration = models.PositiveIntegerField(
-        blank=True,
-        null=True,
-        help_text='Duration of a sprint in days'
+        help_text='Duration of a sprint in days',
+        default=7,
+        validators=[MinValueValidator(1), MaxValueValidator(999)]
     )
     status = models.CharField(
         choices=ProjectStatus.choices,

@@ -23,7 +23,9 @@ import projectRole from '@/store/ressources/projectRole';
 import registration from '@/store/ressources/registration';
 import group from '@/store/ressources/group';
 import selected from '@/store/ressources/selected';
+import poker from '@/store/ressources/poker';
 import sprintStatistics from '@/store/ressources/sprintStatistics';
+import projectStatistics from '@/store/ressources/projectStatistics';
 
 Vue.use(Vuex, Axios);
 
@@ -55,8 +57,6 @@ export default new Vuex.Store({
     navigation:{
       visable: false
     },
-   
-    selectedBoard: {}
   },
   // call REST API (async)
   // Use from the components
@@ -118,8 +118,8 @@ export default new Vuex.Store({
 
     showSystemAlert(state, {message, category="info"}) {
       state.systemAlert.visible = true;
-      if(message.length > 65){
-        state.systemAlert.message = message.slice(0,65) + "...";
+      if(message.length > 100){
+        state.systemAlert.message = message.slice(0,97) + "...";
       }
       else{
         state.systemAlert.message = message;
@@ -201,7 +201,9 @@ export default new Vuex.Store({
     group,
     step,
     selected,
-    sprintStatistics
+    sprintStatistics,
+    projectStatistics,
+    poker
   }
 });
 

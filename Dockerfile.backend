@@ -12,14 +12,19 @@ WORKDIR /server
 
 # Copy the backend directory contents into the container at /server
 ADD backend/scrumtool /server/
-
+#ADD docker-entrypoint.sh /docker-entrypoint.sh
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
+RUN chmod a+x /server/docker-entrypoint.sh
 
 EXPOSE 8000
 STOPSIGNAL SIGINT
-ENTRYPOINT ["python", "manage.py"]
-CMD ["runserver", "0.0.0.0:8000"]
+
+
+ENTRYPOINT ["/server/docker-entrypoint.sh"]
+#CMD ["runserver", "0.0.0.0:8000", "runapscheduler"]
+#ENTRYPOINT ["python", "manage.py"]
+#CMD ["runserver", "0.0.0.0:8000", "runapscheduler"]
 #CMD [ "python", "./manage.py runserver 0.0.0.0:8000" ]
 
 

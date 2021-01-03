@@ -49,7 +49,7 @@ router.register(r'sprints', views.SprintViewSet)
 router.register(r'users', views.PlatformUserViewSet)
 
 router.register(r'sprint_statistics', statistic_views.SprintStatisticViewSet)
-
+router.register(r'project_statistics', statistic_views.ProjectStatisticViewSet)
 
 # OAuth2 provider endpoints
 oauth2_endpoint_views = [

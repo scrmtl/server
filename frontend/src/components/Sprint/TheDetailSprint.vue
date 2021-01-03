@@ -38,6 +38,7 @@
                     v-model="number"
                     outlined
                     dense
+                    disabled
                     readonly
                     label="Sprint No."
                   ></v-text-field>
@@ -47,6 +48,7 @@
                     v-model="namedStatus"
                     outlined
                     dense
+                    disabled
                     readonly
                     label="Status"
                   ></v-text-field>
@@ -58,6 +60,7 @@
                     v-model="start"
                     outlined
                     dense
+                    disabled
                     readonly
                     label="Start"
                   ></v-text-field>
@@ -67,6 +70,7 @@
                     v-model="end"
                     outlined
                     dense
+                    disabled
                     readonly
                     label="End"
                   ></v-text-field>
@@ -76,6 +80,7 @@
                     :value="statistic.total_duration"
                     outlined
                     dense
+                    disabled
                     readonly
                     suffix="days"
                     label="Duration"
@@ -89,6 +94,7 @@
                     v-model="version"
                     outlined
                     dense
+                    :disabled="readOnly || (status !== 'IL' && !visableCreate)"
                     required
                     :rules="[rules.versionNaming]"
                     placeholder="V00.00.00.00"
@@ -102,6 +108,7 @@
                   <v-textarea
                     v-model="story"
                     outlined
+                    :disabled="readOnly || (status !== 'IL' && !visableCreate)"
                     min-height="70"
                     label="Story"
                   ></v-textarea>
@@ -111,7 +118,7 @@
             <v-card-actions>
               <v-btn color="link" text @click="close()">Close</v-btn>
               <v-btn
-                v-if="!visableCreate"
+                v-if="!visableCreate && !readOnly && status === 'IL'"
                 color="link"
                 text
                 @click="confirm()"
@@ -124,16 +131,16 @@
                 @click="addSprint()"
                 >Create</v-btn>
               <v-btn
-                v-if="!visableCreate"
+                v-if="!visableCreate && !readOnly"
                 color="link"
                 text
                 absolute
                 right
-                :disabled="!SprintReleaseValidation"
+                :disabled="!SprintReleaseValidation || readOnly"
                 @click="sprintReleaseDialog = true"
               >Release</v-btn>
               <v-btn
-                v-if="SprintUnReleaseValidation"
+                v-if="SprintUnReleaseValidation && !readOnly"
                 color="link"
                 text
                 absolute
@@ -153,6 +160,7 @@
                     :value="statistic.sum_of_tasks"
                     outlined
                     dense
+                    disabled
                     readonly
                     label="Planned card number"
                   ></v-text-field>
@@ -162,6 +170,7 @@
                     :value="statistic.sum_of_done_tasks"
                     outlined
                     dense
+                    disabled
                     readonly
                     label="Finished card number"
                   ></v-text-field>
@@ -173,6 +182,7 @@
                     :value="statistic.sum_of_sp"
                     outlined
                     dense
+                    disabled
                     readonly
                     label="Planned Story Points"
                   ></v-text-field>
@@ -182,6 +192,7 @@
                     :value="statistic.sum_of_done_sp"
                     outlined
                     dense
+                    disabled
                     readonly
                     label="Finished Story Points"
                   ></v-text-field>
@@ -193,6 +204,7 @@
                     :value="statistic.total_duration"
                     outlined
                     dense
+                    disabled
                     readonly
                     suffix="days"
                     label="Duration"
@@ -203,6 +215,7 @@
                     :value="statistic.remaining_duration"
                     outlined
                     dense
+                    disabled
                     readonly
                     suffix="days"
                     label="remaining duration"
@@ -278,7 +291,8 @@ export default {
     }),
 
     ...mapActions("sprintStatistics", {
-      fetchSprintStatistics: "fetchList"
+      fetchSprintStatistics: "fetchList",
+      fetchSingleSprintStatistics: "fetchSingle"
     }),
     
     close() {
@@ -326,6 +340,7 @@ export default {
               id: this.id,
               customUrlFnArgs: {}
             });
+            this.fetchSingleSprintStatistics({ id: this.id})
           }
           this.close();
         }.bind(this)
@@ -352,6 +367,7 @@ export default {
             }).then((res) => {
               this.$store.commit("selected/setSprintDetail", res.data);
             });
+            this.fetchSingleSprintStatistics({ id: this.id})
           }
           this.close();
           this.$store.commit("showSystemAlert", {
@@ -444,7 +460,8 @@ export default {
       "sprint.details.story",
       "sprint.details.task_cards",
       "sprint.visableDetail",
-      "sprint.visableCreate"
+      "sprint.visableCreate",
+      "sprint.readOnly"
     ]),
     ...mapGetters("sprintStatistics", {
       sprintStatisticsById: "byId"
@@ -467,6 +484,7 @@ export default {
         return false;
       }
     },
+
 
     visibleDrawer: {
       get() {
@@ -500,5 +518,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
-  @import "../main.css";
+  @import "../../main.css";
 </style>

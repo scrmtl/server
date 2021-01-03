@@ -2,7 +2,7 @@
 <template>
   <v-app>
     <SystemBar v-if="this.$store.getters.isLoggedIn" />
-    <TheNavigation/>
+    <TheNavigation v-if="this.$store.getters.isLoggedIn"/>
     <DetailProject v-if="this.$store.getters.isLoggedIn" />
     <DetailTask v-if="this.$store.getters.isLoggedIn" />
     <DetailSprint v-if="this.$store.getters.isLoggedIn" />
@@ -13,9 +13,13 @@
     <SystemAlert/>
 
     <v-footer color="appbar" class="white--text" app>
-      <span>dark, cool, easy</span>
+      <v-img 
+          max-height="25"
+          max-width="25"
+          src="@/assets/logo_transparent.png"></v-img>
+      <span>dark, cool and easy</span>
       <v-spacer></v-spacer>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+      <span>V1.0 &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
@@ -24,10 +28,9 @@
 import SystemBar from "@/components/TheSystemBar.vue";
 import DetailProject from "@/components/TheDetailProject.vue";
 import DetailTask from "@/components/TheDetailTask.vue";
-import DetailSprint from "@/components/TheDetailSprint.vue";
+import DetailSprint from "@/components/Sprint/TheDetailSprint.vue";
 import TheNavigation from "@/components/TheNavigation.vue";
 import SystemAlert from "@/components/SystemAlert.vue";
-import Axios from "axios";
 export default {
   name: "App",
   data: () => ({
@@ -49,39 +52,8 @@ export default {
   computed:{
     
   },
-  created() {
-    Axios.interceptors.response.use((response) => {
-      if (response.status === 401 && response.detail === "Anmeldedaten fehlen") {
-          this.$store.dispatch("logout");
-      }
-      else if(response.status === 403){
-        console.log("Error from interceptor");
-        console.log(response);
-        this.$store.commit("showSystemAlert", {
-              message: "Permission denied",
-              category: "error"
-            });
-      }
-      // return new Promise(() => {
-      //   if (err.status === 401 && err.detail === "Anmeldedaten fehlen") {
-      //     this.$store.dispatch("logout");
-      //   }
-      //   throw err;
-      // });
-      return response;
-    });
-
-    Axios.interceptors.request.use(config => {
-      // console.log(config);
-      if (
-        (config.method === "post" || config.method === "patch") &&
-        config.url[config.url.length - 1] !== "/" &&
-        !config.url.includes("/?")
-      ) {
-        config.url += "/";
-      }
-      return config;
-    });
+  mounted() {
+   
   }
 };
 </script>

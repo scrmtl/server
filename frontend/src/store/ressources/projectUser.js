@@ -18,7 +18,7 @@ export default createCrudModule({
      * @param {number} projectId If set all tasks in that lane are returned (exampleUrl: /api/projects/1/project_users`)
      * @return {string} Url defined by the arguments
      */
-    customUrlFn(id, type, projectId) {
+    customUrlFn(id, type, {projectId=null}) {
         // id will only be available when doing request to single resource, otherwise null
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
         var rootUrl = '/api/project_users';
@@ -67,6 +67,22 @@ export default createCrudModule({
       
             }
         },
+
+        /** @description Add Custom getter 
+         * @param {string} roleName searching role by name
+         * @return {Array} Array of project User Objects with the searching role 
+         */
+        byRole: (state) => {
+          return function(roleName){
+            let userByRole = null;
+            let projectRoles = this.$store.getters["projectRole/list"];
+            if(roleName !== undefined && state.entities !== undefined){
+              let roleId = projectRoles[roleName.toString()].id;
+              userByRole = state.list.map(id => state.entities[id.toString()]).filter(puser => puser.role === roleId);
+            }
+            return userByRole;
+          }
+        }
     }
 
 });
