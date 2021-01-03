@@ -12,7 +12,7 @@
         <SprintLane />
       </div>
       <div class="my-4 ">
-        <v-timeline>
+        <v-timeline class="sprint-number-lane">
           <v-timeline-item
             v-for="sprint in sortedSprintList"
             :key="`${sprint.number}-sprint`"
@@ -82,8 +82,8 @@ export default {
         var keyA = a.number;
         var keyB = b.number;
         // Vergleiche ob AC oder AR
-        if (keyA < keyB) return -1;
-        if (keyA > keyB) return 1;
+        if (keyA > keyB) return -1;
+        if (keyA < keyB) return 1;
         return 0;
       });
       return sorted;
