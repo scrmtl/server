@@ -4,6 +4,8 @@ import os
 from datetime import date
 from django.conf import settings
 
+from asgiref.sync import sync_to_async
+
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from django.core.management.base import BaseCommand
@@ -24,12 +26,9 @@ def my_job():
     logger.info("---------------------Executing my_job-----------------------")
     logger.info(
         f"Sprints today: {Sprint.objects.filter(start=date.today()).all()}")
-    set_sprint_in_progress_handler(
-        Sprint.objects.filter(start=date.today()).all())
-    set_sprint_done_handler(Sprint.objects.filter(end=date.today()).all())
-    set_sprint_accepted_handler(Sprint.objects.filter(end=date.today()).all())
-    move_cards_handler(
-        Sprint.objects.filter(start=date.today()).all())
+    task = Task.objects.get(id=1)
+    task.name = 'nananananana Batman'
+    task.save()
 '''
 
 
@@ -137,7 +136,7 @@ class Command(BaseCommand):
         '''
         scheduler.add_job(
             my_job,
-            trigger=CronTrigger(second="*/59"),  # Every 10 seconds
+            trigger=CronTrigger(second="*/10"),  # Every 10 seconds
             id="my_job",  # The `id` assigned to each job MUST be unique
             max_instances=1,
             replace_existing=True,
@@ -147,7 +146,7 @@ class Command(BaseCommand):
         scheduler.add_job(
             hourly_job,
             # Every 10 seconds
-            trigger=CronTrigger(day="*", hour="*", minute="0"),
+            trigger=CronTrigger(day="*", hour="*", minute="*/10"),
             id="midnight_job",  # The `id` assigned to each job MUST be unique
             max_instances=1,
             replace_existing=True,
