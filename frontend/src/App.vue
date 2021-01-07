@@ -13,9 +13,13 @@
     <SystemAlert/>
 
     <v-footer color="appbar" class="white--text" app>
-      <span>dark, cool, easy</span>
+      <v-img 
+          max-height="25"
+          max-width="25"
+          src="@/assets/logo_transparent.png"></v-img>
+      <span>dark, cool and easy</span>
       <v-spacer></v-spacer>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+      <span>V1.0 &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>

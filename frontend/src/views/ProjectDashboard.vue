@@ -32,57 +32,20 @@
         />
       </v-col>
       <v-col cols="4">
-        <ProjectSummary v-bind:statistics="statistics" />
+        <ProjectSummary />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-//import { mapGetters } from "vuex";
 import Plotly from "@/components/Plotly.vue";
 import ProjectInformation from "@/components/Dashboard/ProjectInformation.vue";
 import ProjectSummary from "@/components/Dashboard/ProjectSummary.vue";
 import ProjectCalendar from "@/components/Dashboard/ProjectCalendar.vue";
 import { mapGetters } from "vuex";
 export default {
-  data: () => ({
-    //Werte für die Statistik
-    statistics: {
-      sum_of_done_sp: 0,
-      sum_of_accepted_sp: 0,
-      sum_of_sp: 0,
-      sum_of_tasks: 0,
-      sum_tasks_rated_not_finished: 0,
-      sum_of_done_tasks: 0,
-      sum_of_accepted_tasks: 0,
-      avg_tasks_in_sprint: 0,
-      avg_sp_in_sprint: 0,
-      worst_sprints_sp: "0, 0, 0",
-      worst_sprints_tasks: "0, 0, 0",
-    },
-
-    //Werte für den Plotly
-    plotTitle: "Project burndown",
-    plotly_data: {
-      avg_finished_tasks_timeline: {
-        x_data: [1, 2, 3, 4, 5],
-        y_data: [0, 0, 0, 0, 0],
-      },
-      avg_finished_sp_timeline: {
-        x_data: [1, 2, 3, 4, 5],
-        y_data: [0, 0, 0, 0, 0],
-      },
-      finished_sp_timeline: {
-        x_data: [1, 2, 3, 4, 5],
-        y_data: [0, 0, 0, 0, 0],
-      },
-      finished_tasks_timeline: {
-        x_data: [1, 2, 3, 4, 5],
-        y_data: [0, 0, 0, 0, 0],
-      },
-    },
-  }),
+  data: () => ({}),
 
   components: {
     Plotly,
@@ -92,110 +55,107 @@ export default {
   },
 
   methods: {
-    //Daten aus dem Backend holen und den Variablen zuweisen...
-    getProjectStatistic() {
-      let stats = this.projectStatistic(this.$route.params.id);
-      if (stats != undefined) {
-        //Plotly-Data
-        this.plotly_data.avg_finished_tasks_timeline.x_data =
-          stats.avg_finished_tasks_timeline.x;
-        this.plotly_data.avg_finished_tasks_timeline.y_data =
-          stats.avg_finished_tasks_timeline.y;
+    //Funktion um die Width der Bars beim Plotly einzustellen
+    makeWidthArray(x_array) {
+      var width = 0.1;
+      var length = x_array.length;
+      var data = [];
 
-        this.plotly_data.avg_finished_sp_timeline.y_data =
-          stats.avg_finished_sp_timeline.x;
-        this.plotly_data.avg_finished_sp_timeline.y_data =
-          stats.avg_finished_sp_timeline.y;
-
-        this.plotly_data.finished_sp_timeline.y_data =
-          stats.finished_sp_timeline.x;
-        this.plotly_data.finished_sp_timeline.y_data =
-          stats.finished_sp_timeline.y;
-
-        this.plotly_data.finished_tasks_timeline.y_data =
-          stats.finished_tasks_timeline.x;
-        this.plotly_data.finished_tasks_timeline.y_data =
-          stats.finished_tasks_timeline.y;
-
-        //Weitere Statisik-Werte
-        this.statistics.sum_of_done_sp = stats.sum_of_done_sp;
-        this.statistics.sum_of_accepted_sp = stats.sum_of_accepted_sp;
-        this.statistics.sum_of_sp = stats.sum_of_sp;
-        this.statistics.sum_of_tasks = stats.sum_of_tasks;
-        this.statistics.sum_tasks_rated_not_finished =
-          stats.sum_tasks_rated_not_finished;
-        this.statistics.sum_of_done_tasks = stats.sum_of_done_tasks;
-        this.statistics.sum_of_accepted_tasks = stats.sum_of_accepted_tasks;
-        this.statistics.avg_tasks_in_sprint = stats.avg_tasks_in_sprint;
-        this.statistics.avg_sp_in_sprint = stats.avg_sp_in_sprint;
-        this.statistics.worst_sprints_sp = stats.worst_sprints_sp;
-        this.statistics.worst_sprints_tasks = stats.worst_sprints_tasks;
+      for (var i = 0; i < length; i++) {
+        data.push(width);
       }
+
+      return data;
     },
   },
 
   computed: {
     ...mapGetters("projectStatistics", {
-      projectStatistic: "byProjectId",
+      projectStatisticById: "byProjectId",
     }),
 
-    //Daten für den Plotly
+    projectStatistic() {
+      var stat = this.projectStatisticById(this.$route.params.id);
+      if (stat !== undefined) {
+        return stat;
+      } else {
+        var defaultData = {
+          avg_finished_tasks_timeline: {
+            x: [1, 2, 3, 4, 5],
+            y: [0, 0, 0, 0, 0],
+          },
+          avg_finished_sp_timeline: {
+            x: [1, 2, 3, 4, 5],
+            y: [0, 0, 0, 0, 0],
+          },
+          finished_sp_timeline: {
+            x: [1, 2, 3, 4, 5],
+            y: [0, 0, 0, 0, 0],
+          },
+          finished_tasks_timeline: {
+            x: [1, 2, 3, 4, 5],
+            y: [0, 0, 0, 0, 0],
+          },
+        };
+        return defaultData;
+      }
+    },
+
+    //Data for Plotly projetc diagramm
     plotData() {
       let avg_finished_tasks = {
-        x: this.plotly_data.avg_finished_tasks_timeline.x_data,
-        y: this.plotly_data.avg_finished_tasks_timeline.y_data,
+        x: this.projectStatistic.avg_finished_tasks_timeline.x,
+        y: this.projectStatistic.avg_finished_tasks_timeline.y,
         name: "Average of finished Tasks",
         type: "scatter",
         mode: "lines",
+        yaxis: "y2",
         line: {
-          color: "#FFFFFF",
-          width: 2,
+          color: "#448AFF",
+          width: 4,
+          dash: "dash",
         },
         connectgaps: true,
       };
       let avg_finished_sp = {
-        x: this.plotly_data.avg_finished_sp_timeline.x_data,
-        y: this.plotly_data.avg_finished_sp_timeline.y_data,
+        x: this.projectStatistic.avg_finished_sp_timeline.x,
+        y: this.projectStatistic.avg_finished_sp_timeline.y,
         name: "Average of finished Story Points",
         type: "scatter",
-        mode: "lines+markers",
-        marker: {
-          size: 10,
-        },
+        mode: "lines",
         line: {
-          color: "#31AA96",
+          color: "#FF5252",
           width: 4,
+          dash: "dash",
         },
         connectgaps: true,
       };
       let finished_tasks = {
-        x: this.plotly_data.finished_tasks_timeline.x_data,
-        y: this.plotly_data.finished_tasks_timeline.y_data,
+        x: this.projectStatistic.finished_tasks_timeline.x,
+        y: this.projectStatistic.finished_tasks_timeline.y,
+        width: this.makeWidthArray(
+          this.projectStatistic.finished_tasks_timeline.x
+        ),
         name: "Finished Tasks",
-        type: "scatter",
-        mode: "lines+markers",
+        type: "bar",
+        yaxis: "y2",
         marker: {
-          size: 10,
-        },
-        line: {
           color: "orange",
-          width: 4,
+          size: 5,
+          opacity: 0.6,
         },
+        alignmentgroup: '1',
         connectgaps: true,
       };
 
       let finished_sp = {
-        x: this.plotly_data.finished_sp_timeline.x_data,
-        y: this.plotly_data.finished_sp_timeline.y_data,
+        x: this.projectStatistic.finished_sp_timeline.x,
+        y: this.projectStatistic.finished_sp_timeline.y,
         name: "Finished Story Points",
         type: "scatter",
-        mode: "lines+markers",
         marker: {
-          size: 10,
-        },
-        line: {
-          color: "pink",
-          width: 4,
+          color: "#009688",
+          size: 5,
         },
         connectgaps: true,
       };
@@ -208,7 +168,7 @@ export default {
         autosize: true,
         height: 700,
         argin: { t: 25, l: 45, r: 10, b: 30 },
-        title: this.plotTitle,
+        title: "Project analysis",
         font: {
           family: "sans-serif",
           size: 15,
@@ -223,12 +183,22 @@ export default {
           zerolinewidth: 4,
         },
         yaxis: {
-          title: "Story Points / Tasks",
-          dtick: 5,
+          title: "Story points",
+          dtick: 4,
           gridcolor: "#636363",
           gridwidth: 2,
           zerolinecolor: "#636363",
           zerolinewidth: 4,
+        },
+        yaxis2: {
+          title: "Tasks",
+          dtick: 1,
+          //gridcolor: "#636363",
+          //gridwidth: 2,
+          //zerolinecolor: "#636363",
+          //zerolinewidth: 4,
+          overlaying: "y",
+          side: "right",
         },
         legend: {
           x: 0,
@@ -236,14 +206,13 @@ export default {
         },
         paper_bgcolor: "#6441A4",
         plot_bgcolor: "#6441A4",
+        bargap: 0.5,
+        barmode: 'group',
       };
     },
   },
 
-  //Wenn die View gemounted wird, werden die Statistiken geladen
-  mounted() {
-    this.getProjectStatistic();
-  },
+  mounted() {},
 };
 </script>
 

@@ -15,17 +15,12 @@ export default createCrudModule({
     ],*/
     getters: {
       bySprintId(state) {
-        return function (sprintId) {
-            let result = undefined;
-            let sprintList = this.$store.getters["sprintStatistics/list"];
-            if (sprintList!== undefined && state.entities !== undefined) {
-                sprintList.forEach(element => {
-                    if (element.id === sprintId) {
-                        result = element;
-                    }
-                })
+        return function(sprintId){
+            var statistic = null;
+            if(state.entities !== undefined && sprintId !== undefined){
+                statistic = state.list.map(id => state.entities[id.toString()]).find(statistic => statistic.id == sprintId);
             }
-            return result;
+            return statistic;
         }
     }
     }

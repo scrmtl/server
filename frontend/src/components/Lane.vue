@@ -22,7 +22,7 @@
       </v-menu>
     </v-card-title>
         <v-card-text 
-          class="lane-body  flex-column" 
+          class="lane-body flex-column" 
           v-if="laneTasks"
           @drop="moveTask($event)"
           @dragover="allowDrop($event)"

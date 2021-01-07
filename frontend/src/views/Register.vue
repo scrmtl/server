@@ -1,7 +1,17 @@
 <template>
   <v-container fluid>
+    <v-row no-gutters align="center" justify="center">
+      <v-img 
+          max-height="150"
+          max-width="150"
+          src="@/assets/logo_transparent.png"></v-img>
+      <span class="text-lg-h1 text-sm-h2 white--text ">Welcome</span>
+    </v-row>
+    <v-row no-gutters align="center" justify="center">
+      <span class="text-lg-subtitle-1 text-sm-subtitle-2 white--text">dark, cool and easy</span>
+    </v-row>
     <v-row ro no-gutters align="center" justify="center">
-      <v-col cols="4">
+      <v-col sm="12" lg="5">
         <v-card class="ma-4">
           <v-card-title>
             <h1>Register</h1>

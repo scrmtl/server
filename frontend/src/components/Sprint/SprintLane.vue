@@ -41,7 +41,7 @@
       {{ selectedSprintDateInfo }}
     </v-card-subtitle>
     <v-card-text 
-      class="lane-body  flex-column" 
+      class="lane-body flex-column" 
       @drop="moveTask($event)"
       @dragover="allowDrop($event)"
       @dragenter.prevent

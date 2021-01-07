@@ -1,5 +1,4 @@
 <template>
-
     <v-row dense>
       <v-col dense class="d-flex flex-nowrap overflow-x-auto" >
         <div class="ma-4" v-for="lane in listBoardLanes" :key="lane.numbering">

@@ -8,7 +8,7 @@
         :elevation="hover ? 14 : 5"
         @click="showTaskDetail()"
         draggable
-        @dragstart="pickupTask($event, task.id, task.name, task.feature, task.numbering, task.lane, task.sprint, plannedSprint.status, task.storypoints)"
+        @dragstart="pickupTask($event, task.id, task.name, task.feature, task.numbering, task.lane, task.sprint, plannedSprint.status, task.storypoints, task.status)"
         
       >
         <v-card-title>
@@ -210,11 +210,12 @@ export default {
       inital = user.username.substring(0, 2);
       return inital;
     },
-    pickupTask(e, taskId, taskName, taskFeatureId, taskNumbering, fromLane, sprint, sprintStatus, storypoints){
+    pickupTask(e, taskId, taskName, taskFeatureId, taskNumbering, fromLane, sprint, sprintStatus, storypoints, taskStatus){
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.dropEffect = "move";
       e.dataTransfer.setData("task-id", taskId);
       e.dataTransfer.setData("task-name", taskName);
+      e.dataTransfer.setData("task-status", taskStatus);
       e.dataTransfer.setData("task-feature-id", taskFeatureId);
       e.dataTransfer.setData("task-numbering", taskNumbering);
       e.dataTransfer.setData("task-sprint-id", sprint);
