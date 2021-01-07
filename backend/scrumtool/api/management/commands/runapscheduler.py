@@ -91,19 +91,22 @@ def move_cards_handler(sprints_today):
             logger.info(
                 f"   --> SB : {sb_board}")
             growing_lane: Lane = pb_board.lanes.get(name__icontains='Growning')
+            ready_lane: Lane = pb_board.lanes.get(name__icontains='Ready')
             next_lane: Lane = sb_board.lanes.get(name__icontains='Next')
             logger.info(
                 f"Move cards from lane {growing_lane}\
                      located in board {pb_board} to lane\
                      {next_lane} located in board {sb_board}")
             # get tasks of PB
-            tasks = Task.objects.filter(lane=growing_lane.id)
+            tasks = Task.objects.filter(
+                lane__in=[growing_lane.id, ready_lane.id], sprint=sprint.id)
             task: Task
             for task in tasks.all():
                 if task.sprint is not None:
                     logger.info(
                         f"Moved card {task}")
                     task.lane = next_lane
+                    task.status = Task.Status.NOT_STARTED
                     task.save()
 
 
@@ -113,9 +116,11 @@ def hourly_job():
     logger.info(
         "---------------------Executing hourly_job-----------------------")
     logger.info(
-        f"Sprints today: {Sprint.objects.filter(start=date.today()).all()}")
+        f"Sprints start today: {Sprint.objects.filter(start=date.today()).all()}")
     set_sprint_in_progress_handler(
         Sprint.objects.filter(start=date.today()).all())
+    logger.info(
+        f"Sprints end today: {Sprint.objects.filter(end=date.today()).all()}")
     set_sprint_done_handler(Sprint.objects.filter(end=date.today()).all())
     set_sprint_accepted_handler(Sprint.objects.filter(end=date.today()).all())
     move_cards_handler(
@@ -146,12 +151,12 @@ class Command(BaseCommand):
         scheduler.add_job(
             hourly_job,
             # Every 10 seconds
-            trigger=CronTrigger(day="*", hour="*", minute="*/10"),
-            id="midnight_job",  # The `id` assigned to each job MUST be unique
+            trigger=CronTrigger(day="*", hour="*", minute="10"),
+            id="hourly_job",  # The `id` assigned to each job MUST be unique
             max_instances=1,
             replace_existing=True,
         )
-        logger.info("Added job 'midnight_job'.")
+        logger.info("Added job 'hourly_job'.")
 
         scheduler.add_job(
             delete_old_job_executions,
