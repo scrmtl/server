@@ -1,131 +1,141 @@
 <template>
-  <v-row>
-    <v-col cols="8">
-      <!-- Hier kommt dann das weitere... /-->
-      <Plotly
-        autoResize
-        :data="plotData"
-        :layout="plotLayout"
-        :options="{
-          modeBarButtonsToRemove: [
-            'sendDataToCloud',
-            'toImage',
-            'autoScale2d',
-            'hoverClosestCartesian',
-            'hoverCompareCartesian',
-            'lasso2d',
-            'select2d',
-          ],
-          displaylogo: false,
-          showTips: false,
-          staticPlot: true,
-          displayModeBar: false,
-        }"
-      />
-    </v-col>
-    <v-col cols="3">
-      <v-card class="lane primary" height="700">
-        <v-card-title class="navbar white--text">{{ infoTitle }}</v-card-title>
-        <v-card-text class="navbar white--text">
-          <v-list class="transparent">
-            <v-subheader class="white--text">STORYPOINTS</v-subheader>
-            <v-list-item dense>
-              <v-list-item-title class="white--text"
-                >Total amount</v-list-item-title
+  <div ref="pdf">
+    <v-row>
+      <v-col cols="8">
+        <!-- Hier kommt dann das weitere... /-->
+        <Plotly
+          autoResize
+          :data="plotData"
+          :layout="plotLayout"
+          :options="{
+            modeBarButtonsToRemove: [
+              'sendDataToCloud',
+              'toImage',
+              'autoScale2d',
+              'hoverClosestCartesian',
+              'hoverCompareCartesian',
+              'lasso2d',
+              'select2d',
+            ],
+            displaylogo: false,
+            showTips: false,
+            staticPlot: true,
+            displayModeBar: false,
+          }"
+        />
+      </v-col>
+      <v-col cols="3">
+        <div>
+          <v-card class="lane primary" height="700">
+            <v-card-title class="navbar white--text">{{
+              infoTitle
+            }}</v-card-title>
+            <v-card-text class="navbar white--text">
+              <v-list class="transparent">
+                <v-subheader class="white--text">STORYPOINTS</v-subheader>
+                <v-list-item dense>
+                  <v-list-item-title class="white--text"
+                    >Total amount</v-list-item-title
+                  >
+                  <v-list-item-subtitle class="white--text text-right">{{
+                    sum_of_planned_sp
+                  }}</v-list-item-subtitle>
+                </v-list-item>
+                <v-list-item dense>
+                  <v-list-item-title class="white--text"
+                    >Done</v-list-item-title
+                  >
+                  <v-list-item-subtitle class="white--text text-right">{{
+                    sum_of_done_sp
+                  }}</v-list-item-subtitle>
+                </v-list-item>
+                <v-list-item dense>
+                  <v-list-item-title class="white--text"
+                    >Not done</v-list-item-title
+                  >
+                  <v-list-item-subtitle class="white--text text-right">{{
+                    sum_of_not_done_sp
+                  }}</v-list-item-subtitle>
+                </v-list-item>
+                <v-list-item dense>
+                  <v-list-item-title class="white--text"
+                    >Accepted</v-list-item-title
+                  >
+                  <v-list-item-subtitle class="white--text text-right">{{
+                    sum_of_accepted_sp
+                  }}</v-list-item-subtitle>
+                </v-list-item>
+                <v-subheader class="white--text">TASKS</v-subheader>
+                <v-list-item dense>
+                  <v-list-item-title class="white--text"
+                    >Total amount</v-list-item-title
+                  >
+                  <v-list-item-subtitle class="white--text text-right">{{
+                    sum_of_planned_tasks
+                  }}</v-list-item-subtitle>
+                </v-list-item>
+                <v-list-item dense>
+                  <v-list-item-title class="white--text"
+                    >Done</v-list-item-title
+                  >
+                  <v-list-item-subtitle class="white--text text-right">{{
+                    sum_of_done_tasks
+                  }}</v-list-item-subtitle>
+                </v-list-item>
+                <v-list-item dense>
+                  <v-list-item-title class="white--text"
+                    >Not done</v-list-item-title
+                  >
+                  <v-list-item-subtitle class="white--text text-right">{{
+                    sum_of_not_done_tasks
+                  }}</v-list-item-subtitle>
+                </v-list-item>
+                <v-list-item dense>
+                  <v-list-item-title class="white--text"
+                    >Accepted</v-list-item-title
+                  >
+                  <v-list-item-subtitle class="white--text text-right">{{
+                    sum_of_accepted_tasks
+                  }}</v-list-item-subtitle>
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn @click="makePDF()">Export Sprint Documentation</v-btn>
+            </v-card-actions>
+          </v-card>
+        </div>
+      </v-col>
+      <v-col cols="1">
+        <v-timeline class="sprint-number-lane">
+          <v-timeline-item
+            v-for="sprint in sortedSprintList"
+            :key="`${sprint.number}-sprint`"
+            small
+            fill-dot
+          >
+            <template v-slot:icon>
+              <v-btn
+                fab
+                small
+                :color="formatSprintList(sprint).color"
+                :class="`${formatSprintList(sprint).text}--text`"
+                @click="showSprint(sprint)"
               >
-              <v-list-item-subtitle class="white--text text-right">{{
-                sum_of_planned_sp
-              }}</v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item dense>
-              <v-list-item-title class="white--text"
-                >Done</v-list-item-title
-              >
-              <v-list-item-subtitle class="white--text text-right">{{
-                sum_of_done_sp
-              }}</v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item dense>
-              <v-list-item-title class="white--text"
-                >Not done</v-list-item-title
-              >
-              <v-list-item-subtitle class="white--text text-right">{{
-                sum_of_not_done_sp
-              }}</v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item dense>
-              <v-list-item-title class="white--text"
-                >Accepted</v-list-item-title
-              >
-              <v-list-item-subtitle class="white--text text-right">{{
-                sum_of_accepted_sp
-              }}</v-list-item-subtitle>
-            </v-list-item>
-            <v-subheader class="white--text">TASKS</v-subheader>
-            <v-list-item dense>
-              <v-list-item-title class="white--text"
-                >Total amount</v-list-item-title
-              >
-              <v-list-item-subtitle class="white--text text-right">{{
-                sum_of_planned_tasks
-              }}</v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item dense>
-              <v-list-item-title class="white--text"
-                >Done</v-list-item-title
-              >
-              <v-list-item-subtitle class="white--text text-right">{{
-                sum_of_done_tasks
-              }}</v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item dense>
-              <v-list-item-title class="white--text"
-                >Not done</v-list-item-title
-              >
-              <v-list-item-subtitle class="white--text text-right">{{
-                sum_of_not_done_tasks
-              }}</v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item dense>
-              <v-list-item-title class="white--text"
-                >Accepted</v-list-item-title
-              >
-              <v-list-item-subtitle class="white--text text-right">{{
-                sum_of_accepted_tasks
-              }}</v-list-item-subtitle>
-            </v-list-item>
-          </v-list>
-        </v-card-text>
-      </v-card>
-    </v-col>
-    <v-col cols="1">
-      <v-timeline class="sprint-number-lane">
-        <v-timeline-item
-          v-for="sprint in sortedSprintList"
-          :key="`${sprint.number}-sprint`"
-          small
-          fill-dot
-        >
-          <template v-slot:icon>
-            <v-btn
-              fab
-              small
-              :color="formatSprintList(sprint).color"
-              :class="`${formatSprintList(sprint).text}--text`"
-              @click="showSprint(sprint)"
-            >
-              {{ sprint.number }}
-            </v-btn>
-          </template>
-        </v-timeline-item>
-      </v-timeline>
-    </v-col>
-  </v-row>
+                {{ sprint.number }}
+              </v-btn>
+            </template>
+          </v-timeline-item>
+        </v-timeline>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import Plotly from "@/components/Plotly.vue";
+import jsPDF from "jspdf";
 
 export default {
   name: "Statistic",
@@ -140,7 +150,6 @@ export default {
     sum_of_done_sp: "No sprint selected",
     sum_of_accepted_sp: "No sprint selected",
     sum_of_not_done_sp: "No sprint selected",
-    
 
     plotly_data: {
       planed: {
@@ -195,8 +204,8 @@ export default {
     formatSprintList(sprint) {
       var format = {
         color: "link",
-        text: "white"
-      }
+        text: "white",
+      };
       switch (sprint.status) {
         // In Planning
         case "IL":
@@ -225,6 +234,21 @@ export default {
           break;
       }
       return format;
+    },
+
+    makePDF() {
+      let pdfName = "test";
+      var doc = new jsPDF();
+      console.log(this.$refs.pdf.innerHTML);
+      const contentHtml = this.$refs.pdf.innerHTML;
+      console.log(contentHtml);
+      doc.html(contentHtml, {
+        callback: function (doc) {
+          doc.save(pdfName + ".pdf");
+        },
+        x: 10,
+        y: 10,
+      });
     },
   },
   computed: {
