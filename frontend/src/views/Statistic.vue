@@ -101,7 +101,10 @@
               </v-list>
             </v-card-text>
             <v-card-actions>
-              <v-btn @click="makePDF()">Export Sprint Documentation</v-btn>
+              <v-btn color="link" :disabled="selectedSprint == null" outlined @click="createReport(selectedSprint)">
+                <v-icon >mdi-file-chart</v-icon>
+                Export Sprint Report
+              </v-btn>
             </v-card-actions>
           </v-card>
         </div>
@@ -135,11 +138,18 @@
 <script>
 import { mapGetters } from "vuex";
 import Plotly from "@/components/Plotly.vue";
-import jsPDF from "jspdf";
+import exportPdf from "@/mixins/pdfExportMixin"
 
 export default {
   name: "Statistic",
+  components: {
+    Plotly,
+  },
+  mixins: [exportPdf],
   data: () => ({
+    reportDialog: false,
+    selectedSprint: null,
+    selectedSprintStatistic: null,
     plotTitle: "No sprint selected",
     infoTitle: "No sprint selected",
     sum_of_planned_tasks: "No sprint selected",
@@ -172,15 +182,16 @@ export default {
       },
     },
   }),
-  components: {
-    Plotly,
-  },
+  
 
   methods: {
     showSprint(sprint) {
       let stats = this.sprintStatistic(sprint.id);
       if (stats != undefined) {
         //Setzten des Graph-Titels
+        this.selectedSprint = sprint;
+        this.selectedSprintStatistic = stats;
+        console.log(this.selectedSprint)
         this.plotTitle = "Burn-Down chart Sprint " + sprint.number;
         this.infoTitle = "Summary Sprint " + sprint.number;
         //Zuweisen der einzelnen Werte zu den Anzeigevariablen
@@ -234,21 +245,6 @@ export default {
           break;
       }
       return format;
-    },
-
-    makePDF() {
-      let pdfName = "test";
-      var doc = new jsPDF();
-      console.log(this.$refs.pdf.innerHTML);
-      const contentHtml = this.$refs.pdf.innerHTML;
-      console.log(contentHtml);
-      doc.html(contentHtml, {
-        callback: function (doc) {
-          doc.save(pdfName + ".pdf");
-        },
-        x: 10,
-        y: 10,
-      });
     },
   },
   computed: {
