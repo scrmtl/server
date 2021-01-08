@@ -115,7 +115,7 @@ def move_cards_to_archive_handler(sprints_today):
     for sprint in sprints_today:
         logger.info(
             f"--> Sprint: {sprint} ends today")
-        if (sprint.status == Sprint.SprintStatus.DONE and
+        if (sprint.status == Sprint.SprintStatus.DONE or
                 sprint.status == Sprint.SprintStatus.ACCEPTED):
             # get lane of SB
             logger.info(
