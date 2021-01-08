@@ -81,7 +81,7 @@ def move_cards_handler(sprints_today):
         if sprint.status == Sprint.SprintStatus.IN_PROGRESS:
             # get lane of PB
             logger.info(
-                f"--> Sprint today: {sprint.project.boards}")
+                f"--> Project boards: {sprint.project.boards}")
             pb_board: Board = sprint.project.boards.get(
                 board_type=Board.BoardType.PB)
             logger.info(
@@ -104,9 +104,47 @@ def move_cards_handler(sprints_today):
             for task in tasks.all():
                 if task.sprint is not None:
                     logger.info(
-                        f"Moved card {task}")
+                        f"Moved card {task} \n")
                     task.lane = next_lane
                     task.status = Task.Status.NOT_STARTED
+                    task.save()
+
+
+def move_cards_to_archive_handler(sprints_today):
+    sprint: Sprint
+    for sprint in sprints_today:
+        logger.info(
+            f"--> Sprint: {sprint} ends today")
+        if sprint.status == Sprint.SprintStatus.DONE:
+            # get lane of SB
+            logger.info(
+                f"--> Sprint today: {sprint.project.boards}")
+            ab_board: Board = sprint.project.boards.get(
+                board_type=Board.BoardType.AB)
+            logger.info(
+                f"   --> AB : {ab_board}")
+            sb_board: Board = sprint.project.boards.get(
+                board_type=Board.BoardType.SP)
+            logger.info(
+                f"   --> SB : {sb_board}")
+            done_lane: Lane = sb_board.lanes.get(name__icontains='Done')
+            archive_lane: Lane = ab_board.lanes.get(
+                name__icontains=sprint.create_lane_name())
+            logger.info(
+                f"Move cards from lane {done_lane}\
+                     located in board {sb_board} to lane\
+                     {archive_lane} located in board {ab_board}")
+            # get tasks of Sprint Backlog
+            tasks = Task.objects.filter(
+                lane=done_lane.id,
+                sprint=sprint.id,
+                status=Sprint.SprintStatus.ACCEPTED)
+            task: Task
+            for task in tasks.all():
+                if task.sprint is not None:
+                    logger.info(
+                        f"Moved card {task} \n")
+                    task.lane = archive_lane
                     task.save()
 
 
@@ -117,14 +155,21 @@ def hourly_job():
         "---------------------Executing hourly_job-----------------------")
     logger.info(
         f"Sprints start today: {Sprint.objects.filter(start=date.today()).all()}")
-    set_sprint_in_progress_handler(
-        Sprint.objects.filter(start=date.today()).all())
     logger.info(
         f"Sprints end today: {Sprint.objects.filter(end=date.today()).all()}")
+    logger.info(f"--> set_sprint_in_progress_handler (Sprint Start)")
+    set_sprint_in_progress_handler(
+        Sprint.objects.filter(start=date.today()).all())
+    logger.info(f"--> set_sprint_done_handler (Sprint End)")
     set_sprint_done_handler(Sprint.objects.filter(end=date.today()).all())
+    logger.info(f"--> set_sprint_accepted_handler (Sprint End)")
     set_sprint_accepted_handler(Sprint.objects.filter(end=date.today()).all())
+    logger.info(f"--> move_cards_handler (Sprint Start)")
     move_cards_handler(
         Sprint.objects.filter(start=date.today()).all())
+    logger.info(f"--> move_cards_to_archive_handler (Sprint End)")
+    move_cards_to_archive_handler(
+        Sprint.objects.filter(end=date.today()).all())
 
 
 def delete_old_job_executions(max_age=604_800):
