@@ -115,7 +115,8 @@ def move_cards_to_archive_handler(sprints_today):
     for sprint in sprints_today:
         logger.info(
             f"--> Sprint: {sprint} ends today")
-        if sprint.status == Sprint.SprintStatus.DONE:
+        if (sprint.status == Sprint.SprintStatus.DONE and
+                sprint.status == Sprint.SprintStatus.ACCEPTED):
             # get lane of SB
             logger.info(
                 f"--> Sprint today: {sprint.project.boards}")
@@ -138,7 +139,7 @@ def move_cards_to_archive_handler(sprints_today):
             tasks = Task.objects.filter(
                 lane=done_lane.id,
                 sprint=sprint.id,
-                status=Sprint.SprintStatus.ACCEPTED)
+                status=Task.Status.ACCEPTED)
             task: Task
             for task in tasks.all():
                 if task.sprint is not None:
