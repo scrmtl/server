@@ -23,7 +23,7 @@ class Sprint(RulesModel, IGetProject):
     """Model definition for Sprint."""
 
     def create_lane_name(self):
-        return f'Sprint {self.number}: {self.start}-{self.end}'
+        return f'Sprint {self.number}: {self.start} - {self.end}'
 
     def number_default(self):
         """used to calculate the default for the number of the sprint
