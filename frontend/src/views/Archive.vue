@@ -2,19 +2,19 @@
   <v-row no-gutters>
     <v-col dense class="d-flex flex-nowrap overflow-x-auto">
       <div class="ma-4" v-for="lane in listBoardLanes" :key="lane.numbering">
-        <Lane v-bind:lane="lane"></Lane>
+        <ArchiveLane v-bind:lane="lane"></ArchiveLane>
       </div>
     </v-col>
   </v-row>
 </template>
 
 <script>
-// import ArchiveLane from "@/components/ArchiveLane.vue";
-import Lane from "@/components/Lane.vue";
+import ArchiveLane from "@/components/ArchiveLane.vue";
+// import Lane from "@/components/Lane.vue";
 import { mapGetters } from 'vuex';
 export default {
   components: {
-    Lane
+    ArchiveLane
   },
   computed: {
     ...mapGetters("sprint", {
