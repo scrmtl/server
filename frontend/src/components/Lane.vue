@@ -173,6 +173,7 @@ export default {
       this.$store.commit("selected/showTaskDetail", true);
       var task = {
         name: "",
+        description: "",
         storypoints: 0,
         lane: laneId,
         feature: this.laneFeature[0].id
