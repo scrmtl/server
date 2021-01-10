@@ -10,4 +10,4 @@ This is the main server application based on Node.js, vue.js, vuetify and django
 
 ## Test it out
 
-Our [Live App](https://scrmtl.ddns.net/app) on HerCloud
+Our [Live App](https://scrmtl.ddns.net/app)
