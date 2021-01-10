@@ -4,9 +4,9 @@
 
 Innovative Scrum Management Tool
 
-## light, cool and easy
+## dark, cool and easy
 
-This is the main server application based on Node.js, express.js
+This is the main server application based on Node.js, vue.js, vuetify and django
 
 ## Test it out
 
