@@ -23,12 +23,11 @@
 #    See the documentation for each action used below for the recommended IAM policies for this IAM user,
 #    and best practices on handling the access key credentials.
 
+name: Deployment Pipeline on master Branch
 on:
   push:
     branches:
       - master
-
-name: Deploy to Amazon ECS
 
 jobs:
   deploy:
