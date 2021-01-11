@@ -1,7 +1,7 @@
 # runapscheduler.py
 import logging
 import os
-from datetime import date
+from datetime import date, timedelta
 from django.conf import settings
 
 from asgiref.sync import sync_to_async
@@ -154,23 +154,27 @@ def hourly_job():
     # the old laptop is only online from 8:00-22:00
     logger.info(
         "---------------------Executing hourly_job-----------------------")
+    start_sprints = Sprint.objects.filter(
+        start__date__gte=date.today(),
+        end__date__lte=date.today()).all()
+
+    end_sprints = Sprint.objects.filter(
+        end__date__range=(date.today(), date.today() +
+                          timedelta(days=30))).all()
     logger.info(
-        f"Sprints start today: {Sprint.objects.filter(start=date.today()).all()}")
+        f"Sprints starting: {start_sprints}")
     logger.info(
-        f"Sprints end today: {Sprint.objects.filter(end=date.today()).all()}")
+        f"Sprints ending: {end_sprints}")
     logger.info(f"--> set_sprint_in_progress_handler (Sprint Start)")
-    set_sprint_in_progress_handler(
-        Sprint.objects.filter(start=date.today()).all())
+    set_sprint_in_progress_handler(start_sprints)
     logger.info(f"--> set_sprint_done_handler (Sprint End)")
-    set_sprint_done_handler(Sprint.objects.filter(end=date.today()).all())
+    set_sprint_done_handler(end_sprints)
     logger.info(f"--> set_sprint_accepted_handler (Sprint End)")
-    set_sprint_accepted_handler(Sprint.objects.filter(end=date.today()).all())
+    set_sprint_accepted_handler(end_sprints)
     logger.info(f"--> move_cards_handler (Sprint Start)")
-    move_cards_handler(
-        Sprint.objects.filter(start=date.today()).all())
+    move_cards_handler(start_sprints)
     logger.info(f"--> move_cards_to_archive_handler (Sprint End)")
-    move_cards_to_archive_handler(
-        Sprint.objects.filter(end=date.today()).all())
+    move_cards_to_archive_handler(end_sprints)
 
 
 def delete_old_job_executions(max_age=604_800):
@@ -187,7 +191,7 @@ class Command(BaseCommand):
         '''
         scheduler.add_job(
             my_job,
-            trigger=CronTrigger(second="*/10"),  # Every 10 seconds
+            trigger =CronTrigger(second ="*/10"),  # Every 10 seconds
             id="my_job",  # The `id` assigned to each job MUST be unique
             max_instances=1,
             replace_existing=True,
