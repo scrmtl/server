@@ -27,6 +27,7 @@ const mutations = {
     state.project.visableDetail = true;
     if (withCreate) {
       state.project.visableCreate = true;
+      // Set Default values of nessessary data
       state.project.details = {
         name: "",
         start:"",
@@ -48,6 +49,7 @@ const mutations = {
     state.sprint.visableDetail = true;
     if (withCreate) {
       state.sprint.visableCreate = true;
+      // Set Default values of nessessary data
       state.sprint.details = {
         version: "",
         project: 0,
@@ -74,7 +76,8 @@ const mutations = {
   showTaskDetail(state, withCreate = false) {
     state.task.visableDetail = true;
     if (withCreate) {
-      state.task.visableCreate = withCreate;
+      state.task.visableCreate = true;
+      // Default values are set in lane (createTaskHelper)
     }
   },
 

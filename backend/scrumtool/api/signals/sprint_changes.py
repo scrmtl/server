@@ -9,10 +9,15 @@ from django.dispatch import receiver
 def create_sprint_lane_in_backlog(sender, instance: Sprint, created, **kwargs):
     if (not created) and (instance.status == Sprint.SprintStatus.DONE):
         # Get Archive Board
-        archive_board = instance.project.boards.get(
+        archive_board: Board = instance.project.boards.get(
             board_type=Board.BoardType.AB)
         # create Name
         lane_name = instance.create_lane_name()
+        # if lane exists skip
+        if archive_board.lanes.get(
+                name__icontains=instance.create_lane_name()) is not None:
+            return
+
         # Add new Lane with Sprint Infos to Board
         sprint_lane = Lane(
             board=archive_board,

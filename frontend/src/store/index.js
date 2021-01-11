@@ -156,16 +156,6 @@ export default new Vuex.Store({
   getters: {
     getField,
     
-    getProjectDetails: state => {
-      return state.selectedProject.details;
-    },
-    getSprintDetails: state => {
-      return state.selectedSprint.details;
-    },
-    getTaskDetails: state => {
-      return state.selectedTask.details;
-    },
-
     getToken: state => {
       return state.Userinfo.token;
     },
