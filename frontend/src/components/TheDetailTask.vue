@@ -425,7 +425,7 @@ export default {
     deleteTaskFn() {
       this.deleteDialog = false;
       this.deleteTask({
-        id: this.id + "/",
+        id: this.id,
         customUrlFnArgs: {}
       });
       this.close();
