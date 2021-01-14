@@ -58,11 +58,15 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'corsheaders',
     'rules.apps.AutodiscoverRulesConfig',
-    'api',
     'simple_history',
     'django_filters',
     'django_property_filter',
     'django_apscheduler',
+
+    # Apps
+    'api',
+    'scrmtl_statistics',
+    'planning_poker'
 
 ]
 
