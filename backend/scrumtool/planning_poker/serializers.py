@@ -1,5 +1,6 @@
 """Serializers for
 """
+
 import logging
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
@@ -9,14 +10,17 @@ from planning_poker.models import PokerVoting, PokerVote, Vote
 logger = logging.getLogger(__name__)
 
 
-class PokerVotingSerializer(serializers.ModelSerializer):
+class PokerVotingSerializer(
+        serializers.ModelSerializer):
     """Base-class serializer for cards.
     Other cards will inherits from this class
     """
 
-    def validate(self, data):
-        self.manager_project_member(data)
-        self.voters_project_members(data)
+    def validate(self, attrs):
+        self.date_validator(attrs)
+        self.manager_project_member(attrs)
+        self.voters_project_members(attrs)
+        return attrs
 
     class Meta:
         model = PokerVoting
@@ -35,9 +39,9 @@ class PokerVotingSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('please select a manager')
         if not ('project' in data.keys()):
             raise serializers.ValidationError('please select a project')
-        manager = get_object_or_404(PlatformUser, id=data['manager'])
-        if len(Project.filter(project_users__in=manager.project_users)) > 0:
-            return
+        manager = data['manager']
+        if Project.objects.filter(project_users__in=manager.project_users.all()).count() > 0:
+            return data
         else:
             raise serializers.ValidationError('user not in project')
 
@@ -47,15 +51,29 @@ class PokerVotingSerializer(serializers.ModelSerializer):
                 'please select at least one voter')
         if not ('project' in data.keys()):
             raise serializers.ValidationError('please select a project')
-        for voter_id in data['manager']:
-            voter = get_object_or_404(PlatformUser, id=voter_id)
-            if len(Project.filter(project_users__in=voter.project_users)) > 0:
-                return
-            else:
-                raise serializers.ValidationError('user not in project')
+        for voter in data['voters']:
+            if Project.objects.filter(
+                project_users__in=voter.project_users.all()
+            ).count() == 0:
+                raise serializers.ValidationError(
+                    f'user {voter} not in project')
+        return data
+
+    def date_validator(self, data):
+        """
+        Check that start is before end.
+        """
+        if (not (('start' in data.keys()) and ('end' in data.keys())) or (
+            data['start'] is None or data['end'] is None
+        )):
+            return data
+        if data['start'] > data['end']:
+            raise serializers.ValidationError("end must occur after start")
+        return data
 
 
-class PokerVoteSerializer(serializers.ModelSerializer):
+class PokerVoteSerializer(
+        serializers.ModelSerializer):
     """Base-class serializer for cards.
     Other cards will inherits from this class
     """
@@ -63,6 +81,11 @@ class PokerVoteSerializer(serializers.ModelSerializer):
     avg_storypoints = serializers.SerializerMethodField()
     end_storypoints = serializers.SerializerMethodField()
     act_storypoints = serializers.SerializerMethodField()
+    # Storypoints according to fibonacci sequence
+    available_storypoints = [1, 2, 3, 5, 8, 13, 21, 34, 55]
+
+    def validate(self, attrs):
+        return self.task_unique(attrs)
 
     class Meta:
         model = PokerVote
@@ -74,32 +97,57 @@ class PokerVoteSerializer(serializers.ModelSerializer):
                   'act_storypoints'
                   )
 
-    def get_avg_storypoints(self, obj):
-        return 9999
+    def get_avg_storypoints(self, obj: PokerVote):
+        # get tasks of accepted sprints
+        if obj.votes.count() == 0:
+            return 0
+        storypoints = 0
+        for vote in obj.votes.all():
+            storypoints += vote.storypoints
+        return storypoints / obj.votes.count()
 
-    def get_end_storypoints(self, obj):
-        return 9999
+    def get_end_storypoints(self, obj: PokerVote):
+        if obj.status == PokerVote.PokerStatus.FINISHED:
+            sp = round(self.get_avg_storypoints(obj))
+            return min(self.available_storypoints, key=lambda x: abs(x-sp))
+        else:
+            return 0
 
     def get_act_storypoints(self, obj):
-        return 9999
+        sp = round(self.get_avg_storypoints(obj))
+        return min(self.available_storypoints, key=lambda x: abs(x-sp))
+
+    def task_unique(self, data):
+        # get pokervote for same task
+        same_vote = PokerVote.objects.filter(task=data['task'])
+        if same_vote.exists():
+            raise serializers.ValidationError(
+                f'A vote for task {data["task"]} already exists ' +
+                f'with vote {same_vote.first()}')
+        return data
 
 
-class VoteSerializer(serializers.ModelSerializer):
+class VoteSerializer(
+        serializers.ModelSerializer):
     """Base-class serializer for cards.
     Other cards will inherits from this class
     """
 
-    def validate_user(self, data):
+    def validate(self, data):
         if not ('user' in data.keys()):
             raise serializers.ValidationError('please select a user')
         if not ('poker_vote' in data.keys()):
             raise serializers.ValidationError('please select a poker_vote')
-        manager = get_object_or_404(PlatformUser, id=data['user'])
-        poker_vote = get_object_or_404(PokerVote, id=data['poker_vote'])
-        if len(poker_vote.poker_voting.filter(voters__pk=user)) > 0:
-            return
+        user = data['user']
+        poker_vote = data['poker_vote']
+        poker_voting = PokerVoting.objects.filter(voters=user,
+                                                  id=poker_vote.poker_voting.id
+                                                  )
+        if poker_voting.count() > 0:
+            return data
         else:
-            raise serializers.ValidationError('user not in project')
+            raise serializers.ValidationError(f'User {user} is not member ' +
+                                              f'of PokerVoting {poker_voting}')
 
     class Meta:
         model = Vote

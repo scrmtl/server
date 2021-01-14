@@ -6,10 +6,10 @@ from rest_framework.request import Request
 from planning_poker import serializers
 from planning_poker import models
 
+from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
-class PokerVotingViewSet(mixins.ListModelMixin,
-                         mixins.RetrieveModelMixin,
-                         viewsets.GenericViewSet):
+
+class PokerVotingViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """
     A viewset that provides information about the requested PokerVoting
     """
@@ -17,9 +17,7 @@ class PokerVotingViewSet(mixins.ListModelMixin,
     queryset = models.PokerVoting.objects.all()
 
 
-class PokerVoteViewSet(mixins.ListModelMixin,
-                       mixins.RetrieveModelMixin,
-                       viewsets.GenericViewSet):
+class PokerVoteViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """
     A viewset that provides information about the requested PokerVote
     """
@@ -27,9 +25,7 @@ class PokerVoteViewSet(mixins.ListModelMixin,
     queryset = models.PokerVote.objects.all()
 
 
-class VoteViewSet(mixins.ListModelMixin,
-                  mixins.RetrieveModelMixin,
-                  viewsets.GenericViewSet):
+class VoteViewSet(AutoPermissionViewSetMixin, viewsets.ModelViewSet):
     """
     A viewset that provides information about the requested Vote
     """
