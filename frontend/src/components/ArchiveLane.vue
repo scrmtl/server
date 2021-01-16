@@ -1,11 +1,12 @@
 <template>
   <v-card min-width="385" max-width="420">
     <v-card-title class="blue-grey darken-2 white--text">
-      {{sprintName}}
+      {{laneName}}
       <v-spacer></v-spacer>
       <v-btn 
         dark 
         icon
+        disabled
         class="icon" 
         height="32"
         @click="showSprintDetails()"
@@ -14,7 +15,7 @@
       </v-btn>
     </v-card-title>
     <v-card-subtitle class="blue-grey darken-2 white--text">
-        {{ sprintMetaData }}
+        {{ laneMetaData }}
     </v-card-subtitle>
     <v-card-text 
       class="blue-grey darken-2 flex-column" 
@@ -37,20 +38,25 @@ export default {
     Task
   },
   props: {
-    sprint: {},
+    lane: {},
   },
   computed:{
     ...mapGetters("task", {
       tasksByIdArray: "byIdArray"
     }),
-    sprintName(){
-      return "Sprint " + this.sprint.number;
+    ...mapGetters("sprint", {
+      sprintById: "byId"
+    }),
+    laneName(){
+      var endIndex = this.lane.name.indexOf(":",0);
+      return this.lane.name.substring(0, endIndex);
     },
-    sprintMetaData(){
-      return "(" + this.sprint.start + " to " + this.sprint.end + ")";
+    laneMetaData(){
+      var startIndex = this.lane.name.indexOf(":",0);
+      return this.lane.name.substring(startIndex + 1, this.lane.name.length);
     },
     laneTask(){
-      return this.tasksByIdArray(this.sprint.task_cards);
+      return this.tasksByIdArray(this.lane.task_cards);
     }
 
   },

@@ -28,6 +28,7 @@ from rest_framework_nested import routers
 
 from api import views
 from scrmtl_statistics import views as statistic_views
+from planning_poker import views as planning_poker_views
 
 router = routers.SimpleRouter()
 
@@ -50,6 +51,10 @@ router.register(r'users', views.PlatformUserViewSet)
 
 router.register(r'sprint_statistics', statistic_views.SprintStatisticViewSet)
 router.register(r'project_statistics', statistic_views.ProjectStatisticViewSet)
+
+router.register(r'poker_votings', planning_poker_views.PokerVotingViewSet)
+router.register(r'poker_votes', planning_poker_views.PokerVoteViewSet)
+router.register(r'votes', planning_poker_views.VoteViewSet)
 
 # OAuth2 provider endpoints
 oauth2_endpoint_views = [

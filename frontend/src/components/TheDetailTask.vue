@@ -54,7 +54,6 @@
                         <v-textarea
                           label="Description"
                           prepend-icon="mdi-information-outline"
-                          required
                           outlined
                           :readonly="status === 'DO' || status === 'AC' || readOnly"
                           class="ma-1"
@@ -264,17 +263,17 @@
     >
       <v-card color="tabbody" shaped>
         <v-card-text class="headline pt-10">
-          <span class="ml-12">Möchten Sie den Task wirklich löschen?</span>
+          <span class="ml-12">Do you want delete the task?</span>
         </v-card-text>
         <v-card-actions class="ml-10 pb-10 pt-10">
           <v-btn width="250" outlined color="error" @click="deleteTaskFn"
-            >Ja</v-btn
+            >Yes</v-btn
           >
           <v-btn
             width="250"
             outlined
             @click="deleteDialog = false"
-            >Nein</v-btn
+            >No</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -347,6 +346,7 @@ export default {
     },
 
     addTask() {
+      // all new task get status "NW"
       this.createTask({
         data: {
           name: this.name,
@@ -376,7 +376,7 @@ export default {
     },
 
     saveTask() {
-      
+      // default data
       var data = {
         name: this.name,
         feature: this.feature,
@@ -401,7 +401,7 @@ export default {
         data.sprint = this.sprint;
         data.labels = this.labels;
       }
-
+      // Update after changes
       this.updateTask({
         id: this.id,
         data,
@@ -425,7 +425,7 @@ export default {
     deleteTaskFn() {
       this.deleteDialog = false;
       this.deleteTask({
-        id: this.id + "/",
+        id: this.id,
         customUrlFnArgs: {}
       });
       this.close();
