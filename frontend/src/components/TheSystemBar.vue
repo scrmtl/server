@@ -25,7 +25,7 @@
           {{ userinfos.username }}
         </v-btn>
 
-        <v-btn class="mt-n3" icon @click="logout()">
+        <v-btn class="mt-n3" icon @click="logoutDialog = true">
           <v-tooltip bottom color="link">
             <template v-slot:activator="{ on, attrs }">
               <v-icon
@@ -46,6 +46,31 @@
         </v-tabs>
       </v-row>
     </v-container>
+    <!-- Delete Dialog -->
+    <v-dialog
+      v-model="logoutDialog"
+      persistent
+      class="mx-auto"
+      width="600"
+      dark
+    >
+      <v-card color="tabbody" shaped>
+        <v-card-text class="headline pt-10">
+          <span class="ml-12">Do you realy want to logout?</span>
+        </v-card-text>
+        <v-card-actions class="ml-10 pb-10 pt-10">
+          <v-btn width="250" outlined color="error" @click="logout()"
+            >Yes</v-btn
+          >
+          <v-btn
+            width="250"
+            outlined
+            @click="logoutDialog = false"
+            >No</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app-bar>
 </template>
 
@@ -58,7 +83,8 @@ export default {
   name: "TheSystemBar",
   data() {
     return {
-      activeTab: `/project/${this.$route.params.id}`
+      activeTab: `/project/${this.$route.params.id}`,
+      logoutDialog: false,
     } 
   },
   components: {
