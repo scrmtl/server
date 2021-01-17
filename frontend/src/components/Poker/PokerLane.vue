@@ -228,8 +228,7 @@ export default {
                 status: "NS"
               }
             }).catch((error)=>{
-              console.log(error);
-              console.log(pokerVotingId);
+              // Delete PokerVoting, if get errors to create pokerVotes
               this.deleteAsyncPokerVoting({id: pokerVotingId})
               this.$store.commit("showSystemAlert", {
                 message: "Async planning poker with one of those cards already exist." + error.data.non_field_errors[0],
