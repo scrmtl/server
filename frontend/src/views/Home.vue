@@ -10,7 +10,7 @@
         </div>
         <div class="projectBtn my-n1">
           <v-switch
-            v-if="this.groupId !== 1"
+            v-if="groupIds[0] !== 1"
             color="link"
             inset
             dark
@@ -42,8 +42,8 @@
 <script>
 import ProjectCard from "@/components/ProjectCard.vue";
 import MyTasksLane from "@/components/Lanes/MyTasksLane.vue";
-import { mapGetters, mapActions, mapState } from "vuex";
-//import scrmtlServices from '@/services/scrmtlServices.js'
+import { mapGetters, mapActions } from "vuex";
+import { mapFields } from "vuex-map-fields";
 
 export default {
   data: () => ({
@@ -53,17 +53,12 @@ export default {
     drawer: false,
     tab: null,
     localProject: {},
-    groupId: 0,
-    userId: {},
     showAllProjects: false,
   }),
   components: {
     ProjectCard,
     MyTasksLane,
   },
-
-  
-
   methods: {
     ...mapActions("project", {
       fetchProjects: "fetchList",
@@ -88,29 +83,7 @@ export default {
       //Load User Groups
       this.fetchGroups();
       this.fetchUsers();
-      this.fetchSession({ customUrlFnArgs: { all: false } });
       this.fetchSprints({ customUrlFnArgs: {} })
-    },
-
-    GetSessionIds() {
-      this.groupId = -1;
-      this.userId = -1;
-      this.fetchSession({
-        id: null,
-        customUrlFnArgs: { all: false },
-      })
-        .then(() => {
-          //get groupId
-          var session = Object.values(this.listSession)[0];
-          this.groupId = session.groups[0];
-          this.userId = session.id;
-        })
-        .catch(() => {
-          if (this.groupId <= 0) {
-            this.groupId = 0;
-            this.userId = 0;
-          }
-        });
     },
 
     showCreateProject() {
@@ -150,34 +123,19 @@ export default {
     },
   },
   computed: {
-    ...mapState({
-      project: "detailProject",
+    ...mapFields({
+      userId: "Userinfo.userId",
+      groupIds: "Userinfo.groups"
     }),
     ...mapGetters("project", {
       listProjects: "list" }),
-    ...mapGetters("session", {
-      listSession: "list",
-    }),
     ...mapGetters("user", {
       projectUsersByUserId: "byUserId",
     }),
-    ...mapGetters("group", {
-      groupById: "byId",
-    }),
-    ...mapGetters({ userinfos: "getUserinfo" }),
-
-    getGroupId: function () {
-      if (this.groupId === 0) {
-        this.GetSessionIds();
-      }
-      return this.groupId;
-    },
-
-    
-
+  
     sortedProjects(){
       // show all project if you admin or you set it via switch
-      if(this.showAllProjects || this.groupId === 1){
+      if(this.showAllProjects || this.groupIds[0] === 1){
         return this.orderProjects(this.listProjects);
       }
       // show only your own projects
@@ -197,12 +155,10 @@ export default {
 
   mounted() {
     this.loadData();
-    this.GetSessionIds();
   },
 
   created() {
     this.loadData();
-    this.GetSessionIds();
   },
 
 };
