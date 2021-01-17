@@ -6,7 +6,7 @@
     <v-card-subtitle class="white--text">
       Summary
     </v-card-subtitle>
-    <v-card-text>
+    <v-card-text class="overflow-y-auto" style="height: calc(100vh - 365px)">
       <v-row align="center">
         <v-col cols="auto">
           <v-progress-circular
@@ -55,21 +55,23 @@
           ></v-text-field>
         </v-col>
       </v-row>
+      <v-row>
+        <v-list class="transparent overflow-y-auto" style="max-height: calc(75vh - 225px)">
+          <v-list-item
+            v-for="player in players"
+            :key="player.name"
+          >
+            <v-list-item-icon >
+              <v-icon :color="player.color">mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title :class="`${player.color}--text`">{{ player.name }}</v-list-item-title>
+            <v-list-item-subtitle :class="`${player.color}--text text-right` ">
+              {{ player.storypoints }}
+            </v-list-item-subtitle>
+          </v-list-item>
+        </v-list>
+      </v-row>
     </v-card-text>
-    <v-list class="transparent">
-      <v-list-item
-        v-for="player in players"
-        :key="player.name"
-      >
-        <v-list-item-icon >
-          <v-icon :color="player.color">mdi-account</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title :class="`${player.color}--text`">{{ player.name }}</v-list-item-title>
-        <v-list-item-subtitle :class="`${player.color}--text text-right` ">
-          {{ player.storypoints }}
-        </v-list-item-subtitle>
-      </v-list-item>
-    </v-list>
     <v-divider></v-divider>
     <v-card-actions>
       <v-btn outlined color="link">Next</v-btn>
