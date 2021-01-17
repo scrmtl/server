@@ -56,7 +56,7 @@
     >
       <v-card color="tabbody" shaped>
         <v-card-text class="headline pt-10">
-          <span class="ml-12">Do you realy want to logout?</span>
+          <span class="ml-12">Do you really want to logout?</span>
         </v-card-text>
         <v-card-actions class="ml-10 pb-10 pt-10">
           <v-btn width="250" outlined color="error" @click="logout()"

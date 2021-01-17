@@ -636,11 +636,11 @@ export default {
   updated() {
     if(this.id != this.id_save){
       this.id_save = this.id;
-      this.tab = 'first';
+      this.tab = "first";
     }
   }, 
   mounted(){
-    this.tab = 'first';
+    this.tab = "first";
   }
 };
 </script>
