@@ -191,16 +191,17 @@ export default {
     showTaskDetail() {
       this.$store.commit("selected/setTaskDetail", this.task);
       if(this.$route.path.endsWith("Archive")){
-        this.$store.commit("selected/showTaskDetailWithReadOnly", false);
+        this.$store.commit("selected/showTaskDetailWithReadOnly");
       }
       else if(this.$route.path.endsWith("ProductBacklog") && !this.allowedChanges){
         this.$store.commit("showSystemAlert", {
           message: "You are not a PO. Read only access in Product backlog",
           category: "warning"
         });
-        this.$store.commit("selected/showTaskDetailWithReadOnly", false);
+        this.$store.commit("selected/showTaskDetailWithReadOnly");
       }
       else{
+        // open without create dialog
         this.$store.commit("selected/showTaskDetail", false);
       }
     },
