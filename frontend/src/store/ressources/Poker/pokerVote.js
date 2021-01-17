@@ -13,4 +13,15 @@ export default createCrudModule({
     // Follow getters are generated:
     // list 
     // byId(id)
+    getters: {
+        byPokerVotingId: (state) => {
+            return function(pokerVotingId){
+                var pokerVotes = null;
+                if(state.entities !== undefined){
+                    pokerVotes = state.list.map(id => state.entities[id.toString()]).filter(pokerVote => pokerVote.poker_voting === pokerVotingId);
+                }
+                return pokerVotes;
+            }
+        }
+    }
 });
