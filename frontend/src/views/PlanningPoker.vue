@@ -1,9 +1,9 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <v-col cols="1">
+      <v-col lg="1"  class="hidden-md-and-down">
       </v-col>
-      <v-col cols="6">
+      <v-col lg="6" md="7" sm="12">
         <v-row justify="center">
         <span class="text-h5 white--text">Project x</span>
         </v-row>
@@ -76,10 +76,10 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="4">
-        <PokerSummary/>
+      <v-col lg="4" md="5" class="hidden-sm-and-down">
+        <PokerSummary class="hidden-sm-and-down"/>
       </v-col>
-      <v-col cols="1">
+      <v-col lg="1"  class="hidden-md-and-down">
       </v-col>
     </v-row>
   </v-container>
@@ -87,6 +87,7 @@
 
 <script>
 import PokerSummary from "@/components/Poker/PokerSummary.vue"
+import { mapGetters } from "vuex";
 export default {
   components: { PokerSummary },
   name: "PlanningPoker",
@@ -94,6 +95,26 @@ export default {
     storypoints: 0,
     availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
   }),
+  computed:{
+    ...mapGetters("pokerVoting", {
+      listPokerVotings: "list",
+      pokerVotingById: "byId"
+    }),
+    ...mapGetters("pokerVote", {
+      listPokerVotes: "list",
+      pokerVoteById: "byId"
+    }),
+    ...mapGetters("vote", {
+      listVotes: "list",
+      voteById: "byId"
+    }),
+  },
+  methods:{
+
+  },
+  mounted(){
+
+  }
 }
 </script>
 
