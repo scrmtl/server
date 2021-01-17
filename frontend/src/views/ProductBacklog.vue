@@ -10,7 +10,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Lane from "@/components/Lane.vue";
+import Lane from "@/components/Lanes/Lane.vue";
 export default {
   data: () => ({
     // boardLanes: Array

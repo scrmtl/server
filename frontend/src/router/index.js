@@ -13,15 +13,6 @@ import Project from "../views/Project.vue";
 import ProjectDashboard from "../views/ProjectDashboard";
 import PlanningPoker from "../views/PlanningPoker";
 
-import Lane from "@/components/Lane.vue";
-import Epic from "@/components/Epic.vue";
-import Feature from "@/components/Feature.vue";
-import Task from "@/components/Task.vue";
-//import { component } from "vue/types/umd";
-
-
-
-
 
 
 Vue.use(VueRouter);
@@ -79,27 +70,7 @@ const routes = [
     path: "/poker",
     name: "PlanningPoker",
     component: PlanningPoker
-  },
-  {
-    path: "/Lane",
-    name: "Lane",
-    component: Lane
-  },
-  {
-    path: "/Epic",
-    name: "Epic",
-    component: Epic
-  },
-  {
-    path: "/Feature",
-    name: "Feature",
-    component: Feature
-  },
-  {
-    path: "/Task",
-    name: "Task",
-    component: Task
-  },
+  }
 ];
 
 const router = new VueRouter({

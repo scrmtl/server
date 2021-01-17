@@ -28,7 +28,7 @@
 import SystemBar from "@/components/TheSystemBar.vue";
 import DetailProject from "@/components/TheDetailProject.vue";
 import DetailTask from "@/components/TheDetailTask.vue";
-import DetailSprint from "@/components/Sprint/TheDetailSprint.vue";
+import DetailSprint from "@/components/TheDetailSprint.vue";
 import TheNavigation from "@/components/TheNavigation.vue";
 import SystemAlert from "@/components/SystemAlert.vue";
 export default {

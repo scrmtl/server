@@ -518,5 +518,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
-  @import "../../main.css";
+  @import "../main.css";
 </style>

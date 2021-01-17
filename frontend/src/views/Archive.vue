@@ -9,8 +9,7 @@
 </template>
 
 <script>
-import ArchiveLane from "@/components/ArchiveLane.vue";
-// import Lane from "@/components/Lane.vue";
+import ArchiveLane from "@/components/Lanes/ArchiveLane.vue";
 import { mapGetters } from 'vuex';
 export default {
   components: {

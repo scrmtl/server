@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import PokerSummary from '../components/Sprint/PokerSummary.vue'
+import PokerSummary from "@/components/Poker/PokerSummary.vue"
 export default {
   components: { PokerSummary },
   name: "PlanningPoker",

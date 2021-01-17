@@ -1,12 +1,15 @@
 <template>
-  <v-row justify="center" >
+  <v-row justify="center">
     <v-col class="d-flex flex-nowrap overflow-x-auto">
-      <div class="ma-4" v-for="lane in neededPlanningLanes" :key="lane.numbering">
+      <div
+        class="ma-4"
+        v-for="lane in neededPlanningLanes"
+        :key="lane.numbering"
+      >
         <Lane v-bind:lane="lane" planningMode allowedAdd></Lane>
       </div>
       <div class="ma-4">
         <PokerLane />
-        
       </div>
       <div class="ma-4">
         <SprintLane />
@@ -39,15 +42,15 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Lane from "@/components/Lane.vue";
-import SprintLane from "@/components/Sprint/SprintLane.vue";
-import PokerLane from "@/components/Sprint/PokerLane.vue";
+import Lane from "@/components/Lanes/Lane.vue";
+import SprintLane from "@/components/Lanes/SprintLane.vue";
+import PokerLane from "@/components/Poker/PokerLane.vue";
 export default {
-  name:"SprintPlanningView",
+  name: "SprintPlanningView",
   components: {
     Lane,
     SprintLane,
-    PokerLane,
+    PokerLane
   },
   methods: {
     showSprint(sprint) {
@@ -58,7 +61,7 @@ export default {
       var format = {
         color: "link",
         text: "white"
-      }
+      };
       switch (sprint.status) {
         // In Planning
         case "IL":
@@ -87,17 +90,17 @@ export default {
           break;
       }
       return format;
-    },
+    }
   },
   computed: {
     ...mapGetters("task", {
-      tasksByIdArray: "byIdArray",
+      tasksByIdArray: "byIdArray"
     }),
     ...mapGetters("lane", {
-      laneByName: "byName",
+      laneByName: "byName"
     }),
     ...mapGetters("sprint", {
-      listSprints: "list",
+      listSprints: "list"
     }),
 
     neededPlanningLanes() {
@@ -113,7 +116,7 @@ export default {
 
     sortedSprintList() {
       var list = this.listSprints;
-      var sorted = list.sort(function (a, b) {
+      var sorted = list.sort(function(a, b) {
         var keyA = a.number;
         var keyB = b.number;
         // Vergleiche ob AC oder AR
@@ -122,8 +125,8 @@ export default {
         return 0;
       });
       return sorted;
-    },
-  },
+    }
+  }
 };
 </script>
 

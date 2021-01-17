@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Lane from "@/components/Lane.vue";
+import Lane from "@/components/Lanes/Lane.vue";
 import { mapGetters } from "vuex";
 export default {
   data: () => ({
