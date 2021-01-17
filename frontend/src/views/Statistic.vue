@@ -191,7 +191,6 @@ export default {
         //Setzten des Graph-Titels
         this.selectedSprint = sprint;
         this.selectedSprintStatistic = stats;
-        console.log(this.selectedSprint)
         this.plotTitle = "Burn-Down chart Sprint " + sprint.number;
         this.infoTitle = "Summary Sprint " + sprint.number;
         //Zuweisen der einzelnen Werte zu den Anzeigevariablen

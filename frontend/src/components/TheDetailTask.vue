@@ -20,7 +20,7 @@
           grow
           tile
         >
-          <v-tab>Details</v-tab>
+          <v-tab key='first'>Details</v-tab>
           <v-tab :disabled="visableCreate">Steps</v-tab>
         </v-tabs>
         <!-- Details Tab -->
@@ -296,6 +296,7 @@ export default {
     deleteDialog: false,
     assignedUserDialog: false,
     isFormValid: null,
+    id_save: null,
     taskNameRules: [
       v => !!v || "Name is required",
       v => (v && v.length <= 50) || "Name must be less than 50 characters"
@@ -633,7 +634,13 @@ export default {
   },
 
   updated() {
-    
+    if(this.id != this.id_save){
+      this.id_save = this.id;
+      this.tab = 'first';
+    }
+  }, 
+  mounted(){
+    this.tab = 'first';
   }
 };
 </script>
