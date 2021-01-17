@@ -225,7 +225,7 @@ export default {
               data:{
                 poker_voting: pokerVotingId,
                 task: card.cardId,
-                status: "NS"
+                status: "WAIT"
               }
             }).catch((error)=>{
               // Delete PokerVoting, if get errors to create pokerVotes
