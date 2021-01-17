@@ -6,37 +6,40 @@ import createPersistedState from "vuex-persistedstate";
 // mutation function from the `vuex-map-fields` module.
 import { getField, updateField } from "vuex-map-fields";
 
-import board from '@/store/ressources/board';
-import epic from '@/store/ressources/epic';
-import feature from '@/store/ressources/feature';
-import label from '@/store/ressources/label';
-import lane from '@/store/ressources/lane';
-import projectUser from '@/store/ressources/projectUser';
-import sprint from '@/store/ressources/sprint';
-import steplist from '@/store/ressources/steplist';
-import step from '@/store/ressources/step';
-import task from '@/store/ressources/task';
-import user from '@/store/ressources/user';
-import project from '@/store/ressources/project';
-import session from '@/store/ressources/session';
-import projectRole from '@/store/ressources/projectRole';
-import registration from '@/store/ressources/registration';
-import group from '@/store/ressources/group';
-import selected from '@/store/ressources/selected';
-import poker from '@/store/ressources/poker';
-import sprintStatistics from '@/store/ressources/sprintStatistics';
-import projectStatistics from '@/store/ressources/projectStatistics';
+import board from "@/store/ressources/board";
+import epic from "@/store/ressources/epic";
+import feature from "@/store/ressources/feature";
+import label from "@/store/ressources/label";
+import lane from "@/store/ressources/lane";
+import projectUser from "@/store/ressources/projectUser";
+import sprint from "@/store/ressources/sprint";
+import steplist from "@/store/ressources/steplist";
+import step from "@/store/ressources/step";
+import task from "@/store/ressources/task";
+import user from "@/store/ressources/user";
+import project from "@/store/ressources/project";
+import session from "@/store/ressources/session";
+import projectRole from "@/store/ressources/projectRole";
+import registration from "@/store/ressources/registration";
+import group from "@/store/ressources/group";
+import selected from "@/store/ressources/selected";
+import pokerVote from "@/store/ressources/Poker/pokerVote";
+import pokerVoting from "@/store/ressources/Poker/pokerVoting";
+import vote from "@/store/ressources/Poker/vote";
+import poker from "@/store/ressources/poker"; // Legacy
+import sprintStatistics from "@/store/ressources/sprintStatistics";
+import projectStatistics from "@/store/ressources/projectStatistics";
 
 Vue.use(Vuex, Axios);
 
 const baseUrlDefault = "https://scrmtl.ddns.net";
 //const baseUrlDefault = "http://192.168.178.48:14444";
-Axios.defaults.baseURL = process.env.VUE_APP_BASE_URL || baseUrlDefault
+Axios.defaults.baseURL = process.env.VUE_APP_BASE_URL || baseUrlDefault;
 
 export default new Vuex.Store({
-  // for debugging 
-  // later something like this even better 
-  // strict: eprocess.env.NODE_ENV !== 'production'
+  // for debugging
+  // later something like this even better
+  // strict: eprocess.env.NODE_ENV !== "production"
   strict: true,
   plugins: [createPersistedState()],
   // States
@@ -44,8 +47,12 @@ export default new Vuex.Store({
     Userinfo: {
       status: "",
       username: "",
-      token: localStorage.getItem('token') || '',
-      refreshToken: localStorage.getItem('refreshToken') || '',
+      userId: "",
+      name: "",
+      email: "",
+      groups: [],
+      token: localStorage.getItem("token") || "",
+      refreshToken: localStorage.getItem("refreshToken") || ""
     },
 
     systemAlert: {
@@ -54,17 +61,16 @@ export default new Vuex.Store({
       category: "info"
     },
 
-    navigation:{
+    navigation: {
       visable: false
-    },
+    }
   },
   // call REST API (async)
   // Use from the components
   actions: {
-
-    login({ commit }, credentials) {
+    login({ commit, dispatch }, credentials) {
       return new Promise((resolve, reject) => {
-        commit('AUTH_REQUEST');
+        commit("AUTH_REQUEST");
         Axios({
           method: "post",
           url: "o/token/",
@@ -74,31 +80,37 @@ export default new Vuex.Store({
           },
           data:
             "grant_type=password&username=" + credentials.username + "&password=" + credentials.password + "&scope=write"
-        })
+        }
+        )
           .then(resp => {
             const token = resp.data.access_token;
             const refreshToken = resp.data.refresh_token;
-            const user = credentials.username;
-            localStorage.setItem('token', token);
-            localStorage.setItem('refreshToken', refreshToken);
-            Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            commit('AUTH_SUCCESS', { token, refreshToken, user });
+            // const user = credentials.username;
+            localStorage.setItem("token", token);
+            localStorage.setItem("refreshToken", refreshToken);
+            Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+            dispatch("session/fetchList", {id: null, customUrlFnArgs: { all: false }})
+            .then((res)=>{
+              var session = Object.values(res.data)[0];
+              commit("AUTH_SUCCESS", { token: token, refreshToken: refreshToken, user: session.username, id: session.id, name: session.name, email: session.email, groups: session.groups });
+            })
+            
             resolve(resp);
           })
           .catch(err => {
-            commit('AUTH_ERROR');
-            localStorage.removeItem('token');
-            localStorage.removeItem('refreshToken');
+            commit("AUTH_ERROR");
+            localStorage.removeItem("token");
+            localStorage.removeItem("refreshToken");
             reject(err);
           })
       })
     },
     logout({ commit }) {
       return new Promise((resolve) => {
-        commit('LOGOUT');
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        delete Axios.defaults.headers.common['Authorization'];
+        commit("LOGOUT");
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+        delete Axios.defaults.headers.common["Authorization"];
         resolve();
       })
     }
@@ -119,7 +131,7 @@ export default new Vuex.Store({
     showSystemAlert(state, {message, category="info"}) {
       state.systemAlert.visible = true;
       if(message.length > 100){
-        state.systemAlert.message = message.slice(0,97) + "...";
+        state.systemAlert.message = message;
       }
       else{
         state.systemAlert.message = message;
@@ -136,11 +148,19 @@ export default new Vuex.Store({
     AUTH_REQUEST(state) {
       state.Userinfo.status = "loading";
     },
-    AUTH_SUCCESS(state, { token, refreshToken, user }) {
+    AUTH_SUCCESS(state, { token, refreshToken, user, id, email, name, groups }) {
+      // this.fetchSession({
+      //   id: null,
+      //   customUrlFnArgs: { all: false },
+      // })
       state.Userinfo.status = "success";
       state.Userinfo.token = token;
       state.Userinfo.refreshToken = refreshToken;
       state.Userinfo.username = user;
+      state.Userinfo.userId = id;
+      state.Userinfo.name = name;
+      state.Userinfo.email = email;
+      state.Userinfo.groups = groups;
     },
     AUTH_ERROR(state) {
       state.Userinfo.status = "error";
@@ -150,6 +170,10 @@ export default new Vuex.Store({
       state.Userinfo.token = "";
       state.Userinfo.refreshToken = "";
       state.Userinfo.username = "";
+      state.Userinfo.userId = "";
+      state.Userinfo.name = "";
+      state.Userinfo.email = "";
+      state.Userinfo.groups = [];
     },
 
   },
@@ -193,7 +217,10 @@ export default new Vuex.Store({
     selected,
     sprintStatistics,
     projectStatistics,
-    poker
+    poker,
+    vote,
+    pokerVote,
+    pokerVoting
   }
 });
 

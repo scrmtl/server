@@ -19,7 +19,6 @@ export default createCrudModule({
      * @return {string} Url defined by the arguments
      */
     customUrlFn(id, type, { all = false }) {
-
         // type is the actions you are dispatching: FETCH_LIST, FETCH_SINGLE, CREATE, UPDATE, REPLACE, DESTROY
         var rootUrl = '';
         if (all) {
@@ -27,7 +26,6 @@ export default createCrudModule({
         } else {
             rootUrl = `/api/users/?session=self`;
         }
-        
         return rootUrl;  
     }
 });

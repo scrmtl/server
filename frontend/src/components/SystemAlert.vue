@@ -2,7 +2,7 @@
   <v-snackbar
     app
     :value="systemAlert.visible"  
-    :timeout="3000"
+    :timeout="5000"
     left
     multi-line
     :color="StatusColor"
