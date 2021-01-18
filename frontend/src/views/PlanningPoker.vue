@@ -5,7 +5,7 @@
       </v-col>
       <v-col lg="6" md="7" sm="12">
         <v-list class="transparent overflow-y-auto" style="max-height: calc(100vh - 225px)">
-        <v-list-item v-for="pokerVoting in listPokerVotings" :key="pokerVoting.id">
+        <v-list-item v-for="pokerVoting in listPokerVotings(userId)" :key="pokerVoting.id">
           <v-list-item-content>
           <v-row justify="center">
           <span class="text-h5 white--text">{{projectName(pokerVoting.project)}}</span>
@@ -21,32 +21,18 @@
                 :key="pokerVote.id"
                 class="primary"
               > 
-                <v-expansion-panel-header v-slot="{ open }">
+                <v-expansion-panel-header disable-icon-rotate>
                   <v-row no-gutters>
-                    <v-col cols="4">
+                    <v-col cols="11">
                       {{taskName(pokerVote.task)}}
                     </v-col>
-                    <v-col
-                      cols="8"
-                      class="text--secondary"
-                    >
-                      <v-fade-transition leave-absolute>
-                        <span v-if="open && (pokerVote.status === 'NS'|| pokerVote.status === 'WAIT')">Please Vote!!!</span>
-                        <span v-else-if="open && (pokerVote.status === 'SKIP')">Skipped</span>
-                        <span v-else-if="open && (pokerVote.status === 'FIN')">Voted</span>
-                        <v-row 
-                          v-else
-                          no-gutters
-                          style="width: 100%"
-                        >
-                          <v-col cols="6">
-                            Status: {{ GetPokerNamedStatus(pokerVote.status) }}
-                          </v-col>
-                          <v-col cols="6">
-                            Your Vote: {{ currentStorypointVote() || 'Not set' }}
-                          </v-col>
-                        </v-row>
-                      </v-fade-transition>
+                    <v-col cols="1">
+                       <v-icon v-if="pokerVote.status === 'SKIP' || pokerVote.status === 'FIN'" color="teal">
+                        mdi-check
+                      </v-icon>
+                      <v-icon v-else color="error">
+                        mdi-alert-circle-outline
+                      </v-icon>
                     </v-col>
                   </v-row>
                 </v-expansion-panel-header>
@@ -71,7 +57,7 @@
                         <v-row >
                           <v-col>
                             <v-autocomplete
-                              v-model="storypoints"
+                              v-model="selectedStorypoints"
                               :items="availableStorypoints"
                               outlined
                               dense
@@ -88,7 +74,7 @@
                               color="white"
                               @click="skipVote(pokerVote.id)"
                             >
-                              Enthalten
+                              Skip
                             </v-btn>
                           </v-col>
                         </v-row>
@@ -100,7 +86,7 @@
                               color="link"
                               @click="sendVote(pokerVote.id)"
                             >
-                              Abgeben
+                              Send vote
                             </v-btn>
                           </v-col>
                         </v-row>
@@ -111,7 +97,6 @@
               </v-expansion-panels>
             </v-col>
           </v-row>
-          <v-divider dark></v-divider>
           </v-list-item-content>
         </v-list-item>
         </v-list>
@@ -127,19 +112,23 @@
 
 <script>
 import PokerSummary from "@/components/Poker/PokerSummary.vue";
-import statusMaxin from "@/mixins/statusMixin"
+import statusMaxin from "@/mixins/statusMixin";
+import { mapFields } from "vuex-map-fields";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "PlanningPoker",
   components: { PokerSummary },
   mixins: [statusMaxin],
   data: () => ({
-    storypoints: 0,
+    selectedStorypoints: 0,
     availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
   }),
   computed:{
+    ...mapFields([
+      "Userinfo.userId"
+    ]),
     ...mapGetters("pokerVoting", {
-      listPokerVotings: "list",
+      listPokerVotings: "byVoterId",
       pokerVotingById: "byId"
     }),
     ...mapGetters("pokerVote", {
@@ -191,14 +180,38 @@ export default {
     },
     skipVote(pokerVoteId){
       console.log(pokerVoteId)
-      // this.createUserVote({
-      //   data:{
-
-      //   }
-      // })
+      this.createUserVote({
+        data:{
+          poker_vote: pokerVoteId,
+          user: this.userId,
+          storypoints: 0
+        }
+      })
+      .then((res)=> {
+        this.fetchSinglePokerVote({id: pokerVoteId})
+        this.fetchSingleUserVote({id: res.data.id})
+      })
     },
     sendVote(pokerVoteId){
-      console.log(pokerVoteId)
+      if(this.selectedStorypoints){
+        this.createUserVote({
+          data:{
+            poker_vote: pokerVoteId,
+            user: this.userId,
+            storypoints: this.selectedStorypoints
+          }
+        })
+        .then((res)=> {
+          this.fetchSinglePokerVote({id: pokerVoteId});
+          this.fetchSingleUserVote({id: res.data.id});
+        })
+      }
+      else{
+        this.$store.commit("showSystemAlert", {
+        message: "Storypoint can't be zero. May you want to skip the vote",
+        category: "warning"
+        });
+      }
     }
   },
   mounted(){
