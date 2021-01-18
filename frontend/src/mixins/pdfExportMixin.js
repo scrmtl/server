@@ -41,16 +41,28 @@ export default {
         headStyles: { fillColor: "#6441A4" },
       })
 
+      //Summary als Tabelle
       doc.autoTable({
         startY: doc.lastAutoTable.finalY + 20,
         head: [['Summary', ' ']],
         body: this.GetSummary(sprint),
         headStyles: { fillColor: "#6441A4" },
       })
+      
+      //zweite Seite Hinzufügen
+      doc.addPage();
 
-      doc.setFontSize(12).text("Sprint Details", 10, finalY = doc.lastAutoTable.finalY + 20);
+      //nochmal den Header
+      doc.setFontSize(16).text("Report Sprint " + sprint.number, 10, 20);
+      doc.setFontSize(7).text("Created on " + today, 175, 23);
+      // create a line under heading 
+      doc.setLineWidth(0.01).line(10, 25, 200, 25);
+
+
+      //Sprint Details als Tabelle
+      doc.setFontSize(12).text("Sprint Details", 10, finalY = 40);
       doc.autoTable({
-        startY: doc.lastAutoTable.finalY + 25,
+        startY: finalY + 2,
         head: [["ID", "Task Name", "Description", "SP", "Status"]],
         body: this.GetDetails(sprint),
         headStyles: { fillColor: "#6441A4" },
