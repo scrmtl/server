@@ -20,8 +20,8 @@
           grow
           tile
         >
-          <v-tab key='first'>Details</v-tab>
-          <v-tab :disabled="visableCreate">Steps</v-tab>
+          <v-tab key="DetailTab">Details</v-tab>
+          <v-tab key="SteplistTab" :disabled="visableCreate">Steps</v-tab>
         </v-tabs>
         <!-- Details Tab -->
         <v-tabs-items
@@ -291,12 +291,11 @@ import { mapFields } from "vuex-map-fields";
 export default {
   name: "TheDetailTask",
   data: () => ({
-    tab: null,
+    tab: "DetailTab",
     availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
     deleteDialog: false,
     assignedUserDialog: false,
     isFormValid: null,
-    id_save: null,
     taskNameRules: [
       v => !!v || "Name is required",
       v => (v && v.length <= 50) || "Name must be less than 50 characters"
@@ -627,20 +626,19 @@ export default {
     visibleDrawer(val, prev){
       if(val === prev) return;
     },
+    id(val, prev){
+      if(val !== prev){
+        this.tab = "DetailTab"
+      }
+    }
   },
 
   created() {
     this.fetchLabel();
   },
 
-  updated() {
-    if(this.id != this.id_save){
-      this.id_save = this.id;
-      this.tab = "first";
-    }
-  }, 
   mounted(){
-    this.tab = "first";
+
   }
 };
 </script>
