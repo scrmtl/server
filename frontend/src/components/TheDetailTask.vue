@@ -291,7 +291,7 @@ import { mapFields } from "vuex-map-fields";
 export default {
   name: "TheDetailTask",
   data: () => ({
-    tab: "DetailTab",
+    tab: null,
     availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
     deleteDialog: false,
     assignedUserDialog: false,
@@ -628,9 +628,9 @@ export default {
     },
     id(val, prev){
       if(val !== prev){
-        this.tab = "DetailTab"
+        this.tab = "DetailTab";
       }
-    }
+    },
   },
 
   created() {
