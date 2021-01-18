@@ -20,8 +20,8 @@
         grow
         tile
       >
-        <v-tab>Details</v-tab>
-        <v-tab :disabled="visableCreate">Summary</v-tab>
+        <v-tab key="DetailTab">Details</v-tab>
+        <v-tab key="Summary" :disabled="visableCreate">Summary</v-tab>
       </v-tabs>
 
       <v-tabs-items v-model="tab" background-color="navbar" color="navbar">
@@ -509,6 +509,11 @@ export default {
       this.namedStatus = this.GetNamedStatus(this.status);
       this.statistic = this.GetStatitic()
     },
+    id(val, prev){
+      if(val !== prev) {
+        this.tab = "DetailTab";
+      }
+    }
   },
   created() {
     this.header = this.GetHeader();

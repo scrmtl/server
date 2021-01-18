@@ -20,8 +20,8 @@
           grow
           tile
         >
-          <v-tab>Details</v-tab>
-          <v-tab>Settings</v-tab>
+          <v-tab key="DetailTab">Details</v-tab>
+          <v-tab key="Settings">Settings</v-tab>
         </v-tabs>
 
         <v-tabs-items v-model="tab" background-color="navbar" color="navbar">
@@ -604,6 +604,11 @@ export default {
       this.templateProjectItems = this.listTemplateProjects();
       this.projectNamedStatus = this.GetProjectNamedStatus(this.status);
     },
+    id(val, prev){
+      if (val !== prev){
+        this.tab = "DetailTab";
+      }
+    }
   },
 
   created() {
