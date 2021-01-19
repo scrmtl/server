@@ -199,8 +199,8 @@ export default {
       return null;
     },
     skipVote(pokerVoteId){
-      // Check, if vote already done
-      // TODO Check, an it is so, delete vote and send vote again
+      console.log(pokerVoteId)
+      // At skipped, send 0 in storypoint to backend
       this.createUserVote({
         data:{
           poker_vote: pokerVoteId,
