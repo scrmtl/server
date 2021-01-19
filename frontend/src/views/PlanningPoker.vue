@@ -20,6 +20,7 @@
                 v-for="pokerVote in listPokerVotes(pokerVoting.id)"
                 :key="pokerVote.id"
                 class="primary"
+                @click="selectPokerVote(pokerVote)"
               > 
                 <v-expansion-panel-header disable-icon-rotate>
                   <v-row no-gutters >
@@ -27,7 +28,7 @@
                       {{taskName(pokerVote.task)}}
                     </v-col>
                     <v-col cols="1">
-                       <v-icon v-if="status(pokerVote.status, pokerVote.id) === 'VOTED'" color="teal">
+                       <v-icon v-if="voteStatus(pokerVote.status, pokerVote.id) === 'VOTED'" color="teal">
                         mdi-check
                       </v-icon>
                       <v-icon v-else color="error">
@@ -39,15 +40,19 @@
                 <v-expansion-panel-content>
                   <v-row no-gutters justify="start">
                       <v-col>
-                        {{taskDescription(pokerVote.task)}}
-                        <v-btn
-                          text
-                          color="white"
-                          @click="showTaskDetails(pokerVote.task)"
-                        >
-                          More Details
-                        </v-btn>
-                        
+                        <v-row class="ma-2 mb-4">
+                          {{taskDescription(pokerVote.task) || "No Description"}}
+                        </v-row>
+                        <v-row class="ma-2">
+                          <v-btn
+                            text
+                            color="white"
+                            outlined
+                            @click="showTaskDetails(pokerVote.task)"
+                          >
+                            More Details
+                          </v-btn>
+                        </v-row>
                       </v-col>
                       <v-divider
                         vertical
@@ -57,8 +62,10 @@
                         <v-row >
                           <v-col>
                             <v-autocomplete
-                              v-model="selectedStorypoints"
+                              :value="votedStorypoints(pokerVote.id)"
+                              @input="updateSelectedStorypoints"
                               :items="availableStorypoints"
+                              :disabled="voteStatus(pokerVote.status, pokerVote.id) !== 'WAIT'"
                               outlined
                               dense
                               label="Story points"
@@ -70,6 +77,7 @@
                           <v-col>
                             <v-btn
                               text
+                              :disabled="voteStatus(pokerVote.status, pokerVote.id) !== 'WAIT'"
                               outlined
                               color="white"
                               @click="skipVote(pokerVote.id)"
@@ -82,6 +90,7 @@
                           <v-col >
                             <v-btn
                               text
+                              :disabled="voteStatus(pokerVote.status, pokerVote.id) !== 'WAIT'"
                               outlined
                               color="link"
                               @click="sendVote(pokerVote.id)"
@@ -102,7 +111,7 @@
         </v-list>
       </v-col>
       <v-col lg="4" md="5" class="hidden-sm-and-down">
-        <PokerSummary class="hidden-sm-and-down"/>
+        <PokerSummary v-bind:selectedPokerVote="selectedPokerVote" class="hidden-sm-and-down"/>
       </v-col>
       <v-col lg="1"  class="hidden-md-and-down">
       </v-col>
@@ -121,6 +130,7 @@ export default {
   mixins: [statusMaxin],
   data: () => ({
     selectedStorypoints: 0,
+    selectedPokerVote: {},
     availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
   }),
   computed:{
@@ -146,6 +156,7 @@ export default {
       projectById: "byId"
     }),
     
+    
   },
   methods:{
     ...mapActions("pokerVoting", {
@@ -164,23 +175,7 @@ export default {
     ...mapActions("task", {
       fetchTasks: "fetchList"
     }),
-    status(pokerVoteStatus, pokerVoteId){
-      var voteStatus = "VOTED"
-      var votes = this.voteByIds({pokerVoteId: pokerVoteId, userId: this.userId})
-      if(votes.length > 0){
-        voteStatus = "VOTED"
-      }
-      else{
-        voteStatus = "WAIT"
-      }
-      console.log(votes)
-      // Waiting for Voting
-
-      // Skipped
-
-      // Voted
-      return voteStatus
-    },
+  
     projectName(projectId){
       return this.projectById(projectId).name;
     },
@@ -190,14 +185,64 @@ export default {
     taskDescription(taskId){
       return this.taskById(taskId).description
     },
+    voteStatus(pokerVoteStatus, pokerVoteId){
+      var voteStatus = "VOTED"
+      var votes = this.voteByIds({pokerVoteId: pokerVoteId, userId: this.userId})
+      if(votes.length > 0 && pokerVoteStatus === "WAIT"){
+        // check vote abstention 
+        if(votes.some(vote => vote.storypoints === 0)){
+          voteStatus="ABSTENTION"
+        }
+        else{
+          voteStatus = "VOTED";
+        }
+      }
+      // Voting is closed
+      else if(votes.length > 0 && pokerVoteStatus === "FIN"){
+        // check vote abstention 
+        if(votes.some(vote => vote.storypoints === 0)){
+          voteStatus="ABSTENTION"
+        }
+        else{
+          voteStatus = "VOTED";
+        }
+      }
+      // Not voted, still waiting for voting
+      else if(votes.length == 0 && pokerVoteStatus === "WAIT"){
+        voteStatus = "WAIT";
+      }
+      // Voting is closed
+      else if(votes.length == 0 && pokerVoteStatus === "FIN"){
+        voteStatus = "NOTVOTED";
+      }
+      else{
+        voteStatus = "SKIPPED";
+      }
+      // WAIT, SKIPPED, VOTED, ABSTENTION, NOTVOTED
+      return voteStatus;
+    },
     showTaskDetails(taskId){
       this.$store.commit("selected/setTaskDetail", this.taskById(taskId));
       // open without create dialog
       this.$store.commit("selected/showTaskDetail");
     },
-    currentStorypointVote(){
-      return null;
+
+    selectPokerVote(pokerVote){
+      this.selectedPokerVote = pokerVote;
     },
+    votedStorypoints(pokerVoteId){
+      var votes = this.voteByIds({pokerVoteId: pokerVoteId, userId: this.userId});
+      if(votes.length > 0 ){
+        return votes.shift().storypoints;
+      }
+      else{
+        return 0;
+      }
+    },
+    updateSelectedStorypoints(value){
+      this.selectedStorypoints = value;
+    },
+
     skipVote(pokerVoteId){
       console.log(pokerVoteId)
       // At skipped, send 0 in storypoint to backend
@@ -209,8 +254,8 @@ export default {
         }
       })
       .then((res)=> {
-        this.fetchSinglePokerVote({id: pokerVoteId})
-        this.fetchSingleUserVote({id: res.data.id})
+        this.fetchSinglePokerVote({id: pokerVoteId});
+        this.fetchSingleUserVote({id: res.data.id});
       })
     },
     sendVote(pokerVoteId){
@@ -227,6 +272,7 @@ export default {
         .then((res)=> {
           this.fetchSinglePokerVote({id: pokerVoteId});
           this.fetchSingleUserVote({id: res.data.id});
+          
         })
       }
       else{
