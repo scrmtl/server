@@ -16,93 +16,8 @@
           <v-row justify="center">
             <v-col>
               <v-expansion-panels dark accordion>
-              <v-expansion-panel
-                v-for="pokerVote in listPokerVotes(pokerVoting.id)"
-                :key="pokerVote.id"
-                class="primary"
-                @click="selectPokerVote(pokerVote)"
-              > 
-                <v-expansion-panel-header disable-icon-rotate>
-                  <v-row no-gutters >
-                    <v-col cols="11"  class="my-1">
-                      {{taskName(pokerVote.task)}}
-                    </v-col>
-                    <v-col cols="1">
-                       <v-icon v-if="voteStatus(pokerVote.status, pokerVote.id) === 'VOTED'" color="teal">
-                        mdi-check
-                      </v-icon>
-                      <v-icon v-else color="error">
-                        mdi-alert-circle-outline
-                      </v-icon>
-                    </v-col>
-                  </v-row>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-row no-gutters justify="start">
-                      <v-col>
-                        <v-row class="ma-2 mb-4">
-                          {{taskDescription(pokerVote.task) || "No Description"}}
-                        </v-row>
-                        <v-row class="ma-2">
-                          <v-btn
-                            text
-                            color="white"
-                            outlined
-                            @click="showTaskDetails(pokerVote.task)"
-                          >
-                            More Details
-                          </v-btn>
-                        </v-row>
-                      </v-col>
-                      <v-divider
-                        vertical
-                        class="mx-4"
-                      ></v-divider>
-                      <v-col>
-                        <v-row >
-                          <v-col>
-                            <v-autocomplete
-                              :value="votedStorypoints(pokerVote.id)"
-                              @input="updateSelectedStorypoints"
-                              :items="availableStorypoints"
-                              :disabled="voteStatus(pokerVote.status, pokerVote.id) !== 'WAIT'"
-                              outlined
-                              dense
-                              label="Story points"
-                            ></v-autocomplete>
-                          </v-col>
-                        </v-row>
-                        <v-spacer></v-spacer>
-                        <v-row >
-                          <v-col>
-                            <v-btn
-                              text
-                              :disabled="voteStatus(pokerVote.status, pokerVote.id) !== 'WAIT'"
-                              outlined
-                              color="white"
-                              @click="skipVote(pokerVote.id)"
-                            >
-                              Skip
-                            </v-btn>
-                          </v-col>
-                        </v-row>
-                        <v-row >
-                          <v-col >
-                            <v-btn
-                              text
-                              :disabled="voteStatus(pokerVote.status, pokerVote.id) !== 'WAIT'"
-                              outlined
-                              color="link"
-                              @click="sendVote(pokerVote.id)"
-                            >
-                              Send vote
-                            </v-btn>
-                          </v-col>
-                        </v-row>
-                      </v-col>
-                    </v-row>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
+                <PokerVote v-for="pokerVote in listPokerVotes(pokerVoting.id)"
+                :key="pokerVote.id" v-bind:pokerVote="pokerVote" @select-pokerVote="selectedPokerVote = $event"/>
               </v-expansion-panels>
             </v-col>
           </v-row>
@@ -121,17 +36,17 @@
 
 <script>
 import PokerSummary from "@/components/Poker/PokerSummary.vue";
-import statusMaxin from "@/mixins/statusMixin";
+import PokerVote from "@/components/Poker/PokerVote.vue";
 import { mapFields } from "vuex-map-fields";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "PlanningPoker",
-  components: { PokerSummary },
-  mixins: [statusMaxin],
+  components: { 
+    PokerSummary,
+    PokerVote
+  },
   data: () => ({
-    selectedStorypoints: 0,
-    selectedPokerVote: {},
-    availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
+    selectedPokerVote: {}
   }),
   computed:{
     ...mapFields([
@@ -142,35 +57,22 @@ export default {
       pokerVotingById: "byId"
     }),
     ...mapGetters("pokerVote", {
-      listPokerVotes: "byPokerVotingId",
-      pokerVoteById: "byId"
-    }),
-    ...mapGetters("vote", {
-      listVotes: "list",
-      voteByIds: "byPokerVoteIdAndUserId"
-    }),
-    ...mapGetters("task", {
-      taskById: "byId"
+      listPokerVotes: "byPokerVotingId"
     }),
     ...mapGetters("project", {
       projectById: "byId"
-    }),
-    
+    }),  
     
   },
   methods:{
     ...mapActions("pokerVoting", {
       fetchPokerVotings: "fetchList",
-      fetchSinglePokerVoting: "fetchSingle",
     }),
     ...mapActions("pokerVote", {
       fetchPokerVotes: "fetchList",
-      fetchSinglePokerVote: "fetchSingle",
     }),
     ...mapActions("vote", {
       fetchUserVotes: "fetchList",
-      fetchSingleUserVote: "fetchSingle",
-      createUserVote: "create"
     }),
     ...mapActions("task", {
       fetchTasks: "fetchList"
@@ -179,109 +81,6 @@ export default {
     projectName(projectId){
       return this.projectById(projectId).name;
     },
-    taskName(taskId){
-      return `#${taskId} ` + this.taskById(taskId).name
-    },
-    taskDescription(taskId){
-      return this.taskById(taskId).description
-    },
-    voteStatus(pokerVoteStatus, pokerVoteId){
-      var voteStatus = "VOTED"
-      var votes = this.voteByIds({pokerVoteId: pokerVoteId, userId: this.userId})
-      if(votes.length > 0 && pokerVoteStatus === "WAIT"){
-        // check vote abstention 
-        if(votes.some(vote => vote.storypoints === 0)){
-          voteStatus="ABSTENTION"
-        }
-        else{
-          voteStatus = "VOTED";
-        }
-      }
-      // Voting is closed
-      else if(votes.length > 0 && pokerVoteStatus === "FIN"){
-        // check vote abstention 
-        if(votes.some(vote => vote.storypoints === 0)){
-          voteStatus="ABSTENTION"
-        }
-        else{
-          voteStatus = "VOTED";
-        }
-      }
-      // Not voted, still waiting for voting
-      else if(votes.length == 0 && pokerVoteStatus === "WAIT"){
-        voteStatus = "WAIT";
-      }
-      // Voting is closed
-      else if(votes.length == 0 && pokerVoteStatus === "FIN"){
-        voteStatus = "NOTVOTED";
-      }
-      else{
-        voteStatus = "SKIPPED";
-      }
-      // WAIT, SKIPPED, VOTED, ABSTENTION, NOTVOTED
-      return voteStatus;
-    },
-    showTaskDetails(taskId){
-      this.$store.commit("selected/setTaskDetail", this.taskById(taskId));
-      // open without create dialog
-      this.$store.commit("selected/showTaskDetail");
-    },
-
-    selectPokerVote(pokerVote){
-      this.selectedPokerVote = pokerVote;
-    },
-    votedStorypoints(pokerVoteId){
-      var votes = this.voteByIds({pokerVoteId: pokerVoteId, userId: this.userId});
-      if(votes.length > 0 ){
-        return votes.shift().storypoints;
-      }
-      else{
-        return 0;
-      }
-    },
-    updateSelectedStorypoints(value){
-      this.selectedStorypoints = value;
-    },
-
-    skipVote(pokerVoteId){
-      console.log(pokerVoteId)
-      // At skipped, send 0 in storypoint to backend
-      this.createUserVote({
-        data:{
-          poker_vote: pokerVoteId,
-          user: this.userId,
-          storypoints: 0
-        }
-      })
-      .then((res)=> {
-        this.fetchSinglePokerVote({id: pokerVoteId});
-        this.fetchSingleUserVote({id: res.data.id});
-      })
-    },
-    sendVote(pokerVoteId){
-      if(this.selectedStorypoints){
-        // Check, if vote already done
-        // TODO
-        this.createUserVote({
-          data:{
-            poker_vote: pokerVoteId,
-            user: this.userId,
-            storypoints: this.selectedStorypoints
-          }
-        })
-        .then((res)=> {
-          this.fetchSinglePokerVote({id: pokerVoteId});
-          this.fetchSingleUserVote({id: res.data.id});
-          
-        })
-      }
-      else{
-        this.$store.commit("showSystemAlert", {
-        message: "Storypoint can't be zero. May you want to skip the vote",
-        category: "warning"
-        });
-      }
-    }
   },
   watch:{
 
