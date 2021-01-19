@@ -22,12 +22,12 @@
                 class="primary"
               > 
                 <v-expansion-panel-header disable-icon-rotate>
-                  <v-row no-gutters>
-                    <v-col cols="11">
+                  <v-row no-gutters >
+                    <v-col cols="11"  class="my-1">
                       {{taskName(pokerVote.task)}}
                     </v-col>
                     <v-col cols="1">
-                       <v-icon v-if="pokerVote.status === 'SKIP' || pokerVote.status === 'FIN'" color="teal">
+                       <v-icon v-if="status(pokerVote.status, pokerVote.id) === 'VOTED'" color="teal">
                         mdi-check
                       </v-icon>
                       <v-icon v-else color="error">
@@ -137,7 +137,7 @@ export default {
     }),
     ...mapGetters("vote", {
       listVotes: "list",
-      voteById: "byId"
+      voteByIds: "byPokerVoteIdAndUserId"
     }),
     ...mapGetters("task", {
       taskById: "byId"
@@ -161,6 +161,26 @@ export default {
       fetchSingleUserVote: "fetchSingle",
       createUserVote: "create"
     }),
+    ...mapActions("task", {
+      fetchTasks: "fetchList"
+    }),
+    status(pokerVoteStatus, pokerVoteId){
+      var voteStatus = "VOTED"
+      var votes = this.voteByIds({pokerVoteId: pokerVoteId, userId: this.userId})
+      if(votes.length > 0){
+        voteStatus = "VOTED"
+      }
+      else{
+        voteStatus = "WAIT"
+      }
+      console.log(votes)
+      // Waiting for Voting
+
+      // Skipped
+
+      // Voted
+      return voteStatus
+    },
     projectName(projectId){
       return this.projectById(projectId).name;
     },
@@ -179,7 +199,8 @@ export default {
       return null;
     },
     skipVote(pokerVoteId){
-      console.log(pokerVoteId)
+      // Check, if vote already done
+      // TODO Check, an it is so, delete vote and send vote again
       this.createUserVote({
         data:{
           poker_vote: pokerVoteId,
@@ -194,6 +215,8 @@ export default {
     },
     sendVote(pokerVoteId){
       if(this.selectedStorypoints){
+        // Check, if vote already done
+        // TODO
         this.createUserVote({
           data:{
             poker_vote: pokerVoteId,
@@ -214,9 +237,17 @@ export default {
       }
     }
   },
+  watch:{
+
+  },
   mounted(){
-    this.fetchPokerVotings();
+    this.fetchPokerVotings().then(()=>{
+      this.listPokerVotings(this.userId).forEach(pokerVoting => {
+        this.fetchTasks({ customUrlFnArgs: { projectId: pokerVoting.project } });
+      });
+    })
     this.fetchPokerVotes();
+    this.fetchUserVotes();
   }
 }
 </script>
