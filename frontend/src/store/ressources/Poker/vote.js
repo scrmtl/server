@@ -22,6 +22,15 @@ export default createCrudModule({
                 }
                 return votes;
             }
+        },
+        byPokerVoteId: (state) => {
+            return function(pokerVoteId){
+                var votes = null;
+                if(state.entities !== undefined){
+                    votes = state.list.map(id => state.entities[id.toString()]).filter(vote => vote.poker_vote === pokerVoteId);
+                }
+                return votes;
+            }
         }
     }
 });

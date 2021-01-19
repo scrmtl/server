@@ -15,11 +15,11 @@
             :width="15"
             :value="13"
             color="link"
-          >13 SP</v-progress-circular>
+          >{{selectedPokerVote.end_storypoints || 0}} SP </v-progress-circular>
         </v-col>
         <v-col cols="auto">
           <v-text-field
-            value="Synchron"
+            :value="selectedPokerVote.status || '-'"
             label="Poker Modus"
             dense
             dark
@@ -44,7 +44,7 @@
         </v-col>
         <v-col cols="6">
           <v-text-field
-            v-model="avgStoryPoints"
+            :value="selectedPokerVote.avg_storypoints || '-'"
             label="Avg. Story Points"
             dense
             dark
@@ -56,7 +56,8 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-list class="transparent overflow-y-auto" style="max-height: calc(75vh - 225px)">
+        <v-col cols="12">
+          <v-list class="transparent overflow-y-auto" style="max-height: calc(75vh - 225px)">
           <v-list-item
             v-for="player in players"
             :key="player.name"
@@ -70,6 +71,7 @@
             </v-list-item-subtitle>
           </v-list-item>
         </v-list>
+        </v-col>
       </v-row>
     </v-card-text>
     <v-divider></v-divider>
@@ -82,19 +84,42 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "PokerSummary",
+  props: ["selectedPokerVote"],
   data: () => ({
-    avgStoryPoints: 12.5,
-    votedPlayer: 46,
-    players: [
-      {name: "Peter", storypoints: "3", color: "white"},
-      {name: "Hans", storypoints: "3", color: "white"},
-      {name: "Jonas", storypoints: "32", color: "warning"},
-      {name: "König Ludwig", storypoints: "8", color: "white"},
-      {name: "Dittrich", storypoints: "8", color: "white"},
-    ]
+    
   }),
+  computed: {
+    ...mapGetters("vote", {
+      voteById: "byPokerVoteId"
+    }),
+    ...mapGetters("user", {
+      plattformUserById: "byId"
+    }),
+    votedPlayer(){
+      return this.voteById(this.selectedPokerVote.id).length;
+    },
+    players(){
+      var votes = this.voteById(this.selectedPokerVote.id);
+      var voter = []
+      if(votes.length > 0){
+        votes.forEach(vote => {
+          var user = this.plattformUserById(vote.user);
+          voter.push({
+            name: user.name + ` (${user.username})`,
+            storypoints: vote.storypoints,
+            color: "white"
+          })  
+        });
+      }
+      return voter;
+    }
+  },
+  methods: {
+
+  }
 }
 </script>
 
