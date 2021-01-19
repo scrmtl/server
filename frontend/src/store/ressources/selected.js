@@ -17,7 +17,7 @@ const state = () => ({
     visableCreate: false,
     readOnly: false,
     details: {},
-  },
+  }
 });
 
 const mutations = {
@@ -41,6 +41,7 @@ const mutations = {
     state.project.visableCreate = false;
     state.project.details = {};
   },
+  
   setProjectDetail(state, project) {
     state.project.details = project;
   },
@@ -69,6 +70,7 @@ const mutations = {
     state.sprint.readOnly = false;
     // state.sprint.details = {};
   },
+
   setSprintDetail(state, sprint) {
     state.sprint.details = sprint;
   },
@@ -92,6 +94,7 @@ const mutations = {
     state.task.readOnly = false;
     state.task.details = {};
   },
+
   setTaskDetail(state, task) {
     state.task.details = task;
   },
