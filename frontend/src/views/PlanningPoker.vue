@@ -26,7 +26,7 @@
         </v-list>
       </v-col>
       <v-col lg="4" md="5" class="hidden-sm-and-down">
-        <PokerSummary v-bind:selectedPokerVote="selectedPokerVote" class="hidden-sm-and-down"/>
+        <PokerSummary v-if="showPokerSummary" v-bind:selectedPokerVote="selectedPokerVote" class="hidden-sm-and-down"/>
       </v-col>
       <v-col lg="1"  class="hidden-md-and-down">
       </v-col>
@@ -46,7 +46,7 @@ export default {
     PokerVote
   },
   data: () => ({
-    selectedPokerVote: {}
+    selectedPokerVote: null
   }),
   computed:{
     ...mapFields([
@@ -62,7 +62,15 @@ export default {
     ...mapGetters("project", {
       projectById: "byId"
     }),  
-    
+    showPokerSummary(){
+      // TODO check, if session manager of selected pokerVote
+      if(this.selectedPokerVote !== null){
+        return true;
+      }
+      else{
+        return false
+      }
+    }
   },
   methods:{
     ...mapActions("pokerVoting", {
