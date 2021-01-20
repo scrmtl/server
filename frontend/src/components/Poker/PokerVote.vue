@@ -9,18 +9,47 @@
         {{taskName}}
       </v-col>
       <v-col cols="1">
-          <v-icon v-if="voteStatus === 'VOTED'" color="teal">
-          mdi-check
-        </v-icon>
-        <v-icon v-else-if="voteStatus ==='SKIPPED'" color="teal">
-          mdi-skipped-next-outline
-        </v-icon>
-        <v-icon v-else-if="voteStatus ==='ABSTENTION'" color="teal">
-          mdi-help-circle-outline
-        </v-icon>
-        <v-icon v-else color="error">
-          mdi-alert-circle-outline
-        </v-icon>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon 
+              v-if="voteStatus === 'VOTED'" 
+              color="teal"
+              v-bind="attrs"
+              v-on="on"
+            >
+              mdi-check
+            </v-icon>
+            <v-icon 
+              v-else-if="voteStatus ==='SKIPPED'"
+              color="teal"
+              v-bind="attrs"
+              v-on="on"
+            >
+              mdi-skipped-next-outline
+            </v-icon>
+            <v-icon
+              v-else-if="voteStatus ==='ABSTENTION'"
+              color="teal"
+              v-bind="attrs"
+              v-on="on"
+            >
+              mdi-help-circle-outline
+            </v-icon>
+            <v-icon 
+              v-else
+              color="error"
+              v-bind="attrs"
+              v-on="on"
+            >
+              mdi-alert-circle-outline
+            </v-icon>
+          </template>
+          <span v-if="voteStatus === 'VOTED'">Your storypoints have been submitted</span>
+          <span v-else-if="voteStatus ==='SKIPPED'">Vote was skipped</span>
+          <span v-else-if="voteStatus ==='ABSTENTION'">You abstained</span>
+          <span v-else>Vote still open</span>
+        </v-tooltip>
+       
       </v-col>
     </v-row>
   </v-expansion-panel-header>
