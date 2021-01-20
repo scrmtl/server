@@ -221,7 +221,7 @@ export default {
         votes.forEach(vote => {
           var user = this.plattformUserById(vote.user);
           voter.push({
-            name: user.name + ` (${user.username})`,
+            name: user.username + ` (${user.name})`,
             storypoints: vote.storypoints,
             color: "white"
           })  

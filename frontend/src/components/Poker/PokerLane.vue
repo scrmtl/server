@@ -23,13 +23,14 @@
           </v-sheet>
         </v-col>
       </v-row>
+      <v-divider dark></v-divider>
       <v-row>
-        <v-subheader class="white--text text-body-1">Cards to vote</v-subheader>
-        <v-list two-line class="transparent overflow-y-auto" style="max-height: calc(65vh - 225px)">
+        <v-subheader class="white--text subtitle-1">Cards to vote</v-subheader>
+        <v-list two-line class="transparent overflow-y-auto" style="max-height: calc(65vh - 350px)">
           <v-list-item v-for="item in cardsToVote" :key="item.cardId">
           <v-list-item-content>
-            <v-list-item-title class="white--text">#{{item.cardId}}: {{item.cardName}}</v-list-item-title>
-            <v-list-item-subtitle class="white--text">Storypoints: {{item.cardStorypoints}}</v-list-item-subtitle>
+            <v-list-item-title class="white--text text-body-1">#{{item.cardId}}: {{item.cardName}}</v-list-item-title>
+            <v-list-item-subtitle class="white--text text-body-2">Storypoints: {{item.cardStorypoints}}</v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
             <v-btn icon>
@@ -39,8 +40,9 @@
           </v-list-item>
         </v-list>
       </v-row>
+      <v-divider dark></v-divider>
       <v-row>
-        <v-subheader class="white--text text-body-1">Options</v-subheader>
+        <v-subheader class="white--text subtitle-1">Options</v-subheader>
       </v-row>
       <v-row no-gutters align="center">
         <v-col cols="6">
@@ -76,6 +78,33 @@
           </v-menu>
         </v-col>
       </v-row>
+      <v-row no-gutters>
+        <v-col>
+          <v-radio-group
+            v-model="voterSetting"
+            column
+            dark
+            label="Voter scope"
+          >
+            <v-radio
+              label="All project users in project"
+              value="all"
+            ></v-radio>
+            <v-radio
+              label="group of specify project users"
+              value="specify"
+            ></v-radio>
+            <v-btn  
+              text
+              outlined 
+              :disabled="voterSetting !== 'specify'"
+              @click="voterSettingDialog = true" 
+            >
+              select Voters
+            </v-btn>
+          </v-radio-group>
+        </v-col>
+      </v-row>
     </v-card-text>
     <v-card-subtitle class="white--text text-body-1">
       Start Poker
@@ -87,35 +116,79 @@
     </v-card-actions>
 </v-card>
 <!-- Sprint Release Dialog -->
-  <v-dialog
-    v-model="asyncPokerDialog"
-    persistent
-    class="mx-auto"
-    width="600"
-    dark
-  >
-    <v-card color="tabbody" shaped>
-      <v-card-text class="headline pt-10">
-        <span class="ml-12">Do you want to start a Async Planning Poker?</span>
-      </v-card-text>
-      <v-card-actions class="ml-10 pb-10 pt-10">
-        <v-btn width="250" outlined  @click="startAsyncPoker()"
-          >Yes</v-btn
+<v-dialog
+  v-model="asyncPokerDialog"
+  persistent
+  class="mx-auto"
+  width="600"
+  dark
+>
+  <v-card color="tabbody" shaped>
+    <v-card-text class="headline pt-10">
+      <span class="ml-12">Do you want to start a Async Planning Poker?</span>
+    </v-card-text>
+    <v-card-actions class="ml-10 pb-10 pt-10">
+      <v-btn width="250" outlined  @click="startAsyncPoker()"
+        >Yes</v-btn
+      >
+      <v-btn
+        width="250"
+        outlined
+        @click="asyncPokerDialog = false"
+        >No</v-btn
+      >
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+<!-- select voter setting dialog -->
+<v-dialog
+  v-model="voterSettingDialog"
+  persistent
+  class="mx-auto"
+  width="600"
+  dark
+>
+  <v-card color="tabbody" shaped>
+    <v-card-title >
+      Select specify Voter
+    </v-card-title>
+    <v-card-text>
+      <v-list class="transparent overflow-y-auto" style="max-height: calc(65vh - 225px)">
+        <v-list-item-group
+          v-model="selectedVoters"
+          multiple
+          active-class=""
         >
-        <v-btn
-          width="250"
-          outlined
-          @click="asyncPokerDialog = false"
-          >No</v-btn
-        >
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+          <v-list-item v-for="voter in availableVoters"
+          :key="voter.id">
+          <template v-slot:default="{ active }">
+            <v-list-item-action>
+              <v-checkbox :input-value="active"></v-checkbox>
+            </v-list-item-action>
+
+            <v-list-item-content>
+              <v-list-item-title>{{voter.username}}</v-list-item-title>
+              <v-list-item-subtitle>{{voter.name}}</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn
+        outlined
+        @click="voterSettingDialog = false"
+        >Save</v-btn
+      >
+    </v-card-actions>
+  </v-card>
+</v-dialog>
 </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
 export default {
   name: "PokerLane",
@@ -124,7 +197,11 @@ export default {
     VoteDateMenu: false,
     openEndVote: true,
     endVoteDate: null,
-    cardsToVote:[]
+    cardsToVote:[],
+    voterSetting: "all",
+    voterSettingDialog: false,
+    selectedVoters: []
+
   }),
   computed: {
     // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
@@ -134,6 +211,9 @@ export default {
     ...mapFields([
       "Userinfo.userId"
     ]),
+    ...mapGetters("user", {
+      plattformUsersbyProjectId: "byProjectId",
+    }),
     allowAsyncPoker(){
       var allowed = false;
         if(this.cardsToVote.length > 0 && this.openEndVote){
@@ -146,6 +226,9 @@ export default {
           allowed = false;
         }
       return allowed;
+    },
+    availableVoters(){
+      return this.plattformUsersbyProjectId(parseInt(this.$route.params.id, 10));
     }
   },
   methods: {
@@ -204,6 +287,15 @@ export default {
         manager: this.userId,
         voters: []
       }
+      // specify voter group
+      if(this.voterSetting === "specify"){
+        asyncPokerData.voters = this.selectedVoters;
+        this.selectedVoters = [];
+      }
+      else{
+        this.selectedVoters = [];
+      }
+      // timeboxed or open end vote
       if(this.openEndVote){
         asyncPokerData.start = new Date().toISOString().slice(0,10);
         asyncPokerData.end = null;
