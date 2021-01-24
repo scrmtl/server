@@ -98,10 +98,10 @@ export default {
       this.listPokerVotings(this.userId).forEach(pokerVoting => {
         this.fetchTasks({ customUrlFnArgs: { projectId: pokerVoting.project } });
       });
-    })
+    });
     this.fetchPokerVotes();
     this.fetchUserVotes();
-  }
+  },
 }
 </script>
 

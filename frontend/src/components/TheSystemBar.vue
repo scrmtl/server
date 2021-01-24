@@ -96,7 +96,6 @@ export default {
     showNavigation() {
       this.$store.commit("showNavigation");
     },
-
     logout() {
       this.$store.dispatch("logout").then(() => {
         this.$router.push("/login");
@@ -117,7 +116,6 @@ export default {
     ...mapGetters("project",{
       projectById: "byId"
     }),
-
     RoutedProjectName (){
       if(this.$route.params.id !== undefined){
         var project = this.projectById(this.$route.params.id)

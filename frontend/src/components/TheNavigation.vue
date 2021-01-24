@@ -91,7 +91,7 @@ export default {
     },
     GoPoker(){
       if(this.$router.history.current.name !== "PlanningPoker"){
-        this.$router.push({ name: 'PlanningPoker' })
+        this.$router.push({ name: 'PlanningPoker' });
       }
     },
 
