@@ -33,4 +33,4 @@ The frontend server application based on Node.js, vue.js, vuetify
 
 ## Test it out
 
-Our [Live App](https://scrmtl.ddns.net/app)
+Our Dev [Live App](https://scrmtl.ddns.net/app)
