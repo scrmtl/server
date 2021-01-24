@@ -90,7 +90,7 @@
       <v-card color="tabbody" shaped>
         <v-card-text class="headline pt-10">
           <span class="ml-12"
-            >Remove the user form the project?</span
+            >Do you want to remove the assigned user?</span
           >
         </v-card-text>
         <v-card-actions class="ml-10 pb-10 pt-10">
@@ -144,7 +144,6 @@ export default {
     },
     removeAssignedUser() {
       if (this.deleteUser !== null) {
-        console.log(this.deleteUser.id);
         this.$emit("remove-user", this.deleteUser.id);
       }
     },
