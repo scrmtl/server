@@ -419,7 +419,7 @@ export default {
     },
 
     deleteAssignedUser(userId){
-      this.assigned_users.splice(this.assigned_users.findIndex(user => user === userId), 1)
+      this.assigned_users = this.assigned_users.filter(user => user !== userId);
     },
 
     deleteTaskFn() {

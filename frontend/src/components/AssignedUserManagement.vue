@@ -145,6 +145,7 @@ export default {
     removeAssignedUser() {
       if (this.deleteUser !== null) {
         this.$emit("remove-user", this.deleteUser.id);
+        this.deleteDialog = false;
       }
     },
     addAssignedUser(user) {

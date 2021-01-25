@@ -533,7 +533,7 @@ export default {
     },
 
     deleteProjectUser(projectUserId) {
-      this.destroyProjectUser({ id: projectUserId }).then(() => {
+      this.destroyProjectUser({ id: projectUserId, customUrlFnArgs: {}}).then(() => {
         this.fetchSingleProject({ id: this.id, customUrlFnArgs: {} }).then(res => {
           this.$store.commit("selected/setProjectDetail", res.data);
         });
