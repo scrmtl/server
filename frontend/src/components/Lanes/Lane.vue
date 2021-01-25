@@ -86,7 +86,6 @@ export default {
     },
     fetchData(lane, isNewTaskCreate = false) {
       if (lane.id === undefined) return;
-      console.log(lane)
       this.fetchSingleLane({ id: lane.id, customUrlFnArgs: {} }).then(
         function() {
           this.localLane = this.laneById(this.localLane.id);
