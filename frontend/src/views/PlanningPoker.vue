@@ -1,11 +1,32 @@
 <template>
   <v-container fluid>
+    <v-row dense>
+      <v-col cols="12" v-if="listFilteredPokerVoting.length > 0">
+        <v-switch
+            color="link"
+            inset
+            dark
+            v-model="showAllPokerVotings"
+          >
+            <template v-slot:label>
+              <span class="link--text">Show all Planning Pokers</span>
+            </template>
+          </v-switch>
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col cols="4"></v-col>
+      <v-col cols="4" v-if="listFilteredPokerVoting.length == 0">
+        <span class="white--text text-center"> No upcoming Planning Poker for you</span>
+      </v-col>
+      <v-col cols="4"></v-col>
+    </v-row>
     <v-row justify="center">
       <v-col lg="1"  class="hidden-md-and-down">
       </v-col>
       <v-col lg="6" md="7" sm="12">
         <v-list class="transparent overflow-y-auto" style="max-height: calc(100vh - 225px)">
-        <v-list-item v-for="pokerVoting in listPokerVotings(userId)" :key="pokerVoting.id">
+        <v-list-item v-for="pokerVoting in listFilteredPokerVoting" :key="pokerVoting.id">
           <v-list-item-content>
           <v-row justify="center">
           <span class="text-h5 white--text">{{projectName(pokerVoting.project)}}</span>
@@ -16,7 +37,7 @@
           <v-row justify="center">
             <v-col>
               <v-expansion-panels dark accordion>
-                <PokerVote v-for="pokerVote in listPokerVotes(pokerVoting.id)"
+                <PokerVote v-for="pokerVote in listFilteredPokerVotes(pokerVoting.id)"
                 :key="pokerVote.id" v-bind:pokerVote="pokerVote" @select-pokerVote="selectedPokerVote = $event"/>
               </v-expansion-panels>
             </v-col>
@@ -46,7 +67,8 @@ export default {
     PokerVote
   },
   data: () => ({
-    selectedPokerVote: null
+    selectedPokerVote: null,
+    showAllPokerVotings: false,
   }),
   computed:{
     ...mapFields([
@@ -70,7 +92,16 @@ export default {
       else{
         return false
       }
-    }
+    },
+    listFilteredPokerVoting(){
+      var pokerVotings = this.listPokerVotings(this.userId);
+      if(this.showAllPokerVotings){
+        return pokerVotings;
+      }else{
+        // Show only open pokerVoting
+        return pokerVotings.filter(pokerVotings => this.listPokerVotes(pokerVotings.id).filter(pokerVote => pokerVote.status == "WAIT").length > 0);
+      }
+    },
   },
   methods:{
     ...mapActions("pokerVoting", {
@@ -89,9 +120,23 @@ export default {
     projectName(projectId){
       return this.projectById(projectId).name;
     },
+
+    listFilteredPokerVotes(pokerVotingId){
+      var pokerVotes = this.listPokerVotes(pokerVotingId);
+      if(this.showAllPokerVotings){
+        return pokerVotes;
+      }else{
+        // Show only open pokerVotes
+        return pokerVotes.filter(pokerVote => pokerVote.status == "WAIT");
+      } 
+    }
   },
   watch:{
-
+    showAllPokerVotings(current, prev){
+      if(current !== prev){
+        this.selectedPokerVote = null;
+      }
+    }
   },
   mounted(){
     this.fetchPokerVotings().then(()=>{

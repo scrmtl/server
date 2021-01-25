@@ -233,16 +233,19 @@ export default {
       var namedStatus = "-";
       switch(this.selectedPokerVote.status){
         case "NS":
-          namedStatus = "Not started";
+          namedStatus = "Not started (Nobody Voted)";
           break;
         case "WAIT":
-          namedStatus = "Waiting for vote";
+          namedStatus = "Waiting for additonal votes";
           break;
         case "SKIP":
-          namedStatus = "Skipped";
+          namedStatus = "Poker skipped";
           break;
         case "FIN":
-          namedStatus = "Voted";
+          namedStatus = "All Voted";
+          break;
+        case "AC":
+          namedStatus = "Poker accepted";
           break;
       };
       return namedStatus;

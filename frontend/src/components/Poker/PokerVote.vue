@@ -20,7 +20,7 @@
               mdi-check
             </v-icon>
             <v-icon 
-              v-else-if="voteStatus ==='SKIPPED'"
+              v-else-if="voteStatus ==='SKIP'"
               color="teal"
               v-bind="attrs"
               v-on="on"
@@ -45,7 +45,7 @@
             </v-icon>
           </template>
           <span v-if="voteStatus === 'VOTED'">Your storypoints have been submitted</span>
-          <span v-else-if="voteStatus ==='SKIPPED'">Vote was skipped</span>
+          <span v-else-if="voteStatus ==='SKIP'">Vote was skipped</span>
           <span v-else-if="voteStatus ==='ABSTENTION'">You abstained</span>
           <span v-else>Vote still open</span>
         </v-tooltip>
@@ -162,10 +162,12 @@ export default {
       }
     },
     votes(){
+      // Own Votes by session (userid)
       return this.voteByIds({pokerVoteId: this.pokerVote.id, userId: this.userId});
     },
     voteStatus(){
-      // WAIT, SKIPPED, VOTED, ABSTENTION, NOTVOTED
+      // Only from own votes
+      // NS, WAIT, SKIPP, VOTED, ABSTENTION, NOTVOTED, AC
       if(this.votes.length > 0 && this.pokerVote.status === "WAIT"){
         // check vote abstention 
         if(this.votes.some(vote => vote.storypoints === 0)){
@@ -193,8 +195,9 @@ export default {
       else if(this.votes.length == 0 && this.pokerVote.status === "FIN"){
         return "NOTVOTED";
       }
+      //
       else{
-        return "SKIPPED";
+        return this.pokerVote.status;
       }
       
     },
