@@ -424,10 +424,13 @@ export default {
 
     deleteTaskFn() {
       this.deleteDialog = false;
+      var laneId = this.lane;
       this.deleteTask({
         id: this.id,
         customUrlFnArgs: {}
-      });
+      }).then(()=>{
+        this.fetchSingleLane({id: laneId, customUrlFnArgs: {}})
+      })
       this.close();
     },
 
