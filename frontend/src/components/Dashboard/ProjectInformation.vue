@@ -1,6 +1,10 @@
 <template>
   <v-card tile flat>
-    <v-card-title class="navbar white--text">Project Information</v-card-title>
+    <v-card-title class="navbar white--text">Project Information 
+      <v-btn class="hidden-sm-and-down" icon @click="showProjectDetail()">
+        <v-icon color="link">mdi-dots-horizontal</v-icon>
+      </v-btn>
+    </v-card-title>
     <v-card-text class="navbar">
       <v-row align="center">
         <v-col>
@@ -110,6 +114,13 @@ export default {
     projectInformation(){
       var project = this.projectById(this.$route.params.id);
       return project;
+    }
+  },
+
+  methods:{
+    showProjectDetail(){
+      this.$store.commit("selected/showProjectDetail", false);
+      this.$store.commit("selected/setProjectDetail", this.projectById(this.$route.params.id));
     }
   }
 }
