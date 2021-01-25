@@ -211,6 +211,36 @@
                   </v-col>
                 </v-row>
               </v-card-text>
+              <v-card-actions>
+                <!-- actions -->
+                <v-btn color="link" text @click="close()">Close</v-btn>
+                <v-btn
+                  v-if="!visableCreate"
+                  color="link"
+                  text
+                  @click="confirm()"
+                  >Save</v-btn
+                >
+                <v-btn
+                  v-if="visableCreate"
+                  color="link"
+                  :disabled="!isFormValid"
+                  text
+                  @click="addProject()"
+                  >Create</v-btn
+                >
+                <v-btn
+                  class="hidden-sm-and-down" 
+                  v-if="!visableCreate"
+                  color="error"
+                  text
+                  absolute
+                  right
+                  @click="deleteProjectDialog = true"
+                >
+                  <v-icon left>mdi-bucket-outline</v-icon>Delete
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-tab-item>
           <!-- Settings Tab -->
@@ -282,39 +312,39 @@
                   </v-col>
                 </v-row>
               </v-card-text>
+              <v-card-actions>
+                <!-- actions -->
+                <v-btn color="link" text @click="close()">Close</v-btn>
+                <v-btn
+                  v-if="!visableCreate"
+                  color="link"
+                  text
+                  @click="confirm()"
+                  >Save</v-btn
+                >
+                <v-btn
+                  v-if="visableCreate"
+                  color="link"
+                  :disabled="!isFormValid"
+                  text
+                  @click="addProject()"
+                  >Create</v-btn
+                >
+                <v-btn
+                  class="hidden-sm-and-down" 
+                  v-if="!visableCreate"
+                  color="error"
+                  text
+                  absolute
+                  right
+                  @click="deleteProjectDialog = true"
+                >
+                  <v-icon left>mdi-bucket-outline</v-icon>Delete
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-tab-item>
         </v-tabs-items>
-        <!-- actions -->
-        <div>
-          <v-btn color="link" text @click="close()">Close</v-btn>
-          <v-btn
-            v-if="!visableCreate"
-            color="link"
-            text
-            @click="confirm()"
-            >Save</v-btn
-          >
-          <v-btn
-            v-if="visableCreate"
-            color="link"
-            :disabled="!isFormValid"
-            text
-            @click="addProject()"
-            >Create</v-btn
-          >
-          <v-btn
-            class="hidden-sm-and-down" 
-            v-if="!visableCreate"
-            color="error"
-            text
-            absolute
-            right
-            @click="deleteProjectDialog = true"
-          >
-            <v-icon left>mdi-bucket-outline</v-icon>Delete
-          </v-btn>
-        </div>
       </v-container>
     </v-navigation-drawer>
     <!-- Delete Dialog -->

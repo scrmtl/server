@@ -187,6 +187,39 @@
                   </v-row>
                 </v-container>
               </v-card-text>
+              <!-- actions -->
+              <v-card-actions>
+                <v-btn
+                  color="link" 
+                  text 
+                  @click="close()"
+                >Close</v-btn>
+                <v-btn
+                  v-if="!visableCreate && !readOnly"
+                  color="link"
+                  text
+                  @click="confirm()"
+                  >Save</v-btn>
+                <v-btn
+                  v-if="visableCreate"
+                  color="link"
+                  :disabled="!isFormValid"
+                  text
+                  @click="addTask()"
+                  >Create</v-btn
+                >
+                <v-btn
+                  v-if="!visableCreate && this.sprint == null"
+                  :disabled="readOnly"
+                  color="error"
+                  text
+                  absolute
+                  right
+                  @click="deleteDialog = true"
+                >
+                  <v-icon left>mdi-bucket-outline</v-icon>Delete
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-tab-item>
           <!-- Step Tab -->
@@ -214,42 +247,42 @@
                   </v-col>
                 </v-row>
               </v-card-text>
+              <!-- actions -->
+              <v-card-actions>
+                <v-btn
+                  color="link" 
+                  text 
+                  @click="close()"
+                >Close</v-btn>
+                <v-btn
+                  v-if="!visableCreate && !readOnly"
+                  color="link"
+                  text
+                  @click="confirm()"
+                  >Save</v-btn>
+                <v-btn
+                  v-if="visableCreate"
+                  color="link"
+                  :disabled="!isFormValid"
+                  text
+                  @click="addTask()"
+                  >Create</v-btn
+                >
+                <v-btn
+                  v-if="!visableCreate && this.sprint == null"
+                  :disabled="readOnly"
+                  color="error"
+                  text
+                  absolute
+                  right
+                  @click="deleteDialog = true"
+                >
+                  <v-icon left>mdi-bucket-outline</v-icon>Delete
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-tab-item>
         </v-tabs-items>
-        <!-- actions -->
-        <div>
-          <v-btn
-            color="link" 
-            text 
-            @click="close()"
-          >Close</v-btn>
-          <v-btn
-            v-if="!visableCreate && !readOnly"
-            color="link"
-            text
-            @click="confirm()"
-            >Save</v-btn>
-          <v-btn
-            v-if="visableCreate"
-            color="link"
-            :disabled="!isFormValid"
-            text
-            @click="addTask()"
-            >Create</v-btn
-          >
-          <v-btn
-            v-if="!visableCreate && this.sprint == null"
-            :disabled="readOnly"
-            color="error"
-            text
-            absolute
-            right
-            @click="deleteDialog = true"
-          >
-            <v-icon left>mdi-bucket-outline</v-icon>Delete
-          </v-btn>
-        </div>
       </v-container>
     </v-navigation-drawer>
 
