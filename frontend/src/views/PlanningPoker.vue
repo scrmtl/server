@@ -29,10 +29,24 @@
         <v-list-item v-for="pokerVoting in listFilteredPokerVoting" :key="pokerVoting.id">
           <v-list-item-content>
           <v-row justify="center">
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon 
+                v-if="pokerVoting.manager === userId" 
+                color="teal"
+                v-bind="attrs"
+                v-on="on"
+                class="mx-4"
+              >
+                mdi-account-cowboy-hat
+              </v-icon>
+            </template>
+            <span >I am planning poker manager</span>
+          </v-tooltip>
           <span class="text-h5 white--text">{{projectName(pokerVoting.project)}}</span>
           </v-row>
           <v-row justify="center">
-            <span class="text-h7 white--text">Mode: {{pokerVoting.mode}}</span>
+            <span class="text-h7 white--text">Mode: {{pokerVoting.mode}} </span>
           </v-row>
           <v-row justify="center">
             <v-col>
