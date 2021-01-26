@@ -189,7 +189,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "PokerSummary",
   props: ["selectedPokerVote"],
@@ -261,15 +261,55 @@ export default {
     }
   },
   methods: {
+    ...mapActions("pokerVote", {
+      fetchSinglePokerVote: "fetchSingle",
+      updatePokerVote: "update",
+    }),
+    ...mapActions("task", {
+      fetchSingleTask: "fetchSingle",
+      updateTask: "update",
+    }),
+
     acceptAsyncVote(){
-      // TODO
+      // Update PokerVote and close vote
+      this.updatePokerVote({
+        id: this.selectedPokerVote.id,
+        data: {
+          poker_voting: this.selectedPokerVote.poker_voting,
+          status: "AC"
+        }
+      }).then(()=>{
+        this.fetchSinglePokerVote({id: this.selectedPokerVote.id});
+      })
     },
     skipAsyncVote(){
-      // TODO
+      // update Poker vote to skipped and set SP to act/old Value
+      this.updatePokerVote({
+        id: this.selectedPokerVote.id,
+        data: {
+          poker_voting: this.selectedPokerVote.poker_voting,
+          status: "SKIP",
+          end_storypoints: this.selectedPokerVote.act_storypoints,
+          task: this.selectedPokerVote.task
+        }
+      }).then(()=>{
+        this.fetchSinglePokerVote({id: this.selectedPokerVote.id});
+      })
     },
     discardAsyncVote(){
       console.log(this.selectedStorypoints);
-      // TODO
+      // update Poker vote to skipped and set SP to user defined Value
+      this.updatePokerVote({
+        id: this.selectedPokerVote.id,
+        data: {
+          poker_voting: this.selectedPokerVote.poker_voting,
+          status: "SKIP",
+          end_storypoints: this.selectedStorypoints,
+          task: this.selectedPokerVote.task
+        }
+      }).then(()=>{
+        this.fetchSinglePokerVote({id: this.selectedPokerVote.id});
+      })
     }
   }
 };
