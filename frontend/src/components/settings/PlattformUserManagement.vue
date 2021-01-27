@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "PlattformUserManagement",
   created() {
@@ -227,9 +227,6 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      userinfos: "Userinfo"
-    }),
     ...mapGetters("user", {
       listPlatformUsers: "list"
     }),
