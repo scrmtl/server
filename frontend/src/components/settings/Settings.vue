@@ -27,7 +27,8 @@
         <General/>
         <v-divider></v-divider> 
         <PlattformUserManagement/>
-        
+        <v-divider dark></v-divider> 
+        <LabelManagement/>
       </v-card>
     </v-dialog>
   </v-row>
@@ -35,6 +36,7 @@
 
 <script>
 import PlattformUserManagement from "@/components/settings/PlattformUserManagement.vue";
+import LabelManagement from "@/components/settings/LabelManagement.vue";
 import General from "@/components/settings/General.vue";
 export default {
   name: "Settings",
@@ -43,6 +45,7 @@ export default {
   },
   components:{
     PlattformUserManagement,
+    LabelManagement,
     General
   },
   methods:{
