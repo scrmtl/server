@@ -5,7 +5,7 @@
     dark
     color="tabbody"
   >
-    <v-subheader>General</v-subheader>
+    <v-subheader class="subtitle-1">General</v-subheader>
     <v-list-item>
       <v-list-item-action>
         <v-checkbox v-model="notifications"></v-checkbox>

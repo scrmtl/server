@@ -5,15 +5,14 @@
     subheader
     color="tabbody"
   >
-    <v-subheader>Plattform user management</v-subheader>
+    <v-subheader class="subtitle-1">Plattform user management</v-subheader>
     <v-list-item>
       <v-list-item-content>               
         <v-data-table
           :headers="headers"
           :items="allUserInfo()"
           sort-by="username"
-          class="tabbody"
-          
+          class="tabbody"          
         >
           <template v-slot:[`item.group`]="{ item }">
             <v-select
@@ -23,7 +22,7 @@
             ></v-select>
           </template>
           <template v-slot:top>
-            <v-toolbar flat color="tabbody">
+            <v-toolbar flat class="tabbody">
               <v-dialog v-model="createUser" persistent >
                 <template v-slot:activator="{ on, attrs }">
                   <v-spacer></v-spacer>
@@ -37,7 +36,7 @@
                     >add user
                   </v-btn>
                 </template>
-                <!-- Add plttform user dialog -->
+                <!-- Add plattform user dialog -->
                 <v-card class="tabbody" dark >
                   <v-card-title>
                     <span class="headline">Add new plattform user</span>
@@ -109,7 +108,7 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot:actions="{ item }">
+          <template v-slot:[`item.actions`]="{ item }">
             <v-icon small class="mr-2" @click="editItem(item)"
               >mdi-pencil</v-icon
             >
