@@ -47,8 +47,6 @@ class PokerVoting(RulesModel, IGetProject):
         help_text='This represents the type of the voting.'
     )
     manager = models.ForeignKey(
-        blank=True,
-        null=True,
         to='api.PlatformUser',
         on_delete=models.CASCADE,
         related_name='poker_voting_managers',
@@ -80,12 +78,24 @@ class PokerVoting(RulesModel, IGetProject):
         return "PokerVoting ID: {0}".format(self.id,
                                             )
 
+    def save(self, *args, **kwargs):
+        if self.voters is None:
+            project_users = self.project.project_users
+            platform_users = PlatformUser.objects.filter(
+                project_users__in=project_users.all())
+            for platform_user in platform_users.all():
+                self.voters.add(platform_user)
+                print(self.voters.all())
+            self.save(force_update=True)
+            print(self.voters.all())
+
 
 class PokerVote(RulesModel, IGetProject):
     """Model definition for PokerVote."""
     class PokerStatus(models.TextChoices):
-        FINISHED = 'FIN', _('Finished')
-        WAITING = 'WAIT', _('Waiting')
+        ACCEPTED = 'AC', _('Accepted')
+        FINISHED = 'FIN', _('Finished')  # when all player voted
+        WAITING = 'WAIT', _('Waiting')  # When at least one player voted
         SKIPPED = 'SKIP', _('Skipped')
         NOTSTARTED = 'NS', _('not started')
 
@@ -184,5 +194,5 @@ class Vote(RulesModel, IGetProject):
 
     def __str__(self):
         """Unicode representation of PokerVote."""
-        return "Vote ID: {0} for task {1}".format(self.id, self.task
-                                                  )
+        return "Vote ID: {0} for pokerVote {1}".format(self.id, self.poker_vote
+                                                       )

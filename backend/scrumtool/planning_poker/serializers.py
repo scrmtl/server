@@ -40,6 +40,8 @@ class PokerVotingSerializer(
         if not ('project' in data.keys()):
             raise serializers.ValidationError('please select a project')
         manager = data['manager']
+        if manager is None:
+            return data
         if Project.objects.filter(project_users__in=manager.project_users.all()).count() > 0:
             return data
         else:
@@ -82,7 +84,8 @@ class PokerVoteSerializer(
     end_storypoints = serializers.SerializerMethodField()
     act_storypoints = serializers.SerializerMethodField()
     # Storypoints according to fibonacci sequence
-    available_storypoints = [1, 2, 3, 5, 8, 13, 21, 34, 55]
+    available_storypoints = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55]
+    manager = serializers.SerializerMethodField()
 
     def validate(self, attrs):
         return self.task_unique(attrs)
@@ -94,17 +97,21 @@ class PokerVoteSerializer(
                   'task', 'status',
                   'avg_storypoints',
                   'end_storypoints',
-                  'act_storypoints'
+                  'act_storypoints',
+                  'manager'
                   )
 
     def get_avg_storypoints(self, obj: PokerVote):
         # get tasks of accepted sprints
-        if obj.votes.count() == 0:
-            return 0
         storypoints = 0
+        skipped = 0
         for vote in obj.votes.all():
             storypoints += vote.storypoints
-        return storypoints / obj.votes.count()
+            if vote.storypoints == 0:
+                skipped += 1
+        if (obj.votes.count() - skipped) == 0:
+            return 0
+        return storypoints / (obj.votes.count() - 1)
 
     def get_end_storypoints(self, obj: PokerVote):
         if obj.status == PokerVote.PokerStatus.FINISHED:
@@ -116,6 +123,9 @@ class PokerVoteSerializer(
     def get_act_storypoints(self, obj):
         sp = round(self.get_avg_storypoints(obj))
         return min(self.available_storypoints, key=lambda x: abs(x-sp))
+
+    def get_manager(self, obj: PokerVote):
+        return obj.poker_voting.manager.id
 
     def task_unique(self, data):
         # get pokervote for same task
@@ -132,8 +142,32 @@ class VoteSerializer(
     """Base-class serializer for cards.
     Other cards will inherits from this class
     """
+    available_storypoints = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55]
 
-    def validate(self, data):
+    def validate_storypoints(self, value):
+        """
+        Check if the value is a valid storypoint
+        """
+        if value not in self.available_storypoints:
+            raise serializers.ValidationError(
+                f'storypoints has to be one '
+                f'in this list: {self.available_storypoints}')
+        return value
+
+    def validate(self, attrs):
+        self.validate_user_attr(attrs)
+        return self.duplicated_vote(attrs)
+
+    class Meta:
+        model = Vote
+        abstract = True
+        fields = ('id',
+                  'poker_vote',
+                  'user',
+                  'storypoints'
+                  )
+
+    def validate_user_attr(self, data):
         if not ('user' in data.keys()):
             raise serializers.ValidationError('please select a user')
         if not ('poker_vote' in data.keys()):
@@ -146,12 +180,19 @@ class VoteSerializer(
         if poker_voting.count() > 0:
             return data
         else:
-            raise serializers.ValidationError(f'User {user} is not member ' +
-                                              f'of PokerVoting {poker_voting}')
+            raise serializers.ValidationError(
+                f'User {user} is not member ' +
+                f'of PokerVoting {poker_voting.all()}')
 
-    class Meta:
-        model = Vote
-        abstract = True
-        fields = ('id', 'poker_vote',
-                  'user', 'storypoints'
-                  )
+    def duplicated_vote(self, attrs):
+        request = self.context['request']
+        if request.method == 'CREATE':
+            vote = Vote.objects.filter(
+                user=attrs['user'], poker_vote=attrs['poker_vote'])
+            if vote.count() == 0:
+                return attrs
+            else:
+                raise serializers.ValidationError(
+                    f'User {attrs["user"]} already voted for PokerVote ' +
+                    f'{attrs["poker_vote"]}')
+        return attrs

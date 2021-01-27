@@ -13,6 +13,7 @@ class ApiConfig(AppConfig):
 # import signals
     def ready(self):
         import api.signals
+        import planning_poker.signals
         from api.management.commands.runapscheduler import Command
         command = Command()
         x = threading.Thread(target=command.handle)
