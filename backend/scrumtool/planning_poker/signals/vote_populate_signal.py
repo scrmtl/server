@@ -12,7 +12,7 @@ def update_poker_vote_status(sender, instance: Vote, created, update_fields, **k
             poker_vote.status == PokerVote.PokerStatus.NOTSTARTED):
         poker_vote.status = PokerVote.PokerStatus.WAITING
         poker_vote.save()
-    if (poker_voting.voters.count() == poker_vote.votes.count() and
+    if (poker_voting.voters.count() == poker_vote.votes.count() - 1 and
             poker_vote.status == PokerVote.PokerStatus.WAITING):
         poker_vote.status = PokerVote.PokerStatus.FINISHED
         poker_vote.save()
