@@ -1,7 +1,7 @@
 <template>
   <v-row no-gutters>
     <v-col dense class="d-flex flex-nowrap overflow-x-auto">
-      <div class="ma-4" v-for="lane in listBoardLanes" :key="lane.numbering">
+      <div class="ma-4" v-for="lane in listBoardLanes" :key="lane.id">
         <ArchiveLane v-bind:lane="lane"></ArchiveLane>
       </div>
     </v-col>
@@ -10,33 +10,32 @@
 
 <script>
 import ArchiveLane from "@/components/Lanes/ArchiveLane.vue";
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 export default {
   components: {
-    ArchiveLane
+    ArchiveLane,
   },
   computed: {
     ...mapGetters("sprint", {
       sprintsbyProjectId: "byProjectId",
-      listSprints: "list"
+      listSprints: "list",
     }),
     ...mapGetters("lane", {
       listLanes: "list",
-      lanesByIdArray: "byIdArray"
+      lanesByIdArray: "byIdArray",
     }),
     ...mapGetters("board", {
       listBoards: "list",
-      boardByType: "byType"
+      boardByType: "byType",
     }),
-    listBoardLanes(){
+    listBoardLanes() {
       var board = this.boardByType("AB", this.$route.params.id);
-      if( board !== undefined){
+      if (board !== undefined) {
         return this.lanesByIdArray(board.lanes);
-      }
-      else{
+      } else {
         return [];
       }
-    }
+    },
     // listArchivedSprintLanes(){
     //   var board = this.boardByType("AB", this.$route.params.id);
     //   console.log(board);
