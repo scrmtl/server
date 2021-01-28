@@ -346,16 +346,23 @@ export default {
                 task: card.cardId,
                 status: "WAIT",
               },
-            }).catch((error) => {
-              // Delete PokerVoting, if get errors to create pokerVotes
-              this.deleteAsyncPokerVoting({ id: pokerVotingId });
-              this.$store.commit("showSystemAlert", {
-                message:
-                  "Async planning poker with one of those cards already exist." +
-                  error.data.non_field_errors[0],
-                category: "error",
+            })
+              .then(() => {
+                this.$store.commit("showSystemAlert", {
+                  message: "Planning Poker is created.",
+                  category: "info",
+                });
+              })
+              .catch((error) => {
+                // Delete PokerVoting, if get errors to create pokerVotes
+                this.deleteAsyncPokerVoting({ id: pokerVotingId });
+                this.$store.commit("showSystemAlert", {
+                  message:
+                    "Async planning poker with one of those cards already exist." +
+                    error.data.non_field_errors[0],
+                  category: "error",
+                });
               });
-            });
           });
           // delete list with card to vote
           this.cardsToVote = [];
