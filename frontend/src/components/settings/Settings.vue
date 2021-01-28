@@ -7,7 +7,7 @@
       scrollable
       transition="dialog-bottom-transition"
     >
-      <v-card>
+      <v-card color="tabbody">
         <v-toolbar
           dark
           color="tabbody"
@@ -22,13 +22,14 @@
           <v-toolbar-title>Settings</v-toolbar-title>
           <v-spacer></v-spacer>          
         </v-toolbar>
-        
-        <!-- Setting components -->
-        <General/>
-        <v-divider></v-divider> 
-        <PlattformUserManagement/>
-        <v-divider dark></v-divider> 
-        <LabelManagement/>
+        <v-card-text >
+          <!-- Setting components -->
+          <General/>
+          <v-divider></v-divider> 
+          <PlattformUserManagement/>
+          <v-divider dark></v-divider> 
+          <LabelManagement/>
+        </v-card-text>
       </v-card>
     </v-dialog>
   </v-row>
