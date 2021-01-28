@@ -129,11 +129,15 @@ class PokerVoteSerializer(
 
     def task_unique(self, data):
         # get pokervote for same task
-        same_vote = PokerVote.objects.filter(task=data['task'])
-        if same_vote.exists():
-            raise serializers.ValidationError(
-                f'A vote for task {data["task"]} already exists ' +
-                f'with vote {same_vote.first()}')
+        return data
+        request = self.context['request']
+        if request.method == 'CREATE':
+            same_vote = PokerVote.objects.filter(task=data['task'])
+            if same_vote.exists():
+                raise serializers.ValidationError(
+                    f'A vote for task {data["task"]} already exists ' +
+                    f'with vote {same_vote.first()}')
+            return data
         return data
 
 
