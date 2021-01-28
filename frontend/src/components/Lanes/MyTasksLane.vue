@@ -1,22 +1,17 @@
 <template>
-  <v-card 
-  class="lane" 
-  max-width="420" 
-  elevation="5"
-  height="100vh-50"
-  overflow-y = auto
+  <v-card
+    class="lane"
+    max-width="420"
+    elevation="5"
+    height="100vh-50"
+    overflow-y="auto"
   >
-    <v-card-title class="navbar white--text">
-      My Tasks
-    </v-card-title>
-      <v-card-text
-      class="lane-body  flex-column"
-      v-if="allFetched" 
-      >
-        <v-row justify="center" v-for="task in listTasks" :key="task.id">
-            <Task v-bind:task="task" v-bind:task_index="task.id" />
-        </v-row>
-      </v-card-text>
+    <v-card-title class="navbar white--text"> My Tasks </v-card-title>
+    <v-card-text class="lane-body flex-column" v-if="allFetched">
+      <v-row justify="center" v-for="task in listTasks" :key="task.id">
+        <Task v-bind:task="task" v-bind:task_index="task.id" />
+      </v-row>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -27,57 +22,55 @@ import { mapGetters, mapActions, mapState } from "vuex";
 import { mapFields } from "vuex-map-fields";
 export default {
   data: () => ({
-    allFetched: false
+    allFetched: false,
   }),
   components: {
-    Task
+    Task,
   },
   computed: {
     ...mapGetters("task", {
-      listTasks: "list"
+      listTasks: "list",
     }),
     ...mapGetters("session", {
-      listSession: "list"
+      listSession: "list",
     }),
     // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
     // Implementation with https://github.com/maoberlehner/vuex-map-fields
     // the string after the last dot (e.g. `id`) is used
     // for defining the name of the computed property.
-    ...mapFields([
-      "Userinfo.userId"
-    ]),
+    ...mapFields(["Userinfo.userId"]),
 
     ...mapState([
-      "route" // vuex-router-sync
-    ])
+      "route", // vuex-router-sync
+    ]),
   },
 
   methods: {
     ...mapActions("task", {
-      fetchTasks: "fetchList"
+      fetchTasks: "fetchList",
     }),
     ...mapActions("label", {
-      fetchLabels: "fetchList"
+      fetchLabels: "fetchList",
     }),
     ...mapActions("session", {
-      fetchSession: "fetchList"
+      fetchSession: "fetchList",
     }),
 
     fetchData() {
       this.fetchTasks({
-        customUrlFnArgs: { byUser: this.userId }
-      }).then(resp => {
+        customUrlFnArgs: { byUser: this.userId },
+      }).then((resp) => {
         if (resp.status === 200) {
           this.fetchLabels({
-            customUrlFnArgs: {}
-          }).then(resp => {
+            customUrlFnArgs: {},
+          }).then((resp) => {
             this.allFetched = true;
             return resp;
           });
         }
         return resp;
       });
-    }
+    },
   },
 
   watch: {
@@ -86,7 +79,7 @@ export default {
       if (val.id === prev.id) return;
       console.log("watch listTasks Getter: " + val + prev);
       this.fetchData();
-    }
+    },
   },
 
   created() {
@@ -94,7 +87,7 @@ export default {
   },
   mounted() {
     this.fetchData();
-  }
+  },
 };
 </script>
 

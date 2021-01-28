@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <v-dialog
-      v-model="dialog"
+      v-model="settingsDialog"
       fullscreen
       hide-overlay
       scrollable
@@ -9,7 +9,7 @@
     >
       <v-card color="tabbody">
         <v-toolbar dark color="tabbody">
-          <v-btn icon dark @click="close">
+          <v-btn icon dark @click="close()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title>Settings</v-toolbar-title>
@@ -41,6 +41,18 @@ export default {
     PlattformUserManagement,
     LabelManagement,
     General,
+  },
+  computed: {
+    settingsDialog: {
+      get() {
+        return this.dialog;
+      },
+      set(newValue) {
+        if (!newValue) {
+          this.$emit("close-dialog");
+        }
+      },
+    },
   },
   methods: {
     close() {
