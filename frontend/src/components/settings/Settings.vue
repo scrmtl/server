@@ -8,27 +8,20 @@
       transition="dialog-bottom-transition"
     >
       <v-card color="tabbody">
-        <v-toolbar
-          dark
-          color="tabbody"
-        >
-          <v-btn
-            icon
-            dark
-            @click="close"
-          >
+        <v-toolbar dark color="tabbody">
+          <v-btn icon dark @click="close">
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title>Settings</v-toolbar-title>
-          <v-spacer></v-spacer>          
+          <v-spacer></v-spacer>
         </v-toolbar>
-        <v-card-text >
+        <v-card-text>
           <!-- Setting components -->
-          <General/>
-          <v-divider></v-divider> 
-          <PlattformUserManagement/>
-          <v-divider dark></v-divider> 
-          <LabelManagement/>
+          <General />
+          <v-divider></v-divider>
+          <PlattformUserManagement />
+          <v-divider dark></v-divider>
+          <LabelManagement />
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -44,20 +37,19 @@ export default {
   props: {
     dialog: { type: Boolean, default: false },
   },
-  components:{
+  components: {
     PlattformUserManagement,
     LabelManagement,
-    General
+    General,
   },
-  methods:{
+  methods: {
     close() {
       this.$emit("close-dialog");
     },
-  }
-}
-
+  },
+};
 </script>
 
 <style lang="css">
-  @import "../../main.css";
+@import "../../main.css";
 </style>
