@@ -14,7 +14,7 @@
       <div class="ma-4">
         <SprintLane />
       </div>
-      <div class="my-4 ">
+      <div class="my-4">
         <v-timeline class="sprint-number-lane">
           <v-timeline-item
             v-for="sprint in sortedSprintList"
@@ -50,7 +50,7 @@ export default {
   components: {
     Lane,
     SprintLane,
-    PokerLane
+    PokerLane,
   },
   methods: {
     showSprint(sprint) {
@@ -60,7 +60,7 @@ export default {
     formatSprintList(sprint) {
       var format = {
         color: "link",
-        text: "white"
+        text: "white",
       };
       switch (sprint.status) {
         // In Planning
@@ -90,17 +90,17 @@ export default {
           break;
       }
       return format;
-    }
+    },
   },
   computed: {
     ...mapGetters("task", {
-      tasksByIdArray: "byIdArray"
+      tasksByIdArray: "byIdArray",
     }),
     ...mapGetters("lane", {
-      laneByName: "byName"
+      laneByName: "byName",
     }),
     ...mapGetters("sprint", {
-      listSprints: "list"
+      listSprints: "byProjectId",
     }),
 
     neededPlanningLanes() {
@@ -115,8 +115,8 @@ export default {
     },
 
     sortedSprintList() {
-      var list = this.listSprints;
-      var sorted = list.sort(function(a, b) {
+      var list = this.listSprints(parseInt(this.$route.params.id));
+      var sorted = list.sort(function (a, b) {
         var keyA = a.number;
         var keyB = b.number;
         // Vergleiche ob AC oder AR
@@ -125,8 +125,8 @@ export default {
         return 0;
       });
       return sorted;
-    }
-  }
+    },
+  },
 };
 </script>
 

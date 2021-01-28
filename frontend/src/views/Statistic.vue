@@ -101,8 +101,13 @@
               </v-list>
             </v-card-text>
             <v-card-actions>
-              <v-btn color="link" :disabled="selectedSprint == null" outlined @click="createReport(selectedSprint)">
-                <v-icon >mdi-file-chart</v-icon>
+              <v-btn
+                color="link"
+                :disabled="selectedSprint == null"
+                outlined
+                @click="createReport(selectedSprint)"
+              >
+                <v-icon>mdi-file-chart</v-icon>
                 Export Sprint Report
               </v-btn>
             </v-card-actions>
@@ -138,7 +143,7 @@
 <script>
 import { mapGetters } from "vuex";
 import Plotly from "@/components/Plotly.vue";
-import exportPdf from "@/mixins/pdfExportMixin"
+import exportPdf from "@/mixins/pdfExportMixin";
 
 export default {
   name: "Statistic",
@@ -182,7 +187,6 @@ export default {
       },
     },
   }),
-  
 
   methods: {
     showSprint(sprint) {
@@ -248,7 +252,7 @@ export default {
   },
   computed: {
     ...mapGetters("sprint", {
-      listSprints: "list",
+      listSprints: "byProjectId",
     }),
 
     ...mapGetters("sprintStatistics", {
@@ -344,7 +348,7 @@ export default {
     },
 
     sortedSprintList() {
-      var list = this.listSprints;
+      var list = this.listSprints(parseInt(this.$route.params.id));
       var sorted = list.sort(function (a, b) {
         var keyA = a.number;
         var keyB = b.number;
