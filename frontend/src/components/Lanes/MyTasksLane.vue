@@ -24,7 +24,7 @@
 import Task from "@/components/Task.vue";
 //import for CRUD operations
 import { mapGetters, mapActions, mapState } from "vuex";
-
+import { mapFields } from "vuex-map-fields";
 export default {
   data: () => ({
     allFetched: false
@@ -39,6 +39,13 @@ export default {
     ...mapGetters("session", {
       listSession: "list"
     }),
+    // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
+    // Implementation with https://github.com/maoberlehner/vuex-map-fields
+    // the string after the last dot (e.g. `id`) is used
+    // for defining the name of the computed property.
+    ...mapFields([
+      "Userinfo.userId"
+    ]),
 
     ...mapState([
       "route" // vuex-router-sync
@@ -57,19 +64,14 @@ export default {
     }),
 
     fetchData() {
-      this.fetchSession({ customUrlFnArgs: { all: false } }).then(resp => {
+      this.fetchTasks({
+        customUrlFnArgs: { byUser: this.userId }
+      }).then(resp => {
         if (resp.status === 200) {
-          this.fetchTasks({
-            customUrlFnArgs: { byUser: this.listSession.shift().id }
+          this.fetchLabels({
+            customUrlFnArgs: {}
           }).then(resp => {
-            if (resp.status === 200) {
-              this.fetchLabels({
-                customUrlFnArgs: {}
-              }).then(resp => {
-                this.allFetched = true;
-                return resp;
-              });
-            }
+            this.allFetched = true;
             return resp;
           });
         }
