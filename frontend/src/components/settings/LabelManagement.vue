@@ -38,7 +38,7 @@
                   <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
                   </v-card-title>
-                  <v-card-text>
+                  <v-card-text class="overflow-y-auto" style="height: calc(95vh - 250px)">
                     <v-row>
                       <v-text-field
                         label="Text"
@@ -63,17 +63,41 @@
                     <v-btn
                       color="white"
                       text
-                      @click="close"
+                      @click="close()"
                     >
                       Cancel
                     </v-btn>
                     <v-btn
                       color="link"
                       text
-                      @click="save"
+                      @click="save()"
                     >
                       Save
                     </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-dialog
+                v-model="deleteDialog"
+                persistent
+                class="mx-auto"
+                width="600"
+                dark
+              >
+                <v-card color="tabbody" shaped>
+                  <v-card-text class="headline pt-10">
+                    <span class="ml-12">Do you want to remove the selected label?</span>
+                  </v-card-text>
+                  <v-card-actions class="ml-10 pb-10 pt-10">
+                    <v-btn width="250" outlined color="error" @click="confirmDeleteLabel()"
+                      >Yes</v-btn
+                    >
+                    <v-btn
+                      width="250"
+                      outlined
+                      @click="closeDeleteDialog()"
+                      >No</v-btn
+                    >
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -109,11 +133,13 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { mapFields } from "vuex-map-fields";
 export default {
   name: "LabelManagement",
   data: () =>({
     colorPicker: false,
     editedDialog: false,
+    deleteDialog: false,
     editedIndex: -1,
     editedLabel: {
         id: 0,
@@ -146,14 +172,25 @@ export default {
       },
     ],
     swatches: [
-      ["#EF9A9A", "#9fa8da", "#90CAF9"],
-      ["#81d4fa", "#80deea", "#A5D6A7"]
+      ["#EF9A9A", "#F48FB1", "#CE93D8"],
+      ["#B39DDB", "#9FA8DA", "#90CAF9"],
+      ["#81D4FA", "#80DEEA", "#80CBC4"],
+      ["#A5D6A7", "#C5E1A5", "#E6EE9C"],
+      ["#FFF59D", "#FFE082", "#FFCC80"],
+      ["#FFAB91", "#BCAAA4", "#B0BEC5"],
     ],
   }),
   computed:{
     ...mapGetters("label", {
       listLabels: "list"
     }),
+    // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
+    // Implementation with https://github.com/maoberlehner/vuex-map-fields
+    // the string after the last dot (e.g. `id`) is used
+    // for defining the name of the computed property.
+    ...mapFields([
+      "Userinfo.userId"
+    ]),
     formTitle() {
       return this.editedIndex === -1 ? 'New label' : 'Edit label'
     },
@@ -161,11 +198,14 @@ export default {
   },
   methods:{
     ...mapActions("label", {
-      fetchLabel: "fetchList",
+      fetchLabels: "fetchList",
       fetchSingleLabel: "fetchSingle",
       updateLabel: "update",
-      deleteLabel: "destroy",
+      destroyLabel: "destroy",
       createLabel: "create"
+    }),
+    ...mapActions("task", {
+      fetchTasks: "fetchList",
     }),
     editLabel(item) {
         this.editedIndex = this.listLabels.indexOf(item)
@@ -176,28 +216,59 @@ export default {
     deleteLabel(item) {
       this.editedIndex = this.listLabels.indexOf(item)
       this.editedLabel = Object.assign({}, item)
-      this.editedDialog = true
+      this.deleteDialog = true
+    },
+    confirmDeleteLabel(){
+      this.destroyLabel({
+        id: this.editedLabel.id
+      }).then(() => {
+        this.fetchTasks({
+          customUrlFnArgs: { byUser: this.userId }
+        })
+        this.fetchLabels();
+      });
+      this.closeDeleteDialog();
     },
 
-    save () {
+    save() {
       if (this.editedIndex > -1) {
-        console.log("edit")
-        // Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        this.updateLabel({
+          id: this.editedLabel.id,
+          data:{
+            title: this.editedLabel.title,
+            color: this.editedLabel.color
+          }
+        }).then(() => {
+          this.fetchLabels();
+        });
       } else {
-        console.log("new")
-        // this.desserts.push(this.editedItem)
+        this.createLabel({
+          data:{
+            title: this.editedLabel.title,
+            color: this.editedLabel.color
+          }
+        }).then(() => {
+          this.fetchLabels();
+        });
       }
       this.close();
     },
 
-    close () {
+    close() {
       this.editedDialog = false;
       this.$nextTick(() => {
         this.editedLabel = Object.assign({}, this.defaultLabel)
         this.editedIndex = -1;
       })
     },
-  }
+    closeDeleteDialog(){
+      this.deleteDialog = false
+      this.$nextTick(() => {
+        this.editedIeditedLabeltem = Object.assign({}, this.defaultLabel)
+        this.editedIndex = -1
+      })
+    }
+  },
 }
 </script>
 
