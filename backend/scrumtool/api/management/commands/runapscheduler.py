@@ -156,7 +156,8 @@ def create_or_get_lane(ab_board: Board, sprint: Sprint):
             name__icontains=sprint.create_lane_name())
     else:
         # create Name
-        lane_name = instance.create_lane_name()
+        lane_name = sprint.create_lane_name()
+
         # Add new Lane with Sprint Infos to Board
         sprint_lane = Lane(
             board=ab_board,
