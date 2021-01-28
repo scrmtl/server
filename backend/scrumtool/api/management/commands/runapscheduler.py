@@ -17,6 +17,8 @@ from api.models.card import Task
 from api.models import Lane
 from api.models.board import Board
 
+from planning_poker.models import PokerVoting, PokerVote
+
 LOGLEVEL = os.getenv('LOGLEVEL', 'INFO').upper()
 logging.basicConfig(level=LOGLEVEL)
 logger = logging.getLogger(__name__)
@@ -167,6 +169,16 @@ def create_or_get_lane(ab_board: Board, sprint: Sprint):
         return sprint_lane
 
 
+def set_poker_vote_status(end_poker_voting):
+    poker_voting: PokerVoting
+    poker_vote: PokerVote
+    for poker_voting in end_poker_voting:
+        for poker_vote in poker_voting.poker_votes.all():
+            poker_vote.status = PokerVote.PokerStatus.FINISHED
+            poker_vote.save()
+            logger.info(f"-->Finished PokerVote: {poker_vote}")
+
+
 def hourly_job():
     # This job actually starts at 10 o'clock because the server aka
     # the old laptop is only online from 8:00-22:00
@@ -192,6 +204,14 @@ def hourly_job():
     move_cards_handler(start_sprints)
     logger.info(f"--> move_cards_to_archive_handler (Sprint End)")
     move_cards_to_archive_handler(end_sprints)
+
+    # Run schedular for Planning poker
+
+    end_poker_voting = PokerVoting.objects.filter(
+        end__gte=date.today()
+    ).all()
+    logger.info(f"Finishing pokerVotings: {end_poker_voting}")
+    set_poker_vote_status(end_poker_voting)
 
 
 def delete_old_job_executions(max_age=604_800):
