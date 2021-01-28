@@ -114,7 +114,8 @@ class PokerVoteSerializer(
         return storypoints / (obj.votes.count() - skipped)
 
     def get_end_storypoints(self, obj: PokerVote):
-        if obj.status == PokerVote.PokerStatus.FINISHED:
+        if (obj.status != PokerVote.PokerStatus.NOTSTARTED and
+                obj.status != PokerVote.PokerStatus.WAITING):
             sp = round(self.get_avg_storypoints(obj))
             return min(self.available_storypoints, key=lambda x: abs(x-sp))
         else:
