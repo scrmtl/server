@@ -16,6 +16,7 @@ from api.rules_predicates import is_dev_in_project, \
     can_change_board, is_own_profile
 
 from api.models.model_interfaces import IGetProject, IGetBoard
+from api.models import PlatformUser
 
 
 class PokerVoting(RulesModel, IGetProject):
@@ -77,17 +78,6 @@ class PokerVoting(RulesModel, IGetProject):
         """Unicode representation of Board."""
         return "PokerVoting ID: {0}".format(self.id,
                                             )
-
-    def save(self, *args, **kwargs):
-        if self.voters is None:
-            project_users = self.project.project_users
-            platform_users = PlatformUser.objects.filter(
-                project_users__in=project_users.all())
-            for platform_user in platform_users.all():
-                self.voters.add(platform_user)
-                print(self.voters.all())
-            self.save(force_update=True)
-            print(self.voters.all())
 
 
 class PokerVote(RulesModel, IGetProject):
