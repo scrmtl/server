@@ -276,7 +276,8 @@ export default {
         id: this.selectedPokerVote.id,
         data: {
           poker_voting: this.selectedPokerVote.poker_voting,
-          status: "AC"
+          status: "AC",
+          task: this.selectedPokerVote.task
         }
       }).then(()=>{
         this.fetchSinglePokerVote({id: this.selectedPokerVote.id});
