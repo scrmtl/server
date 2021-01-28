@@ -47,7 +47,9 @@
                           :counter="50"
                           prepend-icon="mdi-information-outline"
                           class="ma-1"
-                          :readonly="status === 'DO' || status === 'AC' || readOnly"
+                          :readonly="
+                            status === 'DO' || status === 'AC' || readOnly
+                          "
                           v-model="name"
                         ></v-text-field>
                         <!-- Task description -->
@@ -55,7 +57,9 @@
                           label="Description"
                           prepend-icon="mdi-information-outline"
                           outlined
-                          :readonly="status === 'DO' || status === 'AC' || readOnly"
+                          :readonly="
+                            status === 'DO' || status === 'AC' || readOnly
+                          "
                           class="ma-1"
                           v-model="description"
                         ></v-textarea>
@@ -78,7 +82,9 @@
                       <v-autocomplete
                         v-model="storypoints"
                         :items="availableStorypoints"
-                        :disabled="status === 'DO' || status === 'AC' || readOnly"
+                        :disabled="
+                          status === 'DO' || status === 'AC' || readOnly
+                        "
                         outlined
                         dense
                         label="Story points"
@@ -115,7 +121,7 @@
                         dense
                         label="Sprint due date"
                       ></v-text-field>
-                    </v-col>          
+                    </v-col>
                   </v-row>
                   <v-row align="start">
                     <v-col>
@@ -130,7 +136,7 @@
                     </v-col>
                   </v-row>
                   <v-row v-if="!visableCreate" align="center">
-                    <Label ></Label>
+                    <Label></Label>
                   </v-row>
                   <v-row align="center">
                     <v-card
@@ -142,10 +148,10 @@
                     >
                       <v-card-title class="title">
                         <span class="headline">Assigned users</span>
-                        <v-btn 
-                          :disabled="readOnly" 
-                          icon 
-                          @click="assignedUserDialog = true" 
+                        <v-btn
+                          :disabled="readOnly"
+                          icon
+                          @click="assignedUserDialog = true"
                           class="hidden-sm-and-down"
                         >
                           <v-icon color="link">mdi-dots-horizontal</v-icon>
@@ -158,7 +164,6 @@
                           :availableUsers="allAvaiblableUsers"
                           :dialog="assignedUserDialog"
                           :dialogName="'Assigned users'"
-                          
                         />
                       </v-card-title>
                       <v-card-text>
@@ -189,17 +194,14 @@
               </v-card-text>
               <!-- actions -->
               <v-card-actions>
-                <v-btn
-                  color="link" 
-                  text 
-                  @click="close()"
-                >Close</v-btn>
+                <v-btn color="link" text @click="close()">Close</v-btn>
                 <v-btn
                   v-if="!visableCreate && !readOnly"
                   color="link"
                   text
                   @click="confirm()"
-                  >Save</v-btn>
+                  >Save</v-btn
+                >
                 <v-btn
                   v-if="visableCreate"
                   color="link"
@@ -228,7 +230,7 @@
               <v-card-text>
                 <v-row align="center">
                   <v-col>
-                    <v-list :disabled="readOnly" >
+                    <v-list :disabled="readOnly">
                       <v-list-group
                         value="true"
                         v-for="steplist in steplists"
@@ -249,17 +251,14 @@
               </v-card-text>
               <!-- actions -->
               <v-card-actions>
-                <v-btn
-                  color="link" 
-                  text 
-                  @click="close()"
-                >Close</v-btn>
+                <v-btn color="link" text @click="close()">Close</v-btn>
                 <v-btn
                   v-if="!visableCreate && !readOnly"
                   color="link"
                   text
                   @click="confirm()"
-                  >Save</v-btn>
+                  >Save</v-btn
+                >
                 <v-btn
                   v-if="visableCreate"
                   color="link"
@@ -302,12 +301,7 @@
           <v-btn width="250" outlined color="error" @click="deleteTaskFn"
             >Yes</v-btn
           >
-          <v-btn
-            width="250"
-            outlined
-            @click="deleteDialog = false"
-            >No</v-btn
-          >
+          <v-btn width="250" outlined @click="deleteDialog = false">No</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -330,35 +324,36 @@ export default {
     assignedUserDialog: false,
     isFormValid: null,
     taskNameRules: [
-      v => !!v || "Name is required",
-      v => (v && v.length <= 50) || "Name must be less than 50 characters"
-    ]
+      (v) => !!v || "Name is required",
+      (v) => (v && v.length <= 50) || "Name must be less than 50 characters",
+    ],
   }),
   components: {
     ProfileAvatar,
     ProfileTooltip,
     Steplist,
     Label,
-    AssignedUserManagement
+    AssignedUserManagement,
   },
   methods: {
     ...mapActions("label", {
       fetchLabel: "fetchList",
       createLabel: "create",
       updateLabel: "update",
-      deleteLabel: "destroy"
+      deleteLabel: "destroy",
     }),
     ...mapActions("task", {
       createTask: "create",
       fetchSingleTask: "fetchSingle",
       updateTask: "update",
-      deleteTask: "destroy"
+      deleteTask: "destroy",
+      fetchTasks: "fetchList",
     }),
     ...mapActions("lane", {
       fetchSingleLane: "fetchSingle",
     }),
     ...mapActions("user", {
-      fetchPlattformUsers: "fetchList"
+      fetchPlattformUsers: "fetchList",
     }),
 
     close() {
@@ -369,12 +364,17 @@ export default {
       this.saveTask();
       this.$store.commit("selected/hideTaskDetail");
     },
-    addAssignedUser(userId){
-      if(!this.assigned_users.includes(userId)){
+    addAssignedUser(userId) {
+      if (!this.assigned_users.includes(userId)) {
         this.assigned_users.push(userId);
-      }
-      else{
-        this.$store.commit("showSystemAlert", {message: "User " + this.plattformUserById(userId).username +" already assigned" , category: "error"});
+      } else {
+        this.$store.commit("showSystemAlert", {
+          message:
+            "User " +
+            this.plattformUserById(userId).username +
+            " already assigned",
+          category: "error",
+        });
       }
     },
 
@@ -387,25 +387,24 @@ export default {
           storypoints: this.storypoints,
           lane: this.lane,
           feature: this.feature,
-          status: "NW"
+          status: "NW",
         },
-        customUrlFnArgs: {}
+        customUrlFnArgs: {},
       }).then(
         function(value) {
           if (!(value.data.id === undefined)) {
             this.fetchSingleTask({
               id: value.data.id,
-              customUrlFnArgs: {}
-            })
+              customUrlFnArgs: {},
+            });
             this.fetchSingleLane({
-              id: this.lane, 
-              customUrlFnArgs: {}
-            }) 
+              id: this.lane,
+              customUrlFnArgs: {},
+            });
           }
           this.close();
         }.bind(this)
       );
-      
     },
 
     saveTask() {
@@ -413,19 +412,19 @@ export default {
       var data = {
         name: this.name,
         feature: this.feature,
-      }
+      };
       // Declined Workflow
       // If the task declined from PO, is a workflow nessesary
-      if(this.status === "DE"){
+      if (this.status === "DE") {
         var lanes = this.laneByName("Ready (for next Sprints)");
-        if(lanes.length > 0){
-          data.status = "NW"
-          data.lane = lanes.shift().id
-          data.sprint = null
+        if (lanes.length > 0) {
+          data.status = "NW";
+          data.lane = lanes.shift().id;
+          data.sprint = null;
         }
       }
       // normal save
-      else{
+      else {
         data.description = this.description;
         data.storypoints = this.storypoints;
         data.assigned_users = this.assigned_users;
@@ -438,21 +437,23 @@ export default {
       this.updateTask({
         id: this.id,
         data,
-        customUrlFnArgs: {}
+        customUrlFnArgs: {},
       }).then(
         function(value) {
           if (!(value.data.id === undefined)) {
             this.fetchSingleTask({
               id: value.data.id,
-              customUrlFnArgs: {}
+              customUrlFnArgs: {},
             });
           }
         }.bind(this)
       );
     },
 
-    deleteAssignedUser(userId){
-      this.assigned_users = this.assigned_users.filter(user => user !== userId);
+    deleteAssignedUser(userId) {
+      this.assigned_users = this.assigned_users.filter(
+        (user) => user !== userId
+      );
     },
 
     deleteTaskFn() {
@@ -460,14 +461,13 @@ export default {
       var laneId = this.lane;
       this.deleteTask({
         id: this.id,
-        customUrlFnArgs: {}
-      }).then(()=>{
-        this.fetchSingleLane({id: laneId, customUrlFnArgs: {}})
-      })
+        customUrlFnArgs: {},
+      }).then(() => {
+        //console.log(laneId);
+        this.fetchSingleLane({ id: laneId, customUrlFnArgs: {} });
+      });
       this.close();
     },
-
-    
   },
   computed: {
     // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
@@ -495,84 +495,83 @@ export default {
       listPlattfromUsers: "list",
       plattformUsersbyIdArrayWithDetails: "byIdArrayWithDetails",
       plattformUsersbyProjectId: "byProjectId",
-      plattformUserById: "byId"
+      plattformUserById: "byId",
     }),
     ...mapGetters("projectRole", {
       listProjectRoles: "list",
-      projectRoleById: "byId"
+      projectRoleById: "byId",
     }),
     ...mapGetters("sprint", {
-      sprintById: "byId"
+      sprintById: "byId",
     }),
     ...mapGetters("lane", {
-      laneByName: "byName"
+      laneByName: "byName",
     }),
 
-    plannedSprintNumber(){
-      if(this.sprint != null){
-        return this.sprintById(this.sprint).number
+    plannedSprintNumber() {
+      if (this.sprint != null) {
+        return this.sprintById(this.sprint).number;
+      } else {
+        return "Task not planned";
       }
-      else{
-        return "Task not planned"
-      }      
     },
-    plannedSprintStart(){ 
-      if(this.sprint != null){
-        return this.sprintById(this.sprint).start
-      }
-      else{
-        return "Task not planned"
-      }  
-    },
-
-    plannedSprintVersion(){
-      if(this.sprint != null){
-        return this.sprintById(this.sprint).version
-      }
-      else{
-        return "Task not planned"
+    plannedSprintStart() {
+      if (this.sprint != null) {
+        return this.sprintById(this.sprint).start;
+      } else {
+        return "Task not planned";
       }
     },
 
-    plannedSprintEnd(){
-      if(this.sprint != null){
-        return this.sprintById(this.sprint).end
+    plannedSprintVersion() {
+      if (this.sprint != null) {
+        return this.sprintById(this.sprint).version;
+      } else {
+        return "Task not planned";
       }
-      else{
-        return "Task not planned"
+    },
+
+    plannedSprintEnd() {
+      if (this.sprint != null) {
+        return this.sprintById(this.sprint).end;
+      } else {
+        return "Task not planned";
       }
     },
 
     allAssignedUsers() {
-      return this.plattformUsersbyIdArrayWithDetails(this.assigned_users, this.project);
+      return this.plattformUsersbyIdArrayWithDetails(
+        this.assigned_users,
+        this.project
+      );
     },
 
-    allAvaiblableUsers(){
+    allAvaiblableUsers() {
       return this.plattformUsersbyProjectId(this.project);
     },
-    disableStatusChange(){
-      if(this.visableCreate){
+    disableStatusChange() {
+      if (this.visableCreate) {
         return true;
-      }
-      else if(this.readOnly){
+      } else if (this.readOnly) {
         return true;
-      }
-      else if(this.status === "DO" || this.status === "AC" || this.status === "DE"){
+      } else if (
+        this.status === "DO" ||
+        this.status === "AC" ||
+        this.status === "DE"
+      ) {
         return false;
-      }
-      else{
+      } else {
         return true;
       }
     },
-    availableStatus(){
-      if(this.status === "DO" || this.status === "AC" || this.status === "DE"){
-        return [
-          "Done",
-          "Accepted",
-          "Declined"
-        ]
-      }
-      else{
+    availableStatus() {
+      if (
+        this.status === "DO" ||
+        this.status === "AC" ||
+        this.status === "DE"
+      ) {
+        return ["Done", "Accepted", "Declined"];
+      } else {
         return [
           "New",
           "Planned",
@@ -580,9 +579,8 @@ export default {
           "In Progress",
           "Done",
           "Accepted",
-          "Declined"
-        ]
- 
+          "Declined",
+        ];
       }
     },
 
@@ -642,7 +640,7 @@ export default {
             break;
         }
         this.status = status;
-      }
+      },
     },
 
     visibleDrawer: {
@@ -655,15 +653,15 @@ export default {
         } else {
           this.$store.commit("selected/hideTaskDetail");
         }
-      }
-    }
-  },
-  watch:{
-    visibleDrawer(val, prev){
-      if(val === prev) return;
+      },
     },
-    id(val, prev){
-      if(val !== prev){
+  },
+  watch: {
+    visibleDrawer(val, prev) {
+      if (val === prev) return;
+    },
+    id(val, prev) {
+      if (val !== prev) {
         this.tab = "DetailTab";
       }
     },
@@ -673,12 +671,10 @@ export default {
     this.fetchLabel();
   },
 
-  mounted(){
-
-  }
+  mounted() {},
 };
 </script>
 <style lang="css" scoped>
-  @import "../main.css";
-  @import "./Profile/profile.css";
+@import "../main.css";
+@import "./Profile/profile.css";
 </style>
