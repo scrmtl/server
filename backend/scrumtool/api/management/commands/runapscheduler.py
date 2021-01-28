@@ -164,6 +164,7 @@ def create_or_get_lane(ab_board: Board, sprint: Sprint):
             name=lane_name,
         )
         sprint_lane.save()
+        return sprint_lane
 
 
 def hourly_job():
