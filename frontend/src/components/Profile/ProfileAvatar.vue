@@ -1,18 +1,19 @@
 <template>
-    <v-avatar :class="(customClass) ? customClass : ''" :color="(!avatar.img) ? GetColour(avatar.plattform_user.username) : null" :size="size">
-      <slot></slot>
-      <img
-        v-if="avatar.img"
-        :src="avatar.img"
-        :alt="avatar.plattform_user.username"
-      >
-      <span
-        v-else
-        class="white--text"
-      >
-        {{ GetInitials(avatar.plattform_user.username) }}
-      </span>
-    </v-avatar>
+  <v-avatar
+    :class="customClass ? customClass : ''"
+    :color="!avatar.img ? GetColour(avatar.plattform_user.username) : null"
+    :size="size"
+  >
+    <slot></slot>
+    <img
+      v-if="avatar.img"
+      :src="avatar.img"
+      :alt="avatar.plattform_user.username"
+    />
+    <span v-else class="white--text">
+      {{ GetInitials(avatar.plattform_user.username) }}
+    </span>
+  </v-avatar>
 </template>
 
 <script>
@@ -20,49 +21,41 @@ export default {
   props: {
     avatar: {
       default: () => {},
-      type: Object
+      type: Object,
     },
     customClass: {
-      default: '',
-      type: String
+      default: "",
+      type: String,
     },
     size: {
-      default: '32px',
-      type: String
-    }
-  },
-  
-  methods: {
-    GetColour (name) {
-        var hash = 0;
-        if (name.length === 0) return hash;
-        for (var i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + ((hash << 5) - hash);
-            hash = hash & hash;
-        }
-        var color = '#'
-        for (var j = 0; j < 3; j++) {
-            var value = (hash >> (j * 8)) & 255;
-            color += ('00' + value.toString(16)).substr(-2);
-        }
-        return color;
+      default: "32px",
+      type: String,
     },
-    GetInitials (name) {
-        var initials = "AA";
-        initials = name.substring(0,2);
-        return initials;
-        // const parts = name.split(' ')
-        // let initials = ''
-        // for (var i = 0; i < parts.length; i++) {
-        //   if (parts[i].length > 0 && parts[i] !== '') {
-        //     initials += parts[i][0]
-        //   }
-        // }
-        // return initials
-    }
-  }
-}
+  },
+
+  methods: {
+    GetColour(name) {
+      var hash = 0;
+      if (name.length === 0) return hash;
+      for (var i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        hash = hash & hash;
+      }
+      var color = "#";
+      for (var j = 0; j < 3; j++) {
+        var value = (hash >> (j * 8)) & 255;
+        color += ("00" + value.toString(16)).substr(-2);
+      }
+      return color;
+    },
+    GetInitials(name) {
+      var initials = "AA";
+      initials = name.substring(0, 2);
+      return initials;
+    },
+  },
+};
 </script>
 <style lang="css" scoped>
-@import './profile.css';
+@import "./profile.css";
 </style>
