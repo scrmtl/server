@@ -129,8 +129,8 @@ def move_cards_to_archive_handler(sprints_today):
             logger.info(
                 f"   --> SB : {sb_board}")
             done_lane: Lane = sb_board.lanes.get(name__icontains='Done')
-            archive_lane: Lane = ab_board.lanes.get(
-                name__icontains=sprint.create_lane_name())
+
+            archive_lane: Lane = create_or_get_lane(ab_board, sprint)
             logger.info(
                 f"Move cards from lane {done_lane}\
                      located in board {sb_board} to lane\
@@ -147,6 +147,22 @@ def move_cards_to_archive_handler(sprints_today):
                         f"Moved card {task} \n")
                     task.lane = archive_lane
                     task.save()
+
+
+def create_or_get_lane(ab_board: Board, sprint: Sprint):
+    if ab_board.lanes.filter(
+            name__icontains=sprint.create_lane_name()).exists():
+        return ab_board.lanes.get(
+            name__icontains=sprint.create_lane_name())
+    else:
+        # create Name
+        lane_name = instance.create_lane_name()
+        # Add new Lane with Sprint Infos to Board
+        sprint_lane = Lane(
+            board=ab_board,
+            name=lane_name,
+        )
+        sprint_lane.save()
 
 
 def hourly_job():
