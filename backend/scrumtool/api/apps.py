@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+import os
 import subprocess
 import asyncio
 import threading
@@ -13,7 +14,11 @@ class ApiConfig(AppConfig):
 # import signals
 
     def ready(self):
-        if ApiConfig.run_already:
+        stdlogger.info(
+            f"--- ready of App {ApiConfig.name} called --- " +
+            f"--- os environment {os.environ.get('RUN_MAIN', None)} --- " +
+            f"--- process id: {os.getpid()}")
+        if ApiConfig.run_already or os.environ.get('RUN_MAIN', None) != 'true':
             return
         ApiConfig.run_already = True
         import api.signals
