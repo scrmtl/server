@@ -17,6 +17,11 @@ const state = () => ({
     visableCreate: false,
     readOnly: false,
     details: {}
+  },
+  pokerVote: {
+    visableDetail: false,
+    readOnly: false,
+    details: {}
   }
 });
 
@@ -95,6 +100,25 @@ const mutations = {
 
   setTaskDetail(state, task) {
     state.task.details = task;
+  },
+
+  showPokerVoteDetail(state) {
+    state.pokerVote.visableDetail = true;
+  },
+
+  showPokerVoteDetailWithReadOnly(state) {
+    state.pokerVote.visableDetail = true;
+    state.pokerVote.readOnly = true;
+  },
+
+  hidePokerVoteDetail(state) {
+    state.pokerVote.visableDetail = false;
+    state.pokerVote.readOnly = false;
+    state.pokerVote.details = {};
+  },
+
+  setPokerVoteDetail(state, pokerVote) {
+    state.pokerVote.details = pokerVote;
   }
 };
 
