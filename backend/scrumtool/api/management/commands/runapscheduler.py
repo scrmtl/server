@@ -134,9 +134,9 @@ def move_cards_to_archive_handler(sprints_today):
 
             archive_lane: Lane = create_or_get_lane(ab_board, sprint)
             logger.info(
-                f"Move cards from lane {done_lane}\
-                     located in board {sb_board} to lane\
-                     {archive_lane} located in board {ab_board}")
+                f"   --> Move cards from lane {done_lane} " +
+                f"located in board {sb_board} to lane " +
+                f"{archive_lane} located in board {ab_board}")
             # get tasks of Sprint Backlog
             tasks = Task.objects.filter(
                 lane=done_lane.id,
@@ -146,7 +146,7 @@ def move_cards_to_archive_handler(sprints_today):
             for task in tasks.all():
                 if task.sprint is not None:
                     logger.info(
-                        f"Moved card {task} \n")
+                        f"      -->Moved card {task} \n")
                     task.lane = archive_lane
                     task.save()
 
@@ -185,8 +185,8 @@ def hourly_job():
     logger.info(
         "---------------------Executing hourly_job-----------------------")
     start_sprints = Sprint.objects.filter(
-        start__gte=date.today(),
-        end__lte=date.today()).all()
+        start__lte=date.today(),
+        end__gte=date.today()).all()
     end_sprints = Sprint.objects.filter(
         end__range=(date.today() -
                     timedelta(days=30), date.today())).all()
