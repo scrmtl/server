@@ -196,7 +196,7 @@ export default {
   data: () => ({
     discardDialog: false,
     selectedStorypoints: 0,
-    availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55],
+    availableStorypoints: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55]
   }),
   computed: {
     // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
@@ -205,13 +205,13 @@ export default {
     // for defining the name of the computed property.
     ...mapFields(["Userinfo.userId"]),
     ...mapGetters("vote", {
-      voteById: "byPokerVoteId",
+      voteById: "byPokerVoteId"
     }),
     ...mapGetters("user", {
-      plattformUserById: "byId",
+      plattformUserById: "byId"
     }),
     ...mapGetters("pokerVoting", {
-      pokerVotingById: "byId",
+      pokerVotingById: "byId"
     }),
     isActionAllowed() {
       if (this.selectedPokerVote.manager === this.userId) {
@@ -237,12 +237,12 @@ export default {
       var votes = this.voteById(this.selectedPokerVote.id);
       var voter = [];
       if (votes.length > 0) {
-        votes.forEach((vote) => {
+        votes.forEach(vote => {
           var user = this.plattformUserById(vote.user);
           voter.push({
             name: user.username + ` (${user.name})`,
             storypoints: vote.storypoints,
-            color: "white",
+            color: "white"
           });
         });
       }
@@ -282,16 +282,16 @@ export default {
     namedManager() {
       var user = this.plattformUserById(this.pokerVoting.manager);
       return user.username + ` (${user.name})`;
-    },
+    }
   },
   methods: {
     ...mapActions("pokerVote", {
       fetchSinglePokerVote: "fetchSingle",
-      updatePokerVote: "update",
+      updatePokerVote: "update"
     }),
     ...mapActions("task", {
       fetchSingleTask: "fetchSingle",
-      updateTask: "update",
+      updateTask: "update"
     }),
 
     acceptAsyncVote() {
@@ -301,8 +301,8 @@ export default {
         data: {
           poker_voting: this.selectedPokerVote.poker_voting,
           status: "AC",
-          task: this.selectedPokerVote.task,
-        },
+          task: this.selectedPokerVote.task
+        }
       }).then(() => {
         this.fetchSinglePokerVote({ id: this.selectedPokerVote.id });
       });
@@ -315,8 +315,8 @@ export default {
           poker_voting: this.selectedPokerVote.poker_voting,
           status: "SKIP",
           end_storypoints: this.selectedPokerVote.act_storypoints,
-          task: this.selectedPokerVote.task,
-        },
+          task: this.selectedPokerVote.task
+        }
       }).then(() => {
         this.fetchSinglePokerVote({ id: this.selectedPokerVote.id });
       });
@@ -331,13 +331,13 @@ export default {
           poker_voting: this.selectedPokerVote.poker_voting,
           status: "SKIP",
           end_storypoints: this.selectedStorypoints,
-          task: this.selectedPokerVote.task,
-        },
+          task: this.selectedPokerVote.task
+        }
       }).then(() => {
         this.fetchSinglePokerVote({ id: this.selectedPokerVote.id });
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
