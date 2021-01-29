@@ -285,22 +285,22 @@ export default {
       // const taskSprintId = e.dataTransfer.getData("task-sprint-id");
       // const taskSprintStatus = e.dataTransfer.getData("task-sprint-status");
       const taskStorypoints = e.dataTransfer.getData("task-storypoints");
-      if (this.cardsToVote.findIndex(item => item.cardId == taskId) == -1) {
+      if (this.cardsToVote.findIndex((item) => item.cardId == taskId) == -1) {
         this.cardsToVote.push({
           cardName: taskName,
           cardId: taskId,
-          cardStorypoints: taskStorypoints
+          cardStorypoints: taskStorypoints,
         });
       } else {
         this.$store.commit("showSystemAlert", {
           message: "Card is already added in planning poker",
-          category: "warning"
+          category: "warning",
         });
       }
     },
     removePoker(vote) {
       this.cardsToVote = this.cardsToVote.filter(
-        item => item.cardId !== vote.cardId
+        (item) => item.cardId !== vote.cardId
       );
     },
     saveEndVoteDate(date) {
@@ -353,7 +353,7 @@ export default {
                   category: "info",
                   link: true,
                   linkName: "Go To Poker",
-                  linkDestination: "PlanningPoker"
+                  linkDestination: "PlanningPoker",
                 });
               })
               .catch((error) => {

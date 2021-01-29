@@ -173,7 +173,7 @@ export default {
       // NS, WAIT, SKIP, VOTED, ABSTENTION, NOTVOTED, AC
       if (this.votes.length > 0 && this.pokerVote.status === "WAIT") {
         // check vote abstention
-        if (this.votes.some(vote => vote.storypoints === 0)) {
+        if (this.votes.some((vote) => vote.storypoints === 0)) {
           return "ABSTENTION";
         } else {
           return "VOTED";
@@ -182,7 +182,7 @@ export default {
       // Voting is closed
       else if (this.votes.length > 0 && this.pokerVote.status === "FIN") {
         // check vote abstention
-        if (this.votes.some(vote => vote.storypoints === 0)) {
+        if (this.votes.some((vote) => vote.storypoints === 0)) {
           return "ABSTENTION";
         } else {
           return "VOTED";
@@ -200,7 +200,7 @@ export default {
       else {
         return this.pokerVote.status;
       }
-    }
+    },
   },
   methods: {
     ...mapActions("pokerVote", {
@@ -234,8 +234,8 @@ export default {
         data: {
           poker_vote: this.pokerVote.id,
           user: this.userId,
-          storypoints: 0
-        }
+          storypoints: 0,
+        },
       }).then(() => {
         this.fetchSinglePokerVote({ id: this.pokerVote.id });
         this.fetchUserVotes();
@@ -247,8 +247,8 @@ export default {
           data: {
             poker_vote: this.pokerVote.id,
             user: this.userId,
-            storypoints: this.selectedStorypoints
-          }
+            storypoints: this.selectedStorypoints,
+          },
         }).then(() => {
           this.fetchSinglePokerVote({ id: this.pokerVote.id });
           this.fetchUserVotes();
@@ -256,14 +256,13 @@ export default {
       } else {
         this.$store.commit("showSystemAlert", {
           message: "Storypoint can't be zero. May you want to skip the vote",
-          category: "warning"
+          category: "warning",
         });
       }
-    }
+    },
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 
-<style>
-</style>
+<style></style>

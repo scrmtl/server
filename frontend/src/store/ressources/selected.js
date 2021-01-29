@@ -4,25 +4,25 @@ const state = () => ({
   project: {
     visableDetail: false,
     visableCreate: false,
-    details: {}
+    details: {},
   },
   sprint: {
     visableDetail: false,
     visableCreate: false,
     readOnly: false,
-    details: {}
+    details: {},
   },
   task: {
     visableDetail: false,
     visableCreate: false,
     readOnly: false,
-    details: {}
+    details: {},
   },
   pokerVote: {
     visableDetail: false,
     readOnly: false,
-    details: {}
-  }
+    details: {},
+  },
 });
 
 const mutations = {
@@ -37,7 +37,7 @@ const mutations = {
         name: "",
         start: "",
         end: "",
-        sprint_duration: 0
+        sprint_duration: 0,
       };
     }
   },
@@ -58,7 +58,7 @@ const mutations = {
       state.sprint.details = {
         version: "",
         project: 0,
-        story: ""
+        story: "",
       };
     }
   },
@@ -119,11 +119,11 @@ const mutations = {
 
   setPokerVoteDetail(state, pokerVote) {
     state.pokerVote.details = pokerVote;
-  }
+  },
 };
 
 const getters = {
-  getField
+  getField,
 };
 
 export default {
@@ -133,5 +133,5 @@ export default {
   name: "selected",
   state,
   getters,
-  mutations
+  mutations,
 };

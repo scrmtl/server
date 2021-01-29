@@ -13,20 +13,18 @@ import Project from "../views/Project.vue";
 import ProjectDashboard from "../views/ProjectDashboard";
 import PlanningPoker from "../views/PlanningPoker";
 
-
-
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/login",
     name: "LogIn",
-    component: LogIn
+    component: LogIn,
   },
   {
     path: "/register",
     name: "Register",
-    component: Register
+    component: Register,
   },
   {
     path: "/",
@@ -50,43 +48,45 @@ const routes = [
       },
       {
         path: "SprintBacklog",
-        component: SprintBacklog
+        component: SprintBacklog,
       },
       {
         path: "SprintPlaning",
-        component: SprintPlaning
+        component: SprintPlaning,
       },
       {
         path: "Statistic",
-        component: Statistic
+        component: Statistic,
       },
       {
         path: "Archive",
-        component: Archive
+        component: Archive,
       },
-    ]
+    ],
   },
   {
     path: "/poker",
     name: "PlanningPoker",
-    component: PlanningPoker
-  }
+    component: PlanningPoker,
+  },
 ];
 
 const router = new VueRouter({
-  routes
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== "LogIn" && !localStorage.getItem('token') && to.name !== "Register") {
+  if (
+    to.name !== "LogIn" &&
+    !localStorage.getItem("token") &&
+    to.name !== "Register"
+  ) {
     if (to.name == "Register") {
       next({ name: "Register" });
-    }
-    else {
+    } else {
       next({ name: "LogIn" });
     }
-  }
-  else {
+  } else {
     next();
   }
 });

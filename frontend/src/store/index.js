@@ -52,7 +52,7 @@ export default new Vuex.Store({
       email: "",
       groups: [],
       token: localStorage.getItem("token") || "",
-      refreshToken: localStorage.getItem("refreshToken") || ""
+      refreshToken: localStorage.getItem("refreshToken") || "",
     },
 
     systemAlert: {
@@ -61,12 +61,12 @@ export default new Vuex.Store({
       linkName: "Home",
       linkDestination: "Home",
       message: "",
-      category: "info"
+      category: "info",
     },
 
     navigation: {
-      visable: false
-    }
+      visable: false,
+    },
   },
   // call REST API (async)
   // Use from the components
@@ -79,34 +79,48 @@ export default new Vuex.Store({
           url: "o/token/",
           auth: {
             username: "ttLwLjOKoJWtm5NDRRfGbgfioDhS7hwGZ0iaAzzD",
-            password: "SPWysYuxLcr4ju0ITzqKASIQObiWaaUQbKb4ofYgJTv2QmkFSqfgroR3GIOg1QH41okgg0UHPh3gbTUiXuKKuj85Qy241hyBrn851v6eTVOpRujVWzZZP3npTki1Znnc"
+            password:
+              "SPWysYuxLcr4ju0ITzqKASIQObiWaaUQbKb4ofYgJTv2QmkFSqfgroR3GIOg1QH41okgg0UHPh3gbTUiXuKKuj85Qy241hyBrn851v6eTVOpRujVWzZZP3npTki1Znnc",
           },
           data:
-            "grant_type=password&username=" + credentials.username + "&password=" + credentials.password + "&scope=write"
-        }
-        )
-          .then(resp => {
+            "grant_type=password&username=" +
+            credentials.username +
+            "&password=" +
+            credentials.password +
+            "&scope=write",
+        })
+          .then((resp) => {
             const token = resp.data.access_token;
             const refreshToken = resp.data.refresh_token;
             // const user = credentials.username;
             localStorage.setItem("token", token);
             localStorage.setItem("refreshToken", refreshToken);
             Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-            dispatch("session/fetchList", { id: null, customUrlFnArgs: { all: false } })
-              .then((res) => {
-                var session = Object.values(res.data)[0];
-                commit("AUTH_SUCCESS", { token: token, refreshToken: refreshToken, user: session.username, id: session.id, name: session.name, email: session.email, groups: session.groups });
-              })
+            dispatch("session/fetchList", {
+              id: null,
+              customUrlFnArgs: { all: false },
+            }).then((res) => {
+              var session = Object.values(res.data)[0];
+              commit("AUTH_SUCCESS", {
+                token: token,
+                refreshToken: refreshToken,
+                user: session.username,
+                id: session.id,
+                name: session.name,
+                email: session.email,
+                groups: session.groups,
+              });
+            });
 
             resolve(resp);
           })
-          .catch(err => {
+          .catch((err) => {
             commit("AUTH_ERROR");
             localStorage.removeItem("token");
             localStorage.removeItem("refreshToken");
             reject(err);
-          })
-      })
+          });
+      });
     },
     logout({ commit }) {
       return new Promise((resolve) => {
@@ -115,12 +129,11 @@ export default new Vuex.Store({
         localStorage.removeItem("refreshToken");
         delete Axios.defaults.headers.common["Authorization"];
         resolve();
-      })
-    }
+      });
+    },
   },
   //Update States (sync)
   mutations: {
-
     updateField,
 
     showNavigation(state) {
@@ -138,7 +151,7 @@ export default new Vuex.Store({
         category = "info",
         link = false,
         linkName = "Poker",
-        linkDestination = "PlanningPoker"
+        linkDestination = "PlanningPoker",
       }
     ) {
       state.systemAlert.visible = true;
@@ -167,7 +180,10 @@ export default new Vuex.Store({
     AUTH_REQUEST(state) {
       state.Userinfo.status = "loading";
     },
-    AUTH_SUCCESS(state, { token, refreshToken, user, id, email, name, groups }) {
+    AUTH_SUCCESS(
+      state,
+      { token, refreshToken, user, id, email, name, groups }
+    ) {
       // this.fetchSession({
       //   id: null,
       //   customUrlFnArgs: { all: false },
@@ -194,27 +210,24 @@ export default new Vuex.Store({
       state.Userinfo.email = "";
       state.Userinfo.groups = [];
     },
-
   },
   getters: {
     getField,
 
-    getToken: state => {
+    getToken: (state) => {
       return state.Userinfo.token;
     },
 
-    getUserinfo: state => {
+    getUserinfo: (state) => {
       return state.Userinfo;
     },
 
-    isLoggedIn: state => {
+    isLoggedIn: (state) => {
       return !!state.Userinfo.token;
     },
-    authStatus: state => {
+    authStatus: (state) => {
       return state.Userinfo.status;
     },
-
-
   },
   modules: {
     task,
@@ -239,7 +252,6 @@ export default new Vuex.Store({
     poker,
     vote,
     pokerVote,
-    pokerVoting
-  }
+    pokerVoting,
+  },
 });
-

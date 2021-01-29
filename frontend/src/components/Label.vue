@@ -62,7 +62,6 @@
   </v-container>
 </template>
 
-
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
