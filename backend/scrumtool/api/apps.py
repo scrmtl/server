@@ -19,7 +19,9 @@ class ApiConfig(AppConfig):
             f"--- os environment {os.environ.get('RUN_MAIN', None)} --- " +
             f"--- process id: {os.getpid()}")
         if ApiConfig.run_already or os.environ.get('RUN_MAIN', None) != 'true':
+            stdlogger.info("skip app setup")
             return
+        stdlogger.info("set up app")
         ApiConfig.run_already = True
         import api.signals
         import planning_poker.signals
