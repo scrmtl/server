@@ -4,19 +4,19 @@ const state = () => ({
   project: {
     visableDetail: false,
     visableCreate: false,
-    details: {},
+    details: {}
   },
   sprint: {
     visableDetail: false,
     visableCreate: false,
     readOnly: false,
-    details: {},
+    details: {}
   },
   task: {
     visableDetail: false,
     visableCreate: false,
     readOnly: false,
-    details: {},
+    details: {}
   }
 });
 
@@ -30,10 +30,10 @@ const mutations = {
       // Set Default values of nessessary data
       state.project.details = {
         name: "",
-        start:"",
+        start: "",
         end: "",
         sprint_duration: 0
-      }
+      };
     }
   },
   hideProjectDetail(state) {
@@ -41,7 +41,6 @@ const mutations = {
     state.project.visableCreate = false;
     state.project.details = {};
   },
-  
   setProjectDetail(state, project) {
     state.project.details = project;
   },
@@ -59,7 +58,7 @@ const mutations = {
     }
   },
 
-  showSprintDetailWithReadOnly(state){
+  showSprintDetailWithReadOnly(state) {
     state.sprint.visableDetail = true;
     state.sprint.readOnly = true;
   },
@@ -68,7 +67,6 @@ const mutations = {
     state.sprint.visableDetail = false;
     state.sprint.visableCreate = false;
     state.sprint.readOnly = false;
-    // state.sprint.details = {};
   },
 
   setSprintDetail(state, sprint) {
@@ -83,7 +81,7 @@ const mutations = {
     }
   },
 
-  showTaskDetailWithReadOnly(state){
+  showTaskDetailWithReadOnly(state) {
     state.task.visableDetail = true;
     state.task.readOnly = true;
   },
@@ -97,13 +95,12 @@ const mutations = {
 
   setTaskDetail(state, task) {
     state.task.details = task;
-  },
+  }
 };
 
 const getters = {
   getField
 };
-
 
 export default {
   // We're using namespacing
