@@ -18,13 +18,15 @@
             </v-list-item-content>
 
             <v-list-item-avatar tile size="100" color="transparent">
-              <v-progress-circular
-                :rotate="-90"
-                :size="100"
-                :width="15"
-                :value="completedSprintsInPercent"
-                color="link"
-              >{{ completedSprints }} / {{totalSprints}}</v-progress-circular>
+                <v-progress-circular
+                  :rotate="-90"
+                  :size="100"
+                  :width="15"
+                  :value="completedSprintsInPercent"
+                  color="link"
+                >
+                  {{ completedSprints }} / {{ totalSprints }}
+                </v-progress-circular>
             </v-list-item-avatar>
           </v-list-item>
           </router-link>
