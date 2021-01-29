@@ -9,19 +9,17 @@ stdlogger = logging.getLogger(__name__)
 
 class ApiConfig(AppConfig):
     name = 'api'
-
+    run_already = False
 # import signals
+
     def ready(self):
+        if ApiConfig.run_already:
+            return
+        ApiConfig.run_already = True
         import api.signals
         import planning_poker.signals
+
         from api.management.commands.runapscheduler import Command
         command = Command()
         x = threading.Thread(target=command.handle)
         x.start()
-        # asyncio.run(self.run_app_scheduler())
-
-    async def run_app_scheduler(self):
-        from api.management.commands.runapscheduler import Command
-        command = Command()
-        await command.handle()
-        stdlogger.error("app_scheduler stopped")
