@@ -26,12 +26,12 @@
 import { mapFields } from "vuex-map-fields";
 export default {
   data: () => ({
-    show: false
+    show: false,
   }),
   methods: {
     closeAlert() {
       this.$store.commit("hideSystemAlert");
-    }
+    },
   },
   computed: {
     // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
@@ -44,7 +44,7 @@ export default {
       "systemAlert.linkVisible",
       "systemAlert.linkDestination",
       "systemAlert.message",
-      "systemAlert.visible"
+      "systemAlert.visible",
     ]),
 
     StatusColor() {
@@ -67,8 +67,8 @@ export default {
           break;
       }
       return color;
-    }
-  }
+    },
+  },
 };
 </script>
 

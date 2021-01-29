@@ -15,12 +15,12 @@
               'hoverClosestCartesian',
               'hoverCompareCartesian',
               'lasso2d',
-              'select2d'
+              'select2d',
             ],
             displaylogo: false,
             showTips: false,
             staticPlot: true,
-            displayModeBar: false
+            displayModeBar: false,
           }"
         />
       </v-col>
@@ -148,7 +148,7 @@ import exportPdf from "@/mixins/pdfExportMixin";
 export default {
   name: "Statistic",
   components: {
-    Plotly
+    Plotly,
   },
   mixins: [exportPdf],
   data: () => ({
@@ -171,21 +171,21 @@ export default {
         //x_data: [1, 2, 3, 4, 5],
         x_data: [1, 2, 3, 4, 5],
         //y_data: [10, 0, 10, 0, 10],
-        y_data: [0, 0, 0, 0, 0]
+        y_data: [0, 0, 0, 0, 0],
       },
       done: {
         //x_data: [1, 2, 3, 4, 5],
         x_data: [1, 2, 3, 4, 5],
         //y_data: [5, 5, 5, 5, 5],
-        y_data: [0, 0, 0, 0, 0]
+        y_data: [0, 0, 0, 0, 0],
       },
       done_tasks: {
         //x_data: [1, 2, 3, 4, 5],
         x_data: [1, 2, 3, 4, 5],
         //y_data: [10, 10, 10, 10, 10],
-        y_data: [0, 0, 0, 0, 0]
-      }
-    }
+        y_data: [0, 0, 0, 0, 0],
+      },
+    },
   }),
 
   methods: {
@@ -218,7 +218,7 @@ export default {
     formatSprintList(sprint) {
       var format = {
         color: "link",
-        text: "white"
+        text: "white",
       };
       switch (sprint.status) {
         // In Planning
@@ -248,15 +248,15 @@ export default {
           break;
       }
       return format;
-    }
+    },
   },
   computed: {
     ...mapGetters("sprint", {
-      listSprints: "byProjectId"
+      listSprints: "byProjectId",
     }),
 
     ...mapGetters("sprintStatistics", {
-      sprintStatistic: "bySprintId"
+      sprintStatistic: "bySprintId",
     }),
 
     plotData() {
@@ -268,9 +268,9 @@ export default {
         //mode: "lines",
         line: {
           color: "#FFFFFF",
-          width: 2
+          width: 2,
         },
-        connectgaps: true
+        connectgaps: true,
       };
       let done = {
         x: this.plotly_data.done.x_data,
@@ -279,13 +279,13 @@ export default {
         type: "scatter",
         mode: "lines+markers",
         marker: {
-          size: 10
+          size: 10,
         },
         line: {
           color: "#31AA96",
-          width: 4
+          width: 4,
         },
-        connectgaps: true
+        connectgaps: true,
       };
       let done_tasks = {
         x: this.plotly_data.done_tasks.x_data,
@@ -294,8 +294,8 @@ export default {
         type: "bar",
         yaxis: "y2",
         marker: {
-          color: "orange"
-        }
+          color: "orange",
+        },
       };
 
       return [planed, done, done_tasks];
@@ -310,7 +310,7 @@ export default {
         font: {
           family: "sans-serif",
           size: 15,
-          color: "#FFFFFF"
+          color: "#FFFFFF",
         },
         xaxis: {
           title: "Days",
@@ -318,7 +318,7 @@ export default {
           gridcolor: "#636363",
           gridwidth: 2,
           zerolinecolor: "#636363",
-          zerolinewidth: 4
+          zerolinewidth: 4,
         },
         yaxis: {
           title: "Story Points",
@@ -326,7 +326,7 @@ export default {
           gridcolor: "#636363",
           gridwidth: 2,
           zerolinecolor: "#636363",
-          zerolinewidth: 4
+          zerolinewidth: 4,
         },
         yaxis2: {
           title: "Tasks",
@@ -336,20 +336,20 @@ export default {
           //zerolinecolor: "#636363",
           //zerolinewidth: 4,
           overlaying: "y",
-          side: "right"
+          side: "right",
         },
         legend: {
           x: 0,
-          y: 50
+          y: 50,
         },
         paper_bgcolor: "#6441A4",
-        plot_bgcolor: "#6441A4"
+        plot_bgcolor: "#6441A4",
       };
     },
 
     sortedSprintList() {
       var list = this.listSprints(parseInt(this.$route.params.id));
-      var sorted = list.sort(function(a, b) {
+      var sorted = list.sort(function (a, b) {
         var keyA = a.number;
         var keyB = b.number;
         // Vergleiche ob AC oder AR
@@ -358,8 +358,8 @@ export default {
         return 0;
       });
       return sorted;
-    }
-  }
+    },
+  },
 };
 </script>
 

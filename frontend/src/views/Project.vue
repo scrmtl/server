@@ -25,27 +25,27 @@ import { mapActions, mapState } from "vuex";
 export default {
   props: ["id"],
   data: () => ({
-    loading: false
+    loading: false,
   }),
   components: {},
   methods: {
     ...mapActions("board", {
-      fetchBoards: "fetchList"
+      fetchBoards: "fetchList",
     }),
     ...mapActions("lane", {
-      fetchLanes: "fetchList"
+      fetchLanes: "fetchList",
     }),
     ...mapActions("task", {
-      fetchTasks: "fetchList"
+      fetchTasks: "fetchList",
     }),
     ...mapActions("sprint", {
-      fetchSprints: "fetchList"
+      fetchSprints: "fetchList",
     }),
     ...mapActions("sprintStatistics", {
-      fetchSprintStatistics: "fetchList"
+      fetchSprintStatistics: "fetchList",
     }),
     ...mapActions("projectStatistics", {
-      fetchProjectStatistics: "fetchList"
+      fetchProjectStatistics: "fetchList",
     }),
     ...mapActions("session", {
       fetchSession: "fetchList",
@@ -59,25 +59,25 @@ export default {
       this.fetchSession({ customUrlFnArgs: { all: false } });
       this.fetchSprintStatistics();
       this.fetchProjectStatistics();
-    }
+    },
   },
   computed: {
     ...mapState("board", {
-      boardsIsLoading: "isFetchingList"
+      boardsIsLoading: "isFetchingList",
     }),
     ...mapState("lane", {
-      lanesIsLoading: "isFetchingList"
+      lanesIsLoading: "isFetchingList",
     }),
     ...mapState("task", {
-      tasksIsLoading: "isFetchingList"
+      tasksIsLoading: "isFetchingList",
     }),
     ...mapState("sprint", {
-      sprintsIsLoading: "isFetchingList"
-    })
+      sprintsIsLoading: "isFetchingList",
+    }),
   },
   created() {
     this.fetchData();
-  }
+  },
 };
 </script>
 

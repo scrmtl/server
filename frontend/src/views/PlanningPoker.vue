@@ -94,23 +94,23 @@ export default {
   name: "PlanningPoker",
   components: {
     PokerSummary,
-    PokerVote
+    PokerVote,
   },
   data: () => ({
-    showAllPokerVotings: false
+    showAllPokerVotings: false,
   }),
   computed: {
     ...mapFields(["Userinfo.userId"]),
     ...mapFields("selected", ["pokerVote.visableDetail"]),
     ...mapGetters("pokerVoting", {
       listPokerVotings: "byVoterId",
-      pokerVotingById: "byId"
+      pokerVotingById: "byId",
     }),
     ...mapGetters("pokerVote", {
-      listPokerVotes: "byPokerVotingId"
+      listPokerVotes: "byPokerVotingId",
     }),
     ...mapGetters("project", {
-      projectById: "byId"
+      projectById: "byId",
     }),
 
     visiblePokerSummary: {
@@ -123,7 +123,7 @@ export default {
         } else {
           this.$store.commit("selected/hidePokerVoteDetail");
         }
-      }
+      },
     },
     listFilteredPokerVoting() {
       // list only where userId involved
@@ -133,26 +133,26 @@ export default {
       } else {
         // Show only open pokerVoting
         return pokerVotings.filter(
-          pokerVotings =>
+          (pokerVotings) =>
             this.listPokerVotes(pokerVotings.id).filter(
-              pokerVote => pokerVote.status == "WAIT"
+              (pokerVote) => pokerVote.status == "WAIT"
             ).length > 0
         );
       }
-    }
+    },
   },
   methods: {
     ...mapActions("pokerVoting", {
-      fetchPokerVotings: "fetchList"
+      fetchPokerVotings: "fetchList",
     }),
     ...mapActions("pokerVote", {
-      fetchPokerVotes: "fetchList"
+      fetchPokerVotes: "fetchList",
     }),
     ...mapActions("vote", {
-      fetchUserVotes: "fetchList"
+      fetchUserVotes: "fetchList",
     }),
     ...mapActions("task", {
-      fetchTasks: "fetchList"
+      fetchTasks: "fetchList",
     }),
 
     projectName(projectId) {
@@ -165,13 +165,13 @@ export default {
         return pokerVotes;
       } else {
         // Show only open pokerVotes
-        return pokerVotes.filter(pokerVote => pokerVote.status == "WAIT");
+        return pokerVotes.filter((pokerVote) => pokerVote.status == "WAIT");
       }
     },
     showPokerSummary(pokerVote) {
       this.$store.commit("selected/setPokerVoteDetail", pokerVote);
       this.$store.commit("selected/showPokerVoteDetail");
-    }
+    },
   },
   watch: {
     showAllPokerVotings(current, prev) {
@@ -183,20 +183,20 @@ export default {
       if (current.length != prev.length) {
         this.$store.commit("selected/hidePokerVoteDetail");
       }
-    }
+    },
   },
   mounted() {
     this.fetchPokerVotings().then(() => {
-      this.listPokerVotings(this.userId).forEach(pokerVoting => {
+      this.listPokerVotings(this.userId).forEach((pokerVoting) => {
         this.fetchTasks({
-          customUrlFnArgs: { projectId: pokerVoting.project }
+          customUrlFnArgs: { projectId: pokerVoting.project },
         });
       });
     });
     this.fetchPokerVotes();
     this.fetchUserVotes();
     this.$store.commit("selected/hidePokerVoteDetail");
-  }
+  },
 };
 </script>
 

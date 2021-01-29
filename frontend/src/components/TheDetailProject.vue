@@ -230,7 +230,7 @@
                   >Create</v-btn
                 >
                 <v-btn
-                  class="hidden-sm-and-down" 
+                  class="hidden-sm-and-down"
                   v-if="!visableCreate"
                   color="error"
                   text
@@ -267,16 +267,14 @@
                 </v-row>
               </v-card-text>
             </v-card>
-            <v-card
-              v-if="!visableCreate"
-              flat
-              dark
-              color="navbar"
-              tile
-            >
+            <v-card v-if="!visableCreate" flat dark color="navbar" tile>
               <v-card-title class="title">
                 <span class="headline">Assigned project users</span>
-                <v-btn class="hidden-sm-and-down" icon @click="userManagementDialog = true">
+                <v-btn
+                  class="hidden-sm-and-down"
+                  icon
+                  @click="userManagementDialog = true"
+                >
                   <v-icon color="link">mdi-dots-horizontal</v-icon>
                 </v-btn>
                 <AssignedUserManagement
@@ -331,7 +329,7 @@
                   >Create</v-btn
                 >
                 <v-btn
-                  class="hidden-sm-and-down" 
+                  class="hidden-sm-and-down"
                   v-if="!visableCreate"
                   color="error"
                   text
@@ -363,10 +361,7 @@
           <v-btn width="250" outlined color="error" @click="deleteProject()"
             >Yes</v-btn
           >
-          <v-btn
-            width="250"
-            outlined
-            @click="deleteProjectDialog = false"
+          <v-btn width="250" outlined @click="deleteProjectDialog = false"
             >No</v-btn
           >
         </v-card-actions>
@@ -396,18 +391,18 @@ export default {
     projectNamedStatus: "Active",
     //localProject: {},
     rules: {
-      required: value => !!value || "Required",
-      maxCharacter: value => value.length <= 50 || "Max 50 characters",
-      duration: value => {
+      required: (value) => !!value || "Required",
+      maxCharacter: (value) => value.length <= 50 || "Max 50 characters",
+      duration: (value) => {
         const pattern = /^([0-9]{1,3})$/;
         return pattern.test(value) || "Invalid Duration";
-      }
-    }
+      },
+    },
   }),
   components: {
     ProfileAvatar,
     ProfileTooltip,
-    AssignedUserManagement
+    AssignedUserManagement,
   },
   methods: {
     ...mapActions("project", {
@@ -415,19 +410,19 @@ export default {
       destroyProject: "destroy",
       createProject: "create",
       fetchSingleProject: "fetchSingle",
-      fetchProjects: "fetchList"
+      fetchProjects: "fetchList",
     }),
 
     ...mapActions("projectUser", {
       fetchProjectUser: "fetchList",
       createProjectUser: "create",
-      destroyProjectUser: "destroy"
+      destroyProjectUser: "destroy",
     }),
     ...mapActions("projectRole", {
-      fetchProjectRoles: "fetchList"
+      fetchProjectRoles: "fetchList",
     }),
     ...mapActions("user", {
-      fetchPlattformUsers: "fetchList"
+      fetchPlattformUsers: "fetchList",
     }),
 
     close() {
@@ -445,25 +440,26 @@ export default {
           plattform_user: projectUserId,
           // Standard role developer
           role: 3,
-          project: this.id
+          project: this.id,
         },
-        customUrlFnArgs: {}
+        customUrlFnArgs: {},
       })
-        .then(value => {
-          this.fetchSingleProject({ id: this.id,
-              customUrlFnArgs: {} }).then(res => {
-                this.$store.commit("selected/setProjectDetail", res.data);
-          })
+        .then((value) => {
+          this.fetchSingleProject({ id: this.id, customUrlFnArgs: {} }).then(
+            (res) => {
+              this.$store.commit("selected/setProjectDetail", res.data);
+            }
+          );
           return value;
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.data.non_field_errors.length > 0) {
             this.$store.commit("showSystemAlert", {
               message:
                 error.response.data.non_field_errors[
                   error.response.data.non_field_errors.length - 1
                 ],
-              category: "error"
+              category: "error",
             });
           }
         });
@@ -481,28 +477,26 @@ export default {
           dod: this.dod,
           status: this.GetProjectStatus(this.projectNamedStatus),
           project_users: this.project_users,
-          is_template: this.is_template
+          is_template: this.is_template,
         },
-        customUrlFnArgs: { templateId: this.selectedProjectTemplate.id }
+        customUrlFnArgs: { templateId: this.selectedProjectTemplate.id },
       })
-        .then( value => {
-            this.fetchProjects({ customUrlFnArgs: {} });
-            this.fetchProjectUser({ customUrlFnArgs: {} });
-            this.$store.commit("selected/hideProjectDetail");
-            this.$store.commit("showSystemAlert", {
-              message: "Create Project",
-              category: "success"
-            });
-            return value;
-          })
-        .catch( error => {
+        .then((value) => {
+          this.fetchProjects({ customUrlFnArgs: {} });
+          this.fetchProjectUser({ customUrlFnArgs: {} });
+          this.$store.commit("selected/hideProjectDetail");
           this.$store.commit("showSystemAlert", {
-              message: error.detail,
-              category: "error"
-            });
+            message: "Create Project",
+            category: "success",
+          });
+          return value;
         })
-
-      
+        .catch((error) => {
+          this.$store.commit("showSystemAlert", {
+            message: error.detail,
+            category: "error",
+          });
+        });
     },
 
     GetProjectStatus(namedStatus) {
@@ -543,32 +537,36 @@ export default {
           dor: this.dor,
           dod: this.dod,
           project_users: this.project_users,
-          is_template: this.is_template
+          is_template: this.is_template,
         },
-        customUrlFnArgs: {}
-      })
+        customUrlFnArgs: {},
+      });
     },
 
     deleteProject() {
       this.deleteProjectDialog = false;
       this.destroyProject({
         id: this.id,
-        customUrlFnArgs: {}
+        customUrlFnArgs: {},
       });
       this.$store.commit("showSystemAlert", {
         message: "Delete Project " + this.name,
-        category: "info"
+        category: "info",
       });
       this.close();
     },
 
     deleteProjectUser(projectUserId) {
-      this.destroyProjectUser({ id: projectUserId, customUrlFnArgs: {}}).then(() => {
-        this.fetchSingleProject({ id: this.id, customUrlFnArgs: {} }).then(res => {
-          this.$store.commit("selected/setProjectDetail", res.data);
-        });
-      });
-    }
+      this.destroyProjectUser({ id: projectUserId, customUrlFnArgs: {} }).then(
+        () => {
+          this.fetchSingleProject({ id: this.id, customUrlFnArgs: {} }).then(
+            (res) => {
+              this.$store.commit("selected/setProjectDetail", res.data);
+            }
+          );
+        }
+      );
+    },
   },
   computed: {
     // See more under Two-way Computed Property https://vuex.vuejs.org/guide/forms.html
@@ -590,29 +588,27 @@ export default {
       "project.visableDetail",
       "project.visableCreate",
     ]),
-    
+
     ...mapGetters("projectUser", {
       listProjectUsers: "list",
       projectUserById: "byId",
       projectUsersByIdArray: "byIdArray",
-      projectUsersbyIdArrayWithDetails: "byIdArrayWithDetails"
+      projectUsersbyIdArrayWithDetails: "byIdArrayWithDetails",
     }),
     ...mapGetters("projectRole", {
       listProjectRoles: "list",
-      projectRoleById: "byId"
+      projectRoleById: "byId",
     }),
     ...mapGetters("user", {
       listPlattfromUsers: "list",
-      plattformUserById: "byId"
+      plattformUserById: "byId",
     }),
     ...mapGetters("project", {
-      listTemplateProjects: "byTemplates"
+      listTemplateProjects: "byTemplates",
     }),
 
     allAssignedUsers() {
-      return this.projectUsersbyIdArrayWithDetails(
-        this.project_users
-      );
+      return this.projectUsersbyIdArrayWithDetails(this.project_users);
     },
 
     visibleDrawer: {
@@ -625,7 +621,7 @@ export default {
         } else {
           this.$store.commit("selected/hideProjectDetail");
         }
-      }
+      },
     },
   },
   watch: {
@@ -634,21 +630,21 @@ export default {
       this.templateProjectItems = this.listTemplateProjects();
       this.projectNamedStatus = this.GetProjectNamedStatus(this.status);
     },
-    id(val, prev){
-      if (val !== prev){
+    id(val, prev) {
+      if (val !== prev) {
         this.tab = "DetailTab";
       }
-    }
+    },
   },
 
   created() {
     this.fetchProjectUser({ customUrlFnArgs: {} });
     this.fetchProjectRoles();
-  }
+  },
 };
 </script>
 
 <style lang="css" scoped>
-  @import "../main.css";
-  @import "./Profile/profile.css";
+@import "../main.css";
+@import "./Profile/profile.css";
 </style>

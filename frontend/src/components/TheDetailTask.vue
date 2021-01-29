@@ -391,7 +391,7 @@ export default {
         },
         customUrlFnArgs: {},
       }).then(
-        function(value) {
+        function (value) {
           if (!(value.data.id === undefined)) {
             this.fetchSingleTask({
               id: value.data.id,
@@ -439,7 +439,7 @@ export default {
         data,
         customUrlFnArgs: {},
       }).then(
-        function(value) {
+        function (value) {
           if (!(value.data.id === undefined)) {
             this.fetchSingleTask({
               id: value.data.id,

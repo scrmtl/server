@@ -11,7 +11,7 @@
       multiple
       chips
       outlined
-      :disabled="status === 'DO' || status === 'AC'|| readOnly"
+      :disabled="status === 'DO' || status === 'AC' || readOnly"
     >
       <template v-slot:no-data>
         <v-list-item>
@@ -67,9 +67,7 @@
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
 export default {
-  props: {
-
-  },
+  props: {},
   data: () => ({
     activator: null,
     attach: null,
@@ -83,10 +81,10 @@ export default {
     model: [],
     x: 0,
     search: null,
-    y: 0
+    y: 0,
   }),
 
-  computed:{
+  computed: {
     ...mapFields("selected", [
       "task.details.id",
       "task.details.labels",
@@ -95,8 +93,8 @@ export default {
     ]),
     ...mapGetters("label", {
       listLabels: "list",
-      labelById: "byId"
-    })
+      labelById: "byId",
+    }),
   },
 
   watch: {
@@ -107,15 +105,15 @@ export default {
       this.model = val
         //skip adding label if it is newly created
         //-> Promise is going to add it after with response of backend
-        .filter(v => {
+        .filter((v) => {
           if (typeof v === "string") {
             updateLabel = false;
             v = {
               text: v,
-              color: this.colors[this.nonce - 1]
+              color: this.colors[this.nonce - 1],
             };
             this.createLabel({ data: { title: v.text, color: v.color } }).then(
-              function(value) {
+              function (value) {
                 //add label to local label stack
                 if (value.data.id === undefined) return value;
                 var label = value.data;
@@ -132,12 +130,12 @@ export default {
           }
           return true;
         })
-        .map(v => {
+        .map((v) => {
           return v;
         });
       //if no new label is created override labels in task with updated list
       if (updateLabel) {
-        this.labels = val.map(label => label.id);
+        this.labels = val.map((label) => label.id);
       }
     },
     id(val, prev) {
@@ -145,18 +143,18 @@ export default {
       this.items = [{ header: "Select an label or create one" }];
       this.model = [];
       this.fetchAll(val, this.labels);
-    }
+    },
   },
 
   methods: {
     ...mapActions("label", {
       fetchLabels: "fetchList",
       updateLabel: "update",
-      createLabel: "create"
+      createLabel: "create",
     }),
     ...mapActions("task", {
       fetchTask: "fetchSingle",
-      updateTask: "update"
+      updateTask: "update",
     }),
     edit(index, item) {
       if (!this.editing) {
@@ -165,7 +163,7 @@ export default {
       } else {
         this.updateLabel({
           id: item.id,
-          data: { title: item.text, color: item.color }
+          data: { title: item.text, color: item.color },
         });
         this.editing = null;
         this.index = -1;
@@ -174,28 +172,26 @@ export default {
     filter(item, queryText, itemText) {
       if (item.header) return false;
 
-      const hasValue = val => (val != null ? val : "");
+      const hasValue = (val) => (val != null ? val : "");
 
       const text = hasValue(itemText);
       const query = hasValue(queryText);
 
       return (
-        text
-          .toString()
-          .toLowerCase()
-          .indexOf(query.toString().toLowerCase()) > -1
+        text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) >
+        -1
       );
     },
     fetchAll(taskId, labels) {
       if (labels === undefined) return;
       this.fetchLabels({ customUrlFnArgs: {} })
-        .catch(error => {
+        .catch((error) => {
           this.fetchErrors.push(error);
           console.log("error");
           return error;
         })
-        .then(value => {
-          this.listLabels.forEach(label => {
+        .then((value) => {
+          this.listLabels.forEach((label) => {
             //do not use title instead of text. v-combobox needs a text property
             label["text"] = label.title;
             this.items.push(label);
@@ -206,14 +202,14 @@ export default {
       this.fetchTask({ id: taskId, customUrlFnArgs: {} });
     },
     fillTaskLabels(labels) {
-      labels.forEach(labelId => {
+      labels.forEach((labelId) => {
         this.model.push(this.labelById(labelId));
       });
       var labelIds = [];
-      labels.forEach(label => {
+      labels.forEach((label) => {
         labelIds.push(label.id);
       });
-    }
-  }
+    },
+  },
 };
 </script>

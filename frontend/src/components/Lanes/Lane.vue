@@ -195,7 +195,6 @@ export default {
       const taskName = e.dataTransfer.getData("task-name");
       const taskFeatureId = e.dataTransfer.getData("task-feature-id");
       const fromLane = e.dataTransfer.getData("from-lane");
-      // const taskNumbering = e.dataTransfer.getData("task-numbering");
       const taskSprintId = e.dataTransfer.getData("task-sprint-id");
       // In planning mode
       if (this.planningMode && taskSprintId !== null) {
