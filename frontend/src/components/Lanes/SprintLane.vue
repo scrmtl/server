@@ -12,41 +12,46 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item 
+          <v-list-item
             @click="createSprint()"
             :disabled="!SprintCreateValidation"
           >
-          <v-list-item-icon>
-            <v-icon>mdi-plus-circle-outline</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Create new sprint</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item 
+            <v-list-item-icon>
+              <v-icon>mdi-plus-circle-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Create new sprint</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
             @click="showSprintDetails()"
-            :disabled="selectedSprintName==='No sprint selected'"
+            :disabled="selectedSprintName === 'No sprint selected'"
           >
-          <v-list-item-icon>
-            <v-icon>mdi-information-outline</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Sprint details</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-information-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Sprint details</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-menu>
     </v-card-title>
     <v-card-subtitle class="navbar white--text">
       {{ selectedSprintDateInfo }}
     </v-card-subtitle>
-    <v-card-text 
-      class="lane-body flex-column" 
+    <v-card-text
+      class="lane-body flex-column"
       @drop="moveTask($event)"
       @dragover="allowDrop($event)"
       @dragenter.prevent
     >
-      <v-row justify="center"  class="" v-for="task in sprintLaneTask" :key="task.id">
+      <v-row
+        justify="center"
+        class=""
+        v-for="task in sprintLaneTask"
+        :key="task.id"
+      >
         <Task v-bind:task="task" />
       </v-row>
     </v-card-text>
@@ -55,7 +60,7 @@
 
 <script>
 import Task from "@/components/Task.vue";
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
 export default {
   data: () => ({
@@ -65,23 +70,23 @@ export default {
     item: 1,
   }),
   components: {
-    Task
+    Task,
   },
-  methods:{
+  methods: {
     ...mapActions("task", {
       fetchSingleTask: "fetchSingle",
       updateTask: "update",
     }),
     ...mapActions("lane", {
-      fetchSingleLane: "fetchSingle"
+      fetchSingleLane: "fetchSingle",
     }),
     ...mapActions("sprint", {
-      fetchSingleSprint: "fetchSingle"
+      fetchSingleSprint: "fetchSingle",
     }),
-    createSprint(){
+    createSprint() {
       this.$store.commit("selected/showSprintDetail", true);
     },
-    showSprintDetails(){
+    showSprintDetails() {
       this.$store.commit("selected/showSprintDetail", false);
     },
     GetNamedStatus(status) {
@@ -106,25 +111,32 @@ export default {
       return namedStatus;
     },
 
-    GetHeader(status, number, start, end){
+    GetHeader(status, number, start, end) {
       if (number !== undefined) {
         this.selectedSprintName = "Sprint " + number;
-        this.selectedSprintDateInfo = "Status: " + this.GetNamedStatus(status) + " - (" + start + " to " + end + ")";
+        this.selectedSprintDateInfo =
+          "Status: " +
+          this.GetNamedStatus(status) +
+          " - (" +
+          start +
+          " to " +
+          end +
+          ")";
       } else {
         this.selectedSprintName = "No sprint selected";
         this.selectedSprintDateInfo = "";
       }
     },
-    allowDrop(e){
+    allowDrop(e) {
       const storypoints = e.dataTransfer.getData("task-storypoints");
-      if(storypoints > 0 && this.selectedSprint.status === "IL"){
+      if (storypoints > 0 && this.selectedSprint.status === "IL") {
         e.preventDefault();
         return true;
       }
       return false;
     },
 
-    moveTask(e){
+    moveTask(e) {
       const taskId = e.dataTransfer.getData("task-id");
       const taskName = e.dataTransfer.getData("task-name");
       const taskFeatureId = e.dataTransfer.getData("task-feature-id");
@@ -132,7 +144,10 @@ export default {
       // const taskNumbering = e.dataTransfer.getData("task-numbering");
       const taskSprintId = e.dataTransfer.getData("task-sprint-id");
       // task from PB Lane to Sprint Lane (change Status and Sprint)
-      if(this.selectedSprint.id !== undefined && taskSprintId !== this.selectedSprint.id){
+      if (
+        this.selectedSprint.id !== undefined &&
+        taskSprintId !== this.selectedSprint.id
+      ) {
         // set sprint
         // change status
         this.updateTask({
@@ -142,83 +157,79 @@ export default {
             feature: taskFeatureId,
             lane: fromLane,
             status: "PL",
-            sprint: this.selectedSprint.id
+            sprint: this.selectedSprint.id,
           },
-          customUrlFnArgs: {}
-        })
-        .then(()=> {
+          customUrlFnArgs: {},
+        }).then(() => {
           // Update From
-          this.fetchSingleLane({id: fromLane, customUrlFnArgs: {}})
+          this.fetchSingleLane({ id: fromLane, customUrlFnArgs: {} });
           // Update Task
-          this.fetchSingleTask({id: taskId, customUrlFnArgs: {}})
+          this.fetchSingleTask({ id: taskId, customUrlFnArgs: {} });
           // Update Sprint
-          if(this.selectedSprint.id != null){
-            this.fetchSingleSprint({id: this.selectedSprint.id, customUrlFnArgs: {}})
-            .then(()=>{
-              this.$store.commit("selected/setSprintDetail", this.sprintById(this.selectedSprint.id));
-            })
+          if (this.selectedSprint.id != null) {
+            this.fetchSingleSprint({
+              id: this.selectedSprint.id,
+              customUrlFnArgs: {},
+            }).then(() => {
+              this.$store.commit(
+                "selected/setSprintDetail",
+                this.sprintById(this.selectedSprint.id)
+              );
+            });
           }
-          
-        })
+        });
       }
-    }
-
+    },
   },
-  computed:{
-    ...mapFields("selected", [
-      "sprint.details",
-    ]),
+  computed: {
+    ...mapFields("selected", ["sprint.details"]),
     ...mapGetters("sprint", {
       sprintById: "byId",
-      listSprint: "list"
+      listSprint: "list",
     }),
     ...mapGetters("task", {
-      tasksByIdArray: "byIdArray"
+      tasksByIdArray: "byIdArray",
     }),
     ...mapGetters("project", {
-      projectById: "byId"
+      projectById: "byId",
     }),
 
     SprintCreateValidation() {
       var project = this.projectById(this.$route.params.id);
-      if(project !== undefined){
-        if( this.listSprint.length < project.numOfSprints){
+      if (project !== undefined) {
+        if (this.listSprint.length < project.numOfSprints) {
           return true;
-        }
-        else{
+        } else {
           return false;
         }
-      }
-      else{
+      } else {
         return false;
       }
     },
 
-    sprintLaneTask(){
-      if(this.selectedSprint.task_cards === undefined){
-        return []
-      }
-      else{
+    sprintLaneTask() {
+      if (this.selectedSprint.task_cards === undefined) {
+        return [];
+      } else {
         return this.tasksByIdArray(this.selectedSprint.task_cards);
       }
     },
-
-
-
   },
-  watch:{
-    details(currentSprint){
+  watch: {
+    details(currentSprint) {
       this.selectedSprint = currentSprint;
-      this.GetHeader(currentSprint.status, currentSprint.number, currentSprint.start, currentSprint.end);
+      this.GetHeader(
+        currentSprint.status,
+        currentSprint.number,
+        currentSprint.start,
+        currentSprint.end
+      );
     },
-
   },
-  created() {
-  }
-
-}
+  created() {},
+};
 </script>
 
 <style lang="css" scoped>
-  @import "../../main.css";
+@import "../../main.css";
 </style>

@@ -92,12 +92,12 @@ export default new Vuex.Store({
             localStorage.setItem("token", token);
             localStorage.setItem("refreshToken", refreshToken);
             Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-            dispatch("session/fetchList", {id: null, customUrlFnArgs: { all: false }})
-            .then((res)=>{
-              var session = Object.values(res.data)[0];
-              commit("AUTH_SUCCESS", { token: token, refreshToken: refreshToken, user: session.username, id: session.id, name: session.name, email: session.email, groups: session.groups });
-            })
-            
+            dispatch("session/fetchList", { id: null, customUrlFnArgs: { all: false } })
+              .then((res) => {
+                var session = Object.values(res.data)[0];
+                commit("AUTH_SUCCESS", { token: token, refreshToken: refreshToken, user: session.username, id: session.id, name: session.name, email: session.email, groups: session.groups });
+              })
+
             resolve(resp);
           })
           .catch(err => {
@@ -120,9 +120,9 @@ export default new Vuex.Store({
   },
   //Update States (sync)
   mutations: {
-    
+
     updateField,
-    
+
     showNavigation(state) {
       state.navigation.visable = true;
     },
@@ -198,7 +198,7 @@ export default new Vuex.Store({
   },
   getters: {
     getField,
-    
+
     getToken: state => {
       return state.Userinfo.token;
     },
@@ -214,7 +214,7 @@ export default new Vuex.Store({
       return state.Userinfo.status;
     },
 
-  
+
   },
   modules: {
     task,

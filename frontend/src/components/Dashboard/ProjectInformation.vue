@@ -1,6 +1,7 @@
 <template>
   <v-card tile flat>
-    <v-card-title class="navbar white--text">Project Information 
+    <v-card-title class="navbar white--text"
+      >Project Information
       <v-btn class="hidden-sm-and-down" icon @click="showProjectDetail()">
         <v-icon color="link">mdi-dots-horizontal</v-icon>
       </v-btn>
@@ -99,33 +100,33 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 export default {
   name: "ProjectInformation",
-  data: () =>({
+  data: () => ({}),
 
-  }),
-
-  computed:{
+  computed: {
     ...mapGetters("project", {
-      projectById: "byId"
+      projectById: "byId",
     }),
 
-    projectInformation(){
+    projectInformation() {
       var project = this.projectById(this.$route.params.id);
       return project;
-    }
+    },
   },
 
-  methods:{
-    showProjectDetail(){
+  methods: {
+    showProjectDetail() {
       this.$store.commit("selected/showProjectDetail", false);
-      this.$store.commit("selected/setProjectDetail", this.projectById(this.$route.params.id));
-    }
-  }
-}
+      this.$store.commit(
+        "selected/setProjectDetail",
+        this.projectById(this.$route.params.id)
+      );
+    },
+  },
+};
 </script>
 
 <style>
-
 </style>
