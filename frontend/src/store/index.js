@@ -57,6 +57,9 @@ export default new Vuex.Store({
 
     systemAlert: {
       visible: false,
+      linkVisible: false,
+      linkName: "Home",
+      linkDestination: "Home",
       message: "",
       category: "info"
     },
@@ -128,13 +131,26 @@ export default new Vuex.Store({
       state.navigation.visable = false;
     },
 
-    showSystemAlert(state, {message, category="info"}) {
+    showSystemAlert(
+      state,
+      {
+        message,
+        category = "info",
+        link = false,
+        linkName = "Poker",
+        linkDestination = "PlanningPoker"
+      }
+    ) {
       state.systemAlert.visible = true;
-      if(message.length > 100){
+      if (message.length > 100) {
+        state.systemAlert.message = message;
+      } else {
         state.systemAlert.message = message;
       }
-      else{
-        state.systemAlert.message = message;
+      if (link) {
+        state.systemAlert.linkName = linkName;
+        state.systemAlert.linkDestination = linkDestination;
+        state.systemAlert.linkVisible = true;
       }
       state.systemAlert.category = category;
     },
@@ -142,6 +158,9 @@ export default new Vuex.Store({
       state.systemAlert.visible = false;
       state.systemAlert.message = "";
       state.systemAlert.category = "info";
+      state.systemAlert.linkName = "Home";
+      state.systemAlert.linkDestination = "Home";
+      state.systemAlert.linkVisible = false;
     },
 
     // User login and logout
