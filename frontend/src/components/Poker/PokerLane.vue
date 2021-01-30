@@ -351,6 +351,9 @@ export default {
                 this.$store.commit("showSystemAlert", {
                   message: "Planning Poker is created.",
                   category: "info",
+                  link: true,
+                  linkName: "Go To Poker",
+                  linkDestination: "PlanningPoker",
                 });
               })
               .catch((error) => {

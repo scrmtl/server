@@ -2,7 +2,9 @@
   <v-card min-width="385" max-width="420">
     <v-card-title class="navbar white--text">
       <div>
-        <v-icon v-if="planningMode" color="link" class="mb-1 mx-1">mdi-link</v-icon>
+        <v-icon v-if="planningMode" color="link" class="mb-1 mx-1"
+          >mdi-link</v-icon
+        >
         {{ lane.name }}
       </div>
       <v-spacer></v-spacer>
@@ -21,20 +23,17 @@
         </v-list>
       </v-menu>
     </v-card-title>
-        <v-card-text 
-          class="lane-body flex-column" 
-          v-if="laneTasks"
-          @drop="moveTask($event)"
-          @dragover="allowDrop($event)"
-          @dragenter.prevent
-        >
-          <v-row 
-            justify="center" 
-            v-for="task in laneTasks" :key="task.id"   
-          >
-            <Task v-bind:task="task" />
-          </v-row>        
-        </v-card-text>
+    <v-card-text
+      class="lane-body flex-column"
+      v-if="laneTasks"
+      @drop="moveTask($event)"
+      @dragover="allowDrop($event)"
+      @dragenter.prevent
+    >
+      <v-row justify="center" v-for="task in laneTasks" :key="task.id">
+        <Task v-bind:task="task" />
+      </v-row>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -47,17 +46,17 @@ export default {
     epicItem: [{ title: "+ New Feature" }, { title: "+ New Task" }],
     featureItem: [{ title: "+ New Task" }],
     laneFeature: [],
-    laneEpics: [],  
+    laneEpics: [],
     localLane: Object,
-    createInProgress: false
+    createInProgress: false,
   }),
   components: {
-    Task
+    Task,
   },
   props: {
     lane: {},
     allowedAdd: { type: Boolean, default: false },
-    planningMode: { type: Boolean, default: false }
+    planningMode: { type: Boolean, default: false },
   },
   methods: {
     ...mapActions("task", {
@@ -67,18 +66,18 @@ export default {
       updateTask: "update",
     }),
     ...mapActions("lane", {
-      fetchSingleLane: "fetchSingle"
+      fetchSingleLane: "fetchSingle",
     }),
     ...mapActions("feature", {
       fetchFeature: "fetchList",
-      createFeature: "create"
+      createFeature: "create",
     }),
     ...mapActions("epic", {
       fetchEpic: "fetchList",
-      createEpic: "create"
+      createEpic: "create",
     }),
     ...mapActions("sprint", {
-      fetchSingleSprint: "fetchSingle"
+      fetchSingleSprint: "fetchSingle",
     }),
     handle_function_call(function_name) {
       if (function_name === undefined) return;
@@ -87,19 +86,19 @@ export default {
     fetchData(lane, isNewTaskCreate = false) {
       if (lane.id === undefined) return;
       this.fetchSingleLane({ id: lane.id, customUrlFnArgs: {} }).then(
-        function() {
+        function () {
           this.localLane = this.laneById(this.localLane.id);
           this.fetchEpic({
-            customUrlFnArgs: { laneId: this.localLane.id }
+            customUrlFnArgs: { laneId: this.localLane.id },
           }).then(
-            function() {
+            function () {
               this.laneEpics = this.epicsByIdArray(this.localLane.epic_cards);
             }.bind(this)
           );
           this.fetchFeature({
-            customUrlFnArgs: { laneId: this.localLane.id }
+            customUrlFnArgs: { laneId: this.localLane.id },
           }).then(
-            function() {
+            function () {
               this.laneFeature = this.featuresByIdArray(
                 this.localLane.feature_cards
               );
@@ -126,10 +125,10 @@ export default {
             description: "",
             numbering: 0,
             status: "NS",
-            lane: this.localLane.id
-          }
+            lane: this.localLane.id,
+          },
         }).then(
-          function(value) {
+          function (value) {
             this.createFeature({
               customUrlFnArgs: {},
               data: {
@@ -138,10 +137,10 @@ export default {
                 numbering: 0,
                 status: "NS",
                 lane: this.localLane.id,
-                epic: value.data.id
-              }
+                epic: value.data.id,
+              },
             }).then(
-              function() {
+              function () {
                 this.fetchData(this.localLane, true);
               }.bind(this)
             );
@@ -157,10 +156,10 @@ export default {
             numbering: 0,
             status: "NS",
             lane: this.localLane.id,
-            epic: this.laneEpics[0].id
-          }
+            epic: this.laneEpics[0].id,
+          },
         }).then(
-          function() {
+          function () {
             this.fetchData(this.localLane);
           }.bind(this)
         );
@@ -175,33 +174,30 @@ export default {
         description: "",
         storypoints: 0,
         lane: laneId,
-        feature: this.laneFeature[0].id
+        feature: this.laneFeature[0].id,
       };
       this.$store.commit("selected/setTaskDetail", task);
       this.createInProgress = false;
     },
 
-    allowDrop(e){
+    allowDrop(e) {
       const sprintStatus = e.dataTransfer.getData("task-sprint-status");
-      if(this.planningMode && sprintStatus !== "IL"){
+      if (this.planningMode && sprintStatus !== "IL") {
         return false;
-      }
-      else{
+      } else {
         e.preventDefault();
         return true;
       }
-
     },
 
-    moveTask(e){
+    moveTask(e) {
       const taskId = e.dataTransfer.getData("task-id");
       const taskName = e.dataTransfer.getData("task-name");
       const taskFeatureId = e.dataTransfer.getData("task-feature-id");
       const fromLane = e.dataTransfer.getData("from-lane");
-      // const taskNumbering = e.dataTransfer.getData("task-numbering");
       const taskSprintId = e.dataTransfer.getData("task-sprint-id");
       // In planning mode
-      if(this.planningMode && taskSprintId !== null){
+      if (this.planningMode && taskSprintId !== null) {
         // task from Sprint Lane to PB Lane (change Status and Sprint)
         // delete sprint in card (null)
         // change lane
@@ -213,127 +209,129 @@ export default {
             feature: taskFeatureId,
             lane: this.localLane.id,
             sprint: null,
-            status: "NW"            
+            status: "NW",
           },
-          customUrlFnArgs: {}
-        })
-        .then(()=> {
+          customUrlFnArgs: {},
+        }).then(() => {
           // Update From
-          this.fetchSingleLane({id: fromLane, customUrlFnArgs: {}})
+          this.fetchSingleLane({ id: fromLane, customUrlFnArgs: {} });
           // Update To
-          this.fetchSingleLane({id: this.localLane.id, customUrlFnArgs: {}})
+          this.fetchSingleLane({ id: this.localLane.id, customUrlFnArgs: {} });
           // Update Task
-          this.fetchSingleTask({id: taskId, customUrlFnArgs: {}})
+          this.fetchSingleTask({ id: taskId, customUrlFnArgs: {} });
           // Update Sprint
-          if(taskSprintId !== "null"){
-            this.fetchSingleSprint({id: taskSprintId, customUrlFnArgs: {}})
-            .then((res)=>{
-              if(res.status === 200){
+          if (taskSprintId !== "null") {
+            this.fetchSingleSprint({
+              id: taskSprintId,
+              customUrlFnArgs: {},
+            }).then((res) => {
+              if (res.status === 200) {
                 this.$store.commit("selected/setSprintDetail", res.data);
               }
-            })
+            });
           }
-        })        
-      }
-      else{
-        if(fromLane != this.localLane.id){
+        });
+      } else {
+        if (fromLane != this.localLane.id) {
           // change lane
           var localData = {
             name: taskName,
             feature: taskFeatureId,
             lane: this.localLane.id,
-          }
+          };
           // change status (in certainly lanes)
           switch (this.localLane.name) {
             case "Doing":
-              localData.status ="IP"
+              localData.status = "IP";
               break;
             case "Done":
-              localData.status ="DO"
+              localData.status = "DO";
               break;
             case "Next (Sprint Backlog)":
-              localData.status ="NS"
+              localData.status = "NS";
               break;
             case "Ready (for Review)":
-              localData.status ="IP"
-              break;     
+              localData.status = "IP";
+              break;
           }
           // Accept changes
           this.updateTask({
             id: taskId,
             data: localData,
-            customUrlFnArgs: {}
-          })
-          .then(()=> {         
+            customUrlFnArgs: {},
+          }).then(() => {
             // Update From
-            this.fetchSingleLane({id: fromLane, customUrlFnArgs: {}})
+            this.fetchSingleLane({ id: fromLane, customUrlFnArgs: {} });
             // Update To
-            this.fetchSingleLane({id: this.localLane.id, customUrlFnArgs: {}})
+            this.fetchSingleLane({
+              id: this.localLane.id,
+              customUrlFnArgs: {},
+            });
             // Update Task
-            this.fetchSingleTask({id: taskId, customUrlFnArgs: {}})    
-          })
-        } 
+            this.fetchSingleTask({ id: taskId, customUrlFnArgs: {} });
+          });
+        }
       }
-    }    
+    },
   },
 
   watch: {
     lane(currentLane, prevLane) {
       // performance increase, if lane already loaded
-      if ((currentLane === undefined)){
+      if (currentLane === undefined) {
         return;
       }
       // fetch, if add or remove cards in task_cards
-      if(currentLane.task_cards.length !== prevLane.task_cards.length){
+      if (currentLane.task_cards.length !== prevLane.task_cards.length) {
         this.localLane = currentLane;
-        this.fetchData(currentLane); 
-      }  
+        this.fetchData(currentLane);
+      }
     },
 
     laneFeature(currentLane, prevLane) {
       if (this.createInProgress & !(currentLane.length === prevLane.length)) {
         this.createTaskHelper(currentLane.id);
       }
-    }
+    },
   },
   computed: {
     ...mapGetters("task", {
       tasksById: "byId",
-      tasksByIdArray: "byIdArray"
+      tasksByIdArray: "byIdArray",
     }),
     ...mapGetters("feature", {
       featuresById: "byId",
-      featuresByIdArray: "byIdArray"
+      featuresByIdArray: "byIdArray",
     }),
     ...mapGetters("epic", {
       epicsById: "byId",
-      epicsByIdArray: "byIdArray"
+      epicsByIdArray: "byIdArray",
     }),
     ...mapGetters("lane", {
-      laneById: "byId"
+      laneById: "byId",
     }),
-    laneTasks(){
+    laneTasks() {
       // Lane in Planning Mode
-      if(this.planningMode){
+      if (this.planningMode) {
         // Filter cards in lane, if lane in planning mode
         // Show cards, they not planned in Sprint
-        return this.tasksByIdArray(this.localLane.task_cards).filter(card => card.sprint === null)
-      }
-      else{
+        return this.tasksByIdArray(this.localLane.task_cards).filter(
+          (card) => card.sprint === null
+        );
+      } else {
         // Show all cards in lane
         return this.tasksByIdArray(this.localLane.task_cards);
       }
-      
-    }
+    },
   },
 
   created() {
     this.fetchData(this.lane);
     this.localLane = this.lane;
-  }
+  },
 };
 </script>
 
 <style lang="css" scoped>
-  @import "../../main.css";
+@import "../../main.css";
 </style>

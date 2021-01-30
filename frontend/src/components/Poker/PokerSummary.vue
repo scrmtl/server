@@ -13,7 +13,7 @@
               :width="15"
               :value="storypointsInPercent"
               color="link"
-              >{{ selectedPokerVote.act_storypoints || 0 }} SP
+              >{{ act_storypoints || 0 }} SP
             </v-progress-circular>
           </v-col>
           <v-col cols="6">
@@ -67,7 +67,7 @@
           </v-col>
           <v-col cols="6">
             <v-text-field
-              :value="selectedPokerVote.avg_storypoints || '-'"
+              :value="avg_storypoints || '-'"
               label="Avg. Story Points"
               dense
               dark
@@ -192,7 +192,6 @@ import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
 export default {
   name: "PokerSummary",
-  props: ["selectedPokerVote"],
   data: () => ({
     discardDialog: false,
     selectedStorypoints: 0,
@@ -204,6 +203,18 @@ export default {
     // the string after the last dot (e.g. `id`) is used
     // for defining the name of the computed property.
     ...mapFields(["Userinfo.userId"]),
+    ...mapFields("selected", [
+      "pokerVote.details.id",
+      "pokerVote.details.manager",
+      "pokerVote.details.status",
+      "pokerVote.details.act_storypoints",
+      "pokerVote.details.avg_storypoints",
+      "pokerVote.details.end_storypoints",
+      "pokerVote.details.poker_voting",
+      "pokerVote.details.task",
+      "pokerVote.visableDetail",
+      "pokerVote.readOnly",
+    ]),
     ...mapGetters("vote", {
       voteById: "byPokerVoteId",
     }),
@@ -214,11 +225,8 @@ export default {
       pokerVotingById: "byId",
     }),
     isActionAllowed() {
-      if (this.selectedPokerVote.manager === this.userId) {
-        if (
-          this.selectedPokerVote.status !== "AC" &&
-          this.selectedPokerVote.status !== "SKIP"
-        ) {
+      if (this.manager === this.userId) {
+        if (this.status !== "AC" && this.status !== "SKIP") {
           return true;
         } else {
           return false;
@@ -228,13 +236,13 @@ export default {
       }
     },
     storypointsInPercent() {
-      return Math.round((this.selectedPokerVote.act_storypoints / 55) * 100);
+      return Math.round((this.act_storypoints / 55) * 100);
     },
     votedPlayer() {
-      return this.voteById(this.selectedPokerVote.id).length;
+      return this.voteById(this.id).length;
     },
     players() {
-      var votes = this.voteById(this.selectedPokerVote.id);
+      var votes = this.voteById(this.id);
       var voter = [];
       if (votes.length > 0) {
         votes.forEach((vote) => {
@@ -250,7 +258,7 @@ export default {
     },
     pokerNamedStatus() {
       var namedStatus = "-";
-      switch (this.selectedPokerVote.status) {
+      switch (this.status) {
         case "NS":
           namedStatus = "Not started (Nobody Voted)";
           break;
@@ -270,10 +278,8 @@ export default {
       return namedStatus;
     },
     pokerVoting() {
-      if (this.selectedPokerVote !== null) {
-        var pokerVoting = this.pokerVotingById(
-          this.selectedPokerVote.poker_voting
-        );
+      if (this.id !== null) {
+        var pokerVoting = this.pokerVotingById(this.poker_voting);
         return pokerVoting;
       } else {
         return null;
@@ -297,28 +303,32 @@ export default {
     acceptAsyncVote() {
       // Update PokerVote and close vote
       this.updatePokerVote({
-        id: this.selectedPokerVote.id,
+        id: this.id,
         data: {
-          poker_voting: this.selectedPokerVote.poker_voting,
+          poker_voting: this.poker_voting,
           status: "AC",
-          task: this.selectedPokerVote.task,
+          task: this.task,
         },
-      }).then(() => {
-        this.fetchSinglePokerVote({ id: this.selectedPokerVote.id });
+      }).then((res) => {
+        this.$store.commit("selected/setPokerVoteDetail", res.data);
+        this.fetchSinglePokerVote({ id: this.id });
+        this.fetchSingleTask({ id: this.task, customUrlFnArgs: {} });
       });
     },
     skipAsyncVote() {
       // update Poker vote to skipped and set SP to act/old Value
       this.updatePokerVote({
-        id: this.selectedPokerVote.id,
+        id: this.id,
         data: {
-          poker_voting: this.selectedPokerVote.poker_voting,
+          poker_voting: this.poker_voting,
           status: "SKIP",
-          end_storypoints: this.selectedPokerVote.act_storypoints,
-          task: this.selectedPokerVote.task,
+          end_storypoints: this.act_storypoints,
+          task: this.task,
         },
-      }).then(() => {
-        this.fetchSinglePokerVote({ id: this.selectedPokerVote.id });
+      }).then((res) => {
+        this.$store.commit("selected/setPokerVoteDetail", res.data);
+        this.fetchSinglePokerVote({ id: this.id });
+        this.fetchSingleTask({ id: this.task, customUrlFnArgs: {} });
       });
     },
     discardAsyncVote() {
@@ -326,15 +336,15 @@ export default {
       this.discardDialog = false;
       // update Poker vote to skipped and set SP to user defined Value
       this.updatePokerVote({
-        id: this.selectedPokerVote.id,
+        id: this.id,
         data: {
-          poker_voting: this.selectedPokerVote.poker_voting,
+          poker_voting: this.poker_voting,
           status: "SKIP",
           end_storypoints: this.selectedStorypoints,
-          task: this.selectedPokerVote.task,
+          task: this.task,
         },
       }).then(() => {
-        this.fetchSinglePokerVote({ id: this.selectedPokerVote.id });
+        this.fetchSinglePokerVote({ id: this.id });
       });
     },
   },

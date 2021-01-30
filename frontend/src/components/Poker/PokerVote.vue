@@ -40,6 +40,14 @@
               >
                 mdi-sticker-check-outline
               </v-icon>
+              <v-icon
+                v-else-if="voteStatus === 'NOTVOTED'"
+                color="blue-grey lighten-3"
+                v-bind="attrs"
+                v-on="on"
+              >
+                mdi-close
+              </v-icon>
               <v-icon v-else color="error" v-bind="attrs" v-on="on">
                 mdi-alert-circle-outline
               </v-icon>
@@ -50,6 +58,7 @@
             <span v-else-if="voteStatus === 'AC'">Vote accepted</span>
             <span v-else-if="voteStatus === 'SKIP'">Vote was skipped</span>
             <span v-else-if="voteStatus === 'ABSTENTION'">You abstained</span>
+            <span v-else-if="voteStatus === 'NOTVOTED'">You not voted</span>
             <span v-else>Vote still open</span>
           </v-tooltip>
         </v-col>
@@ -189,7 +198,6 @@ export default {
       }
       //
       else {
-        console.log(this.pokerVote.status);
         return this.pokerVote.status;
       }
     },
@@ -257,5 +265,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

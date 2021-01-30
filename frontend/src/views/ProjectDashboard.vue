@@ -144,7 +144,7 @@ export default {
           size: 5,
           opacity: 0.6,
         },
-        alignmentgroup: '1',
+        alignmentgroup: "1",
         connectgaps: true,
       };
 
@@ -207,7 +207,7 @@ export default {
         paper_bgcolor: "#6441A4",
         plot_bgcolor: "#6441A4",
         bargap: 0.5,
-        barmode: 'group',
+        barmode: "group",
       };
     },
   },

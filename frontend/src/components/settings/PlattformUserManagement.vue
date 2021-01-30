@@ -235,4 +235,3 @@ export default {
 <style lang="css">
 @import "../../main.css";
 </style>
-    

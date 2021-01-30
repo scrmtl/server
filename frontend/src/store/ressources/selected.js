@@ -1,4 +1,4 @@
-import { getField, updateField } from 'vuex-map-fields';
+import { getField, updateField } from "vuex-map-fields";
 
 const state = () => ({
   project: {
@@ -17,7 +17,12 @@ const state = () => ({
     visableCreate: false,
     readOnly: false,
     details: {},
-  }
+  },
+  pokerVote: {
+    visableDetail: false,
+    readOnly: false,
+    details: {},
+  },
 });
 
 const mutations = {
@@ -30,10 +35,10 @@ const mutations = {
       // Set Default values of nessessary data
       state.project.details = {
         name: "",
-        start:"",
+        start: "",
         end: "",
-        sprint_duration: 0
-      }
+        sprint_duration: 0,
+      };
     }
   },
   hideProjectDetail(state) {
@@ -41,7 +46,6 @@ const mutations = {
     state.project.visableCreate = false;
     state.project.details = {};
   },
-  
   setProjectDetail(state, project) {
     state.project.details = project;
   },
@@ -54,12 +58,12 @@ const mutations = {
       state.sprint.details = {
         version: "",
         project: 0,
-        story: ""
+        story: "",
       };
     }
   },
 
-  showSprintDetailWithReadOnly(state){
+  showSprintDetailWithReadOnly(state) {
     state.sprint.visableDetail = true;
     state.sprint.readOnly = true;
   },
@@ -68,7 +72,6 @@ const mutations = {
     state.sprint.visableDetail = false;
     state.sprint.visableCreate = false;
     state.sprint.readOnly = false;
-    // state.sprint.details = {};
   },
 
   setSprintDetail(state, sprint) {
@@ -83,7 +86,7 @@ const mutations = {
     }
   },
 
-  showTaskDetailWithReadOnly(state){
+  showTaskDetailWithReadOnly(state) {
     state.task.visableDetail = true;
     state.task.readOnly = true;
   },
@@ -98,12 +101,30 @@ const mutations = {
   setTaskDetail(state, task) {
     state.task.details = task;
   },
+
+  showPokerVoteDetail(state) {
+    state.pokerVote.visableDetail = true;
+  },
+
+  showPokerVoteDetailWithReadOnly(state) {
+    state.pokerVote.visableDetail = true;
+    state.pokerVote.readOnly = true;
+  },
+
+  hidePokerVoteDetail(state) {
+    state.pokerVote.visableDetail = false;
+    state.pokerVote.readOnly = false;
+    state.pokerVote.details = {};
+  },
+
+  setPokerVoteDetail(state, pokerVote) {
+    state.pokerVote.details = pokerVote;
+  },
 };
 
 const getters = {
-  getField
+  getField,
 };
-
 
 export default {
   // We're using namespacing
@@ -112,5 +133,5 @@ export default {
   name: "selected",
   state,
   getters,
-  mutations
+  mutations,
 };

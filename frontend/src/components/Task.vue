@@ -8,8 +8,20 @@
         :elevation="hover ? 14 : 5"
         @click="showTaskDetail()"
         draggable
-        @dragstart="pickupTask($event, task.id, task.name, task.feature, task.numbering, task.lane, task.sprint, plannedSprint.status, task.storypoints, task.status)"
-        
+        @dragstart="
+          pickupTask(
+            $event,
+            task.id,
+            task.name,
+            task.feature,
+            task.numbering,
+            task.lane,
+            task.sprint,
+            plannedSprint.status,
+            task.storypoints,
+            task.status
+          )
+        "
       >
         <v-card-title>
           <span class="tabbody--text">{{ task.name }}</span>
@@ -73,20 +85,20 @@
         </v-card-title>
         <v-card-text class="">
           <v-row dense>
-            <v-col >
+            <v-col>
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-icon 
+                  <v-icon
                     v-if="plannedSprint.start !== ''"
-                    color="tabbody" 
-                    v-bind="attrs" 
+                    color="tabbody"
+                    v-bind="attrs"
                     v-on="on"
                     >mdi-calendar-range</v-icon
                   >
                 </template>
                 <span>Planned implementation</span>
               </v-tooltip>
-              <span>{{plannedSprint.start}}</span>
+              <span>{{ plannedSprint.start }}</span>
             </v-col>
             <v-col cols="auto"></v-col>
             <v-col cols="3">
@@ -179,28 +191,29 @@ import ProfileTooltip from "@/components/Profile/ProfileTooltip.vue";
 
 export default {
   data: () => ({
-    dialog: null
+    dialog: null,
   }),
   props: ["task"],
   components: {
     ProfileAvatar,
-    ProfileTooltip
+    ProfileTooltip,
   },
 
   methods: {
     showTaskDetail() {
       this.$store.commit("selected/setTaskDetail", this.task);
-      if(this.$route.path.endsWith("Archive")){
+      if (this.$route.path.endsWith("Archive")) {
         this.$store.commit("selected/showTaskDetailWithReadOnly");
-      }
-      else if(this.$route.path.endsWith("ProductBacklog") && !this.allowedChanges){
+      } else if (
+        this.$route.path.endsWith("ProductBacklog") &&
+        !this.allowedChanges
+      ) {
         this.$store.commit("showSystemAlert", {
           message: "You are not a PO. Read only access in Product backlog",
-          category: "warning"
+          category: "warning",
         });
         this.$store.commit("selected/showTaskDetailWithReadOnly");
-      }
-      else{
+      } else {
         // open without create dialog
         this.$store.commit("selected/showTaskDetail", false);
       }
@@ -211,7 +224,18 @@ export default {
       inital = user.username.substring(0, 2);
       return inital;
     },
-    pickupTask(e, taskId, taskName, taskFeatureId, taskNumbering, fromLane, sprint, sprintStatus, storypoints, taskStatus){
+    pickupTask(
+      e,
+      taskId,
+      taskName,
+      taskFeatureId,
+      taskNumbering,
+      fromLane,
+      sprint,
+      sprintStatus,
+      storypoints,
+      taskStatus
+    ) {
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.dropEffect = "move";
       e.dataTransfer.setData("task-id", taskId);
@@ -223,68 +247,78 @@ export default {
       e.dataTransfer.setData("task-sprint-status", sprintStatus);
       e.dataTransfer.setData("task-storypoints", storypoints);
       e.dataTransfer.setData("from-lane", fromLane);
-      
     },
   },
   computed: {
     ...mapGetters("user", {
       UsersById: "byId",
       usersByIdArray: "byIdArray",
-      usersbyIdArrayWithDetails: "byIdArrayWithDetails"
+      usersbyIdArrayWithDetails: "byIdArrayWithDetails",
     }),
     ...mapGetters("label", {
-      labelById: "byId"
+      labelById: "byId",
     }),
     ...mapGetters("sprint", {
-      sprintById: "byId"
+      sprintById: "byId",
     }),
-     ...mapGetters("session", {
-      listSession: "list"
+    ...mapGetters("session", {
+      listSession: "list",
     }),
-    ...mapGetters("projectUser",{
-      listProjectUser: "list"
+    ...mapGetters("projectUser", {
+      listProjectUser: "list",
     }),
-    allowedChanges(){
+    allowedChanges() {
       var allowed = false;
       // role id 1 is always product owner
-      var productOwnersInProject = this.listProjectUser.filter(projectUser => projectUser.role === 1 && projectUser.project == this.task.project);
-      if(this.listSession !== undefined && productOwnersInProject !== undefined){
-        if (productOwnersInProject.find(po => po.plattform_user === this.listSession[0].id) !== undefined){
+      var productOwnersInProject = this.listProjectUser.filter(
+        (projectUser) =>
+          projectUser.role === 1 && projectUser.project == this.task.project
+      );
+      if (
+        this.listSession !== undefined &&
+        productOwnersInProject !== undefined
+      ) {
+        if (
+          productOwnersInProject.find(
+            (po) => po.plattform_user === this.listSession[0].id
+          ) !== undefined
+        ) {
           allowed = true;
-        }
-        else{
+        } else {
           allowed = false;
         }
       }
       return allowed;
     },
 
-    plannedSprint(){ 
+    plannedSprint() {
       var sprintInfo = {
         start: "",
         end: "",
         status: "",
-      }
-      if(this.task.sprint != null){
+      };
+      if (this.task.sprint != null) {
         sprintInfo.start = this.sprintById(this.task.sprint).start;
         sprintInfo.end = this.sprintById(this.task.sprint).end;
         sprintInfo.status = this.sprintById(this.task.sprint).status;
-        return sprintInfo
+        return sprintInfo;
+      } else {
+        return sprintInfo;
       }
-      else{
-        return sprintInfo
-      }  
     },
 
     avatarsSorted() {
-      return this.usersbyIdArrayWithDetails(this.task.assigned_users, this.task.project);
+      return this.usersbyIdArrayWithDetails(
+        this.task.assigned_users,
+        this.task.project
+      );
     },
     avatarsStackedLimited() {
       return this.avatarsSorted && this.avatarsSorted.length > 0
         ? this.avatarsSorted.slice(0, 5)
         : null;
-    }
-  }
+    },
+  },
 };
 </script>
 

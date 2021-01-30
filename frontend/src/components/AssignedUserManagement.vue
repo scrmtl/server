@@ -67,9 +67,7 @@
             ></v-select>
           </template>
           <template v-slot:[`item.actions`]="{ item }">
-            <v-icon small @click="removeUser(item)">
-              mdi-delete
-            </v-icon>
+            <v-icon small @click="removeUser(item)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
       </v-card-text>
@@ -89,12 +87,14 @@
     >
       <v-card color="tabbody" shaped>
         <v-card-text class="headline pt-10">
-          <span class="ml-12"
-            >Do you want to remove the assigned user?</span
-          >
+          <span class="ml-12">Do you want to remove the assigned user?</span>
         </v-card-text>
         <v-card-actions class="ml-10 pb-10 pt-10">
-          <v-btn width="250" outlined color="error" @click="removeAssignedUser()"
+          <v-btn
+            width="250"
+            outlined
+            color="error"
+            @click="removeAssignedUser()"
             >Yes</v-btn
           >
           <v-btn width="250" outlined @click="deleteDialog = false">No</v-btn>

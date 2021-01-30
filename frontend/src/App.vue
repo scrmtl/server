@@ -2,7 +2,7 @@
 <template>
   <v-app>
     <SystemBar v-if="this.$store.getters.isLoggedIn" />
-    <TheNavigation v-if="this.$store.getters.isLoggedIn"/>
+    <TheNavigation v-if="this.$store.getters.isLoggedIn" />
     <DetailProject v-if="this.$store.getters.isLoggedIn" />
     <DetailTask v-if="this.$store.getters.isLoggedIn" />
     <DetailSprint v-if="this.$store.getters.isLoggedIn" />
@@ -10,13 +10,14 @@
     <v-main class="tabbody">
       <router-view />
     </v-main>
-    <SystemAlert/>
+    <SystemAlert />
 
     <v-footer color="appbar" class="white--text" app>
-      <v-img 
-          max-height="25"
-          max-width="25"
-          src="@/assets/logo_transparent.png"></v-img>
+      <v-img
+        max-height="25"
+        max-width="25"
+        src="@/assets/logo_transparent.png"
+      ></v-img>
       <span>dark, cool and easy</span>
       <v-spacer></v-spacer>
       <span>V1.1 (beta) &copy; {{ new Date().getFullYear() }}</span>
@@ -42,22 +43,16 @@ export default {
     DetailTask,
     DetailSprint,
     TheNavigation,
-    SystemAlert
+    SystemAlert,
   },
 
-  methods: {
-    
-  },
+  methods: {},
 
-  computed:{
-    
-  },
-  mounted() {
-   
-  }
+  computed: {},
+  mounted() {},
 };
 </script>
 
-<style lang="css" >
-  @import "/main.css";
+<style lang="css">
+@import "/main.css";
 </style>

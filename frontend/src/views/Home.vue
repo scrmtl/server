@@ -25,10 +25,7 @@
     </v-row>
     <v-row align="start" justify="center">
       <v-col lg="8" md="7" sm="12">
-        <div
-          v-for="project in sortedProjects"
-          :key="project.id"
-        >
+        <div v-for="project in sortedProjects" :key="project.id">
           <ProjectCard v-bind:project="project" />
         </div>
       </v-col>
@@ -83,7 +80,7 @@ export default {
       //Load User Groups
       this.fetchGroups();
       this.fetchUsers();
-      this.fetchSprints({ customUrlFnArgs: {} })
+      this.fetchSprints({ customUrlFnArgs: {} });
     },
 
     showCreateProject() {
@@ -111,7 +108,7 @@ export default {
 
     //Ordnet die Projekte nach dem Status (Ob Aktiv oder Archiv)
     orderProjects(projects) {
-       projects.sort(function (a, b) {
+      projects.sort(function (a, b) {
         var keyA = a.status;
         var keyB = b.status;
         // Vergleiche ob AC oder AR
@@ -119,27 +116,28 @@ export default {
         if (keyA > keyB) return 1;
         return 0;
       });
-      return projects
+      return projects;
     },
   },
   computed: {
     ...mapFields({
       userId: "Userinfo.userId",
-      groupIds: "Userinfo.groups"
+      groupIds: "Userinfo.groups",
     }),
     ...mapGetters("project", {
-      listProjects: "list" }),
+      listProjects: "list",
+    }),
     ...mapGetters("user", {
       projectUsersByUserId: "byUserId",
     }),
-  
-    sortedProjects(){
+
+    sortedProjects() {
       // show all project if you admin or you set it via switch
-      if(this.showAllProjects || this.groupIds[0] === 1){
+      if (this.showAllProjects || this.groupIds[0] === 1) {
         return this.orderProjects(this.listProjects);
       }
       // show only your own projects
-      else{
+      else {
         var userProjects = [];
         this.projectUsersByUserId(this.userId).forEach((projectUser) => {
           this.listProjects.forEach((project) => {
@@ -150,7 +148,7 @@ export default {
         });
         return this.orderProjects(userProjects);
       }
-    }
+    },
   },
 
   mounted() {
@@ -160,10 +158,9 @@ export default {
   created() {
     this.loadData();
   },
-
 };
 </script>
 
-<style lang="css" >
+<style lang="css">
 @import "../main.css";
 </style>

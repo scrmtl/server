@@ -1,11 +1,14 @@
 <template>
   <v-container fluid>
     <v-row dense>
-      <v-col cols="12" v-if="listFilteredPokerVoting.length > 0">
-        <v-switch color="link" inset dark v-model="showAllPokerVotings">
-          <template v-slot:label>
-            <span class="link--text">Show all Planning Pokers</span>
-          </template>
+      <v-col cols="12">
+        <v-switch
+          color="link"
+          inset
+          dark
+          v-model="showAllPokerVotings"
+          label="Show all Planning Pokers"
+        >
         </v-switch>
       </v-col>
     </v-row>
@@ -65,7 +68,7 @@
                       )"
                       :key="pokerVote.id"
                       v-bind:pokerVote="pokerVote"
-                      @select-pokerVote="selectedPokerVote = $event"
+                      @select-pokerVote="showPokerSummary($event)"
                     />
                   </v-expansion-panels>
                 </v-col>
@@ -75,11 +78,7 @@
         </v-list>
       </v-col>
       <v-col lg="4" md="5" class="hidden-sm-and-down">
-        <PokerSummary
-          v-if="showPokerSummary"
-          v-bind:selectedPokerVote="selectedPokerVote"
-          class="hidden-sm-and-down"
-        />
+        <PokerSummary v-if="visiblePokerSummary" class="hidden-sm-and-down" />
       </v-col>
       <v-col lg="1" class="hidden-md-and-down"> </v-col>
     </v-row>
@@ -98,11 +97,11 @@ export default {
     PokerVote,
   },
   data: () => ({
-    selectedPokerVote: null,
     showAllPokerVotings: false,
   }),
   computed: {
     ...mapFields(["Userinfo.userId"]),
+    ...mapFields("selected", ["pokerVote.visableDetail"]),
     ...mapGetters("pokerVoting", {
       listPokerVotings: "byVoterId",
       pokerVotingById: "byId",
@@ -113,15 +112,21 @@ export default {
     ...mapGetters("project", {
       projectById: "byId",
     }),
-    showPokerSummary() {
-      // TODO check, if session manager of selected pokerVote
-      if (this.selectedPokerVote !== null) {
-        return true;
-      } else {
-        return false;
-      }
+
+    visiblePokerSummary: {
+      get() {
+        return this.visableDetail;
+      },
+      set(newValue) {
+        if (newValue) {
+          this.$store.commit("selected/showPokerVoteDetail");
+        } else {
+          this.$store.commit("selected/hidePokerVoteDetail");
+        }
+      },
     },
     listFilteredPokerVoting() {
+      // list only where userId involved
       var pokerVotings = this.listPokerVotings(this.userId);
       if (this.showAllPokerVotings) {
         return pokerVotings;
@@ -163,11 +168,20 @@ export default {
         return pokerVotes.filter((pokerVote) => pokerVote.status == "WAIT");
       }
     },
+    showPokerSummary(pokerVote) {
+      this.$store.commit("selected/setPokerVoteDetail", pokerVote);
+      this.$store.commit("selected/showPokerVoteDetail");
+    },
   },
   watch: {
     showAllPokerVotings(current, prev) {
       if (current !== prev) {
-        this.selectedPokerVote = null;
+        this.$store.commit("selected/hidePokerVoteDetail");
+      }
+    },
+    listFilteredPokerVoting(current, prev) {
+      if (current.length != prev.length) {
+        this.$store.commit("selected/hidePokerVoteDetail");
       }
     },
   },
@@ -181,9 +195,9 @@ export default {
     });
     this.fetchPokerVotes();
     this.fetchUserVotes();
+    this.$store.commit("selected/hidePokerVoteDetail");
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

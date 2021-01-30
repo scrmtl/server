@@ -12,13 +12,11 @@ Vue.config.productionTip = false;
 // Axios.defaults.headers.common['Authorization'] = `Bearer ${store.state.token}`;
 // Vue.prototype.$http = Axios;
 
-
 interceptorsSetup();
 
 new Vue({
   router,
   store,
   vuetify,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");
-
