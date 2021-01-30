@@ -41,7 +41,7 @@ def set_sprint_in_progress_handler(sprints_today):
         if (sprint.status == Sprint.SprintStatus.PLANNED) and \
                 (len(sprint.task_cards.all()) > 0):
             logger.info(
-                f"Set status {Sprint.SprintStatus.IN_PROGRESS}\
+                f"--> Set status {Sprint.SprintStatus.IN_PROGRESS}\
                      in Sprint {sprint}")
             sprint.status = Sprint.SprintStatus.IN_PROGRESS
             sprint.save()
@@ -52,7 +52,7 @@ def set_sprint_done_handler(sprints_today):
     for sprint in sprints_today:
         if sprint.status == Sprint.SprintStatus.IN_PROGRESS:
             logger.info(
-                f"Set status {Sprint.SprintStatus.DONE}\
+                f"--> Set status {Sprint.SprintStatus.DONE}\
                      in Sprint {sprint}")
             sprint.status = Sprint.SprintStatus.DONE
             sprint.save()
@@ -69,7 +69,7 @@ def set_sprint_accepted_handler(sprints_today):
         if sprint.status == Sprint.SprintStatus.DONE and all_tasks_accepted:
 
             logger.info(
-                f"Set status {Sprint.SprintStatus.ACCEPTED}\
+                f"--> Set status {Sprint.SprintStatus.ACCEPTED}\
                      in Sprint {sprint}")
             sprint.status = Sprint.SprintStatus.ACCEPTED
             sprint.save()
@@ -96,9 +96,9 @@ def move_cards_handler(sprints_today):
             ready_lane: Lane = pb_board.lanes.get(name__icontains='Ready')
             next_lane: Lane = sb_board.lanes.get(name__icontains='Next')
             logger.info(
-                f"Move cards from lane {growing_lane}\
-                     located in board {pb_board} to lane\
-                     {next_lane} located in board {sb_board}")
+                f"   --> Move cards from lane {growing_lane} "
+                f"located in board {pb_board} to lane "
+                f"{next_lane} located in board {sb_board}")
             # get tasks of PB
             tasks = Task.objects.filter(
                 lane__in=[growing_lane.id, ready_lane.id], sprint=sprint.id)
@@ -106,7 +106,7 @@ def move_cards_handler(sprints_today):
             for task in tasks.all():
                 if task.sprint is not None:
                     logger.info(
-                        f"Moved card {task} \n")
+                        f"      --> Moved card {task} \n")
                     task.lane = next_lane
                     task.status = Task.Status.NOT_STARTED
                     task.save()
@@ -194,15 +194,15 @@ def hourly_job():
         f"Sprints starting: {start_sprints}")
     logger.info(
         f"Sprints ending: {end_sprints}")
-    logger.info(f"--> set_sprint_in_progress_handler (Sprint Start)")
+    logger.info(f"set_sprint_in_progress_handler (Sprint Start)")
     set_sprint_in_progress_handler(start_sprints)
-    logger.info(f"--> set_sprint_done_handler (Sprint End)")
+    logger.info(f"set_sprint_done_handler (Sprint End)")
     set_sprint_done_handler(end_sprints)
-    logger.info(f"--> set_sprint_accepted_handler (Sprint End)")
+    logger.info(f"set_sprint_accepted_handler (Sprint End)")
     set_sprint_accepted_handler(end_sprints)
-    logger.info(f"--> move_cards_handler (Sprint Start)")
+    logger.info(f"move_cards_handler (Sprint Start)")
     move_cards_handler(start_sprints)
-    logger.info(f"--> move_cards_to_archive_handler (Sprint End)")
+    logger.info(f"move_cards_to_archive_handler (Sprint End)")
     move_cards_to_archive_handler(end_sprints)
 
     # Run schedular for Planning poker

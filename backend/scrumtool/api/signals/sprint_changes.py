@@ -14,8 +14,8 @@ def create_sprint_lane_in_backlog(sender, instance: Sprint, created, **kwargs):
         # create Name
         lane_name = instance.create_lane_name()
         # if lane exists skip
-        if archive_board.lanes.get(
-                name__icontains=instance.create_lane_name()) is not None:
+        if archive_board.lanes.filter(
+                name__icontains=instance.create_lane_name()).exists():
             return
 
         # Add new Lane with Sprint Infos to Board
