@@ -545,12 +545,13 @@ export default {
 
     deleteProject() {
       this.deleteProjectDialog = false;
+      var projectName = this.name;
       this.destroyProject({
         id: this.id,
         customUrlFnArgs: {},
       });
       this.$store.commit("showSystemAlert", {
-        message: "Delete Project " + this.name,
+        message: "Delete Project " + projectName,
         category: "info",
       });
       this.close();
