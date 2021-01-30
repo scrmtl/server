@@ -133,8 +133,8 @@ export default {
       } else {
         // Show only open pokerVoting
         return pokerVotings.filter(
-          (pokerVotings) =>
-            this.listPokerVotes(pokerVotings.id).filter(
+          (pokerVoting) =>
+            this.listPokerVotes(pokerVoting.id).filter(
               (pokerVote) => pokerVote.status == "WAIT"
             ).length > 0
         );

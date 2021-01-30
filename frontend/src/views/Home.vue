@@ -72,6 +72,12 @@ export default {
     ...mapActions("sprint", {
       fetchSprints: "fetchList",
     }),
+    ...mapActions("pokerVoting", {
+      fetchPokerVotings: "fetchList",
+    }),
+    ...mapActions("pokerVote", {
+      fetchPokerVotes: "fetchList",
+    }),
 
     async loadData() {
       var status = await this.checkAuthStatus();
@@ -134,6 +140,12 @@ export default {
     ...mapGetters("user", {
       projectUsersByUserId: "byUserId",
     }),
+    ...mapGetters("pokerVoting", {
+      listPokerVotings: "byVoterId",
+    }),
+    ...mapGetters("pokerVote", {
+      listPokerVotes: "byPokerVotingId",
+    }),
     ...mapGetters(["getUserinfo", "authStatus"]),
 
     sortedProjects() {
@@ -160,6 +172,28 @@ export default {
 
   mounted() {
     this.loadData();
+    this.fetchPokerVotings().then(() => {
+      this.fetchPokerVotes().then(() => {
+        // list only where userId involved
+        var pokerVotings = this.listPokerVotings(this.getUserinfo.userId);
+        if (
+          pokerVotings.filter(
+            (pokerVoting) =>
+              this.listPokerVotes(pokerVoting.id).filter(
+                (pokerVote) => pokerVote.status == "WAIT"
+              ).length > 0
+          )
+        ) {
+          this.$store.commit("showSystemAlert", {
+            message: "Your vote is asked",
+            category: "info",
+            link: true,
+            linkName: "Go To Poker",
+            linkDestination: "PlanningPoker",
+          });
+        }
+      });
+    });
   },
 
   created() {
