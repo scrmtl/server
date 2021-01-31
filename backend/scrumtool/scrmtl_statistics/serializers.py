@@ -120,7 +120,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         # get number of days
         sum_sp = self.get_sum_of_sp(obj)
         daily_sp = math.floor((sum_sp / obj.project.sprint_duration))
-        sps = [None] * obj.project.sprint_duration
+        sps = [None] * (obj.project.sprint_duration+1)
         if daily_sp > 0:
             sps = [daily_sp * day for day in
                    reversed(range(1, (obj.project.sprint_duration + 1)))]
@@ -139,7 +139,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         days = [int for int in range(1, (obj.project.sprint_duration + 1))]
         day_dates = self.build_day_list(obj)
         daily_sp = [self.get_sum_of_sp(obj)] * obj.project.sprint_duration
-        daily_sp_count = [0] * obj.project.sprint_duration
+        daily_sp_count = [0] * (obj.project.sprint_duration+1)
         sum_finished_tasks = 0
         task: Task
         for task in task_queryset:
@@ -161,7 +161,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         task_queryset: QuerySet = obj.task_cards.all()
         days = [int for int in range(1, (obj.project.sprint_duration + 1))]
         day_dates = self.build_day_list(obj)
-        daily_sp = [0] * obj.project.sprint_duration
+        daily_sp = [0] * (obj.project.sprint_duration+1)
         task: Task
         for task in task_queryset:
             if task.done_on in day_dates:
