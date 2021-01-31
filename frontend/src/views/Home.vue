@@ -182,7 +182,7 @@ export default {
               this.listPokerVotes(pokerVoting.id).filter(
                 (pokerVote) => pokerVote.status == "WAIT"
               ).length > 0
-          )
+          ).length > 0
         ) {
           this.$store.commit("showSystemAlert", {
             message: "Your vote is asked",
