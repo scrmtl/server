@@ -20,7 +20,7 @@
       ></v-img>
       <span>dark, cool and easy</span>
       <v-spacer></v-spacer>
-      <span>V1.1 (beta) &copy; {{ new Date().getFullYear() }}</span>
+      <span>V1.1 &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
