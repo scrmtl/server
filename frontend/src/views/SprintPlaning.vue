@@ -6,7 +6,11 @@
         v-for="lane in neededPlanningLanes"
         :key="lane.numbering"
       >
-        <Lane v-bind:lane="lane" planningMode allowedAdd></Lane>
+        <Lane
+          v-bind:lane="lane"
+          planningMode
+          :allowedAdd="allowedChanges"
+        ></Lane>
       </div>
       <div class="ma-4">
         <PokerLane />
@@ -102,6 +106,10 @@ export default {
     ...mapGetters("sprint", {
       listSprints: "byProjectId",
     }),
+    ...mapGetters("projectUser", {
+      listProjectUser: "list",
+    }),
+    ...mapGetters(["getUserinfo"]),
 
     neededPlanningLanes() {
       var lanes = [];
@@ -125,6 +133,29 @@ export default {
         return 0;
       });
       return sorted;
+    },
+    allowedChanges() {
+      var allowed = false;
+      // role id 1 is always product owner
+      var productOwnersInProject = this.listProjectUser.filter(
+        (projectUser) =>
+          projectUser.role === 1 && projectUser.project == this.$route.params.id
+      );
+      if (
+        this.getUserinfo !== undefined &&
+        productOwnersInProject !== undefined
+      ) {
+        if (
+          productOwnersInProject.find(
+            (po) => po.plattform_user === this.getUserinfo.userId
+          ) !== undefined
+        ) {
+          allowed = true;
+        } else {
+          allowed = false;
+        }
+      }
+      return allowed;
     },
   },
 };
