@@ -79,11 +79,14 @@ export default {
       informationArray.push(["Status", this.GetNamedStatus(sprint.status)]);
       informationArray.push(["Start", sprint.start]);
       informationArray.push(["End", sprint.end]);
-      informationArray.push(["Total Duration", sprint.total_duration]);
+      informationArray.push([
+        "Total Duration",
+        sprint.total_duration.toString() + "   days",
+      ]);
       if (sprint.status !== "DO" || sprint.status !== "AC") {
         informationArray.push([
           "Remaining Duration",
-          sprint.remaining_duration,
+          sprint.remaining_duration.toString() + "   days",
         ]);
       }
       informationArray.push(["Product Version", sprint.version]);

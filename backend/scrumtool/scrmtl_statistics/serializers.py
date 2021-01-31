@@ -1,11 +1,15 @@
 """Serializer for sprints
 """
+
+import logging
 from datetime import date, timedelta
 from rest_framework import serializers
 from django.db.models import QuerySet
 import math
 
 from api.models import Sprint, Project, Epic, Feature, Task, Lane
+
+logger = logging.getLogger(__name__)
 
 
 class SprintStatisticSerializer(serializers.ModelSerializer):
@@ -153,13 +157,18 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         }
 
     def get_finished_tasks_timeline(self, obj: Sprint):
+        logger.info(f'get finished tasks timeline')
         task_queryset: QuerySet = obj.task_cards.all()
         days = [int for int in range(1, (obj.project.sprint_duration + 1))]
         day_dates = self.build_day_list(obj)
+        logger.info(f'Sprint Info: start={obj.start} - end={obj.end}')
         daily_sp = [0] * obj.project.sprint_duration
         task: Task
+        logger.info(f'Day dates: {day_dates}')
+        logger.info(f'Task Queryset: {task_queryset}')
         for task in task_queryset:
             if task.done_on in day_dates:
+                logger.info(f'--> Task done: {task}')
                 index = day_dates.index(task.done_on)
                 daily_sp[index] += 1
         return {
@@ -172,7 +181,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         This function return a list with days of the sprint
         """
         day_dates = [
-            obj.start + timedelta(int) for int in range(1, (obj.project.sprint_duration + 1))]
+            obj.start + timedelta(int) for int in range(0, (obj.project.sprint_duration))]
         return day_dates
 
 
