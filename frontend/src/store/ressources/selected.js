@@ -39,6 +39,7 @@ const mutations = {
         end: "",
         dor: "",
         dod: "",
+        description: "",
         sprint_duration: 0,
       };
     }
