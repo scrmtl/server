@@ -111,7 +111,7 @@ class PokerVoteSerializer(
                 skipped += 1
         if (obj.votes.count() - skipped) <= 0:
             return 0
-        return storypoints / (obj.votes.count() - skipped)
+        return format(storypoints / (obj.votes.count() - skipped), '.1f')
 
     def get_end_storypoints(self, obj: PokerVote):
         if (obj.status != PokerVote.PokerStatus.NOTSTARTED and

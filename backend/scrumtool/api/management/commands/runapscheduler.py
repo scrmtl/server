@@ -63,8 +63,10 @@ def set_sprint_accepted_handler(sprints_today):
     task: Task
     all_tasks_accepted = True
     for sprint in sprints_today:
+        logger.info(f"--> Sprint {sprint}")
         for task in sprint.task_cards.all():
             if task.status != Task.Status.ACCEPTED:
+                logger.info(f"--> task {sprint}")
                 all_tasks_accepted = False
         if sprint.status == Sprint.SprintStatus.DONE and all_tasks_accepted:
 
@@ -73,6 +75,7 @@ def set_sprint_accepted_handler(sprints_today):
                      in Sprint {sprint}")
             sprint.status = Sprint.SprintStatus.ACCEPTED
             sprint.save()
+        all_tasks_accepted = True
 
 
 def move_cards_handler(sprints_today):
