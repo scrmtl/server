@@ -84,14 +84,6 @@
                 </v-list-item>
                 <v-list-item dense>
                   <v-list-item-title class="white--text"
-                    >Not done</v-list-item-title
-                  >
-                  <v-list-item-subtitle class="white--text text-right">{{
-                    sum_of_not_done_tasks
-                  }}</v-list-item-subtitle>
-                </v-list-item>
-                <v-list-item dense>
-                  <v-list-item-title class="white--text"
                     >Accepted</v-list-item-title
                   >
                   <v-list-item-subtitle class="white--text text-right">{{
@@ -160,7 +152,6 @@ export default {
     sum_of_planned_tasks: "No sprint selected",
     sum_of_done_tasks: "No sprint selected",
     sum_of_accepted_tasks: "No sprint selected",
-    sum_of_not_done_tasks: "No sprint selected",
     sum_of_planned_sp: "No sprint selected",
     sum_of_done_sp: "No sprint selected",
     sum_of_accepted_sp: "No sprint selected",
@@ -205,8 +196,6 @@ export default {
         this.sum_of_planned_tasks = stats.sum_of_tasks;
         this.sum_of_done_tasks = stats.sum_of_done_tasks;
         this.sum_of_accepted_tasks = stats.sum_of_accepted_tasks;
-        this.sum_of_not_done_tasks =
-          stats.sum_of_tasks - stats.sum_of_done_tasks;
         this.plotly_data.planed.x_data = stats.planned_sp_timeline.x;
         this.plotly_data.planed.y_data = stats.planned_sp_timeline.y;
         this.plotly_data.done.x_data = stats.finished_sp_timeline.x;
