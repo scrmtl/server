@@ -192,7 +192,7 @@ def hourly_job():
         end__gte=date.today()).all()
     end_sprints = Sprint.objects.filter(
         end__range=(date.today() -
-                    timedelta(days=30), date.today())).all()
+                    timedelta(days=30), date.today()-timedelta(days=1))).all()
     logger.info(
         f"Sprints starting: {start_sprints}")
     logger.info(
