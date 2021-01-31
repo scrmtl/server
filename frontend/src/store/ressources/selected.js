@@ -32,11 +32,14 @@ const mutations = {
     state.project.visableDetail = true;
     if (withCreate) {
       state.project.visableCreate = true;
-      // Set Default values of nessessary data
+      // Set Default values of necessary data
       state.project.details = {
         name: "",
         start: "",
         end: "",
+        dor: "",
+        dod: "",
+        description: "",
         sprint_duration: 0,
       };
     }
@@ -54,7 +57,7 @@ const mutations = {
     state.sprint.visableDetail = true;
     if (withCreate) {
       state.sprint.visableCreate = true;
-      // Set Default values of nessessary data
+      // Set Default values of necessary data
       state.sprint.details = {
         version: "",
         project: 0,

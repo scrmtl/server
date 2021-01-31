@@ -10,7 +10,7 @@
         </div>
         <div class="projectBtn my-n1">
           <v-switch
-            v-if="groupIds[0] !== 1"
+            v-if="getUserinfo.groups[0] !== 1"
             color="link"
             inset
             dark
@@ -30,7 +30,10 @@
         </div>
       </v-col>
       <v-col lg="4" md="5" class="hidden-sm-and-down">
-        <MyTasksLane class="hidden-sm-and-down" />
+        <MyTasksLane
+          v-if="authStatus === 'success'"
+          class="hidden-sm-and-down"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -40,7 +43,6 @@
 import ProjectCard from "@/components/ProjectCard.vue";
 import MyTasksLane from "@/components/Lanes/MyTasksLane.vue";
 import { mapGetters, mapActions } from "vuex";
-import { mapFields } from "vuex-map-fields";
 
 export default {
   data: () => ({
@@ -67,20 +69,32 @@ export default {
     ...mapActions("group", {
       fetchGroups: "fetchList",
     }),
-    ...mapActions("session", {
-      fetchSession: "fetchList",
-    }),
     ...mapActions("sprint", {
       fetchSprints: "fetchList",
     }),
+    ...mapActions("pokerVoting", {
+      fetchPokerVotings: "fetchList",
+    }),
+    ...mapActions("pokerVote", {
+      fetchPokerVotes: "fetchList",
+    }),
 
-    loadData() {
-      // Load Projects
-      this.fetchProjects({ customUrlFnArgs: {} });
-      //Load User Groups
-      this.fetchGroups();
-      this.fetchUsers();
-      this.fetchSprints({ customUrlFnArgs: {} });
+    async loadData() {
+      var status = await this.checkAuthStatus();
+      if (status === "success") {
+        // Load Projects
+        this.fetchProjects({ customUrlFnArgs: {} });
+        //Load User Groups
+        this.fetchGroups();
+        this.fetchUsers();
+        this.fetchSprints({ customUrlFnArgs: {} });
+      }
+    },
+
+    checkAuthStatus() {
+      return new Promise((resolve) => {
+        resolve(this.authStatus);
+      });
     },
 
     showCreateProject() {
@@ -120,32 +134,37 @@ export default {
     },
   },
   computed: {
-    ...mapFields({
-      userId: "Userinfo.userId",
-      groupIds: "Userinfo.groups",
-    }),
     ...mapGetters("project", {
       listProjects: "list",
     }),
     ...mapGetters("user", {
       projectUsersByUserId: "byUserId",
     }),
+    ...mapGetters("pokerVoting", {
+      listPokerVotings: "byVoterId",
+    }),
+    ...mapGetters("pokerVote", {
+      listPokerVotes: "byPokerVotingId",
+    }),
+    ...mapGetters(["getUserinfo", "authStatus"]),
 
     sortedProjects() {
       // show all project if you admin or you set it via switch
-      if (this.showAllProjects || this.groupIds[0] === 1) {
+      if (this.showAllProjects || this.getUserinfo.groups[0] === 1) {
         return this.orderProjects(this.listProjects);
       }
       // show only your own projects
       else {
         var userProjects = [];
-        this.projectUsersByUserId(this.userId).forEach((projectUser) => {
-          this.listProjects.forEach((project) => {
-            if (project.id === projectUser.project) {
-              userProjects.push(project);
-            }
-          });
-        });
+        this.projectUsersByUserId(this.getUserinfo.userId).forEach(
+          (projectUser) => {
+            this.listProjects.forEach((project) => {
+              if (project.id === projectUser.project) {
+                userProjects.push(project);
+              }
+            });
+          }
+        );
         return this.orderProjects(userProjects);
       }
     },
@@ -153,6 +172,28 @@ export default {
 
   mounted() {
     this.loadData();
+    this.fetchPokerVotings().then(() => {
+      this.fetchPokerVotes().then(() => {
+        // list only where userId involved
+        var pokerVotings = this.listPokerVotings(this.getUserinfo.userId);
+        if (
+          pokerVotings.filter(
+            (pokerVoting) =>
+              this.listPokerVotes(pokerVoting.id).filter(
+                (pokerVote) => pokerVote.status == "WAIT"
+              ).length > 0
+          ).length > 0
+        ) {
+          this.$store.commit("showSystemAlert", {
+            message: "Your vote is asked",
+            category: "info",
+            link: true,
+            linkName: "Go To Poker",
+            linkDestination: "PlanningPoker",
+          });
+        }
+      });
+    });
   },
 
   created() {
