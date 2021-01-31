@@ -136,7 +136,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
 
     def get_finished_sp_timeline(self, obj: Sprint):
         task_queryset: QuerySet = obj.task_cards.all()
-        days = [int for int in range(1, (obj.project.sprint_duration + 1))]
+        days = [int for int in range(0, (obj.project.sprint_duration + 1))]
         day_dates = self.build_day_list(obj)
         daily_sp = [self.get_sum_of_sp(obj)] * \
             (obj.project.sprint_duration + 1)
@@ -160,7 +160,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
     def get_finished_tasks_timeline(self, obj: Sprint):
         logger.info(f'get finished tasks timeline')
         task_queryset: QuerySet = obj.task_cards.all()
-        days = [int for int in range(1, (obj.project.sprint_duration + 1))]
+        days = [int for int in range(0, (obj.project.sprint_duration + 1))]
         day_dates = self.build_day_list(obj)
         daily_sp = [0] * (obj.project.sprint_duration+1)
         task: Task
