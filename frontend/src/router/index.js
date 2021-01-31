@@ -13,29 +13,18 @@ import Project from "../views/Project.vue";
 import ProjectDashboard from "../views/ProjectDashboard";
 import PlanningPoker from "../views/PlanningPoker";
 
-import Lane from "@/components/Lane.vue";
-import Epic from "@/components/Epic.vue";
-import Feature from "@/components/Feature.vue";
-import Task from "@/components/Task.vue";
-//import { component } from "vue/types/umd";
-
-
-
-
-
-
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/login",
     name: "LogIn",
-    component: LogIn
+    component: LogIn,
   },
   {
     path: "/register",
     name: "Register",
-    component: Register
+    component: Register,
   },
   {
     path: "/",
@@ -59,63 +48,45 @@ const routes = [
       },
       {
         path: "SprintBacklog",
-        component: SprintBacklog
+        component: SprintBacklog,
       },
       {
         path: "SprintPlaning",
-        component: SprintPlaning
+        component: SprintPlaning,
       },
       {
         path: "Statistic",
-        component: Statistic
+        component: Statistic,
       },
       {
         path: "Archive",
-        component: Archive
+        component: Archive,
       },
-    ]
+    ],
   },
   {
     path: "/poker",
     name: "PlanningPoker",
-    component: PlanningPoker
-  },
-  {
-    path: "/Lane",
-    name: "Lane",
-    component: Lane
-  },
-  {
-    path: "/Epic",
-    name: "Epic",
-    component: Epic
-  },
-  {
-    path: "/Feature",
-    name: "Feature",
-    component: Feature
-  },
-  {
-    path: "/Task",
-    name: "Task",
-    component: Task
+    component: PlanningPoker,
   },
 ];
 
 const router = new VueRouter({
-  routes
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== "LogIn" && !localStorage.getItem('token') && to.name !== "Register") {
+  if (
+    to.name !== "LogIn" &&
+    !localStorage.getItem("token") &&
+    to.name !== "Register"
+  ) {
     if (to.name == "Register") {
       next({ name: "Register" });
-    }
-    else {
+    } else {
       next({ name: "LogIn" });
     }
-  }
-  else {
+  } else {
     next();
   }
 });

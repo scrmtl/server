@@ -1,19 +1,13 @@
 <template>
-  <v-list
-    three-line
-    dark
-    subheader
-    color="tabbody"
-  >
-    <v-subheader>Plattform user management</v-subheader>
+  <v-list three-line dark subheader color="tabbody">
+    <v-subheader class="subtitle-1">Plattform user management</v-subheader>
     <v-list-item>
-      <v-list-item-content>               
+      <v-list-item-content>
         <v-data-table
           :headers="headers"
           :items="allUserInfo()"
           sort-by="username"
           class="tabbody"
-          
         >
           <template v-slot:[`item.group`]="{ item }">
             <v-select
@@ -23,8 +17,8 @@
             ></v-select>
           </template>
           <template v-slot:top>
-            <v-toolbar flat color="tabbody">
-              <v-dialog v-model="createUser" persistent >
+            <v-toolbar flat class="tabbody">
+              <v-dialog v-model="createUser" persistent>
                 <template v-slot:activator="{ on, attrs }">
                   <v-spacer></v-spacer>
                   <v-btn
@@ -37,8 +31,8 @@
                     >add user
                   </v-btn>
                 </template>
-                <!-- Add plttform user dialog -->
-                <v-card class="tabbody" dark >
+                <!-- Add plattform user dialog -->
+                <v-card class="tabbody" dark>
                   <v-card-title>
                     <span class="headline">Add new plattform user</span>
                   </v-card-title>
@@ -101,15 +95,13 @@
                     <v-btn color="link" text v-on:click="createUser = false"
                       >CANCEL</v-btn
                     >
-                    <v-btn color="link" text v-on:click="saveUser"
-                      >SAVE</v-btn
-                    >
+                    <v-btn color="link" text v-on:click="saveUser">SAVE</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot:actions="{ item }">
+          <template v-slot:[`item.actions`]="{ item }">
             <v-icon small class="mr-2" @click="editItem(item)"
               >mdi-pencil</v-icon
             >
@@ -121,11 +113,11 @@
         </v-data-table>
       </v-list-item-content>
     </v-list-item>
-  </v-list> 
+  </v-list>
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "PlattformUserManagement",
   created() {
@@ -136,13 +128,13 @@ export default {
     user: "",
     groupNames: [],
     showPassword: false,
-    passwordRules: [v => !!v || "password is required"],
+    passwordRules: [(v) => !!v || "password is required"],
     createUser: false,
     headers: [
       { text: "User name", value: "username" },
       { text: "E-Mail", value: "email" },
       { text: "Name", value: "name" },
-      { text: "Rights", value: "group", sortable: false }
+      { text: "Rights", value: "group", sortable: false },
     ],
     editedIndex: -1,
     editedItem: {
@@ -150,36 +142,36 @@ export default {
       email: "",
       username: "",
       password: "",
-      repeated_password: ""
+      repeated_password: "",
     },
     defaultItem: {
       name: "Max Mustermann",
       email: "Max.Mustermann@mail.com",
-      username: "maxMuster"
-    }
+      username: "maxMuster",
+    },
   }),
   methods: {
     ...mapActions("registration", {
-      registerUser: "create"
+      registerUser: "create",
     }),
     ...mapActions("user", {
       fetchUser: "fetchList",
-      updateUser: "update"
+      updateUser: "update",
     }),
     ...mapActions("group", {
-      fetchGroups: "fetchList"
+      fetchGroups: "fetchList",
     }),
     fetchAll() {
-      this.fetchUser().catch(error => {
+      this.fetchUser().catch((error) => {
         this.fetchErrors.push(error);
       });
       this.fetchGroups()
-        .catch(error => {
+        .catch((error) => {
           this.fetchErrors.push(error);
         })
         .then(() => {
           var listgroupsvalues = [];
-          this.listGroups.forEach(group => {
+          this.listGroups.forEach((group) => {
             listgroupsvalues.push(group.name);
           });
           this.groupNames = listgroupsvalues;
@@ -188,7 +180,7 @@ export default {
     updateGroup(newGroup, item) {
       this.updateUser({
         id: item.id,
-        data: { groups: [this.byGroupName(newGroup)] }
+        data: { groups: [this.byGroupName(newGroup)] },
       }).then(() => this.fetchAll());
     },
     saveUser() {
@@ -198,17 +190,18 @@ export default {
           email: this.editedItem.email,
           username: this.editedItem.username,
           password1: this.editedItem.password,
-          password2: this.editedItem.repeated_password
-        }
+          password2: this.editedItem.repeated_password,
+        },
       }).then(() => this.fetchAll());
-      let setAll = (obj, val) => Object.keys(obj).forEach(k => (obj[k] = val));
+      let setAll = (obj, val) =>
+        Object.keys(obj).forEach((k) => (obj[k] = val));
       setAll(this.editedItem, "");
       this.createUser = false;
     },
     allUserInfo() {
       var data = [];
       var groupId;
-      Object.values(this.listPlatformUsers).forEach(pUser => {
+      Object.values(this.listPlatformUsers).forEach((pUser) => {
         groupId = Object.values(pUser.groups).shift();
         if (!(groupId === undefined)) {
           var group = this.groupById(groupId);
@@ -217,32 +210,28 @@ export default {
             email: pUser.email,
             username: pUser.username,
             group: group,
-            id: pUser.id
+            id: pUser.id,
           });
         } else {
           this.fetchErrors.push("undefined groupId");
         }
       });
       return data;
-    }
+    },
   },
   computed: {
-    ...mapState({
-      userinfos: "Userinfo"
-    }),
     ...mapGetters("user", {
-      listPlatformUsers: "list"
+      listPlatformUsers: "list",
     }),
     ...mapGetters("group", {
       groupById: "byId",
       listGroups: "list",
-      byGroupName: "byName"
-    })
-  }
+      byGroupName: "byName",
+    }),
+  },
 };
 </script>
 
 <style lang="css">
-  @import "../../main.css";
+@import "../../main.css";
 </style>
-    

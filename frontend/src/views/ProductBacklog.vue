@@ -10,64 +10,71 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Lane from "@/components/Lane.vue";
+import Lane from "@/components/Lanes/Lane.vue";
 export default {
   data: () => ({
     // boardLanes: Array
   }),
   components: {
-    Lane
+    Lane,
   },
-  methods: {
-  },
+  methods: {},
   computed: {
     ...mapGetters("lane", {
       listLanes: "list",
-      lanesByIdArray: "byIdArray"
+      lanesByIdArray: "byIdArray",
     }),
     ...mapGetters("board", {
       listBoards: "list",
-      boardByType: "byType"
+      boardByType: "byType",
     }),
     ...mapGetters("session", {
-      listSession: "list"
+      listSession: "list",
     }),
-    ...mapGetters("projectUser",{
-      listProjectUser: "list"
+    ...mapGetters("projectUser", {
+      listProjectUser: "list",
     }),
-    allowedChanges(){
+    allowedChanges() {
       var allowed = false;
       // role id 1 is always product owner
-      var productOwnersInProject = this.listProjectUser.filter(projectUser => projectUser.role === 1 && projectUser.project == this.$route.params.id);
-      if(this.listSession !== undefined && productOwnersInProject !== undefined){
-        if (productOwnersInProject.find(po => po.plattform_user === this.listSession[0].id) !== undefined){
+      var productOwnersInProject = this.listProjectUser.filter(
+        (projectUser) =>
+          projectUser.role === 1 && projectUser.project == this.$route.params.id
+      );
+      if (
+        this.listSession !== undefined &&
+        productOwnersInProject !== undefined
+      ) {
+        if (
+          productOwnersInProject.find(
+            (po) => po.plattform_user === this.listSession[0].id
+          ) !== undefined
+        ) {
           allowed = true;
-        }
-        else{
+        } else {
           allowed = false;
         }
       }
       return allowed;
     },
 
-    listBoardLanes(){
+    listBoardLanes() {
       var board = this.boardByType("PB", this.$route.params.id);
-      if( board !== undefined){
+      if (board !== undefined) {
         return this.lanesByIdArray(board.lanes);
-      }
-      else{
+      } else {
         return [];
       }
-    }
+    },
   },
-  mounted() { 
-    if(!this.allowedChanges){
+  mounted() {
+    if (!this.allowedChanges) {
       this.$store.commit("showSystemAlert", {
         message: "You are not a PO. Read only access in Product backlog",
-        category: "warning"
+        category: "warning",
       });
     }
-  }
+  },
 };
 </script>
 

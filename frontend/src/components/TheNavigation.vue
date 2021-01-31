@@ -10,19 +10,15 @@
   >
     <v-list-item>
       <v-list-item-content>
-        <v-list-item-title class="title">
-          Scrum Tool
-        </v-list-item-title>
-        <v-list-item-subtitle>
-          Dark, Cool, Easy
-        </v-list-item-subtitle>
+        <v-list-item-title class="title"> Scrum Tool </v-list-item-title>
+        <v-list-item-subtitle> Dark, Cool, Easy </v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
 
     <v-divider></v-divider>
 
     <v-list nav>
-      <v-list-item @click="GoHome()" link >
+      <v-list-item @click="GoHome()" link>
         <v-list-item-icon>
           <v-icon>mdi-home</v-icon>
         </v-list-item-icon>
@@ -30,7 +26,7 @@
           <v-list-item-title>Home</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item @click="GoPoker()" link >
+      <v-list-item @click="GoPoker()" link>
         <v-list-item-icon>
           <v-icon>mdi-cards</v-icon>
         </v-list-item-icon>
@@ -38,9 +34,9 @@
           <v-list-item-title>Planning Poker</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item 
-        link 
-        @click="settingsDialog = true" 
+      <v-list-item
+        link
+        @click="settingsDialog = true"
         :disabled="getGroupId != 1"
         class="hidden-sm-and-down"
       >
@@ -52,7 +48,7 @@
         </v-list-item-content>
       </v-list-item>
       <Settings
-        @close-dialog="settingsDialog = false" 
+        @close-dialog="settingsDialog = false"
         :dialog="settingsDialog"
       />
     </v-list>
@@ -73,36 +69,36 @@ import { mapGetters, mapActions, mapState } from "vuex";
 export default {
   data: () => ({
     settingsDialog: false,
-    groupId: 0
+    groupId: 0,
   }),
   components: {
-    Settings
+    Settings,
   },
-  methods:{
+  methods: {
     logout() {
       this.$store.dispatch("logout").then(() => {
         this.$router.push("/login");
       });
     },
-    GoHome(){
-      if(this.$router.history.current.name !== "Home"){
-        this.$router.push({ name: 'Home' })
+    GoHome() {
+      if (this.$router.history.current.name !== "Home") {
+        this.$router.push({ name: "Home" });
       }
     },
-    GoPoker(){
-      if(this.$router.history.current.name !== "PlanningPoker"){
-        this.$router.push({ name: 'PlanningPoker' })
+    GoPoker() {
+      if (this.$router.history.current.name !== "PlanningPoker") {
+        this.$router.push({ name: "PlanningPoker" });
       }
     },
 
     ...mapActions("session", {
-      fetchSession: "fetchList"
+      fetchSession: "fetchList",
     }),
     fetchGroupId() {
       this.groupId = -1;
       this.fetchSession({
         id: null,
-        customUrlFnArgs: { all: false }
+        customUrlFnArgs: { all: false },
       })
         .then(() => {
           //get groupId
@@ -114,9 +110,9 @@ export default {
             this.groupId = 0;
           }
         });
-    }
+    },
   },
-  computed:{
+  computed: {
     visibleDrawer: {
       get() {
         return this.navigation.visable;
@@ -127,17 +123,17 @@ export default {
         } else {
           this.$store.commit("hideNavigation");
         }
-      }
+      },
     },
     ...mapState(["navigation"]),
     ...mapGetters("session", {
-      listSession: "list"
+      listSession: "list",
     }),
     ...mapGetters("group", {
-      groupById: "byId"
+      groupById: "byId",
     }),
     ...mapGetters({ userinfos: "getUserinfo" }),
-    getGroupId: function() {
+    getGroupId: function () {
       if (this.groupId === 0) {
         this.fetchGroupId();
       }
@@ -146,10 +142,10 @@ export default {
   },
   mounted() {
     this.listSession;
-  }
-}
+  },
+};
 </script>
 
 <style lang="css">
-  @import "../main.css";
+@import "../main.css";
 </style>

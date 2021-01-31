@@ -1,33 +1,28 @@
 <template>
   <v-row justify="center">
     <v-dialog
-      v-model="dialog"
+      v-model="settingsDialog"
       fullscreen
       hide-overlay
       scrollable
       transition="dialog-bottom-transition"
     >
-      <v-card>
-        <v-toolbar
-          dark
-          color="tabbody"
-        >
-          <v-btn
-            icon
-            dark
-            @click="close"
-          >
+      <v-card color="tabbody">
+        <v-toolbar dark color="tabbody">
+          <v-btn icon dark @click="close()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title>Settings</v-toolbar-title>
-          <v-spacer></v-spacer>          
+          <v-spacer></v-spacer>
         </v-toolbar>
-        
-        <!-- Setting components -->
-        <General/>
-        <v-divider></v-divider> 
-        <PlattformUserManagement/>
-        
+        <v-card-text>
+          <!-- Setting components -->
+          <General />
+          <v-divider></v-divider>
+          <PlattformUserManagement />
+          <v-divider dark></v-divider>
+          <LabelManagement />
+        </v-card-text>
       </v-card>
     </v-dialog>
   </v-row>
@@ -35,25 +30,38 @@
 
 <script>
 import PlattformUserManagement from "@/components/settings/PlattformUserManagement.vue";
+import LabelManagement from "@/components/settings/LabelManagement.vue";
 import General from "@/components/settings/General.vue";
 export default {
   name: "Settings",
   props: {
     dialog: { type: Boolean, default: false },
   },
-  components:{
+  components: {
     PlattformUserManagement,
-    General
+    LabelManagement,
+    General,
   },
-  methods:{
+  computed: {
+    settingsDialog: {
+      get() {
+        return this.dialog;
+      },
+      set(newValue) {
+        if (!newValue) {
+          this.$emit("close-dialog");
+        }
+      },
+    },
+  },
+  methods: {
     close() {
       this.$emit("close-dialog");
     },
-  }
-}
-
+  },
+};
 </script>
 
 <style lang="css">
-  @import "../../main.css";
+@import "../../main.css";
 </style>

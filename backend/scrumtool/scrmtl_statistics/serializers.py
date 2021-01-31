@@ -1,11 +1,15 @@
 """Serializer for sprints
 """
+
+import logging
 from datetime import date, timedelta
 from rest_framework import serializers
 from django.db.models import QuerySet
 import math
 
 from api.models import Sprint, Project, Epic, Feature, Task, Lane
+
+logger = logging.getLogger(__name__)
 
 
 class SprintStatisticSerializer(serializers.ModelSerializer):
@@ -116,14 +120,14 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         # get number of days
         sum_sp = self.get_sum_of_sp(obj)
         daily_sp = math.floor((sum_sp / obj.project.sprint_duration))
-        sps = [None] * obj.project.sprint_duration
+        sps = [None] * (obj.project.sprint_duration+1)
         if daily_sp > 0:
             sps = [daily_sp * day for day in
-                   reversed(range(1, (obj.project.sprint_duration + 1)))]
+                   reversed(range(0, (obj.project.sprint_duration + 1)))]
         else:
             sps[0] = sum_sp
-            sps[obj.project.sprint_duration-1] = 0
-        days = [day for day in range(1, (obj.project.sprint_duration + 1))]
+            sps[obj.project.sprint_duration] = 0
+        days = [day for day in range(0, (obj.project.sprint_duration + 1))]
 
         return {
             'x': days,
@@ -132,10 +136,11 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
 
     def get_finished_sp_timeline(self, obj: Sprint):
         task_queryset: QuerySet = obj.task_cards.all()
-        days = [int for int in range(1, (obj.project.sprint_duration + 1))]
+        days = [int for int in range(0, (obj.project.sprint_duration + 1))]
         day_dates = self.build_day_list(obj)
-        daily_sp = [self.get_sum_of_sp(obj)] * obj.project.sprint_duration
-        daily_sp_count = [0] * obj.project.sprint_duration
+        daily_sp = [self.get_sum_of_sp(obj)] * \
+            (obj.project.sprint_duration + 1)
+        daily_sp_count = [0] * (obj.project.sprint_duration+1)
         sum_finished_tasks = 0
         task: Task
         for task in task_queryset:
@@ -143,7 +148,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
                 index = day_dates.index(task.done_on)
                 daily_sp_count[index] += task.storypoints
 
-        for i in range(0, (obj.project.sprint_duration)):
+        for i in range(0, (obj.project.sprint_duration + 1)):
             sum_finished_tasks += daily_sp_count[i]
             daily_sp[i] -= sum_finished_tasks
 
@@ -153,10 +158,11 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         }
 
     def get_finished_tasks_timeline(self, obj: Sprint):
+        logger.info(f'get finished tasks timeline')
         task_queryset: QuerySet = obj.task_cards.all()
-        days = [int for int in range(1, (obj.project.sprint_duration + 1))]
+        days = [int for int in range(0, (obj.project.sprint_duration + 1))]
         day_dates = self.build_day_list(obj)
-        daily_sp = [0] * obj.project.sprint_duration
+        daily_sp = [0] * (obj.project.sprint_duration+1)
         task: Task
         for task in task_queryset:
             if task.done_on in day_dates:
@@ -172,7 +178,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         This function return a list with days of the sprint
         """
         day_dates = [
-            obj.start + timedelta(int) for int in range(1, (obj.project.sprint_duration + 1))]
+            obj.start + timedelta(int) for int in range(0, (obj.project.sprint_duration)+1)]
         return day_dates
 
 
@@ -380,6 +386,7 @@ class ProjectStatisticSerializer(serializers.ModelSerializer):
         return worst_sprints
 
     def get_avg_finished_tasks_timeline(self, obj: Project):
+        logger.info(f'get avg finished tasks')
         number_sprints = len(self.get_accepted_sprint_ids(obj))
         avg_tasks = self.get_avg_tasks_in_sprint(obj)
         tasks = [avg_tasks] * number_sprints

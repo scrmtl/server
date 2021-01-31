@@ -1,4 +1,4 @@
-import { getField, updateField } from 'vuex-map-fields';
+import { getField, updateField } from "vuex-map-fields";
 
 const state = () => ({
   project: {
@@ -18,6 +18,11 @@ const state = () => ({
     readOnly: false,
     details: {},
   },
+  pokerVote: {
+    visableDetail: false,
+    readOnly: false,
+    details: {},
+  },
 });
 
 const mutations = {
@@ -27,12 +32,16 @@ const mutations = {
     state.project.visableDetail = true;
     if (withCreate) {
       state.project.visableCreate = true;
+      // Set Default values of necessary data
       state.project.details = {
         name: "",
-        start:"",
+        start: "",
         end: "",
-        sprint_duration: 0
-      }
+        dor: "",
+        dod: "",
+        description: "",
+        sprint_duration: 0,
+      };
     }
   },
   hideProjectDetail(state) {
@@ -48,15 +57,16 @@ const mutations = {
     state.sprint.visableDetail = true;
     if (withCreate) {
       state.sprint.visableCreate = true;
+      // Set Default values of necessary data
       state.sprint.details = {
         version: "",
         project: 0,
-        story: ""
+        story: "",
       };
     }
   },
 
-  showSprintDetailWithReadOnly(state){
+  showSprintDetailWithReadOnly(state) {
     state.sprint.visableDetail = true;
     state.sprint.readOnly = true;
   },
@@ -65,8 +75,8 @@ const mutations = {
     state.sprint.visableDetail = false;
     state.sprint.visableCreate = false;
     state.sprint.readOnly = false;
-    // state.sprint.details = {};
   },
+
   setSprintDetail(state, sprint) {
     state.sprint.details = sprint;
   },
@@ -74,11 +84,12 @@ const mutations = {
   showTaskDetail(state, withCreate = false) {
     state.task.visableDetail = true;
     if (withCreate) {
-      state.task.visableCreate = withCreate;
+      state.task.visableCreate = true;
+      // Default values are set in lane (createTaskHelper)
     }
   },
 
-  showTaskDetailWithReadOnly(state){
+  showTaskDetailWithReadOnly(state) {
     state.task.visableDetail = true;
     state.task.readOnly = true;
   },
@@ -89,15 +100,34 @@ const mutations = {
     state.task.readOnly = false;
     state.task.details = {};
   },
+
   setTaskDetail(state, task) {
     state.task.details = task;
+  },
+
+  showPokerVoteDetail(state) {
+    state.pokerVote.visableDetail = true;
+  },
+
+  showPokerVoteDetailWithReadOnly(state) {
+    state.pokerVote.visableDetail = true;
+    state.pokerVote.readOnly = true;
+  },
+
+  hidePokerVoteDetail(state) {
+    state.pokerVote.visableDetail = false;
+    state.pokerVote.readOnly = false;
+    state.pokerVote.details = {};
+  },
+
+  setPokerVoteDetail(state, pokerVote) {
+    state.pokerVote.details = pokerVote;
   },
 };
 
 const getters = {
-  getField
+  getField,
 };
-
 
 export default {
   // We're using namespacing
@@ -106,5 +136,5 @@ export default {
   name: "selected",
   state,
   getters,
-  mutations
+  mutations,
 };

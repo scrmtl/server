@@ -10,7 +10,7 @@
         </div>
         <div class="projectBtn my-n1">
           <v-switch
-            v-if="this.groupId !== 1"
+            v-if="getUserinfo.groups[0] !== 1"
             color="link"
             inset
             dark
@@ -25,15 +25,15 @@
     </v-row>
     <v-row align="start" justify="center">
       <v-col lg="8" md="7" sm="12">
-        <div
-          v-for="project in sortedProjects"
-          :key="project.id"
-        >
+        <div v-for="project in sortedProjects" :key="project.id">
           <ProjectCard v-bind:project="project" />
         </div>
       </v-col>
       <v-col lg="4" md="5" class="hidden-sm-and-down">
-        <MyTasksLane class="hidden-sm-and-down" />
+        <MyTasksLane
+          v-if="authStatus === 'success'"
+          class="hidden-sm-and-down"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -41,9 +41,8 @@
 
 <script>
 import ProjectCard from "@/components/ProjectCard.vue";
-import MyTasksLane from "@/components/MyTasksLane.vue";
-import { mapGetters, mapActions, mapState } from "vuex";
-//import scrmtlServices from '@/services/scrmtlServices.js'
+import MyTasksLane from "@/components/Lanes/MyTasksLane.vue";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   data: () => ({
@@ -53,17 +52,12 @@ export default {
     drawer: false,
     tab: null,
     localProject: {},
-    groupId: 0,
-    userId: {},
     showAllProjects: false,
   }),
   components: {
     ProjectCard,
     MyTasksLane,
   },
-
-  
-
   methods: {
     ...mapActions("project", {
       fetchProjects: "fetchList",
@@ -75,42 +69,32 @@ export default {
     ...mapActions("group", {
       fetchGroups: "fetchList",
     }),
-    ...mapActions("session", {
-      fetchSession: "fetchList",
-    }),
     ...mapActions("sprint", {
       fetchSprints: "fetchList",
     }),
+    ...mapActions("pokerVoting", {
+      fetchPokerVotings: "fetchList",
+    }),
+    ...mapActions("pokerVote", {
+      fetchPokerVotes: "fetchList",
+    }),
 
-    loadData() {
-      // Load Projects
-      this.fetchProjects({ customUrlFnArgs: {} });
-      //Load User Groups
-      this.fetchGroups();
-      this.fetchUsers();
-      this.fetchSession({ customUrlFnArgs: { all: false } });
-      this.fetchSprints({ customUrlFnArgs: {} })
+    async loadData() {
+      var status = await this.checkAuthStatus();
+      if (status === "success") {
+        // Load Projects
+        this.fetchProjects({ customUrlFnArgs: {} });
+        //Load User Groups
+        this.fetchGroups();
+        this.fetchUsers();
+        this.fetchSprints({ customUrlFnArgs: {} });
+      }
     },
 
-    GetSessionIds() {
-      this.groupId = -1;
-      this.userId = -1;
-      this.fetchSession({
-        id: null,
-        customUrlFnArgs: { all: false },
-      })
-        .then(() => {
-          //get groupId
-          var session = Object.values(this.listSession)[0];
-          this.groupId = session.groups[0];
-          this.userId = session.id;
-        })
-        .catch(() => {
-          if (this.groupId <= 0) {
-            this.groupId = 0;
-            this.userId = 0;
-          }
-        });
+    checkAuthStatus() {
+      return new Promise((resolve) => {
+        resolve(this.authStatus);
+      });
     },
 
     showCreateProject() {
@@ -138,7 +122,7 @@ export default {
 
     //Ordnet die Projekte nach dem Status (Ob Aktiv oder Archiv)
     orderProjects(projects) {
-       projects.sort(function (a, b) {
+      projects.sort(function (a, b) {
         var keyA = a.status;
         var keyB = b.status;
         // Vergleiche ob AC oder AR
@@ -146,68 +130,78 @@ export default {
         if (keyA > keyB) return 1;
         return 0;
       });
-      return projects
+      return projects;
     },
   },
   computed: {
-    ...mapState({
-      project: "detailProject",
-    }),
     ...mapGetters("project", {
-      listProjects: "list" }),
-    ...mapGetters("session", {
-      listSession: "list",
+      listProjects: "list",
     }),
     ...mapGetters("user", {
       projectUsersByUserId: "byUserId",
     }),
-    ...mapGetters("group", {
-      groupById: "byId",
+    ...mapGetters("pokerVoting", {
+      listPokerVotings: "byVoterId",
     }),
-    ...mapGetters({ userinfos: "getUserinfo" }),
+    ...mapGetters("pokerVote", {
+      listPokerVotes: "byPokerVotingId",
+    }),
+    ...mapGetters(["getUserinfo", "authStatus"]),
 
-    getGroupId: function () {
-      if (this.groupId === 0) {
-        this.GetSessionIds();
-      }
-      return this.groupId;
-    },
-
-    
-
-    sortedProjects(){
+    sortedProjects() {
       // show all project if you admin or you set it via switch
-      if(this.showAllProjects || this.groupId === 1){
+      if (this.showAllProjects || this.getUserinfo.groups[0] === 1) {
         return this.orderProjects(this.listProjects);
       }
       // show only your own projects
-      else{
+      else {
         var userProjects = [];
-        this.projectUsersByUserId(this.userId).forEach((projectUser) => {
-          this.listProjects.forEach((project) => {
-            if (project.id === projectUser.project) {
-              userProjects.push(project);
-            }
-          });
-        });
+        this.projectUsersByUserId(this.getUserinfo.userId).forEach(
+          (projectUser) => {
+            this.listProjects.forEach((project) => {
+              if (project.id === projectUser.project) {
+                userProjects.push(project);
+              }
+            });
+          }
+        );
         return this.orderProjects(userProjects);
       }
-    }
+    },
   },
 
   mounted() {
     this.loadData();
-    this.GetSessionIds();
+    this.fetchPokerVotings().then(() => {
+      this.fetchPokerVotes().then(() => {
+        // list only where userId involved
+        var pokerVotings = this.listPokerVotings(this.getUserinfo.userId);
+        if (
+          pokerVotings.filter(
+            (pokerVoting) =>
+              this.listPokerVotes(pokerVoting.id).filter(
+                (pokerVote) => pokerVote.status == "WAIT"
+              ).length > 0
+          ).length > 0
+        ) {
+          this.$store.commit("showSystemAlert", {
+            message: "Your vote is asked",
+            category: "info",
+            link: true,
+            linkName: "Go To Poker",
+            linkDestination: "PlanningPoker",
+          });
+        }
+      });
+    });
   },
 
   created() {
     this.loadData();
-    this.GetSessionIds();
   },
-
 };
 </script>
 
-<style lang="css" >
+<style lang="css">
 @import "../main.css";
 </style>

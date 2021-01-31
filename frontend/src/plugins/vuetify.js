@@ -24,12 +24,12 @@ const vuetify = new Vuetify({
         link: "#31AA96",
         task: "#999C96",
         frontend: "#6441A4",
-        backend:"#2E4057",
-        ui_ux:"#31AA96",
-        bug:"#FF5252"
-      }
-    }
-  }
+        backend: "#2E4057",
+        ui_ux: "#31AA96",
+        bug: "#FF5252",
+      },
+    },
+  },
 });
 
 export default vuetify;

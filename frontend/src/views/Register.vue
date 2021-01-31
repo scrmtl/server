@@ -1,14 +1,17 @@
 <template>
   <v-container fluid>
     <v-row no-gutters align="center" justify="center">
-      <v-img 
-          max-height="150"
-          max-width="150"
-          src="@/assets/logo_transparent.png"></v-img>
-      <span class="text-lg-h1 text-sm-h2 white--text ">Welcome</span>
+      <v-img
+        max-height="150"
+        max-width="150"
+        src="@/assets/logo_transparent.png"
+      ></v-img>
+      <span class="text-lg-h1 text-sm-h2 white--text">Welcome</span>
     </v-row>
     <v-row no-gutters align="center" justify="center">
-      <span class="text-lg-subtitle-1 text-sm-subtitle-2 white--text">dark, cool and easy</span>
+      <span class="text-lg-subtitle-1 text-sm-subtitle-2 white--text"
+        >dark, cool and easy</span
+      >
     </v-row>
     <v-row ro no-gutters align="center" justify="center">
       <v-col sm="12" lg="5">
@@ -82,20 +85,21 @@ export default {
       errorHappend: false,
       errorMessage: "Username or password is invalid",
       usernameRules: [
-        v => !!v || "Name is required",
-        v => (v && v.length <= 150) || "Name must be less than 150 characters",
-        v => (v || "").indexOf(" ") < 0 || "No spaces are allowed"
+        (v) => !!v || "Name is required",
+        (v) =>
+          (v && v.length <= 150) || "Name must be less than 150 characters",
+        (v) => (v || "").indexOf(" ") < 0 || "No spaces are allowed",
       ],
-      passwordRules: [v => !!v || "password is required"]
+      passwordRules: [(v) => !!v || "password is required"],
     };
   },
   methods: {
     ...mapActions("registration", {
-      registerUser: "create"
+      registerUser: "create",
     }),
 
     register() {
-        this.errorHappend = false;
+      this.errorHappend = false;
       if (this.eMail == this.eMail_repeat) {
         if (this.password == this.password_repeat) {
           this.registerUser({
@@ -104,9 +108,9 @@ export default {
               email: this.eMail,
               username: this.username,
               password1: this.password,
-              password2: this.password_repeat
-            }
-          }).catch(err => {
+              password2: this.password_repeat,
+            },
+          }).catch((err) => {
             if (err.response === undefined) {
               this.errorHappend = false;
             } else {
@@ -146,19 +150,19 @@ export default {
 
     back() {
       this.$router.push("/login");
-    }
+    },
   },
   computed: {
-    ...mapGetters(["authStatus", "isLoggedIn"])
+    ...mapGetters(["authStatus", "isLoggedIn"]),
   },
 
-  created: function() {
+  created: function () {
     this.eMail = "";
     this.eMail_repeat = "";
     this.username = "";
     this.password = "";
     this.password_repeat = "";
-    Axios.interceptors.request.use(config => {
+    Axios.interceptors.request.use((config) => {
       if (
         (config.method === "post") | (config.method === "patch") &&
         config.url[config.url.length - 1] !== "/"
@@ -167,7 +171,7 @@ export default {
       }
       return config;
     });
-  }
+  },
 };
 </script>
 

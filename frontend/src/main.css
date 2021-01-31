@@ -62,6 +62,12 @@
     margin-left: -24px;
   }
 
+.sprint-number-lane {
+  overflow-y: auto;
+  width: 15vh;
+  max-height: calc(100vh - 220px)
+}
+
 .lane-body {
     overflow-y: auto;
     height: calc(95vh - 225px);
