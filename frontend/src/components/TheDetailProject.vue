@@ -636,6 +636,13 @@ export default {
         this.tab = "DetailTab";
       }
     },
+    templateProjectItems(val, prev) {
+      if (val !== prev) {
+        if (this.selectedProjectTemplate == null) {
+          this.selectedProjectTemplate = this.templateProjectItems[0];
+        }
+      }
+    },
   },
 
   created() {
