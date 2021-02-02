@@ -15,6 +15,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "exceljs": "^4.2.0",
+    "js-cookie": "^2.2.1",
     "jspdf": "^2.2.0",
     "jspdf-autotable": "^3.5.13",
     "plotly.js-dist": "^1.58.0",
