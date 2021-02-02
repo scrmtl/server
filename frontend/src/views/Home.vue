@@ -79,16 +79,16 @@ export default {
       fetchPokerVotes: "fetchList",
     }),
 
-    async loadData() {
-      var status = await this.checkAuthStatus();
-      if (status === "success") {
-        // Load Projects
-        this.fetchProjects({ customUrlFnArgs: {} });
-        //Load User Groups
-        this.fetchGroups();
-        this.fetchUsers();
-        this.fetchSprints({ customUrlFnArgs: {} });
-      }
+    loadData() {
+      // var status = await this.checkAuthStatus();
+      // if (status === "success") {
+      // Load Projects
+      this.fetchProjects({ customUrlFnArgs: {} });
+      //Load User Groups
+      this.fetchGroups();
+      this.fetchUsers();
+      this.fetchSprints({ customUrlFnArgs: {} });
+      // }
     },
 
     checkAuthStatus() {

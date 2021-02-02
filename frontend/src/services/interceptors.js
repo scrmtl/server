@@ -14,18 +14,21 @@ export default function setup() {
       return response;
     },
     function (error) {
+      console.log(error);
       if (error.response.status) {
         switch (error.response.status) {
           case 400:
-            //do something
+            // Bad Request
             break;
           case 401:
             store.commit("showSystemAlert", {
-              message: "seesion expired",
+              message: "session expired",
               category: "error",
             });
             store.dispatch("logout").then(() => {
-              router.push("/login");
+              if (router.history.current.name !== "LogIn") {
+                router.push("/login");
+              }
             });
             break;
           case 403:

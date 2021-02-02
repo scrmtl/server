@@ -76,12 +76,13 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  // safe routes if you not logged in
   if (
     to.name !== "LogIn" &&
-    !localStorage.getItem("token") &&
-    to.name !== "Register"
+    to.name !== "Register" &&
+    !localStorage.getItem("token")
   ) {
-    if (to.name == "Register") {
+    if (to.name === "Register") {
       next({ name: "Register" });
     } else {
       next({ name: "LogIn" });

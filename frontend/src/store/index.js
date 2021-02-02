@@ -2,7 +2,6 @@ import Vue from "vue";
 import Vuex from "vuex";
 import Axios from "axios";
 import createPersistedState from "vuex-persistedstate";
-// import Cookies from 'js-cookie';
 // mutation function from the `vuex-map-fields` module.
 import { getField, updateField } from "vuex-map-fields";
 
@@ -41,23 +40,7 @@ export default new Vuex.Store({
   // later something like this even better
   // strict: eprocess.env.NODE_ENV !== "production"
   strict: true,
-  plugins: [
-    // createPersistedState({
-    //   storage: {
-    //     getItem: (key) => Cookies.get(key),
-    //     setItem: (key, value) => {
-    //       try {
-    //         Cookies.set(key, value, { expires: 3, secure: false });
-    //       } catch (err) {
-    //         console.log(err);
-    //       }
-    //     },
-    //     // Cookies.set(key, value, { expires: 3, secure: true }),
-    //     removeItem: (key) => Cookies.remove(key),
-    //   },
-    // }),
-    createPersistedState(),
-  ],
+  plugins: [createPersistedState()],
   // States
   state: {
     Userinfo: {
