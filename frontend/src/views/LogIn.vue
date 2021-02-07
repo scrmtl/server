@@ -82,7 +82,7 @@ export default {
     };
   },
   methods: {
-    async login() {
+    login() {
       this.isLoginError = false;
       const credentials = {
         username: this.username,
@@ -99,11 +99,11 @@ export default {
         });
     },
     goToHome() {
-      this.$router.push("/");
+      this.$router.push({ name: "Home" });
     },
 
     register() {
-      this.$router.push("/register");
+      this.$router.push({ name: "Register" });
     },
   },
   computed: {
