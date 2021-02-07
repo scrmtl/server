@@ -1,10 +1,11 @@
 import Axios from "axios";
-// this is not avialable in axios interceptor, so it have to import direktly
+// this is not available in axios interceptor, so it have to import directly
 import store from "../store";
 import router from "../router";
 
 export default function setup() {
-  const token = localStorage.getItem("token");
+  // load token from vuex
+  const token = store.getters.getToken;
   if (token) {
     Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }

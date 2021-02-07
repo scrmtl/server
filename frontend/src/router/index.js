@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-
+import store from "../store";
 import LogIn from "../views/LogIn.vue";
 import Register from "../views/Register.vue";
 import Home from "../views/Home.vue";
@@ -80,12 +80,14 @@ router.beforeEach((to, from, next) => {
   if (
     to.name !== "LogIn" &&
     to.name !== "Register" &&
-    !localStorage.getItem("token")
+    !store.getters.getToken
   ) {
     if (to.name === "Register") {
       next({ name: "Register" });
     } else {
-      next({ name: "LogIn" });
+      if (from.name !== "LogIn") {
+        next({ name: "LogIn" });
+      }
     }
   } else {
     next();
