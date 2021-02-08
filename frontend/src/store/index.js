@@ -132,6 +132,7 @@ export default new Vuex.Store({
                   message: "No session data found",
                   category: "error",
                 });
+                reject(err);
               });
             resolve();
           })
