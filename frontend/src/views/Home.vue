@@ -92,8 +92,12 @@ export default {
     },
 
     checkAuthStatus() {
-      return new Promise((resolve) => {
-        resolve(this.authStatus);
+      return new Promise((resolve, reject) => {
+        if (this.authStatus === "success") {
+          resolve(this.authStatus);
+        } else {
+          reject();
+        }
       });
     },
 

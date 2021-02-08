@@ -90,14 +90,20 @@ export default {
       };
       this.$store
         .dispatch("login", credentials)
-        .then(() => this.$router.push("/"))
+        .then(() => {
+          this.goToHome();
+        })
         .catch((err) => {
           console.log(err);
           this.isLoginError = true;
         });
     },
+    goToHome() {
+      this.$router.push({ name: "Home" });
+    },
+
     register() {
-      this.$router.push("/register");
+      this.$router.push({ name: "Register" });
     },
   },
   computed: {

@@ -82,6 +82,16 @@
       </v-col>
       <v-col lg="1" class="hidden-md-and-down"> </v-col>
     </v-row>
+    <v-overlay
+      :value="pokerVotingIsLoading || pokerVoteIsLoading || tasksIsLoading"
+    >
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="link"
+        indeterminate
+      ></v-progress-circular>
+    </v-overlay>
   </v-container>
 </template>
 
@@ -89,7 +99,7 @@
 import PokerSummary from "@/components/Poker/PokerSummary.vue";
 import PokerVote from "@/components/Poker/PokerVote.vue";
 import { mapFields } from "vuex-map-fields";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 export default {
   name: "PlanningPoker",
   components: {
@@ -112,7 +122,15 @@ export default {
     ...mapGetters("project", {
       projectById: "byId",
     }),
-
+    ...mapState("task", {
+      tasksIsLoading: "isFetchingList",
+    }),
+    ...mapState("pokerVoting", {
+      pokerVotingIsLoading: "isFetchingList",
+    }),
+    ...mapState("pokerVote", {
+      pokerVoteIsLoading: "isFetchingList",
+    }),
     visiblePokerSummary: {
       get() {
         return this.visableDetail;
@@ -187,10 +205,14 @@ export default {
   },
   mounted() {
     this.fetchPokerVotings().then(() => {
+      var alreadyFetchedProjectTasks = [];
       this.listPokerVotings(this.userId).forEach((pokerVoting) => {
-        this.fetchTasks({
-          customUrlFnArgs: { projectId: pokerVoting.project },
-        });
+        if (!alreadyFetchedProjectTasks.includes(pokerVoting.project)) {
+          this.fetchTasks({
+            customUrlFnArgs: { projectId: pokerVoting.project },
+          });
+          alreadyFetchedProjectTasks.push(pokerVoting.project);
+        }
       });
     });
     this.fetchPokerVotes();

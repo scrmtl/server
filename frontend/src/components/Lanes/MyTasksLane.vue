@@ -30,7 +30,7 @@ export default {
     ...mapGetters("task", {
       listTasks: "list",
     }),
-    ...mapGetters(["getUserinfo", "authStatus"]),
+    ...mapGetters(["getUserinfo"]),
 
     ...mapState([
       "route", // vuex-router-sync

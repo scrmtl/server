@@ -1,10 +1,11 @@
 import Axios from "axios";
-// this is not avialable in axios interceptor, so it have to import direktly
+// this is not available in axios interceptor, so it have to import directly
 import store from "../store";
 import router from "../router";
 
 export default function setup() {
-  const token = localStorage.getItem("token");
+  // load token from vuex
+  const token = store.getters.getToken;
   if (token) {
     Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }
@@ -14,18 +15,21 @@ export default function setup() {
       return response;
     },
     function (error) {
+      console.log(error);
       if (error.response.status) {
         switch (error.response.status) {
           case 400:
-            //do something
+            // Bad Request
             break;
           case 401:
             store.commit("showSystemAlert", {
-              message: "seesion expired",
+              message: "session expired",
               category: "error",
             });
             store.dispatch("logout").then(() => {
-              router.push("/login");
+              if (router.history.current.name !== "LogIn") {
+                router.push("/login");
+              }
             });
             break;
           case 403:
