@@ -177,7 +177,7 @@ class Vote(RulesModel, IGetProject):
 
         rules_permissions = {
             "view": is_project_team_member,
-            "add": is_own_vote,
+            "add": is_project_team_member,
             "change": is_own_vote,
             "delete": is_own_vote
         }
