@@ -34,6 +34,11 @@ OAUTH2_PROVIDER = {
 
 AUTH_USER_MODEL = 'api.PlatformUser'
 
+AUTHENTICATION_BACKENDS = (
+    'rules.permissions.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': (
         'rest_framework.schemas.coreapi.AutoSchema'),
