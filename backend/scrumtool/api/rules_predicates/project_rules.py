@@ -67,10 +67,22 @@ def is_project_team_member(user, project_object):
 
 @rules.predicate
 def is_own_profile(user, platform_user_object):
+    if platform_user_object is None:
+        return False
     if user.id == platform_user_object.id:
-        True
+        return True
     else:
-        False
+        return False
+
+
+@rules.predicate
+def is_own_vote(user, vote_object):
+    if vote_object is None:
+        return False
+    if user.id == vote_object.user.id:
+        return True
+    else:
+        return False
 
 
 is_admin = rules.is_group_member('admin')

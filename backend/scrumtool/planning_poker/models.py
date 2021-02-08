@@ -13,7 +13,7 @@ from django.core.exceptions import PermissionDenied
 
 from api.rules_predicates import is_dev_in_project, \
     is_po_in_project, is_sm_in_project, is_project_team_member, is_admin,\
-    can_change_board, is_own_profile
+    can_change_board, is_own_profile, is_own_vote
 
 from api.models.model_interfaces import IGetProject, IGetBoard
 from api.models import PlatformUser
@@ -176,10 +176,10 @@ class Vote(RulesModel, IGetProject):
         verbose_name_plural = 'Votes'
 
         rules_permissions = {
-            "view": is_own_profile,
-            "add": is_own_profile,
-            "change": is_own_profile,
-            "delete": is_own_profile
+            "view": is_project_team_member,
+            "add": is_own_vote,
+            "change": is_own_vote,
+            "delete": is_own_vote
         }
 
     def __str__(self):
