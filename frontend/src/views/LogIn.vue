@@ -99,11 +99,11 @@ export default {
         });
     },
     goToHome() {
-      this.$router.push({ name: "Home" });
+      this.$router.push({ name: "Home" }).catch(() => {});
     },
 
     register() {
-      this.$router.push({ name: "Register" });
+      this.$router.push({ name: "Register" }).catch(() => {});
     },
   },
   computed: {
