@@ -205,7 +205,8 @@ export default {
       if (this.$route.path.endsWith("Archive")) {
         this.$store.commit("selected/showTaskDetailWithReadOnly");
       } else if (
-        this.$route.path.endsWith("ProductBacklog") &&
+        (this.$route.path.endsWith("ProductBacklog") ||
+          this.$route.path.endsWith("SprintPlaning")) &&
         !this.allowedChanges
       ) {
         this.$store.commit("showSystemAlert", {

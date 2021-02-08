@@ -238,6 +238,19 @@ export default {
       }
       return format;
     },
+
+    //Funktion um die Width der Bars beim Plotly einzustellen
+    makeWidthArray(x_array) {
+      var width = 0.1;
+      var length = x_array.length;
+      var data = [];
+
+      for (var i = 0; i < length; i++) {
+        data.push(width);
+      }
+
+      return data;
+    },
   },
   computed: {
     ...mapGetters("sprint", {
@@ -279,11 +292,13 @@ export default {
       let done_tasks = {
         x: this.plotly_data.done_tasks.x_data,
         y: this.plotly_data.done_tasks.y_data,
+        width: this.makeWidthArray(this.plotly_data.done_tasks.x_data),
         name: "Done Tasks",
         type: "bar",
         yaxis: "y2",
         marker: {
           color: "orange",
+          opacity: 0.6,
         },
       };
 
@@ -338,7 +353,7 @@ export default {
 
     sortedSprintList() {
       var list = this.listSprints(parseInt(this.$route.params.id));
-      var sorted = list.sort(function (a, b) {
+      var sorted = list.sort(function(a, b) {
         var keyA = a.number;
         var keyB = b.number;
         // Vergleiche ob AC oder AR

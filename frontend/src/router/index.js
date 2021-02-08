@@ -80,7 +80,7 @@ router.beforeEach((to, from, next) => {
   if (
     to.name !== "LogIn" &&
     to.name !== "Register" &&
-    !store.getters.getToken
+    store.getters.authStatus !== "success"
   ) {
     if (to.name === "Register") {
       next({ name: "Register" });
