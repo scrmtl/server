@@ -22,10 +22,10 @@ def getProjectUser(user, project_object):
         plattform_user=user)
 
     if project_user.exists():
-        stdlogger.info(f"--> No")
+        stdlogger.info(f"--> Yes")
         return project_user.first()
     else:
-        stdlogger.info(f"--> Yes")
+        stdlogger.info(f"--> No")
         return None
 
 
