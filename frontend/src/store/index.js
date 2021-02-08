@@ -86,7 +86,8 @@ export default new Vuex.Store({
     login({ commit, dispatch }, credentials) {
       return new Promise((resolve, reject) => {
         commit("AUTH_REQUEST");
-        Axios({
+        // axios return his own promise, no resolve needed
+        return Axios({
           method: "post",
           url: "o/token/",
           auth: {
@@ -111,19 +112,27 @@ export default new Vuex.Store({
             await dispatch("session/fetchList", {
               id: null,
               customUrlFnArgs: { all: false },
-            }).then((res) => {
-              var session = Object.values(res.data)[0];
-              commit("AUTH_SUCCESS", {
-                token: token,
-                refreshToken: refreshToken,
-                user: session.username,
-                id: session.id,
-                name: session.name,
-                email: session.email,
-                groups: session.groups,
+            })
+              .then((res) => {
+                var session = Object.values(res.data)[0];
+                commit("AUTH_SUCCESS", {
+                  token: token,
+                  refreshToken: refreshToken,
+                  user: session.username,
+                  id: session.id,
+                  name: session.name,
+                  email: session.email,
+                  groups: session.groups,
+                });
+                resolve();
+              })
+              .catch((err) => {
+                console.log(err);
+                this.$store.commit("showSystemAlert", {
+                  message: "No session data found",
+                  category: "error",
+                });
               });
-              resolve();
-            });
             resolve();
           })
           .catch((err) => {
