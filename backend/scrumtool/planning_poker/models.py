@@ -13,7 +13,8 @@ from django.core.exceptions import PermissionDenied
 
 from api.rules_predicates import is_dev_in_project, \
     is_po_in_project, is_sm_in_project, is_project_team_member, is_admin,\
-    can_change_board, is_own_profile, is_own_vote
+    can_change_board, is_own_profile, is_own_vote, is_default_user
+from rules import always_allow
 
 from api.models.model_interfaces import IGetProject, IGetBoard
 from api.models import PlatformUser
@@ -69,7 +70,7 @@ class PokerVoting(RulesModel, IGetProject):
 
         rules_permissions = {
             "view": is_project_team_member,
-            "add": is_po_in_project | is_sm_in_project,
+            "add": is_default_user,
             "change": is_po_in_project | is_sm_in_project,
             "delete": rules.always_deny
         }
@@ -129,7 +130,7 @@ class PokerVote(RulesModel, IGetProject):
 
         rules_permissions = {
             "view": is_project_team_member,
-            "add": is_po_in_project | is_sm_in_project,
+            "add": is_default_user,
             "change": is_po_in_project | is_sm_in_project,
             "delete": is_po_in_project | is_sm_in_project
         }
@@ -177,7 +178,7 @@ class Vote(RulesModel, IGetProject):
 
         rules_permissions = {
             "view": is_project_team_member,
-            "add": is_project_team_member,
+            "add": is_default_user,
             "change": is_own_vote,
             "delete": is_own_vote
         }
