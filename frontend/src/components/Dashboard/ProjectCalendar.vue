@@ -46,7 +46,7 @@ export default {
       projectById: "byId",
     }),
     ...mapGetters("sprint", {
-      listSprints: "list",
+      listSprints: "byProjectId",
     }),
 
     projectEvents() {
@@ -67,7 +67,7 @@ export default {
         category: "project",
         timed: false,
       });
-      this.listSprints.forEach((sprint) => {
+      this.listSprints(this.$route.params.id).forEach((sprint) => {
         // Sprint Duration
         events.push({
           name: `Sprint ${sprint.number} (${sprint.version})`,
