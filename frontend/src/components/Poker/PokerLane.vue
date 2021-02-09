@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card class="primary" min-width="300" max-width="400">
-      <v-card-title class="white--text"> Gromming </v-card-title>
+      <v-card-title class="white--text"> Grooming </v-card-title>
       <v-card-subtitle class="white--text"> Planning Poker </v-card-subtitle>
       <v-card-text class="overflow-y-auto" style="height: calc(95vh - 355px)">
         <v-row align="center">
