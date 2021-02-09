@@ -158,7 +158,8 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         }
 
     def get_finished_tasks_timeline(self, obj: Sprint):
-        logger.info(f'get finished tasks timeline')
+        logger.info(f'get finished tasks timeline ' +
+                    f'of sprint {obj} from project {obj.project}')
         task_queryset: QuerySet = obj.task_cards.all()
         logger.info(f'--> get tasks: {task_queryset}')
         days = [int for int in range(0, (obj.project.sprint_duration + 1))]
