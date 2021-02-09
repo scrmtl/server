@@ -78,17 +78,22 @@
     border-left-color: #6441A4;
     border-right-color: #6441A4;
   }
-  .link-color {
-    color: white;
-  }
-/* .lane-extended {
+
+  .lane-sprint-body {
+    overflow-y: auto;
+    height: calc(95vh - 245px);
     background-color: #2E4057;
     border-style: solid;
     border-top-style: hidden;
+    border-bottom-color: #6441A4;
     border-left-color: #6441A4;
     border-right-color: #6441A4;
-    border-bottom-color: #6441A4;
-  } */
+  }
+
+.link-color {
+    color: white;
+  }
+
 .epic-header {
     background-color: #6441A4;
     width: 300px;
