@@ -139,7 +139,7 @@ export default {
       // role id 1 is always product owner
       var productOwnersInProject = this.listProjectUser.filter(
         (projectUser) =>
-          projectUser.role === 1 && projectUser.project == this.$route.params.id
+          projectUser.role == 1 && projectUser.project == this.$route.params.id
       );
       if (
         this.getUserinfo !== undefined &&
@@ -147,7 +147,7 @@ export default {
       ) {
         if (
           productOwnersInProject.find(
-            (po) => po.plattform_user === this.getUserinfo.userId
+            (po) => po.plattform_user == this.getUserinfo.userId
           ) !== undefined
         ) {
           allowed = true;
