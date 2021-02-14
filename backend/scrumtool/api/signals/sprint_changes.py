@@ -22,5 +22,6 @@ def create_sprint_lane_in_backlog(sender, instance: Sprint, created, **kwargs):
         sprint_lane = Lane(
             board=archive_board,
             name=lane_name,
+            numbering=instance.number
         )
         sprint_lane.save()

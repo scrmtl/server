@@ -167,6 +167,7 @@ def create_or_get_lane(ab_board: Board, sprint: Sprint):
         sprint_lane = Lane(
             board=ab_board,
             name=lane_name,
+            numbering=sprint.number
         )
         sprint_lane.save()
         return sprint_lane
