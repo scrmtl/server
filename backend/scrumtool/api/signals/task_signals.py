@@ -21,7 +21,8 @@ def set_done_on_task(sender, instance: Task, update_fields, **kwargs):
             old_instance.status != Task.Status.DONE):
         logger.info(f'overwrite task date_on with {date.today()}')
         instance.done_on = date.today()
-    elif instance.status == Task.Status.ACCEPTED:
+    elif (instance.status == Task.Status.ACCEPTED or
+          instance.status == Task.Status.DONE):
         return
     else:
         instance.done_on = None
@@ -35,7 +36,8 @@ def set_done_on_epic(sender, instance: Epic, update_fields, **kwargs):
     if (instance.status == Epic.Status.DONE and
             old_instance.status != Epic.Status.DONE):
         instance.done_on = date.today()
-    elif instance.status == Epic.Status.ACCEPTED:
+    elif (instance.status == Task.Status.ACCEPTED or
+          instance.status == Task.Status.DONE):
         return
     else:
         instance.done_on = None
@@ -49,7 +51,8 @@ def set_done_on_feature(sender, instance: Feature, update_fields, **kwargs):
     if (instance.status == Feature.Status.DONE and
             old_instance.status != Feature.Status.DONE):
         instance.done_on = date.today()
-    elif instance.status == Feature.Status.ACCEPTED:
+    elif (instance.status == Task.Status.ACCEPTED or
+          instance.status == Task.Status.DONE):
         return
     else:
         instance.done_on = None
