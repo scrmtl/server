@@ -183,6 +183,23 @@ def set_poker_vote_status(end_poker_voting):
             logger.info(f"-->Finished PokerVote: {poker_vote}")
 
 
+def sort_tasks_in_lanes():
+    logger.info(
+        "--------------------- number tasks -----------------------")
+    lane: Lane
+    for lane in Lane.objects.all():
+        logger.info(
+            f"--> Lane: {lane}")
+        order_id = 1
+        task: Task
+        for task in lane.task_cards.all():
+            logger.info(f"   --> task: {task}")
+            task.numbering = order_id
+            order_id += 1
+            task.save()
+            logger.info(f"   --> new numbering: {task.numbering}")
+
+
 def hourly_job():
     # This job actually starts at 10 o'clock because the server aka
     # the old laptop is only online from 8:00-22:00
@@ -262,6 +279,18 @@ class Command(BaseCommand):
             "Added weekly job: 'delete_old_job_executions'."
         )
 
+        scheduler.add_job(
+            sort_tasks_in_lanes,
+            trigger=CronTrigger(
+                day_of_week="mon", hour="10", minute="00"
+            ),  # Midnight on Monday, before start of the next work week.
+            id="sort_tasks_in_lanes",
+            max_instances=1,
+            replace_existing=True,
+        )
+        logger.info(
+            "Added sort job: 'sort_tasks_in_lanes'."
+        )
         try:
             logger.info("Starting scheduler...")
             scheduler.start()
