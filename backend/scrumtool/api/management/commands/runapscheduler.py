@@ -16,6 +16,7 @@ from api.models.sprint import Sprint
 from api.models.card import Task
 from api.models import Lane
 from api.models.board import Board
+from api.models.project import Project
 
 from planning_poker.models import PokerVoting, PokerVote
 
@@ -187,7 +188,11 @@ def sort_tasks_in_lanes():
     logger.info(
         "--------------------- number tasks -----------------------")
     lane: Lane
+
     for lane in Lane.objects.all():
+        project: Project = lane.board.project
+        if project.status == Project.ProjectStatus.AR:
+            continue
         logger.info(
             f"--> Lane: {lane}")
         order_id = 1
