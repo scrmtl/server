@@ -51,14 +51,6 @@
                 </v-list-item>
                 <v-list-item dense>
                   <v-list-item-title class="white--text"
-                    >Not done</v-list-item-title
-                  >
-                  <v-list-item-subtitle class="white--text text-right">{{
-                    sum_of_not_done_sp
-                  }}</v-list-item-subtitle>
-                </v-list-item>
-                <v-list-item dense>
-                  <v-list-item-title class="white--text"
                     >Accepted</v-list-item-title
                   >
                   <v-list-item-subtitle class="white--text text-right">{{
@@ -155,7 +147,6 @@ export default {
     sum_of_planned_sp: "No sprint selected",
     sum_of_done_sp: "No sprint selected",
     sum_of_accepted_sp: "No sprint selected",
-    sum_of_not_done_sp: "No sprint selected",
 
     plotly_data: {
       planed: {
@@ -192,7 +183,6 @@ export default {
         this.sum_of_planned_sp = stats.sum_of_sp;
         this.sum_of_done_sp = stats.sum_of_done_sp;
         this.sum_of_accepted_sp = stats.sum_of_accepted_sp;
-        this.sum_of_not_done_sp = stats.sum_of_sp - stats.sum_of_done_sp;
         this.sum_of_planned_tasks = stats.sum_of_tasks;
         this.sum_of_done_tasks = stats.sum_of_done_tasks;
         this.sum_of_accepted_tasks = stats.sum_of_accepted_tasks;
@@ -353,7 +343,7 @@ export default {
 
     sortedSprintList() {
       var list = this.listSprints(parseInt(this.$route.params.id));
-      var sorted = list.sort(function(a, b) {
+      var sorted = list.sort(function (a, b) {
         var keyA = a.number;
         var keyB = b.number;
         // Vergleiche ob AC oder AR
