@@ -9,7 +9,7 @@ from django.contrib.auth.models import AbstractUser
 
 from api.rules_predicates import is_dev_in_project, \
     is_po_in_project, is_sm_in_project, is_project_team_member, \
-    can_change_user
+    can_change_user, is_default_user
 
 
 class ProjectRole(RulesModel):
@@ -55,7 +55,7 @@ class ProjectRole(RulesModel):
     class Meta:
         """Meta definition for ProjectRule."""
         rules_permissions = {
-            "view": rules.always_allow,
+            "view": rules.is_authenticated,
             "add": rules.always_deny,
             "change": rules.always_deny,
             "delete": rules.always_deny
@@ -75,10 +75,10 @@ class PlatformUser(RulesModelMixin, AbstractUser, metaclass=RulesModelBase):
 
     class Meta:
         rules_permissions = {
-            "view": rules.always_allow,
-            "add": rules.always_allow,
-            "change": rules.always_allow,
-            "delete": rules.always_allow
+            "view": rules.is_authenticated,
+            "add": rules.is_authenticated,
+            "change": rules.is_authenticated,
+            "delete": rules.is_authenticated
         }
 
 
@@ -108,7 +108,7 @@ class ProjectUser(RulesModel):
 
         rules_permissions = {
             "view": is_project_team_member,
-            "add": is_po_in_project | is_sm_in_project,
+            "add": is_default_user,
             "change": is_po_in_project | is_sm_in_project,
             "delete": is_po_in_project | is_sm_in_project
         }

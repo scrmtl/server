@@ -205,7 +205,8 @@ export default {
       if (this.$route.path.endsWith("Archive")) {
         this.$store.commit("selected/showTaskDetailWithReadOnly");
       } else if (
-        this.$route.path.endsWith("ProductBacklog") &&
+        (this.$route.path.endsWith("ProductBacklog") ||
+          this.$route.path.endsWith("SprintPlaning")) &&
         !this.allowedChanges
       ) {
         this.$store.commit("showSystemAlert", {
@@ -298,9 +299,12 @@ export default {
         status: "",
       };
       if (this.task.sprint != null) {
-        sprintInfo.start = this.sprintById(this.task.sprint).start;
-        sprintInfo.end = this.sprintById(this.task.sprint).end;
-        sprintInfo.status = this.sprintById(this.task.sprint).status;
+        var sprint = this.sprintById(this.task.sprint);
+        if (sprint) {
+          sprintInfo.start = sprint.start;
+          sprintInfo.end = sprint.end;
+          sprintInfo.status = sprint.status;
+        }
         return sprintInfo;
       } else {
         return sprintInfo;

@@ -83,21 +83,32 @@ export default {
   },
   methods: {
     login() {
-      this.isLoginError = false;
-      const credentials = {
-        username: this.username,
-        password: this.password,
-      };
-      this.$store
-        .dispatch("login", credentials)
-        .then(() => this.$router.push("/"))
-        .catch((err) => {
-          console.log(err);
-          this.isLoginError = true;
-        });
+      return new Promise((resolve, reject) => {
+        this.isLoginError = false;
+        const credentials = {
+          username: this.username,
+          password: this.password,
+        };
+        this.$store
+          .dispatch("login", credentials)
+          .then(() => {
+            this.goToHome();
+            resolve();
+          })
+          .catch((err) => {
+            console.log(err);
+            this.isLoginError = true;
+            reject(err);
+          });
+        resolve();
+      });
     },
+    goToHome() {
+      this.$router.push({ name: "Home" }).catch(() => {});
+    },
+
     register() {
-      this.$router.push("/register");
+      this.$router.push({ name: "Register" }).catch(() => {});
     },
   },
   computed: {

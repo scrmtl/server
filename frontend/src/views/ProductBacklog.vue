@@ -28,26 +28,24 @@ export default {
       listBoards: "list",
       boardByType: "byType",
     }),
-    ...mapGetters("session", {
-      listSession: "list",
-    }),
     ...mapGetters("projectUser", {
       listProjectUser: "list",
     }),
+    ...mapGetters(["getUserinfo"]),
     allowedChanges() {
       var allowed = false;
       // role id 1 is always product owner
       var productOwnersInProject = this.listProjectUser.filter(
         (projectUser) =>
-          projectUser.role === 1 && projectUser.project == this.$route.params.id
+          projectUser.role == 1 && projectUser.project == this.$route.params.id
       );
       if (
-        this.listSession !== undefined &&
+        this.getUserinfo !== undefined &&
         productOwnersInProject !== undefined
       ) {
         if (
           productOwnersInProject.find(
-            (po) => po.plattform_user === this.listSession[0].id
+            (po) => po.plattform_user == this.getUserinfo.userId
           ) !== undefined
         ) {
           allowed = true;

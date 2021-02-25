@@ -16,7 +16,8 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import PermissionDenied
 
 from api.rules_predicates import is_dev_in_project, \
-    is_po_in_project, is_sm_in_project, is_project_team_member, is_admin
+    is_po_in_project, is_sm_in_project, is_project_team_member, is_admin, \
+    is_default_user
 
 from api.rules_predicates import can_change_board
 
@@ -42,7 +43,7 @@ class Steplist(RulesModel, IGetProject, IGetBoard):
         verbose_name_plural = 'Steplist'
         rules_permissions = {
             "view": is_project_team_member,
-            "add": is_po_in_project,
+            "add": is_default_user,
             "change": can_change_board,
             "delete": is_admin
         }

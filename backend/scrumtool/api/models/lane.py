@@ -11,7 +11,7 @@ from django.core.exceptions import PermissionDenied
 
 from api.rules_predicates import is_dev_in_project, \
     is_po_in_project, is_sm_in_project, is_project_team_member, \
-    can_change_board, is_admin
+    can_change_board, is_admin, is_default_user
 
 from django_property_filter import PropertyFilterSet, PropertyNumberFilter
 
@@ -50,7 +50,7 @@ class Lane(RulesModel, IGetProject, IGetBoard):
         verbose_name_plural = 'Lanes'
         rules_permissions = {
             "view": is_project_team_member,
-            "add": is_po_in_project,
+            "add": is_default_user,
             "change": can_change_board,
             "delete": is_admin
         }

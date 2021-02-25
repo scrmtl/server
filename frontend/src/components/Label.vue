@@ -29,7 +29,7 @@
           :input-value="selected"
           label
         >
-          <span class="pr-2"> {{ item.text }} id: {{ item.id }} </span>
+          <span class="pr-2"> {{ item.text }} </span>
           <v-icon small @click="parent.selectItem(item)"
             >mdi-close-circle</v-icon
           >

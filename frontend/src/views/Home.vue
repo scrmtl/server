@@ -92,8 +92,12 @@ export default {
     },
 
     checkAuthStatus() {
-      return new Promise((resolve) => {
-        resolve(this.authStatus);
+      return new Promise((resolve, reject) => {
+        if (this.authStatus === "success") {
+          resolve(this.authStatus);
+        } else {
+          reject();
+        }
       });
     },
 
@@ -146,6 +150,9 @@ export default {
     ...mapGetters("pokerVote", {
       listPokerVotes: "byPokerVotingId",
     }),
+    ...mapGetters("vote", {
+      votesById: "byPokerVoteId",
+    }),
     ...mapGetters(["getUserinfo", "authStatus"]),
 
     sortedProjects() {
@@ -180,10 +187,15 @@ export default {
           pokerVotings.filter(
             (pokerVoting) =>
               this.listPokerVotes(pokerVoting.id).filter(
-                (pokerVote) => pokerVote.status == "WAIT"
+                (pokerVote) =>
+                  pokerVote.status == "WAIT" &&
+                  this.votesById(pokerVote.id).filter(
+                    (vote) => vote.user == this.getUserinfo.userId
+                  ).length == 0
               ).length > 0
           ).length > 0
         ) {
+          // Notification if not already voted
           this.$store.commit("showSystemAlert", {
             message: "Your vote is asked",
             category: "info",

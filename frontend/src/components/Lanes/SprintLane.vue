@@ -41,7 +41,7 @@
       {{ selectedSprintDateInfo }}
     </v-card-subtitle>
     <v-card-text
-      class="lane-body flex-column"
+      class="lane-sprint-body flex-column"
       @drop="moveTask($event)"
       @dragover="allowDrop($event)"
       @dragenter.prevent
@@ -65,7 +65,7 @@ import { mapFields } from "vuex-map-fields";
 export default {
   data: () => ({
     selectedSprintName: "No sprint selected",
-    selectedSprintDateInfo: "",
+    selectedSprintDateInfo: "create or select sprint",
     selectedSprint: {},
     item: 1,
   }),
@@ -124,7 +124,7 @@ export default {
           ")";
       } else {
         this.selectedSprintName = "No sprint selected";
-        this.selectedSprintDateInfo = "";
+        this.selectedSprintDateInfo = " - ";
       }
     },
     allowDrop(e) {

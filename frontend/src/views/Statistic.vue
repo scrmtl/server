@@ -51,14 +51,6 @@
                 </v-list-item>
                 <v-list-item dense>
                   <v-list-item-title class="white--text"
-                    >Not done</v-list-item-title
-                  >
-                  <v-list-item-subtitle class="white--text text-right">{{
-                    sum_of_not_done_sp
-                  }}</v-list-item-subtitle>
-                </v-list-item>
-                <v-list-item dense>
-                  <v-list-item-title class="white--text"
                     >Accepted</v-list-item-title
                   >
                   <v-list-item-subtitle class="white--text text-right">{{
@@ -155,7 +147,6 @@ export default {
     sum_of_planned_sp: "No sprint selected",
     sum_of_done_sp: "No sprint selected",
     sum_of_accepted_sp: "No sprint selected",
-    sum_of_not_done_sp: "No sprint selected",
 
     plotly_data: {
       planed: {
@@ -192,7 +183,6 @@ export default {
         this.sum_of_planned_sp = stats.sum_of_sp;
         this.sum_of_done_sp = stats.sum_of_done_sp;
         this.sum_of_accepted_sp = stats.sum_of_accepted_sp;
-        this.sum_of_not_done_sp = stats.sum_of_sp - stats.sum_of_done_sp;
         this.sum_of_planned_tasks = stats.sum_of_tasks;
         this.sum_of_done_tasks = stats.sum_of_done_tasks;
         this.sum_of_accepted_tasks = stats.sum_of_accepted_tasks;
@@ -238,6 +228,19 @@ export default {
       }
       return format;
     },
+
+    //Funktion um die Width der Bars beim Plotly einzustellen
+    makeWidthArray(x_array) {
+      var width = 0.1;
+      var length = x_array.length;
+      var data = [];
+
+      for (var i = 0; i < length; i++) {
+        data.push(width);
+      }
+
+      return data;
+    },
   },
   computed: {
     ...mapGetters("sprint", {
@@ -279,11 +282,13 @@ export default {
       let done_tasks = {
         x: this.plotly_data.done_tasks.x_data,
         y: this.plotly_data.done_tasks.y_data,
+        width: this.makeWidthArray(this.plotly_data.done_tasks.x_data),
         name: "Done Tasks",
         type: "bar",
         yaxis: "y2",
         marker: {
           color: "orange",
+          opacity: 0.6,
         },
       };
 

@@ -11,7 +11,7 @@ from django.db import models
 
 from simple_history.models import HistoricalRecords
 
-from api.rules_predicates import is_dev_in_project, \
+from api.rules_predicates import is_dev_in_project, is_default_user, \
     is_po_in_project, is_sm_in_project, is_project_team_member, is_admin
 
 from api.models.model_interfaces import IGetProject
@@ -98,7 +98,7 @@ class Sprint(RulesModel, IGetProject):
 
         rules_permissions = {
             "view": rules.is_authenticated,
-            "add": rules.always_deny,
+            "add": is_default_user,
             "change": is_po_in_project,
             "delete": rules.always_deny,
         }

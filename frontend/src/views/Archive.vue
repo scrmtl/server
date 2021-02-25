@@ -31,7 +31,16 @@ export default {
     listBoardLanes() {
       var board = this.boardByType("AB", this.$route.params.id);
       if (board !== undefined) {
-        return this.lanesByIdArray(board.lanes);
+        var list = this.lanesByIdArray(board.lanes);
+        var sorted = list.sort(function (a, b) {
+          var keyA = a.numbering;
+          var keyB = b.numbering;
+          // Vergleiche ob AC oder AR
+          if (keyA > keyB) return -1;
+          if (keyA < keyB) return 1;
+          return 0;
+        });
+        return sorted;
       } else {
         return [];
       }

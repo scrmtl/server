@@ -158,14 +158,21 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         }
 
     def get_finished_tasks_timeline(self, obj: Sprint):
-        logger.info(f'get finished tasks timeline')
+        logger.info(f'get finished tasks timeline ' +
+                    f'of sprint {obj} from project {obj.project}')
         task_queryset: QuerySet = obj.task_cards.all()
+        logger.info(f'--> get tasks: {task_queryset}')
         days = [int for int in range(0, (obj.project.sprint_duration + 1))]
+        logger.info(f'--> build day list: {days}')
         day_dates = self.build_day_list(obj)
+        logger.info(f'--> List with day_dates: {day_dates}')
         daily_sp = [0] * (obj.project.sprint_duration+1)
         task: Task
         for task in task_queryset:
+            logger.info(
+                f'   --> test for task: {task} which was done on {task.done_on}')
             if task.done_on in day_dates:
+                logger.info(f'      --> Yes task was done in sprint')
                 index = day_dates.index(task.done_on)
                 daily_sp[index] += 1
         return {
@@ -178,7 +185,7 @@ class SprintStatisticSerializer(serializers.ModelSerializer):
         This function return a list with days of the sprint
         """
         day_dates = [
-            obj.start + timedelta(int) for int in range(0, (obj.project.sprint_duration)+1)]
+            obj.start + timedelta(x) for x in range(0, (obj.project.sprint_duration)+1)]
         return day_dates
 
 

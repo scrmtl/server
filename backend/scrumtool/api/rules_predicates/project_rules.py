@@ -4,23 +4,29 @@ import rules
 import logging
 
 from api.models.model_interfaces import IGetProject
+from api import models
 
 stdlogger = logging.getLogger(__name__)
 
 
 def getProjectUser(user, project_object):
     if not isinstance(project_object, IGetProject):
-        raise TypeError("project_object is not of \
-            type Project but of \
-                type {0}".format(
-            type(project_object)))
-    for project_user in project_object.project.project_users.all():
-        if project_user.plattform_user.id == user.id:
-            stdlogger.info(
-                'User is member of the project %s ',
-                project_object.project)
-            return project_user
-    return None
+        raise TypeError(f"project_object is not of " +
+                        f"type Project but of type {type(project_object)}")
+    project_users = project_object.project.project_users
+    project = project_object.project
+    stdlogger.info(
+        f"Is user {user} member in project: {project_object.project}")
+    project_user = models.ProjectUser.objects.filter(
+        project=project,
+        plattform_user=user)
+
+    if project_user.exists():
+        stdlogger.info(f"--> Yes")
+        return project_user.first()
+    else:
+        stdlogger.info(f"--> No")
+        return None
 
 
 @rules.predicate
@@ -61,10 +67,22 @@ def is_project_team_member(user, project_object):
 
 @rules.predicate
 def is_own_profile(user, platform_user_object):
+    if platform_user_object is None:
+        return False
     if user.id == platform_user_object.id:
-        True
+        return True
     else:
-        False
+        return False
+
+
+@rules.predicate
+def is_own_vote(user, vote_object):
+    if vote_object is None:
+        return False
+    if user.id == vote_object.user.id:
+        return True
+    else:
+        return False
 
 
 is_admin = rules.is_group_member('admin')

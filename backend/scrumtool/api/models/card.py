@@ -223,9 +223,9 @@ class Epic(Card):
         verbose_name_plural = 'Epics(Card)'
         rules_permissions = {
             "view": is_project_team_member,
-            "add": is_po_in_project,
+            "add": is_default_user,
             "change": can_change_board,
-            "delete": is_admin
+            "delete": can_change_board
         }
 
 
@@ -243,9 +243,9 @@ class Feature(Card):
         verbose_name_plural = 'Features(Card)'
         rules_permissions = {
             "view": is_project_team_member,
-            "add": is_po_in_project,
+            "add": is_default_user,
             "change": can_change_board,
-            "delete": is_admin
+            "delete": can_change_board
         }
 
 
@@ -264,9 +264,9 @@ class Task(Card):
         verbose_name_plural = 'Tasks(Card)'
         rules_permissions = {
             "view": is_project_team_member,
-            "add": is_po_in_project,
+            "add": is_default_user,
             "change": can_change_board,
-            "delete": is_admin
+            "delete": can_change_board
         }
 
 

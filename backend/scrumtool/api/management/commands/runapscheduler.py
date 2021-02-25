@@ -16,6 +16,7 @@ from api.models.sprint import Sprint
 from api.models.card import Task
 from api.models import Lane
 from api.models.board import Board
+from api.models.project import Project
 
 from planning_poker.models import PokerVoting, PokerVote
 
@@ -167,6 +168,7 @@ def create_or_get_lane(ab_board: Board, sprint: Sprint):
         sprint_lane = Lane(
             board=ab_board,
             name=lane_name,
+            numbering=sprint.number
         )
         sprint_lane.save()
         return sprint_lane
@@ -180,6 +182,27 @@ def set_poker_vote_status(end_poker_voting):
             poker_vote.status = PokerVote.PokerStatus.FINISHED
             poker_vote.save()
             logger.info(f"-->Finished PokerVote: {poker_vote}")
+
+
+def sort_tasks_in_lanes():
+    logger.info(
+        "--------------------- number tasks -----------------------")
+    lane: Lane
+
+    for lane in Lane.objects.all():
+        project: Project = lane.board.project
+        if project.status == Project.ProjectStatus.AR:
+            continue
+        logger.info(
+            f"--> Lane: {lane}")
+        order_id = 1
+        task: Task
+        for task in lane.task_cards.all():
+            logger.info(f"   --> task: {task}")
+            task.numbering = order_id
+            order_id += 1
+            task.save()
+            logger.info(f"   --> new numbering: {task.numbering}")
 
 
 def hourly_job():
@@ -261,6 +284,18 @@ class Command(BaseCommand):
             "Added weekly job: 'delete_old_job_executions'."
         )
 
+        scheduler.add_job(
+            sort_tasks_in_lanes,
+            trigger=CronTrigger(
+                day_of_week="mon", hour="10", minute="00"
+            ),  # Midnight on Monday, before start of the next work week.
+            id="sort_tasks_in_lanes",
+            max_instances=1,
+            replace_existing=True,
+        )
+        logger.info(
+            "Added sort job: 'sort_tasks_in_lanes'."
+        )
         try:
             logger.info("Starting scheduler...")
             scheduler.start()

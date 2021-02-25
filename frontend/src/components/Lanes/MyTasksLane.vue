@@ -8,7 +8,7 @@
   >
     <v-card-title class="navbar white--text"> My Tasks </v-card-title>
     <v-card-text class="lane-body flex-column" v-if="allFetched">
-      <v-row justify="center" v-for="task in listTasks" :key="task.id">
+      <v-row justify="center" v-for="task in openTasks" :key="task.id">
         <Task v-bind:task="task" v-bind:task_index="task.id" />
       </v-row>
     </v-card-text>
@@ -30,11 +30,17 @@ export default {
     ...mapGetters("task", {
       listTasks: "list",
     }),
-    ...mapGetters(["getUserinfo", "authStatus"]),
+    ...mapGetters(["getUserinfo"]),
 
     ...mapState([
       "route", // vuex-router-sync
     ]),
+
+    openTasks() {
+      return this.listTasks.filter(
+        (task) => task.status !== "DO" && task.status !== "AC"
+      );
+    },
   },
 
   methods: {

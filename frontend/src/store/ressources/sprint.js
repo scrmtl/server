@@ -36,7 +36,7 @@ export default createCrudModule({
         if (state.entities !== undefined) {
           sprints = state.list
             .map((id) => state.entities[id.toString()])
-            .filter((sprint) => sprint.project === projectId);
+            .filter((sprint) => sprint.project == projectId);
         }
         return sprints;
       };

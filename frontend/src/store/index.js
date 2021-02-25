@@ -2,10 +2,9 @@ import Vue from "vue";
 import Vuex from "vuex";
 import Axios from "axios";
 import createPersistedState from "vuex-persistedstate";
-
 // mutation function from the `vuex-map-fields` module.
 import { getField, updateField } from "vuex-map-fields";
-
+// import * as Cookies from "js-cookie";
 import board from "@/store/ressources/board";
 import epic from "@/store/ressources/epic";
 import feature from "@/store/ressources/feature";
@@ -41,7 +40,20 @@ export default new Vuex.Store({
   // later something like this even better
   // strict: eprocess.env.NODE_ENV !== "production"
   strict: true,
+  // save vuex store in LocalStorage of browser
   plugins: [createPersistedState()],
+  // save vuex store as cookie, but cookie is too big
+  // plugins: [
+  //   createPersistedState({
+  //     storage: {
+  //       getItem: (key) => Cookies.get(key),
+  //       // Please see https://github.com/js-cookie/js-cookie#json, on how to handle JSON.
+  //       setItem: (key, value) =>
+  //         Cookies.set(key, value, { expires: 3, secure: false }),
+  //       removeItem: (key) => Cookies.remove(key),
+  //     },
+  //   }),
+  // ],
   // States
   state: {
     Userinfo: {
@@ -51,8 +63,8 @@ export default new Vuex.Store({
       name: "",
       email: "",
       groups: [],
-      token: localStorage.getItem("token") || "",
-      refreshToken: localStorage.getItem("refreshToken") || "",
+      token: "",
+      refreshToken: "",
     },
 
     systemAlert: {
@@ -74,7 +86,8 @@ export default new Vuex.Store({
     login({ commit, dispatch }, credentials) {
       return new Promise((resolve, reject) => {
         commit("AUTH_REQUEST");
-        Axios({
+        // axios return his own promise, no resolve needed
+        return Axios({
           method: "post",
           url: "o/token/",
           auth: {
@@ -89,35 +102,44 @@ export default new Vuex.Store({
             credentials.password +
             "&scope=write",
         })
-          .then((resp) => {
+          .then(async (resp) => {
             const token = resp.data.access_token;
             const refreshToken = resp.data.refresh_token;
             // const user = credentials.username;
-            localStorage.setItem("token", token);
-            localStorage.setItem("refreshToken", refreshToken);
+            // localStorage.setItem("token", token);
+            // localStorage.setItem("refreshToken", refreshToken);
             Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-            dispatch("session/fetchList", {
+            await dispatch("session/fetchList", {
               id: null,
               customUrlFnArgs: { all: false },
-            }).then((res) => {
-              var session = Object.values(res.data)[0];
-              commit("AUTH_SUCCESS", {
-                token: token,
-                refreshToken: refreshToken,
-                user: session.username,
-                id: session.id,
-                name: session.name,
-                email: session.email,
-                groups: session.groups,
+            })
+              .then((res) => {
+                var session = Object.values(res.data)[0];
+                commit("AUTH_SUCCESS", {
+                  token: token,
+                  refreshToken: refreshToken,
+                  user: session.username,
+                  id: session.id,
+                  name: session.name,
+                  email: session.email,
+                  groups: session.groups,
+                });
+                resolve();
+              })
+              .catch((err) => {
+                console.log(err);
+                this.$store.commit("showSystemAlert", {
+                  message: "No session data found",
+                  category: "error",
+                });
+                reject(err);
               });
-            });
-
-            resolve(resp);
+            resolve();
           })
           .catch((err) => {
             commit("AUTH_ERROR");
-            localStorage.removeItem("token");
-            localStorage.removeItem("refreshToken");
+            // localStorage.removeItem("token");
+            // localStorage.removeItem("refreshToken");
             reject(err);
           });
       });
@@ -125,8 +147,8 @@ export default new Vuex.Store({
     logout({ commit }) {
       return new Promise((resolve) => {
         commit("LOGOUT");
-        localStorage.removeItem("token");
-        localStorage.removeItem("refreshToken");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("refreshToken");
         delete Axios.defaults.headers.common["Authorization"];
         resolve();
       });
@@ -184,10 +206,6 @@ export default new Vuex.Store({
       state,
       { token, refreshToken, user, id, email, name, groups }
     ) {
-      // this.fetchSession({
-      //   id: null,
-      //   customUrlFnArgs: { all: false },
-      // })
       state.Userinfo.status = "success";
       state.Userinfo.token = token;
       state.Userinfo.refreshToken = refreshToken;
@@ -199,6 +217,8 @@ export default new Vuex.Store({
     },
     AUTH_ERROR(state) {
       state.Userinfo.status = "error";
+      state.Userinfo.token = "";
+      state.Userinfo.refreshToken = "";
     },
     LOGOUT(state) {
       state.Userinfo.status = "";
