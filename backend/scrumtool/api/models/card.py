@@ -225,7 +225,7 @@ class Epic(Card):
             "view": is_project_team_member,
             "add": is_default_user,
             "change": can_change_board,
-            "delete": is_admin
+            "delete": can_change_board
         }
 
 
@@ -245,7 +245,7 @@ class Feature(Card):
             "view": is_project_team_member,
             "add": is_default_user,
             "change": can_change_board,
-            "delete": is_admin
+            "delete": can_change_board
         }
 
 
@@ -266,7 +266,7 @@ class Task(Card):
             "view": is_project_team_member,
             "add": is_default_user,
             "change": can_change_board,
-            "delete": is_admin
+            "delete": can_change_board
         }
 
 
