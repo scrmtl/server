@@ -139,7 +139,7 @@ export default {
             }
           });
         } else {
-          this.errorMessage = "Password does not macht";
+          this.errorMessage = "Password does not match";
           this.isRegisterError = true;
         }
       } else {

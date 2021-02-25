@@ -205,6 +205,7 @@ export default {
   },
   mounted() {
     this.fetchPokerVotings().then(() => {
+      // request tasks only one time, also if there different pokervoting in same project
       var alreadyFetchedProjectTasks = [];
       this.listPokerVotings(this.userId).forEach((pokerVoting) => {
         if (!alreadyFetchedProjectTasks.includes(pokerVoting.project)) {
