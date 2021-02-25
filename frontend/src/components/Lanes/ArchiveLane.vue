@@ -10,7 +10,7 @@
     <v-card-subtitle class="blue-grey darken-2 white--text">
       {{ laneMetaData }}
     </v-card-subtitle>
-    <v-card-text class="blue-grey darken-2 flex-column">
+    <v-card-text class="lane-archive-body blue-grey darken-2 flex-column">
       <v-row justify="center" class="" v-for="task in laneTask" :key="task.id">
         <Task v-bind:task="task" />
       </v-row>

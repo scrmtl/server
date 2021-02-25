@@ -89,6 +89,10 @@
     border-left-color: #6441A4;
     border-right-color: #6441A4;
   }
+  .lane-archive-body {
+    overflow-y: auto;
+    height: calc(95vh - 245px);
+  }
 
 .link-color {
     color: white;
